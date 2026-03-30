@@ -20,7 +20,7 @@ DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 
 def load_menu():
     """Load menu data for the ordering page."""
-    with open(os.path.join(DATA_DIR, "menu.json"), "r") as f:
+    with open(os.path.join(DATA_DIR, "menu.json"), "r", encoding="utf-8") as f:
         return json.load(f)
 
 

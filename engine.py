@@ -15,7 +15,7 @@ def load_data():
     data = {}
     for name in ("ingredients", "recipes", "energy", "packaging"):
         path = os.path.join(DATA_DIR, f"{name}.json")
-        with open(path, "r") as f:
+        with open(path, "r", encoding="utf-8") as f:
             data[name] = json.load(f)
     return data
 

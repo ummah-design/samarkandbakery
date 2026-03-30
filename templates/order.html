@@ -24,7 +24,7 @@
     <meta name="twitter:description" content="Fresh handmade Uzbek & Turkish pastries in Tetouan. Order online for weekend delivery or pickup.">
     <meta name="twitter:image" content="https://samarkandbakery.com/static/profile-pic.png">
 
-    <!-- Google Analytics (GA4) — replace G-2WFWSZVETF with your Measurement ID -->
+    <!-- Google Analytics (GA4) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-2WFWSZVETF"></script>
     <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-2WFWSZVETF');</script>
 
@@ -79,8 +79,8 @@
             background: rgba(30,42,74,0.97);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            padding: 1px 24px;
-            height: auto;
+            padding: 0 24px;
+            height: 64px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -90,20 +90,316 @@
         .header-inner {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             max-width: 1200px;
             width: 100%;
         }
 
         .header-logo {
-            height: 64px;
+            height: 52px;
             width: auto;
             flex-shrink: 0;
             display: block;
         }
 
-        /* ===== MAIN CONTAINER ===== */
-        .main { max-width: 960px; margin: 0 auto; padding: 24px 20px 120px; }
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .header-nav a {
+            color: rgba(255,255,255,0.75);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 200ms ease;
+            white-space: nowrap;
+        }
+
+        .header-nav a:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.08);
+        }
+
+        .header-nav a.active {
+            color: var(--gold-pale);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .mobile-menu-btn svg { width: 24px; height: 24px; }
+
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 64px;
+            left: 0;
+            right: 0;
+            background: var(--navy);
+            padding: 16px 24px;
+            z-index: 99;
+            border-bottom: 1px solid rgba(184,134,11,0.2);
+            animation: slideDown 200ms ease;
+        }
+
+        .mobile-nav.open { display: block; }
+
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .mobile-nav a {
+            display: block;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            transition: color 200ms;
+        }
+
+        .mobile-nav a:last-child { border-bottom: none; }
+        .mobile-nav a:hover { color: var(--gold-pale); }
+
+        /* ===== HERO ===== */
+        .hero {
+            position: relative;
+            background: var(--navy);
+            overflow: hidden;
+            padding: 80px 24px;
+            text-align: center;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 30% 20%, rgba(184,134,11,0.12) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 80%, rgba(184,134,11,0.08) 0%, transparent 50%);
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(to top, var(--warm-bg), transparent);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(184,134,11,0.15);
+            border: 1px solid rgba(184,134,11,0.25);
+            color: var(--gold-pale);
+            font-size: 0.82rem;
+            font-weight: 600;
+            padding: 8px 20px;
+            border-radius: 24px;
+            margin-bottom: 28px;
+            letter-spacing: 0.3px;
+        }
+
+        .hero-badge svg { width: 16px; height: 16px; }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.15;
+            margin-bottom: 20px;
+        }
+
+        .hero-title span { color: var(--gold-pale); }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.6;
+            margin-bottom: 36px;
+            max-width: 520px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 36px;
+            background: var(--gold);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 200ms ease;
+            text-decoration: none;
+        }
+
+        .hero-cta:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184,134,11,0.3); }
+        .hero-cta svg { width: 18px; height: 18px; }
+
+        .hero-features {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 48px;
+            flex-wrap: wrap;
+        }
+
+        .hero-feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.88rem;
+        }
+
+        .hero-feature-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-feature-icon svg { width: 18px; height: 18px; stroke: var(--gold-pale); }
+
+        /* ===== SECTION LAYOUT ===== */
+        .section {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-heading {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 60px;
+        }
+
+        .section-label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 12px;
+        }
+
+        .section-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            max-width: 520px;
+            margin: 0 auto;
+        }
+
+        /* ===== ABOUT SECTION ===== */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
+
+        .about-image {
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+        }
+
+        .about-image img {
+            width: 100%;
+            height: 360px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .about-text h3 {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 16px;
+        }
+
+        .about-text p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 16px;
+            font-size: 0.95rem;
+        }
+
+        .about-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .about-detail {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .about-detail-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--gold-pale);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .about-detail-icon svg { width: 16px; height: 16px; stroke: var(--gold); }
+
+        .about-detail-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .about-detail-text strong { color: var(--navy); display: block; margin-bottom: 2px; }
 
         /* ===== NOTICE BANNER ===== */
         .notice {
@@ -130,14 +426,11 @@
         }
 
         .notice-icon svg { width: 20px; height: 20px; stroke: var(--gold-pale); }
-
         .notice-title { font-weight: 600; font-size: 0.95rem; }
         .notice-desc { font-size: 0.82rem; opacity: 0.7; margin-top: 2px; }
 
         /* ===== CATEGORY ===== */
-        .category {
-            margin-bottom: 40px;
-        }
+        .category { margin-bottom: 40px; }
 
         .category-header {
             display: flex;
@@ -166,7 +459,6 @@
             gap: 20px;
         }
 
-        /* ===== PRODUCT CARD ===== */
         .product-card {
             background: var(--warm-card);
             border-radius: var(--radius-lg);
@@ -195,9 +487,7 @@
             transition: transform 400ms ease;
         }
 
-        .product-card:hover .product-img {
-            transform: scale(1.04);
-        }
+        .product-card:hover .product-img { transform: scale(1.04); }
 
         .product-img-overlay {
             position: absolute;
@@ -223,9 +513,7 @@
             text-transform: uppercase;
         }
 
-        .product-body {
-            padding: 18px 20px 20px;
-        }
+        .product-body { padding: 18px 20px 20px; }
 
         .product-name {
             font-family: var(--font-display);
@@ -267,7 +555,6 @@
             margin-left: 2px;
         }
 
-        /* Add button */
         .btn-add {
             display: inline-flex;
             align-items: center;
@@ -287,10 +574,8 @@
         .btn-add:hover { background: var(--navy-light); transform: translateY(-1px); }
         .btn-add:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
         .btn-add:active { transform: scale(0.97); }
-
         .btn-add svg { width: 16px; height: 16px; }
 
-        /* Quantity stepper */
         .qty-stepper {
             display: inline-flex;
             align-items: center;
@@ -317,7 +602,6 @@
         .qty-btn:hover { background: rgba(30,42,74,0.08); }
         .qty-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
         .qty-btn svg { width: 16px; height: 16px; }
-
         .qty-btn--minus { color: var(--text-secondary); }
         .qty-btn--plus { background: var(--navy); color: #fff; }
         .qty-btn--plus:hover { background: var(--navy-light); }
@@ -329,6 +613,217 @@
             font-size: 1rem;
             color: var(--navy);
         }
+
+        /* ===== REVIEWS SECTION ===== */
+        .reviews-scroll-section {
+            padding: 0 0 60px;
+            overflow: hidden;
+        }
+
+        .reviews-track-wrapper {
+            position: relative;
+            max-width: 100vw;
+            overflow: hidden;
+        }
+
+        .reviews-track-wrapper::before,
+        .reviews-track-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 60px;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .reviews-track-wrapper::before {
+            left: 0;
+            background: linear-gradient(to right, var(--warm-bg), transparent);
+        }
+
+        .reviews-track-wrapper::after {
+            right: 0;
+            background: linear-gradient(to left, var(--warm-bg), transparent);
+        }
+
+        .reviews-track {
+            display: flex;
+            gap: 20px;
+            animation: scrollReviews 40s linear infinite;
+            width: max-content;
+            padding: 8px 0;
+        }
+
+        .reviews-track:hover { animation-play-state: paused; }
+
+        @keyframes scrollReviews {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .review-card {
+            background: var(--warm-card);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            min-width: 300px;
+            max-width: 340px;
+            flex-shrink: 0;
+            border: 1px solid var(--border-light);
+            transition: box-shadow 200ms ease;
+        }
+
+        .review-card:hover { box-shadow: var(--shadow-md); }
+
+        .review-card-stars {
+            color: var(--gold);
+            font-size: 1rem;
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+        }
+
+        .review-card-text {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 16px;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .review-card-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .review-card-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--navy);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.82rem;
+            flex-shrink: 0;
+        }
+
+        .review-card-name {
+            font-weight: 600;
+            font-size: 0.88rem;
+            color: var(--navy);
+        }
+
+        .review-card-product {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .reviews-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        /* ===== CONTACT SECTION ===== */
+        .contact-section {
+            background: var(--warm-card);
+            border-top: 1px solid var(--border-light);
+            padding: 60px 20px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        .contact-info h3 {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 16px;
+        }
+
+        .contact-info p {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .contact-item-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: var(--warm-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .contact-item-icon svg { width: 20px; height: 20px; stroke: var(--gold); }
+
+        .contact-item-text { font-size: 0.92rem; color: var(--text-primary); }
+        .contact-item-text a { color: var(--navy); text-decoration: none; font-weight: 500; }
+        .contact-item-text a:hover { color: var(--gold); }
+        .contact-item-label { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 2px; }
+
+        .contact-form-card {
+            background: var(--warm-bg);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+        }
+
+        .contact-form-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 6px;
+        }
+
+        .contact-form-card .form-note {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .btn-send-inquiry {
+            width: 100%;
+            padding: 14px;
+            background: var(--navy);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 200ms ease, transform 200ms ease;
+        }
+
+        .btn-send-inquiry:hover { background: var(--navy-light); transform: translateY(-1px); }
+        .btn-send-inquiry:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
         /* ===== CART BAR ===== */
         .cart-bar {
@@ -347,7 +842,6 @@
         }
 
         .cart-bar.visible { transform: translateY(0); }
-
         .cart-bar-info { font-size: 0.88rem; opacity: 0.7; }
 
         .cart-bar-total {
@@ -436,7 +930,6 @@
             margin-bottom: 20px;
         }
 
-        /* Cart summary in modal */
         .cart-summary { margin-bottom: 24px; }
 
         .cart-line {
@@ -463,7 +956,6 @@
 
         .cart-line-total .amount { color: var(--gold); }
 
-        /* Form fields */
         .field { margin-bottom: 16px; }
 
         .field-label {
@@ -495,10 +987,8 @@
         }
 
         .field-input::placeholder { color: var(--text-muted); }
-
         textarea.field-input { resize: vertical; min-height: 72px; }
 
-        /* Delivery toggle */
         .toggle-group {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -525,14 +1015,8 @@
         }
 
         .toggle-option-title { font-weight: 600; font-size: 0.95rem; }
+        .toggle-option-sub { font-size: 0.75rem; opacity: 0.6; margin-top: 3px; }
 
-        .toggle-option-sub {
-            font-size: 0.75rem;
-            opacity: 0.6;
-            margin-top: 3px;
-        }
-
-        /* Map */
         #checkout-map {
             width: 100%;
             height: 220px;
@@ -543,15 +1027,9 @@
         }
 
         #checkout-map.visible { display: block; }
-
         .map-hint { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; }
 
-        /* Action buttons */
-        .modal-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 24px;
-        }
+        .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
 
         .btn-back {
             padding: 14px 20px;
@@ -587,7 +1065,6 @@
         .btn-place-order:disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed; transform: none; }
         .btn-place-order:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
 
-        /* Success */
         .success-view { text-align: center; padding: 40px 0; display: none; }
 
         .success-check {
@@ -635,15 +1112,10 @@
             text-align: center;
             padding: 48px 20px 32px;
             border-top: 1px solid var(--border);
-            margin-top: 20px;
+            background: var(--warm-bg);
         }
 
-        .footer-logo {
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            margin: 0 auto 12px;
-        }
+        .footer-logo { width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 12px; }
 
         .footer-name {
             font-family: var(--font-display);
@@ -652,27 +1124,11 @@
             margin-bottom: 8px;
         }
 
-        .footer-info {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            line-height: 1.8;
-        }
-
-        .footer-info a {
-            color: var(--navy);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 200ms ease;
-        }
-
+        .footer-info { font-size: 0.85rem; color: var(--text-muted); line-height: 1.8; }
+        .footer-info a { color: var(--navy); text-decoration: none; font-weight: 500; transition: color 200ms ease; }
         .footer-info a:hover { color: var(--gold); }
 
-        .footer-socials {
-            display: flex;
-            justify-content: center;
-            gap: 16px;
-            margin-top: 16px;
-        }
+        .footer-socials { display: flex; justify-content: center; gap: 16px; margin-top: 16px; }
 
         .footer-social-link {
             width: 40px;
@@ -686,77 +1142,10 @@
             text-decoration: none;
         }
 
-        .footer-social-link:hover {
-            background: var(--navy);
-            transform: translateY(-2px);
-        }
-
+        .footer-social-link:hover { background: var(--navy); transform: translateY(-2px); }
         .footer-social-link svg { width: 20px; height: 20px; fill: var(--navy); transition: fill 200ms ease; }
         .footer-social-link:hover svg { fill: #fff; }
         .footer-social-link:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            .product-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
-            .category-name { font-size: 1.25rem; }
-            .header-title { font-size: 1.1rem; letter-spacing: 1.5px; }
-            .modal-panel { padding: 24px; }
-        }
-
-        @media (max-width: 375px) {
-            .product-grid { grid-template-columns: 1fr; }
-            .header-logo { width: 40px; height: 40px; }
-            .header-title { font-size: 1rem; }
-            .btn-checkout { padding: 12px 20px; font-size: 0.9rem; }
-        }
-
-        @media (min-width: 1024px) {
-            .product-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-
-        /* Social proof toast */
-        .social-proof {
-            position: fixed;
-            bottom: 24px;
-            left: 24px;
-            background: var(--warm-card);
-            border-radius: var(--radius-md);
-            padding: 14px 18px;
-            box-shadow: var(--shadow-lg);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            z-index: 90;
-            max-width: 320px;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 400ms ease, transform 400ms ease;
-            pointer-events: none;
-            border-left: 3px solid var(--gold);
-        }
-
-        .social-proof.visible {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
-        }
-
-        .social-proof-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--gold-pale);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .social-proof-icon svg { width: 18px; height: 18px; stroke: var(--gold); }
-
-        .social-proof-text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; }
-        .social-proof-name { font-weight: 600; color: var(--text-primary); }
-        .social-proof-time { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
 
         /* Mini calendar */
         .mini-cal {
@@ -776,11 +1165,7 @@
             margin-bottom: 12px;
         }
 
-        .mini-cal-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-        }
+        .mini-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
 
         .mini-cal-header {
             text-align: center;
@@ -803,11 +1188,7 @@
         }
 
         .mini-cal-day.empty { visibility: hidden; }
-
-        .mini-cal-day.disabled {
-            color: var(--border);
-            cursor: default;
-        }
+        .mini-cal-day.disabled { color: var(--border); cursor: default; }
 
         .mini-cal-day.available {
             background: var(--gold-pale);
@@ -817,34 +1198,51 @@
             transition: all 200ms ease;
         }
 
-        .mini-cal-day.available:hover {
-            background: var(--gold);
-            color: #fff;
-            transform: scale(1.05);
+        .mini-cal-day.available:hover { background: var(--gold); color: #fff; transform: scale(1.05); }
+        .mini-cal-day.available:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+
+        .mini-cal-day.selected { background: var(--navy) !important; color: #fff !important; box-shadow: 0 2px 8px rgba(30,42,74,0.25); }
+        .mini-cal-day.today { border: 2px solid var(--border); }
+        .mini-cal-day .day-label { display: block; font-size: 0.62rem; font-weight: 400; margin-top: 1px; opacity: 0.7; }
+
+        /* Social proof toast */
+        .social-proof {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            background: var(--warm-card);
+            border-radius: var(--radius-md);
+            padding: 14px 18px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 90;
+            max-width: 320px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 400ms ease, transform 400ms ease;
+            pointer-events: none;
+            border-left: 3px solid var(--gold);
         }
 
-        .mini-cal-day.available:focus-visible {
-            outline: 2px solid var(--navy);
-            outline-offset: 2px;
+        .social-proof.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+        .social-proof-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--gold-pale);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
-        .mini-cal-day.selected {
-            background: var(--navy) !important;
-            color: #fff !important;
-            box-shadow: 0 2px 8px rgba(30,42,74,0.25);
-        }
-
-        .mini-cal-day.today {
-            border: 2px solid var(--border);
-        }
-
-        .mini-cal-day .day-label {
-            display: block;
-            font-size: 0.62rem;
-            font-weight: 400;
-            margin-top: 1px;
-            opacity: 0.7;
-        }
+        .social-proof-icon svg { width: 18px; height: 18px; stroke: var(--gold); }
+        .social-proof-text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; }
+        .social-proof-name { font-weight: 600; color: var(--text-primary); }
+        .social-proof-time { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
 
         /* WhatsApp floating button */
         .whatsapp-float {
@@ -864,22 +1262,41 @@
             text-decoration: none;
         }
 
-        .whatsapp-float:hover {
-            transform: scale(1.08);
-            box-shadow: 0 6px 24px rgba(37,211,102,0.45);
-        }
-
+        .whatsapp-float:hover { transform: scale(1.08); box-shadow: 0 6px 24px rgba(37,211,102,0.45); }
         .whatsapp-float:focus-visible { outline: 2px solid var(--navy); outline-offset: 3px; }
-
         .whatsapp-float svg { width: 30px; height: 30px; fill: #fff; }
 
-        /* Move WhatsApp button up when cart bar is visible */
-        .cart-bar.visible ~ .whatsapp-float { bottom: 84px; }
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .header-nav { display: none; }
+            .mobile-menu-btn { display: flex; }
+            .product-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+            .category-name { font-size: 1.25rem; }
+            .modal-panel { padding: 24px; }
+            .about-grid { grid-template-columns: 1fr; gap: 28px; }
+            .about-image img { height: 240px; }
+            .contact-grid { grid-template-columns: 1fr; gap: 32px; }
+            .hero { padding: 56px 20px; }
+            .hero-features { gap: 20px; }
+            .review-card { min-width: 260px; }
+        }
 
-        /* Reduced motion */
+        @media (max-width: 375px) {
+            .product-grid { grid-template-columns: 1fr; }
+            .header-logo { height: 40px; }
+            .btn-checkout { padding: 12px 20px; font-size: 0.9rem; }
+        }
+
+        @media (min-width: 1024px) {
+            .product-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
         }
+
+        /* Scroll smooth */
+        html { scroll-behavior: smooth; }
     </style>
 </head>
 <body>
@@ -887,27 +1304,139 @@
 <!-- HEADER -->
 <header class="site-header">
     <div class="header-inner">
-        <img class="header-logo" src="{{ url_for('static', filename='logo.svg') }}" alt="Samarkand Turkic Bakery">
+        <a href="#home"><img class="header-logo" src="{{ url_for('static', filename='logo.svg') }}" alt="Samarkand Turkic Bakery"></a>
+        <nav class="header-nav">
+            <a href="#home" class="active">Home</a>
+            <a href="#about">About Us</a>
+            <a href="#menu">Menu</a>
+            <a href="#reviews">Customer Reviews</a>
+            <a href="#contact">Contact Us</a>
+        </nav>
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" id="menu-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+        </button>
     </div>
 </header>
 
-<!-- MAIN -->
-<main class="main">
+<nav class="mobile-nav" id="mobile-nav">
+    <a href="#home" onclick="closeMobileMenu()">Home</a>
+    <a href="#about" onclick="closeMobileMenu()">About Us</a>
+    <a href="#menu" onclick="closeMobileMenu()">Menu</a>
+    <a href="#reviews" onclick="closeMobileMenu()">Customer Reviews</a>
+    <a href="#contact" onclick="closeMobileMenu()">Contact Us</a>
+</nav>
 
-    <!-- Notice -->
-    <div class="notice">
-        <div class="notice-icon">
-            <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg>
+<!-- HERO -->
+<section class="hero" id="home">
+    <div class="hero-content">
+        <div class="hero-badge">
+            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg>
+            Deliveries & Collections: Saturday & Sunday
         </div>
-        <div>
-            <div class="notice-title">Deliveries & Collections: Saturday & Sunday only</div>
-            <div class="notice-desc">Place your order any time — we prepare and deliver on weekends.</div>
+        <h1 class="hero-title">
+            Authentic <span>Uzbek & Turkish</span><br>Baked Goods
+        </h1>
+        <p class="hero-subtitle">
+            Handcrafted with love in Tetouan. From golden samsa to warm Turkish pide — taste the heritage of the Silk Road, delivered to your door.
+        </p>
+        <a href="#menu" class="hero-cta">
+            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"/></svg>
+            Order Now
+        </a>
+        <div class="hero-features">
+            <div class="hero-feature">
+                <div class="hero-feature-icon">
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z"/></svg>
+                </div>
+                Freshly Baked
+            </div>
+            <div class="hero-feature">
+                <div class="hero-feature-icon">
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+                </div>
+                Home-Based
+            </div>
+            <div class="hero-feature">
+                <div class="hero-feature-icon">
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"/></svg>
+                </div>
+                Weekend Delivery
+            </div>
         </div>
     </div>
+</section>
 
-    <!-- Menu -->
+<!-- ABOUT -->
+<section id="about">
+    <div class="section-heading">
+        <div class="section-label">Our Story</div>
+        <h2 class="section-title">About Samarkand Bakery</h2>
+        <p class="section-subtitle">A taste of Central Asia and Turkey, right here in Tetouan</p>
+    </div>
+    <div class="about-grid">
+        <div class="about-image">
+            <img src="{{ url_for('static', filename='products/meat_samsa.jpeg') }}" alt="Freshly baked samsa">
+        </div>
+        <div class="about-text">
+            <h3>From Our Home Kitchen to Your Table</h3>
+            <p>
+                Samarkand Turkic Bakery brings the rich flavours of Uzbekistan and Turkey to Tetouan, Morocco. Every pastry, bread, and pie is handcrafted using traditional recipes passed down through generations — made fresh in our home kitchen with the finest local ingredients.
+            </p>
+            <p>
+                From flaky golden samsa filled with seasoned meat to warm, pillowy Turkish pide, each bite carries the warmth of Central Asian and Anatolian heritage. We bake with passion, and we deliver with care.
+            </p>
+            <div class="about-details">
+                <div class="about-detail">
+                    <div class="about-detail-icon">
+                        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z"/></svg>
+                    </div>
+                    <div class="about-detail-text">
+                        <strong>Freshly Baked</strong>
+                        Made to order, never frozen
+                    </div>
+                </div>
+                <div class="about-detail">
+                    <div class="about-detail-icon">
+                        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+                    </div>
+                    <div class="about-detail-text">
+                        <strong>Weekend Delivery</strong>
+                        Saturday & Sunday
+                    </div>
+                </div>
+                <div class="about-detail">
+                    <div class="about-detail-icon">
+                        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"/></svg>
+                    </div>
+                    <div class="about-detail-text">
+                        <strong>Tetouan Based</strong>
+                        Pickup at Wilaya Centre
+                    </div>
+                </div>
+                <div class="about-detail">
+                    <div class="about-detail-icon">
+                        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 0 0-2.455 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"/></svg>
+                    </div>
+                    <div class="about-detail-text">
+                        <strong>Traditional Recipes</strong>
+                        Uzbek & Turkish heritage
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- MENU -->
+<section id="menu" class="section" style="padding-bottom: 60px;">
+    <div class="section-heading">
+        <div class="section-label">Our Menu</div>
+        <h2 class="section-title">Order Fresh Baked Goods</h2>
+        <p class="section-subtitle">Place your order any time — we prepare and deliver on weekends</p>
+    </div>
+
     {% for category in menu.categories %}
-    <section class="category">
+    <div class="category">
         <div class="category-header">
             <h2 class="category-name">{{ category.name }}</h2>
             <div class="category-line"></div>
@@ -938,33 +1467,114 @@
             </article>
             {% endfor %}
         </div>
-    </section>
+    </div>
     {% endfor %}
+</section>
 
-    <!-- Footer -->
-    <footer class="site-footer">
-        <img class="footer-logo" src="{{ url_for('static', filename='profile-pic.png') }}" alt="">
-        <div class="footer-name">Samarkand Turkic Bakery</div>
-        <div class="footer-info">
-            Tetouan, Morocco<br>
-            <a href="tel:+212680342679">+212 680 342 679</a>
+<!-- CUSTOMER REVIEWS -->
+<section id="reviews">
+    <div class="section-heading">
+        <div class="section-label">What Our Customers Say</div>
+        <h2 class="section-title">Customer Reviews</h2>
+        <p class="section-subtitle">Real feedback from people who tried our baked goods</p>
+    </div>
+    <div class="reviews-scroll-section">
+        <div class="reviews-track-wrapper">
+            <div class="reviews-track" id="reviews-track">
+                <div class="reviews-empty" id="reviews-empty">Loading reviews...</div>
+            </div>
         </div>
-        <div class="footer-socials">
-            <a href="https://www.instagram.com/SamarkandBakery" target="_blank" rel="noopener" class="footer-social-link" aria-label="Instagram">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-            </a>
-            <a href="https://www.tiktok.com/@SamarkandBakery" target="_blank" rel="noopener" class="footer-social-link" aria-label="TikTok">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.48V13.2a8.16 8.16 0 005.58 2.17V12a4.85 4.85 0 01-3.77-1.54V6.69h3.77z"/></svg>
-            </a>
-            <a href="https://www.youtube.com/@SamarkandBakery" target="_blank" rel="noopener" class="footer-social-link" aria-label="YouTube">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-            </a>
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section">
+    <div class="section-heading" style="padding-top:0;">
+        <div class="section-label">Get in Touch</div>
+        <h2 class="section-title">Contact Us</h2>
+        <p class="section-subtitle">Have a question? We would love to hear from you</p>
+    </div>
+    <div class="contact-grid">
+        <div class="contact-info">
+            <h3>Samarkand Turkic Bakery</h3>
+            <p>We are a home-based bakery in Tetouan bringing authentic Uzbek and Turkish flavours to Morocco. For orders, please use our menu above. For everything else, get in touch below.</p>
+
+            <div class="contact-item">
+                <div class="contact-item-icon">
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"/></svg>
+                </div>
+                <div>
+                    <div class="contact-item-label">Phone / WhatsApp</div>
+                    <div class="contact-item-text"><a href="tel:+212680342679">+212 680 342 679</a></div>
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <div class="contact-item-icon">
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"/></svg>
+                </div>
+                <div>
+                    <div class="contact-item-label">Pickup Location</div>
+                    <div class="contact-item-text">Wilaya Centre, Tetouan, Morocco</div>
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <div class="contact-item-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5"/></svg>
+                </div>
+                <div>
+                    <div class="contact-item-label">Instagram</div>
+                    <div class="contact-item-text"><a href="https://www.instagram.com/SamarkandBakery" target="_blank" rel="noopener">@SamarkandBakery</a></div>
+                </div>
+            </div>
         </div>
-        <div style="margin-top:24px;font-size:0.78rem;color:var(--text-muted);">
-            Website and comprehensive order handling system by <a href="https://ummahdesign.com/" target="_blank" rel="noopener" style="color:var(--navy);font-weight:600;text-decoration:none;transition:color 200ms;">Ummah Design</a>
+
+        <div class="contact-form-card">
+            <h3>Send Us a Message</h3>
+            <p class="form-note">This form is for general inquiries only. To place an order, please use our <a href="#menu" style="color:var(--gold);font-weight:600;text-decoration:none;">menu above</a>.</p>
+
+            <div class="field">
+                <label class="field-label" for="contact-name">Your Name</label>
+                <input class="field-input" type="text" id="contact-name" placeholder="Full name">
+            </div>
+            <div class="field">
+                <label class="field-label" for="contact-email">Email</label>
+                <input class="field-input" type="email" id="contact-email" placeholder="your@email.com">
+            </div>
+            <div class="field">
+                <label class="field-label" for="contact-message">Message</label>
+                <textarea class="field-input" id="contact-message" placeholder="How can we help you?" style="min-height:100px;"></textarea>
+            </div>
+            <button class="btn-send-inquiry" onclick="sendInquiry()">Send Message</button>
+            <div id="contact-status" style="margin-top:12px;font-size:0.88rem;text-align:center;"></div>
         </div>
-    </footer>
-</main>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+    <img class="footer-logo" src="{{ url_for('static', filename='profile-pic.png') }}" alt="">
+    <div class="footer-name">Samarkand Turkic Bakery</div>
+    <div class="footer-info">
+        Tetouan, Morocco<br>
+        <a href="tel:+212680342679">+212 680 342 679</a>
+    </div>
+    <div class="footer-socials">
+        <a href="https://www.instagram.com/SamarkandBakery" target="_blank" rel="noopener" class="footer-social-link" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </a>
+        <a href="https://www.tiktok.com/@SamarkandBakery" target="_blank" rel="noopener" class="footer-social-link" aria-label="TikTok">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.48V13.2a8.16 8.16 0 005.58 2.17V12a4.85 4.85 0 01-3.77-1.54V6.69h3.77z"/></svg>
+        </a>
+        <a href="https://www.youtube.com/@SamarkandBakery" target="_blank" rel="noopener" class="footer-social-link" aria-label="YouTube">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        </a>
+    </div>
+    <div style="margin-top:24px;font-size:0.78rem;color:var(--text-muted);">
+        Website and comprehensive order handling system by <a href="https://ummahdesign.com/" target="_blank" rel="noopener" style="color:var(--navy);font-weight:600;text-decoration:none;transition:color 200ms;">Ummah Design</a>
+    </div>
+</footer>
 
 <!-- CART BAR -->
 <div class="cart-bar" id="cart-bar">
@@ -985,7 +1595,6 @@
             <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
         </button>
 
-        <!-- Form -->
         <div id="checkout-form">
             <h2 class="modal-title">Your Order</h2>
             <div class="cart-summary" id="checkout-summary"></div>
@@ -1050,7 +1659,6 @@
             </div>
         </div>
 
-        <!-- Success -->
         <div class="success-view" id="success-view">
             <div class="success-check">
                 <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
@@ -1072,7 +1680,28 @@ let marker = null;
 let selectedLat = null;
 let selectedLng = null;
 
-// Mini calendar — shows 2 weeks, only Sat/Sun selectable, never today
+// Mobile menu
+function toggleMobileMenu() {
+    document.getElementById('mobile-nav').classList.toggle('open');
+}
+function closeMobileMenu() {
+    document.getElementById('mobile-nav').classList.remove('open');
+}
+
+// Active nav on scroll
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.header-nav a');
+window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+        if (window.scrollY >= s.offsetTop - 100) current = s.id;
+    });
+    navLinks.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+});
+
+// Mini calendar
 (function buildCalendar() {
     const container = document.getElementById('mini-cal');
     const today = new Date();
@@ -1080,13 +1709,11 @@ let selectedLng = null;
     const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
     const dayHeaders = ['Mo','Tu','We','Th','Fr','Sa','Su'];
 
-    // Find the Monday of this week
     const startOfWeek = new Date(today);
     const todayDay = today.getDay();
     const diffToMonday = todayDay === 0 ? 6 : todayDay - 1;
     startOfWeek.setDate(today.getDate() - diffToMonday);
 
-    // Build 2 weeks (14 days) from this Monday
     const days = [];
     for (let i = 0; i < 14; i++) {
         const d = new Date(startOfWeek);
@@ -1094,7 +1721,6 @@ let selectedLng = null;
         days.push(new Date(d));
     }
 
-    // Group by month for display
     const months = {};
     for (const d of days) {
         const key = d.getFullYear() + '-' + d.getMonth();
@@ -1106,28 +1732,18 @@ let selectedLng = null;
     for (const [key, month] of Object.entries(months)) {
         html += `<div class="mini-cal-month">${month.label}</div>`;
         html += '<div class="mini-cal-grid">';
+        for (const h of dayHeaders) html += `<div class="mini-cal-header">${h}</div>`;
 
-        // Day headers
-        for (const h of dayHeaders) {
-            html += `<div class="mini-cal-header">${h}</div>`;
-        }
-
-        // Find what day of week the first day of this group starts
         const firstDay = month.days[0];
-        const firstDow = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1; // Mon=0
+        const firstDow = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
+        for (let e = 0; e < firstDow; e++) html += '<div class="mini-cal-day empty"></div>';
 
-        // Empty cells before first day
-        for (let e = 0; e < firstDow; e++) {
-            html += '<div class="mini-cal-day empty"></div>';
-        }
-
-        // Day cells
         for (const d of month.days) {
-            const dow = d.getDay(); // 0=Sun, 6=Sat
+            const dow = d.getDay();
             const isWeekend = dow === 0 || dow === 6;
             const isToday = d.getTime() === today.getTime();
             const isFuture = d.getTime() > today.getTime();
-            const isAvailable = isWeekend && isFuture; // Weekend AND not today
+            const isAvailable = isWeekend && isFuture;
             const dateStr = d.toISOString().split('T')[0];
             const dayLabel = dow === 6 ? 'Sat' : dow === 0 ? 'Sun' : '';
 
@@ -1144,21 +1760,18 @@ let selectedLng = null;
                 html += `<div class="${classes}">${d.getDate()}</div>`;
             }
         }
-
         html += '</div>';
     }
-
     container.innerHTML = html;
 })();
 
 function selectDate(dateStr, el) {
     document.getElementById('c-date').value = dateStr;
-    // Remove selected from all
     document.querySelectorAll('.mini-cal-day.selected').forEach(d => d.classList.remove('selected'));
     el.classList.add('selected');
 }
 
-// Load cart from localStorage (persisted across page navigations)
+// Cart from localStorage
 (function loadCartFromStorage() {
     const stored = JSON.parse(localStorage.getItem('samarkand_cart') || '{}');
     if (Object.keys(stored).length > 0) {
@@ -1170,9 +1783,7 @@ function selectDate(dateStr, el) {
     }
 })();
 
-function saveCart() {
-    localStorage.setItem('samarkand_cart', JSON.stringify(cart));
-}
+function saveCart() { localStorage.setItem('samarkand_cart', JSON.stringify(cart)); }
 
 function addToCart(key) {
     if (!cart[key]) cart[key] = 0;
@@ -1187,10 +1798,7 @@ function removeFromCart(key) {
     refreshUI(key);
 }
 
-function refreshUI(key) {
-    updateControls(key);
-    updateCartBar();
-}
+function refreshUI(key) { updateControls(key); updateCartBar(); }
 
 function updateControls(key) {
     const el = document.getElementById('ctrl-' + key);
@@ -1234,7 +1842,6 @@ function openCheckout() {
     modal.classList.add('open');
     document.getElementById('checkout-form').style.display = 'block';
     document.getElementById('success-view').style.display = 'none';
-
     renderCheckoutSummary();
 }
 
@@ -1301,7 +1908,7 @@ async function applyPromo() {
     } else {
         appliedPromo = null;
         discountAmount = 0;
-        msgEl.innerHTML = `<span style="color:var(--danger);font-weight:500;">${data.error}</span>`;
+        msgEl.innerHTML = `<span style="color:#c0392b;font-weight:500;">${data.error}</span>`;
         renderCheckoutSummary();
     }
 }
@@ -1314,7 +1921,6 @@ function adjustCheckout(key, delta) {
     updateControls(key);
     updateCartBar();
     renderCheckoutSummary();
-    // Re-validate promo if applied
     if (appliedPromo) applyPromo();
 }
 
@@ -1364,18 +1970,11 @@ async function submitOrder() {
     if (!name || !email || !phone) { alert('Please enter your name, email, and phone number.'); return; }
     if (!preferredDate) { alert('Please select a preferred date.'); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('Please enter a valid email address.'); return; }
-    // Normalise phone: keep only + and digits
     phone = phone.replace(/[^\d+]/g, '');
-    // Moroccan local: 0680... -> +212680...
     if (phone.startsWith('0') && phone.length === 10) phone = '+212' + phone.substring(1);
-    // 9 digits starting with 5/6/7 (Moroccan mobile without prefix)
     else if (phone.length === 9 && '567'.includes(phone[0])) phone = '+212' + phone;
-    // Starts with 00 (international)
     else if (phone.startsWith('00')) phone = '+' + phone.substring(2);
-    // Has country code but no +
     else if (phone.length > 10 && phone[0] !== '+') phone = '+' + phone;
-    // Already has +
-    // Validate minimum length
     if (phone.replace(/\D/g, '').length < 9) { alert('Please enter a valid phone number (e.g. 0680 342 679 or +212 680 342 679)'); return; }
     if (deliveryType === 'delivery' && !selectedLat) { alert('Please tap on the map to set your delivery location.'); return; }
 
@@ -1405,7 +2004,7 @@ async function submitOrder() {
             document.getElementById('checkout-form').style.display = 'none';
             document.getElementById('success-view').style.display = 'block';
             localStorage.removeItem('samarkand_cart');
-                document.getElementById('success-msg').textContent = data.message;
+            document.getElementById('success-msg').textContent = data.message;
             document.getElementById('success-total').textContent = 'Total: ' + data.total_price.toFixed(2) + ' MAD';
         } else {
             alert(data.error || 'Something went wrong.');
@@ -1432,6 +2031,77 @@ function resetOrder() {
     document.getElementById('map-hint').textContent = 'Tap the map to pin your delivery location';
     setDelivery('pickup');
 }
+
+// Load reviews for scrolling section
+(async function loadHomeReviews() {
+    try {
+        const res = await fetch('/api/reviews/all');
+        const reviews = await res.json();
+        const track = document.getElementById('reviews-track');
+
+        if (!reviews || reviews.length === 0) {
+            track.innerHTML = '<div class="reviews-empty">No reviews yet. Be the first to share your experience!</div>';
+            track.style.animation = 'none';
+            return;
+        }
+
+        let html = '';
+        const buildCard = (r) => {
+            const stars = '\u2605'.repeat(r.rating) + '\u2606'.repeat(5 - r.rating);
+            const initial = r.customer_name ? r.customer_name.charAt(0).toUpperCase() : '?';
+            return `<div class="review-card">
+                <div class="review-card-stars">${stars}</div>
+                <div class="review-card-text">${r.review_text}</div>
+                <div class="review-card-author">
+                    <div class="review-card-avatar">${initial}</div>
+                    <div>
+                        <div class="review-card-name">${r.customer_name}</div>
+                        <div class="review-card-product">${r.product_name || ''}</div>
+                    </div>
+                </div>
+            </div>`;
+        };
+
+        // Build cards, then duplicate for infinite scroll
+        for (const r of reviews) html += buildCard(r);
+        // Duplicate for seamless loop
+        for (const r of reviews) html += buildCard(r);
+
+        track.innerHTML = html;
+
+        // Adjust animation speed based on number of cards
+        const totalWidth = reviews.length * 340;
+        const duration = Math.max(20, reviews.length * 8);
+        track.style.animationDuration = duration + 's';
+    } catch(e) {
+        document.getElementById('reviews-track').innerHTML = '<div class="reviews-empty">No reviews yet. Be the first to share your experience!</div>';
+        document.getElementById('reviews-track').style.animation = 'none';
+    }
+})();
+
+// Contact form
+function sendInquiry() {
+    const name = document.getElementById('contact-name').value.trim();
+    const email = document.getElementById('contact-email').value.trim();
+    const message = document.getElementById('contact-message').value.trim();
+    const statusEl = document.getElementById('contact-status');
+
+    if (!name || !email || !message) {
+        statusEl.innerHTML = '<span style="color:#c0392b;">Please fill in all fields.</span>';
+        return;
+    }
+
+    // Send via WhatsApp as a simple solution
+    const text = encodeURIComponent(`General Inquiry from ${name} (${email}):\n\n${message}`);
+    window.open('https://wa.me/212680342679?text=' + text, '_blank');
+
+    statusEl.innerHTML = '<span style="color:var(--success);font-weight:600;">Redirecting to WhatsApp...</span>';
+    document.getElementById('contact-name').value = '';
+    document.getElementById('contact-email').value = '';
+    document.getElementById('contact-message').value = '';
+
+    setTimeout(() => { statusEl.innerHTML = ''; }, 5000);
+}
 </script>
 
 <!-- Social proof toast -->
@@ -1451,7 +2121,7 @@ function resetOrder() {
 </a>
 
 <script>
-// Move WhatsApp button up when cart bar is visible
+// WhatsApp button position
 const cartBarEl = document.getElementById('cart-bar');
 const waBtn = document.getElementById('whatsapp-btn');
 const observer = new MutationObserver(() => {
@@ -1492,12 +2162,11 @@ observer.observe(cartBarEl, { attributes: true, attributeFilter: ['class'] });
             idx++;
         }
 
-        // First pop-up after 8 seconds, then every 25 seconds
         setTimeout(() => {
             showNext();
             setInterval(showNext, 25000);
         }, 8000);
-    } catch(e) { /* silently fail if no orders */ }
+    } catch(e) {}
 })();
 </script>
 

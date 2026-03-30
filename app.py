@@ -319,6 +319,18 @@ def api_admin_customer_orders_by_query():
 
 # ── Public Reviews API ──
 
+@app.route("/api/reviews/all")
+def api_all_reviews():
+    """Get all approved reviews across all products (for homepage)."""
+    reviews = get_reviews(status="approved")
+    # Enrich with product names from menu
+    menu = load_menu()
+    for r in reviews:
+        product = menu["products"].get(r.get("product_key", ""), {})
+        r["product_name"] = product.get("name", r.get("product_key", ""))
+    return jsonify(reviews)
+
+
 @app.route("/api/reviews/<product_key>")
 def api_product_reviews(product_key):
     """Get approved reviews for a product."""

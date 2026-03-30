@@ -12,7 +12,13 @@ import functools
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 
 from engine import load_data, calculate_cost, calculate_order
-from emailer import send_order_placed, send_order_confirmed, send_order_completed
+try:
+    from emailer import send_order_placed, send_order_confirmed, send_order_completed
+except ImportError:
+    # Fallback stubs if emailer module not found
+    def send_order_placed(order): return False
+    def send_order_confirmed(order): return False
+    def send_order_completed(order): return False
 from database import (create_order, get_orders, get_order, update_order_status,
                       get_customers, get_customer_orders,
                       create_review, get_reviews, update_review_status, add_review_reply,

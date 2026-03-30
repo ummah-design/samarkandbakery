@@ -839,10 +839,12 @@
     }
 
     // ===== RECIPES & PRICES =====
+    let _recipesData = [];
+
     async function loadRecipes() {
-        const res = await fetch('/api/recipes'); const data = await res.json();
+        const res = await fetch('/api/recipes'); _recipesData = await res.json();
         const tbody = document.querySelector('#recipes-table tbody'); tbody.innerHTML = '';
-        for (const r of data) {
+        for (const r of _recipesData) {
             const imgSrc = r.image ? `/static/products/${r.image}` : '';
             const imgHtml = imgSrc ? `<img src="${imgSrc}" alt="${r.name}" style="width:48px;height:48px;object-fit:cover;border-radius:8px;">` : '';
             const desc = r.description ? (r.description.length > 80 ? r.description.substring(0, 80) + '...' : r.description) : '-';
@@ -851,16 +853,13 @@
                 <td><strong>${r.name}</strong></td>
                 <td style="font-size:0.85em;color:#6b6b80;max-width:300px;" dir="auto">${desc}</td>
                 <td class="price">${mad(r.selling_price)}</td>
-                <td><button class="status-btn complete" style="font-size:0.78em;padding:6px 14px;" data-key="${r.key}" onclick="openProductEditFromData(this)">Edit</button></td>
+                <td><button class="status-btn complete" style="font-size:0.78em;padding:6px 14px;" onclick="openProductEdit('${r.key}')">Edit</button></td>
             </tr>`;
-            // Store full data on the button for edit
-            const btns = tbody.querySelectorAll('[data-key="' + r.key + '"]');
-            if (btns.length) btns[btns.length-1]._data = r;
         }
     }
 
-    function openProductEditFromData(btn) {
-        const r = btn._data;
+    function openProductEdit(key) {
+        const r = _recipesData.find(x => x.key === key);
         if (!r) return;
         document.getElementById('edit-product-key').value = r.key;
         document.getElementById('edit-name').value = r.name || '';

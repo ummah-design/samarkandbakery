@@ -670,7 +670,7 @@
                         </table>
                     </div>
                     <div class="detail-section"><h4>Financials</h4>
-                        <div class="detail-row"><span class="label">Revenue:</span><span class="value">${(order.total_price||0).toFixed(2)} MAD</span></div>
+                        <div class="detail-row"><span class="label">Received:</span><span class="value">${(order.total_price||0).toFixed(2)} MAD</span></div>
                         <div class="detail-row"><span class="label">Cost:</span><span class="value">${(order.total_cost||0).toFixed(2)} MAD</span></div>
                         <div class="detail-row"><span class="label">Profit:</span><span class="value ${pc}">${(order.total_profit||0).toFixed(2)} MAD</span></div>
                     </div>
@@ -950,7 +950,7 @@
                 <td><a href="#" onclick="event.preventDefault();loadPromoUsage('${p.code}')" style="color:#1e2a4a;font-weight:700;text-decoration:underline;cursor:pointer;">${p.code}</a></td>
                 <td class="price">${discount}</td>
                 <td>${p.min_order > 0 ? mad(p.min_order) : '-'}</td>
-                <td>${p.times_used}</td>
+                <td>${p.times_used > 0 ? `<a href="#" onclick="event.preventDefault();loadPromoUsage('${p.code}')" style="color:#1e2a4a;font-weight:700;text-decoration:underline;cursor:pointer;">${p.times_used}</a>` : '0'}</td>
                 <td>${maxText}</td>
                 <td><span class="status-badge ${statusClass}">${statusText}</span></td>
                 <td><button class="status-btn ${p.active ? 'cancel' : 'confirm'}" onclick="togglePromo(${p.id}, ${!p.active})">${p.active ? 'Disable' : 'Enable'}</button></td>

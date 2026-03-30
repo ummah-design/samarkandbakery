@@ -667,6 +667,34 @@
 
         .footer-info a:hover { color: var(--gold); }
 
+        .footer-socials {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .footer-social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--warm-cream);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 200ms ease, transform 200ms ease;
+            text-decoration: none;
+        }
+
+        .footer-social-link:hover {
+            background: var(--navy);
+            transform: translateY(-2px);
+        }
+
+        .footer-social-link svg { width: 20px; height: 20px; fill: var(--navy); transition: fill 200ms ease; }
+        .footer-social-link:hover svg { fill: #fff; }
+        .footer-social-link:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .product-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
@@ -729,6 +757,94 @@
         .social-proof-text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; }
         .social-proof-name { font-weight: 600; color: var(--text-primary); }
         .social-proof-time { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+
+        /* Mini calendar */
+        .mini-cal {
+            background: var(--warm-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .mini-cal-month {
+            text-align: center;
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 12px;
+        }
+
+        .mini-cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+
+        .mini-cal-header {
+            text-align: center;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 0 8px;
+        }
+
+        .mini-cal-day {
+            text-align: center;
+            padding: 10px 4px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            position: relative;
+        }
+
+        .mini-cal-day.empty { visibility: hidden; }
+
+        .mini-cal-day.disabled {
+            color: var(--border);
+            cursor: default;
+        }
+
+        .mini-cal-day.available {
+            background: var(--gold-pale);
+            color: var(--gold);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 200ms ease;
+        }
+
+        .mini-cal-day.available:hover {
+            background: var(--gold);
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        .mini-cal-day.available:focus-visible {
+            outline: 2px solid var(--navy);
+            outline-offset: 2px;
+        }
+
+        .mini-cal-day.selected {
+            background: var(--navy) !important;
+            color: #fff !important;
+            box-shadow: 0 2px 8px rgba(30,42,74,0.25);
+        }
+
+        .mini-cal-day.today {
+            border: 2px solid var(--border);
+        }
+
+        .mini-cal-day .day-label {
+            display: block;
+            font-size: 0.62rem;
+            font-weight: 400;
+            margin-top: 1px;
+            opacity: 0.7;
+        }
 
         /* WhatsApp floating button */
         .whatsapp-float {
@@ -831,8 +947,18 @@
         <div class="footer-name">Samarkand Turkic Bakery</div>
         <div class="footer-info">
             Tetouan, Morocco<br>
-            <a href="tel:+212680342679">+212 680 342 679</a><br>
-            <a href="https://www.instagram.com/SamarkandBakery" target="_blank" rel="noopener">@SamarkandBakery</a>
+            <a href="tel:+212680342679">+212 680 342 679</a>
+        </div>
+        <div class="footer-socials">
+            <a href="https://www.instagram.com/SamarkandBakery" target="_blank" rel="noopener" class="footer-social-link" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            </a>
+            <a href="https://www.tiktok.com/@SamarkandBakery" target="_blank" rel="noopener" class="footer-social-link" aria-label="TikTok">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.48V13.2a8.16 8.16 0 005.58 2.17V12a4.85 4.85 0 01-3.77-1.54V6.69h3.77z"/></svg>
+            </a>
+            <a href="https://www.youtube.com/@SamarkandBakery" target="_blank" rel="noopener" class="footer-social-link" aria-label="YouTube">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            </a>
         </div>
     </footer>
 </main>
@@ -874,6 +1000,12 @@
                 <input class="field-input" type="tel" id="c-phone" placeholder="e.g. 0680 342 679 or +212 680 342 679" required>
             </div>
 
+            <div class="field">
+                <label class="field-label">Preferred Delivery Date (Saturday or Sunday)</label>
+                <div class="mini-cal" id="mini-cal"></div>
+                <input type="hidden" id="c-date" required>
+            </div>
+
             <label class="field-label">Collection Method</label>
             <div class="toggle-group">
                 <div class="toggle-option active" id="opt-pickup" onclick="setDelivery('pickup')">
@@ -896,6 +1028,15 @@
             </div>
 
             <div class="field">
+            <div class="field">
+                <label class="field-label" for="c-promo">Promo Code (optional)</label>
+                <div style="display:flex;gap:8px;">
+                    <input class="field-input" type="text" id="c-promo" placeholder="Enter code" style="margin-bottom:0;text-transform:uppercase;">
+                    <button type="button" onclick="applyPromo()" style="padding:10px 18px;background:var(--navy);color:#fff;border:none;border-radius:var(--radius-sm);font-weight:600;cursor:pointer;white-space:nowrap;transition:background 200ms;" onmouseover="this.style.background='var(--navy-light)'" onmouseout="this.style.background='var(--navy)'">Apply</button>
+                </div>
+                <div id="promo-message" style="font-size:0.85rem;margin-top:6px;"></div>
+            </div>
+
                 <label class="field-label" for="c-notes">Notes (optional)</label>
                 <textarea class="field-input" id="c-notes" placeholder="Any special requests..."></textarea>
             </div>
@@ -927,6 +1068,92 @@ let checkoutMap = null;
 let marker = null;
 let selectedLat = null;
 let selectedLng = null;
+
+// Mini calendar — shows 2 weeks, only Sat/Sun selectable, never today
+(function buildCalendar() {
+    const container = document.getElementById('mini-cal');
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const dayHeaders = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+
+    // Find the Monday of this week
+    const startOfWeek = new Date(today);
+    const todayDay = today.getDay();
+    const diffToMonday = todayDay === 0 ? 6 : todayDay - 1;
+    startOfWeek.setDate(today.getDate() - diffToMonday);
+
+    // Build 2 weeks (14 days) from this Monday
+    const days = [];
+    for (let i = 0; i < 14; i++) {
+        const d = new Date(startOfWeek);
+        d.setDate(startOfWeek.getDate() + i);
+        days.push(new Date(d));
+    }
+
+    // Group by month for display
+    const months = {};
+    for (const d of days) {
+        const key = d.getFullYear() + '-' + d.getMonth();
+        if (!months[key]) months[key] = { label: monthNames[d.getMonth()] + ' ' + d.getFullYear(), days: [] };
+        months[key].days.push(d);
+    }
+
+    let html = '';
+    for (const [key, month] of Object.entries(months)) {
+        html += `<div class="mini-cal-month">${month.label}</div>`;
+        html += '<div class="mini-cal-grid">';
+
+        // Day headers
+        for (const h of dayHeaders) {
+            html += `<div class="mini-cal-header">${h}</div>`;
+        }
+
+        // Find what day of week the first day of this group starts
+        const firstDay = month.days[0];
+        const firstDow = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1; // Mon=0
+
+        // Empty cells before first day
+        for (let e = 0; e < firstDow; e++) {
+            html += '<div class="mini-cal-day empty"></div>';
+        }
+
+        // Day cells
+        for (const d of month.days) {
+            const dow = d.getDay(); // 0=Sun, 6=Sat
+            const isWeekend = dow === 0 || dow === 6;
+            const isToday = d.getTime() === today.getTime();
+            const isFuture = d.getTime() > today.getTime();
+            const isAvailable = isWeekend && isFuture; // Weekend AND not today
+            const dateStr = d.toISOString().split('T')[0];
+            const dayLabel = dow === 6 ? 'Sat' : dow === 0 ? 'Sun' : '';
+
+            let classes = 'mini-cal-day';
+            if (isToday) classes += ' today';
+            if (isAvailable) classes += ' available';
+            else classes += ' disabled';
+
+            if (isAvailable) {
+                html += `<div class="${classes}" tabindex="0" role="button" onclick="selectDate('${dateStr}', this)" onkeydown="if(event.key==='Enter')selectDate('${dateStr}',this)">
+                    ${d.getDate()}<span class="day-label">${dayLabel}</span>
+                </div>`;
+            } else {
+                html += `<div class="${classes}">${d.getDate()}</div>`;
+            }
+        }
+
+        html += '</div>';
+    }
+
+    container.innerHTML = html;
+})();
+
+function selectDate(dateStr, el) {
+    document.getElementById('c-date').value = dateStr;
+    // Remove selected from all
+    document.querySelectorAll('.mini-cal-day.selected').forEach(d => d.classList.remove('selected'));
+    el.classList.add('selected');
+}
 
 // Load cart from localStorage (persisted across page navigations)
 (function loadCartFromStorage() {
@@ -1017,18 +1244,75 @@ function renderCheckoutSummary() {
         const p = menuData.products[k];
         const sub = p.price * q;
         total += sub;
-        html += `<div class="cart-line">
-            <span class="cart-line-name">${p.name} x${q}</span>
-            <span style="display:flex;align-items:center;gap:10px;">
-                <span class="cart-line-price">${sub.toFixed(2)} MAD</span>
+        html += `<div class="cart-line" style="align-items:center;">
+            <span class="cart-line-name">${p.name}</span>
+            <span style="display:flex;align-items:center;gap:8px;">
+                <span style="display:inline-flex;align-items:center;gap:4px;background:var(--warm-cream);border-radius:6px;padding:2px;">
+                    <button onclick="adjustCheckout('${k}',-1)" style="width:28px;height:28px;border:none;border-radius:5px;background:transparent;cursor:pointer;font-size:1rem;font-weight:700;color:var(--text-secondary);display:flex;align-items:center;justify-content:center;transition:background 200ms;" onmouseover="this.style.background='rgba(30,42,74,0.08)'" onmouseout="this.style.background='transparent'" aria-label="Decrease">
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14"/></svg>
+                    </button>
+                    <span style="min-width:24px;text-align:center;font-weight:700;font-size:0.9rem;color:var(--navy);">${q}</span>
+                    <button onclick="adjustCheckout('${k}',1)" style="width:28px;height:28px;border:none;border-radius:5px;background:var(--navy);cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;transition:background 200ms;" onmouseover="this.style.background='var(--navy-light)'" onmouseout="this.style.background='var(--navy)'" aria-label="Increase">
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                    </button>
+                </span>
+                <span class="cart-line-price" style="min-width:75px;text-align:right;">${sub.toFixed(2)} MAD</span>
                 <button onclick="removeFromCheckout('${k}')" style="background:none;border:none;cursor:pointer;padding:4px;opacity:0.4;transition:opacity 200ms;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'" aria-label="Remove ${p.name}">
-                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+                    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
                 </button>
             </span>
         </div>`;
     }
-    html += `<div class="cart-line-total"><span>Total</span><span class="amount">${total.toFixed(2)} MAD</span></div>`;
+    if (discountAmount > 0) {
+        html += `<div class="cart-line" style="color:var(--success);"><span>Discount (${appliedPromo})</span><span style="font-weight:600;">-${discountAmount.toFixed(2)} MAD</span></div>`;
+        html += `<div class="cart-line-total"><span>Total</span><span class="amount">${(total - discountAmount).toFixed(2)} MAD</span></div>`;
+    } else {
+        html += `<div class="cart-line-total"><span>Total</span><span class="amount">${total.toFixed(2)} MAD</span></div>`;
+    }
     document.getElementById('checkout-summary').innerHTML = html;
+}
+
+let appliedPromo = null;
+let discountAmount = 0;
+
+async function applyPromo() {
+    const code = document.getElementById('c-promo').value.trim();
+    const msgEl = document.getElementById('promo-message');
+    if (!code) { msgEl.innerHTML = ''; appliedPromo = null; discountAmount = 0; renderCheckoutSummary(); return; }
+
+    let total = 0;
+    for (const [k, q] of Object.entries(cart)) total += menuData.products[k].price * q;
+
+    const res = await fetch('/api/promo/validate', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, order_total: total })
+    });
+    const data = await res.json();
+
+    if (data.valid) {
+        appliedPromo = data.code;
+        discountAmount = data.discount_amount;
+        const label = data.discount_type === 'percentage' ? data.discount_value + '%' : data.discount_value + ' MAD';
+        msgEl.innerHTML = `<span style="color:var(--success);font-weight:600;">${label} discount applied! You save ${discountAmount.toFixed(2)} MAD</span>`;
+        renderCheckoutSummary();
+    } else {
+        appliedPromo = null;
+        discountAmount = 0;
+        msgEl.innerHTML = `<span style="color:var(--danger);font-weight:500;">${data.error}</span>`;
+        renderCheckoutSummary();
+    }
+}
+
+function adjustCheckout(key, delta) {
+    if (!cart[key]) return;
+    cart[key] += delta;
+    if (cart[key] <= 0) { delete cart[key]; }
+    saveCart();
+    updateControls(key);
+    updateCartBar();
+    renderCheckoutSummary();
+    // Re-validate promo if applied
+    if (appliedPromo) applyPromo();
 }
 
 function removeFromCheckout(key) {
@@ -1073,7 +1357,9 @@ async function submitOrder() {
     const name = document.getElementById('c-name').value.trim();
     const email = document.getElementById('c-email').value.trim().toLowerCase();
     let phone = document.getElementById('c-phone').value.trim();
+    const preferredDate = document.getElementById('c-date').value;
     if (!name || !email || !phone) { alert('Please enter your name, email, and phone number.'); return; }
+    if (!preferredDate) { alert('Please select a preferred date.'); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('Please enter a valid email address.'); return; }
     // Normalise phone: keep only + and digits
     phone = phone.replace(/[^\d+]/g, '');
@@ -1101,6 +1387,8 @@ async function submitOrder() {
                 customer_name: name,
                 customer_email: email,
                 customer_phone: phone,
+                promo_code: appliedPromo || '',
+                preferred_date: preferredDate,
                 delivery_type: deliveryType,
                 delivery_address: document.getElementById('c-address')?.value || null,
                 delivery_lat: selectedLat,

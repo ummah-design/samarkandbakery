@@ -12,7 +12,12 @@ import functools
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 
 from engine import load_data, calculate_cost, calculate_order
-from database import create_order, get_orders, get_order, update_order_status, get_customers, get_customer_orders
+from database import (create_order, get_orders, get_order, update_order_status,
+                      get_customers, get_customer_orders,
+                      create_review, get_reviews, update_review_status, add_review_reply,
+                      get_product_review_summary, is_known_customer, get_customer_review_count,
+                      create_promo, validate_promo, use_promo, get_promos, toggle_promo,
+                      get_promo_usage)
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "samarkand-bakery-secret-2026-change-me")
@@ -99,11 +104,21 @@ def api_submit_order():
             "subtotal": subtotal
         })
 
+    # Validate and apply promo code if provided
+    promo_code = req.get("promo_code", "").strip().upper() or None
+    discount_amt = 0
+    if promo_code:
+        promo_result = validate_promo(promo_code, total_price)
+        if promo_result.get("valid"):
+            discount_amt = promo_result["discount_amount"]
+            total_price -= discount_amt
+            use_promo(promo_code)
+
     data = load_data()
     cost_items = [{"recipe_key": i["key"], "quantity": i["quantity"]} for i in items]
     cost_result = calculate_order(cost_items, data)
     total_cost = cost_result.get("total_cost", 0)
-    total_profit = cost_result.get("total_profit", 0)
+    total_profit = round(total_price - total_cost, 2)
 
     order_id = create_order(
         customer_name=req["customer_name"],
@@ -117,6 +132,9 @@ def api_submit_order():
         total_price=round(total_price, 2),
         total_cost=round(total_cost, 2),
         total_profit=round(total_profit, 2),
+        promo_code=promo_code,
+        discount_amount=round(discount_amt, 2),
+        preferred_date=req.get("preferred_date"),
         notes=req.get("notes")
     )
 
@@ -246,6 +264,120 @@ def api_admin_customers():
 def api_admin_customer_orders(email):
     orders = get_customer_orders(email)
     return jsonify(orders)
+
+
+# ── Public Reviews API ──
+
+@app.route("/api/reviews/<product_key>")
+def api_product_reviews(product_key):
+    """Get approved reviews for a product."""
+    reviews = get_reviews(product_key=product_key, status="approved")
+    summary = get_product_review_summary(product_key)
+    return jsonify({"reviews": reviews, "summary": summary})
+
+
+@app.route("/api/reviews/<product_key>/submit", methods=["POST"])
+def api_submit_review(product_key):
+    """Submit a review (goes to pending moderation)."""
+    req = request.json
+    name = req.get("name", "").strip()
+    email = req.get("email", "").strip()
+    rating = req.get("rating", 0)
+    text = req.get("text", "").strip()
+
+    if not name or not rating or not text:
+        return jsonify({"error": "Name, rating, and review text are required"}), 400
+    if rating < 1 or rating > 5:
+        return jsonify({"error": "Rating must be between 1 and 5"}), 400
+
+    review_id = create_review(product_key, name, email, rating, text)
+    return jsonify({"success": True, "message": "Thank you! Your review will appear after approval."})
+
+
+# ── Admin Reviews API ──
+
+@app.route("/api/admin/reviews")
+@admin_required
+def api_admin_reviews():
+    """Get all reviews for moderation, enriched with customer info."""
+    status = request.args.get("status")
+    reviews = get_reviews(status=status)
+    for r in reviews:
+        email = r.get("customer_email", "")
+        r["is_known_customer"] = is_known_customer(email) if email else False
+        r["total_reviews"] = get_customer_review_count(email) if email else 0
+    return jsonify(reviews)
+
+
+@app.route("/api/admin/reviews/<int:review_id>/status", methods=["POST"])
+@admin_required
+def api_admin_review_status(review_id):
+    new_status = request.json.get("status")
+    if new_status not in ("approved", "rejected"):
+        return jsonify({"error": "Invalid status"}), 400
+    update_review_status(review_id, new_status)
+    return jsonify({"success": True})
+
+
+@app.route("/api/admin/reviews/<int:review_id>/reply", methods=["POST"])
+@admin_required
+def api_admin_review_reply(review_id):
+    reply = request.json.get("reply", "").strip()
+    if not reply:
+        return jsonify({"error": "Reply cannot be empty"}), 400
+    add_review_reply(review_id, reply)
+    return jsonify({"success": True})
+
+
+# ── Public Promo API ──
+
+@app.route("/api/promo/validate", methods=["POST"])
+def api_validate_promo():
+    code = request.json.get("code", "")
+    order_total = request.json.get("order_total", 0)
+    result = validate_promo(code, order_total)
+    return jsonify(result)
+
+
+# ── Admin Promo API ──
+
+@app.route("/api/admin/promos")
+@admin_required
+def api_admin_promos():
+    return jsonify(get_promos())
+
+
+@app.route("/api/admin/promos/create", methods=["POST"])
+@admin_required
+def api_admin_create_promo():
+    req = request.json
+    code = req.get("code", "")
+    discount_type = req.get("discount_type", "percentage")
+    discount_value = req.get("discount_value", 0)
+    min_order = req.get("min_order", 0)
+    max_uses = req.get("max_uses", 0)
+    if not code or not discount_value:
+        return jsonify({"error": "Code and discount value required"}), 400
+    success = create_promo(code, discount_type, discount_value, min_order, max_uses)
+    if not success:
+        return jsonify({"error": "Code already exists"}), 400
+    return jsonify({"success": True})
+
+
+@app.route("/api/admin/promos/<code>/usage")
+@admin_required
+def api_admin_promo_usage(code):
+    """Get all orders that used a specific promo code."""
+    usage = get_promo_usage(code)
+    return jsonify(usage)
+
+
+@app.route("/api/admin/promos/<int:promo_id>/toggle", methods=["POST"])
+@admin_required
+def api_admin_toggle_promo(promo_id):
+    active = request.json.get("active", True)
+    toggle_promo(promo_id, active)
+    return jsonify({"success": True})
 
 
 # ── Public API: Recent orders for social proof ──

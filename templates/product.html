@@ -426,6 +426,166 @@
             line-height: 1.6;
         }
 
+        /* Reviews */
+        .reviews-section { margin-top: 32px; }
+
+        .reviews-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .reviews-title {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--navy);
+        }
+
+        .reviews-avg {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .reviews-avg svg { width: 18px; height: 18px; fill: var(--gold); stroke: none; }
+
+        .review-card {
+            background: var(--warm-card);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .review-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .review-author { font-weight: 600; color: var(--navy); font-size: 0.95rem; }
+
+        .review-stars { display: flex; gap: 2px; }
+        .review-stars svg { width: 16px; height: 16px; }
+        .review-stars .filled { fill: var(--gold); stroke: none; }
+        .review-stars .empty { fill: none; stroke: var(--border); stroke-width: 1.5; }
+
+        .review-date { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 8px; }
+        .review-text { font-size: 0.92rem; color: var(--text-secondary); line-height: 1.6; }
+
+        .review-reply {
+            margin-top: 12px;
+            padding: 12px 16px;
+            background: var(--warm-bg);
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--gold);
+        }
+
+        .review-reply-label { font-size: 0.78rem; font-weight: 600; color: var(--gold); margin-bottom: 4px; }
+        .review-reply-text { font-size: 0.88rem; color: var(--text-secondary); }
+
+        .no-reviews { text-align: center; padding: 30px; color: var(--text-muted); font-size: 0.9rem; }
+
+        /* Review form */
+        .review-form {
+            background: var(--warm-card);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            margin-top: 20px;
+        }
+
+        .review-form h3 {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 16px;
+        }
+
+        .star-picker {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 16px;
+        }
+
+        .star-picker button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 2px;
+            transition: transform 200ms ease;
+        }
+
+        .star-picker button:hover { transform: scale(1.15); }
+        .star-picker svg { width: 28px; height: 28px; }
+        .star-picker .filled { fill: var(--gold); stroke: none; }
+        .star-picker .empty { fill: none; stroke: var(--border); stroke-width: 1.5; }
+
+        .review-form label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .review-form input,
+        .review-form textarea {
+            display: block;
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            background: var(--warm-bg);
+            margin-bottom: 16px;
+            transition: border-color 200ms ease, box-shadow 200ms ease;
+        }
+
+        .review-form input:focus,
+        .review-form textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(184,134,11,0.12);
+        }
+
+        .review-form textarea { resize: vertical; min-height: 80px; }
+
+        .btn-submit-review {
+            padding: 12px 24px;
+            background: var(--navy);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 200ms ease;
+        }
+
+        .btn-submit-review:hover { background: var(--navy-light); }
+        .btn-submit-review:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+        .btn-submit-review:disabled { background: var(--border); cursor: not-allowed; }
+
+        .review-success {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: var(--success);
+            font-weight: 500;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .product-hero {
@@ -588,6 +748,37 @@
         <p>{{ allergen_notice }}</p>
     </div>
 
+    <!-- Reviews -->
+    <div class="reviews-section">
+        <div class="reviews-header">
+            <h2 class="reviews-title">Customer Reviews</h2>
+            <div class="reviews-avg" id="reviews-avg"></div>
+        </div>
+        <div id="reviews-list"></div>
+
+        <!-- Review form -->
+        <div class="review-form" id="review-form">
+            <h3>Leave a Review</h3>
+            <label class="field-label">Your Rating</label>
+            <div class="star-picker" id="star-picker"></div>
+
+            <label class="field-label" for="rev-name">Your Name</label>
+            <input class="field-input" type="text" id="rev-name" placeholder="Full name" required>
+
+            <label class="field-label" for="rev-email">Email (optional)</label>
+            <input class="field-input" type="email" id="rev-email" placeholder="your@email.com">
+
+            <label class="field-label" for="rev-text">Your Review</label>
+            <textarea class="field-input" id="rev-text" placeholder="What did you think of this product?" required></textarea>
+
+            <button class="btn-submit-review" id="rev-submit" onclick="submitReview()">Submit Review</button>
+        </div>
+        <div class="review-success" id="review-success">
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="color:#2d7a4f;margin-bottom:8px;"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+            <br>Thank you! Your review will appear after approval.
+        </div>
+    </div>
+
 </main>
 
 <script>
@@ -612,6 +803,100 @@ function addToOrder() {
     setTimeout(() => {
         window.location.href = '/';
     }, 600);
+}
+
+// ===== REVIEWS =====
+let selectedRating = 0;
+const starSvgFilled = '<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" class="filled"/></svg>';
+const starSvgEmpty = '<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" class="empty"/></svg>';
+
+// Star picker
+(function initStarPicker() {
+    const picker = document.getElementById('star-picker');
+    for (let i = 1; i <= 5; i++) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.innerHTML = starSvgEmpty;
+        btn.setAttribute('aria-label', i + ' star' + (i > 1 ? 's' : ''));
+        btn.onclick = () => {
+            selectedRating = i;
+            const buttons = picker.querySelectorAll('button');
+            buttons.forEach((b, idx) => {
+                b.innerHTML = idx < i ? starSvgFilled : starSvgEmpty;
+            });
+        };
+        picker.appendChild(btn);
+    }
+})();
+
+// Load reviews
+async function loadReviews() {
+    const res = await fetch('/api/reviews/' + productKey);
+    const data = await res.json();
+
+    // Summary
+    const avgEl = document.getElementById('reviews-avg');
+    if (data.summary.count > 0) {
+        avgEl.innerHTML = starSvgFilled + ' <strong>' + data.summary.avg_rating + '</strong> (' + data.summary.count + ' review' + (data.summary.count > 1 ? 's' : '') + ')';
+    }
+
+    // Reviews list
+    const list = document.getElementById('reviews-list');
+    if (data.reviews.length === 0) {
+        list.innerHTML = '<div class="no-reviews">No reviews yet. Be the first to leave one!</div>';
+        return;
+    }
+
+    let html = '';
+    for (const r of data.reviews) {
+        let stars = '';
+        for (let i = 1; i <= 5; i++) {
+            stars += i <= r.rating ? starSvgFilled : starSvgEmpty;
+        }
+        const date = new Date(r.created_at).toLocaleDateString();
+        html += '<div class="review-card">';
+        html += '<div class="review-top"><span class="review-author">' + r.customer_name + '</span><div class="review-stars">' + stars + '</div></div>';
+        html += '<div class="review-date">' + date + '</div>';
+        html += '<div class="review-text">' + r.review_text + '</div>';
+        if (r.admin_reply) {
+            html += '<div class="review-reply"><div class="review-reply-label">Samarkand Bakery</div><div class="review-reply-text">' + r.admin_reply + '</div></div>';
+        }
+        html += '</div>';
+    }
+    list.innerHTML = html;
+}
+
+loadReviews();
+
+async function submitReview() {
+    const name = document.getElementById('rev-name').value.trim();
+    const email = document.getElementById('rev-email').value.trim();
+    const text = document.getElementById('rev-text').value.trim();
+
+    if (!name || !text) { alert('Please enter your name and review.'); return; }
+    if (selectedRating === 0) { alert('Please select a star rating.'); return; }
+
+    const btn = document.getElementById('rev-submit');
+    btn.disabled = true; btn.textContent = 'Submitting...';
+
+    try {
+        const res = await fetch('/api/reviews/' + productKey + '/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, rating: selectedRating, text })
+        });
+        const data = await res.json();
+        if (data.success) {
+            document.getElementById('review-form').style.display = 'none';
+            document.getElementById('review-success').style.display = 'block';
+        } else {
+            alert(data.error || 'Error submitting review.');
+            btn.disabled = false; btn.textContent = 'Submit Review';
+        }
+    } catch(e) {
+        alert('Connection error.');
+        btn.disabled = false; btn.textContent = 'Submit Review';
+    }
 }
 </script>
 </body>

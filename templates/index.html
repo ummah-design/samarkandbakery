@@ -154,10 +154,11 @@
         .order-details { display: none; padding: 0 18px 18px; border-top: 1px solid #f0f0f0; }
         .order-details.visible { display: block; }
         .detail-section { margin-top: 12px; }
-        .detail-section h4 { font-size: 0.85em; text-transform: uppercase; color: #999; margin-bottom: 6px; }
-        .detail-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.9em; }
-        .detail-row .label { color: #666; }
-        .detail-row .value { font-weight: 500; }
+        .detail-section h4 { font-size: 0.78em; text-transform: uppercase; color: #b8860b; margin-bottom: 8px; letter-spacing: 0.5px; font-weight: 700; padding-bottom: 6px; border-bottom: 2px solid #f0ebe3; }
+        .detail-row { display: flex; align-items: baseline; padding: 6px 0; font-size: 0.9em; border-bottom: 1px solid #f5f0eb; }
+        .detail-row:last-child { border-bottom: none; }
+        .detail-row .label { color: #888; min-width: 140px; flex-shrink: 0; font-size: 0.85em; }
+        .detail-row .value { font-weight: 500; color: #2c2c2c; }
         .status-actions { display: flex; gap: 8px; margin-top: 12px; }
         .status-btn { padding: 6px 14px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85em; font-weight: 500; }
         .status-btn.confirm { background: #d4edda; color: #155724; }
@@ -196,6 +197,8 @@
         <button class="tab" onclick="showTab('cost', this)">Product Cost</button>
         <button class="tab" onclick="showTab('quote', this)">Order Quote</button>
         <button class="tab" onclick="showTab('recipes', this)">All Products</button>
+        <button class="tab" onclick="showTab('reviews', this)">Reviews</button>
+        <button class="tab" onclick="showTab('promos', this)">Promo Codes</button>
         <button class="tab" onclick="showTab('customers', this)">Customers</button>
         <button class="tab" onclick="showTab('prices', this)">Ingredient Prices</button>
     </div>
@@ -313,6 +316,69 @@
         </div>
     </div>
 
+    <!-- ===== REVIEWS TAB ===== -->
+    <div id="tab-reviews" class="tab-content">
+        <div class="card">
+            <h2>Review Moderation</h2>
+            <div class="filters" id="review-filters">
+                <button class="filter-btn active" onclick="filterReviews(null, this)">All</button>
+                <button class="filter-btn" onclick="filterReviews('pending', this)">Pending</button>
+                <button class="filter-btn" onclick="filterReviews('approved', this)">Approved</button>
+                <button class="filter-btn" onclick="filterReviews('rejected', this)">Rejected</button>
+            </div>
+            <div id="admin-reviews-list"></div>
+        </div>
+    </div>
+
+    <!-- ===== PROMO CODES TAB ===== -->
+    <div id="tab-promos" class="tab-content">
+        <div class="card">
+            <h2>Create Promo Code</h2>
+            <div class="form-row">
+                <div>
+                    <label>Code</label>
+                    <input type="text" id="promo-code" placeholder="e.g. RAMADAN10" style="text-transform:uppercase;">
+                </div>
+                <div>
+                    <label>Discount Type</label>
+                    <select id="promo-type">
+                        <option value="percentage">Percentage (%)</option>
+                        <option value="fixed">Fixed Amount (MAD)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div>
+                    <label>Discount Value</label>
+                    <input type="number" id="promo-value" placeholder="e.g. 10" min="1">
+                </div>
+                <div>
+                    <label>Min Order (MAD, 0 = no min)</label>
+                    <input type="number" id="promo-min" value="0" min="0">
+                </div>
+            </div>
+            <div style="margin-bottom:15px;">
+                <label>Max Uses (0 = unlimited)</label>
+                <input type="number" id="promo-max" value="0" min="0" style="max-width:200px;">
+            </div>
+            <button class="btn" onclick="createPromo()">Create Promo Code</button>
+        </div>
+        <div class="card">
+            <h2>All Promo Codes</h2>
+            <table class="recipes-table" id="promos-table">
+                <thead><tr><th>Code</th><th>Discount</th><th>Min Order</th><th>Used</th><th>Max</th><th>Status</th><th>Action</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div class="card" id="promo-usage-card" style="display:none;">
+            <h2 id="promo-usage-title">Usage Details</h2>
+            <table class="order-table" id="promo-usage-table">
+                <thead><tr><th>Customer</th><th>Email</th><th>Order Total</th><th>Discount</th><th>Date</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
     <!-- ===== CUSTOMERS TAB ===== -->
     <div id="tab-customers" class="tab-content">
         <div class="card">
@@ -409,6 +475,8 @@
         if (name === 'prices') loadPrices();
         if (name === 'admin') loadAdminOrders();
         if (name === 'customers') loadCustomers();
+        if (name === 'promos') loadPromos();
+        if (name === 'reviews') loadAdminReviews();
     }
 
     function mad(val) { return parseFloat(val).toFixed(2) + ' MAD'; }
@@ -582,21 +650,29 @@
                 </div>
                 <div class="order-details" id="details-${order.id}">
                     <div class="detail-section"><h4>Customer</h4>
-                        <div class="detail-row"><span class="label">Name</span><span class="value">${order.customer_name}</span></div>
-                        <div class="detail-row"><span class="label">Email</span><span class="value">${order.customer_email || '-'}</span></div>
-                        <div class="detail-row"><span class="label">Phone</span><span class="value">${order.customer_phone}</span></div>
-                        <div class="detail-row"><span class="label">Type</span><span class="value">${order.delivery_type==='delivery'?'Delivery':'Pickup (Wilaya Centre)'}</span></div>
-                        ${order.delivery_address?`<div class="detail-row"><span class="label">Address</span><span class="value">${order.delivery_address}</span></div>`:''}
-                        ${order.notes?`<div class="detail-row"><span class="label">Notes</span><span class="value">${order.notes}</span></div>`:''}
+                        <div class="detail-row"><span class="label">Name:</span><span class="value">${order.customer_name}</span></div>
+                        <div class="detail-row"><span class="label">Email:</span><span class="value">${order.customer_email || '-'}</span></div>
+                        <div class="detail-row"><span class="label">Phone:</span><span class="value">${order.customer_phone}</span></div>
+                        <div class="detail-row"><span class="label">Type:</span><span class="value">${order.delivery_type==='delivery'?'Delivery':'Pickup (Wilaya Centre)'}</span></div>
+                        ${order.preferred_date?`<div class="detail-row"><span class="label">Delivery Date:</span><span class="value" style="font-weight:700;color:#b8860b;">${order.preferred_date}</span></div>`:''}
+                        ${order.promo_code?`<div class="detail-row"><span class="label">Promo Code:</span><span class="value" style="font-weight:600;color:#2d7a4f;">${order.promo_code} (-${(order.discount_amount||0).toFixed(2)} MAD)</span></div>`:''}
+                        ${order.delivery_address?`<div class="detail-row"><span class="label">Address:</span><span class="value">${order.delivery_address}</span></div>`:''}
+                        ${order.notes?`<div class="detail-row"><span class="label">Notes:</span><span class="value">${order.notes}</span></div>`:''}
                     </div>
                     ${order.delivery_lat?`<div class="detail-section"><h4>Delivery Location</h4><div id="map-${order.id}" style="width:100%;height:200px;border-radius:8px;"></div></div>`:''}
-                    <div class="detail-section"><h4>Items</h4>
-                        ${order.items.map(i=>`<div class="detail-row"><span class="label">${i.name} x${i.quantity}</span><span class="value">${(i.subtotal||0).toFixed(2)} MAD</span></div>`).join('')}
+                    <div class="detail-section"><h4>Items Ordered</h4>
+                        <table style="width:100%;border-collapse:collapse;font-size:0.9em;">
+                        ${order.items.map(i=>`<tr style="border-bottom:1px solid #f0ebe3;">
+                            <td style="padding:8px 0;color:#444;">${i.name}</td>
+                            <td style="padding:8px 12px;text-align:center;color:#888;">x${i.quantity}</td>
+                            <td style="padding:8px 0;text-align:right;font-weight:600;color:#1e2a4a;">${(i.subtotal||0).toFixed(2)} MAD</td>
+                        </tr>`).join('')}
+                        </table>
                     </div>
                     <div class="detail-section"><h4>Financials</h4>
-                        <div class="detail-row"><span class="label">Revenue</span><span class="value">${(order.total_price||0).toFixed(2)} MAD</span></div>
-                        <div class="detail-row"><span class="label">Cost</span><span class="value">${(order.total_cost||0).toFixed(2)} MAD</span></div>
-                        <div class="detail-row"><span class="label">Profit</span><span class="value ${pc}">${(order.total_profit||0).toFixed(2)} MAD</span></div>
+                        <div class="detail-row"><span class="label">Revenue:</span><span class="value">${(order.total_price||0).toFixed(2)} MAD</span></div>
+                        <div class="detail-row"><span class="label">Cost:</span><span class="value">${(order.total_cost||0).toFixed(2)} MAD</span></div>
+                        <div class="detail-row"><span class="label">Profit:</span><span class="value ${pc}">${(order.total_profit||0).toFixed(2)} MAD</span></div>
                     </div>
                     <div class="status-actions">
                         ${order.status==='pending'?'<button class="status-btn confirm" onclick="changeStatus('+order.id+',\'confirmed\')">Confirm</button>':''}
@@ -776,6 +852,183 @@
 
         detail.style.display = 'block';
         detail.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ===== REVIEWS MODERATION =====
+    async function loadAdminReviews(status) {
+        let url = '/api/admin/reviews';
+        if (status) url += '?status=' + status;
+        const res = await fetch(url);
+        const reviews = await res.json();
+        renderAdminReviews(reviews);
+    }
+
+    function renderAdminReviews(reviews) {
+        const container = document.getElementById('admin-reviews-list');
+        if (reviews.length === 0) {
+            container.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">No reviews found</div>';
+            return;
+        }
+        let html = '';
+        for (const r of reviews) {
+            const sc = r.status === 'approved' ? 'status-confirmed' : r.status === 'rejected' ? 'status-cancelled' : 'status-pending';
+            const stars = '&#9733;'.repeat(r.rating) + '&#9734;'.repeat(5 - r.rating);
+            const date = new Date(r.created_at).toLocaleString();
+            const nameHtml = r.is_known_customer && r.customer_email
+                ? `<a href="#" onclick="event.preventDefault();showTab('customers',document.querySelector('[onclick*=customers]'));setTimeout(()=>loadCustomerOrders('${encodeURIComponent(r.customer_email)}','${r.customer_name.replace(/'/g,"\\'")}'),300)" style="color:#1e2a4a;font-weight:700;text-decoration:underline;cursor:pointer;">${r.customer_name}</a>`
+                : `<strong>${r.customer_name}</strong>`;
+            const customerBadge = r.is_known_customer
+                ? `<span style="background:#e8f5e9;color:#2d7a4f;padding:2px 8px;border-radius:10px;font-size:0.72em;font-weight:600;margin-left:6px;">Verified Customer</span>`
+                : '';
+            const reviewCount = r.total_reviews > 1 ? `<span style="color:#999;font-size:0.75em;margin-left:6px;">${r.total_reviews} reviews</span>` : '';
+            html += `<div class="order-card" style="margin-bottom:12px;">
+                <div style="padding:16px 18px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                        <div>
+                            ${nameHtml}${customerBadge}${reviewCount}
+                            <span style="color:#999;font-size:0.82em;margin-left:8px;">${r.customer_email || ''}</span>
+                        </div>
+                        <span class="status-badge ${sc}">${r.status}</span>
+                    </div>
+                    <div style="color:#b8860b;font-size:1.1em;margin-bottom:4px;">${stars}</div>
+                    <div style="font-size:0.85em;color:#999;margin-bottom:6px;">Product: <strong>${r.product_key}</strong> — ${date}</div>
+                    <div style="font-size:0.95em;color:#444;margin-bottom:12px;">${r.review_text}</div>
+                    ${r.admin_reply ? `<div style="padding:10px 14px;background:#faf6f1;border-left:3px solid #b8860b;border-radius:6px;margin-bottom:12px;">
+                        <div style="font-size:0.78em;font-weight:600;color:#b8860b;margin-bottom:3px;">Your Reply</div>
+                        <div style="font-size:0.9em;color:#555;">${r.admin_reply}</div>
+                    </div>` : ''}
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        ${r.status === 'pending' ? `<button class="status-btn confirm" onclick="reviewAction(${r.id}, 'approve')">Approve</button>
+                        <button class="status-btn cancel" onclick="reviewAction(${r.id}, 'reject')">Reject</button>` : ''}
+                        ${!r.admin_reply ? `<button class="status-btn complete" onclick="showReplyBox(${r.id})">Reply</button>` : ''}
+                    </div>
+                    <div id="reply-box-${r.id}" style="display:none;margin-top:10px;">
+                        <textarea id="reply-text-${r.id}" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-family:inherit;font-size:0.9em;min-height:60px;" placeholder="Write your reply..."></textarea>
+                        <button class="btn" style="margin-top:6px;padding:8px 16px;font-size:0.85em;" onclick="sendReply(${r.id})">Send Reply</button>
+                    </div>
+                </div>
+            </div>`;
+        }
+        container.innerHTML = html;
+    }
+
+    function filterReviews(status, btn) {
+        document.querySelectorAll('#review-filters .filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        loadAdminReviews(status);
+    }
+
+    async function reviewAction(id, action) {
+        const status = action === 'approve' ? 'approved' : 'rejected';
+        await fetch(`/api/admin/reviews/${id}/status`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status })
+        });
+        loadAdminReviews();
+    }
+
+    function showReplyBox(id) {
+        document.getElementById('reply-box-' + id).style.display = 'block';
+    }
+
+    // ===== PROMO CODES =====
+    async function loadPromos() {
+        const res = await fetch('/api/admin/promos');
+        const promos = await res.json();
+        const tbody = document.querySelector('#promos-table tbody');
+        tbody.innerHTML = '';
+        if (promos.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#999;padding:30px;">No promo codes yet</td></tr>';
+            return;
+        }
+        for (const p of promos) {
+            const discount = p.discount_type === 'percentage' ? p.discount_value + '%' : mad(p.discount_value);
+            const statusClass = p.active ? 'status-confirmed' : 'status-cancelled';
+            const statusText = p.active ? 'Active' : 'Disabled';
+            const maxText = p.max_uses === 0 ? 'Unlimited' : p.max_uses;
+            tbody.innerHTML += `<tr>
+                <td><a href="#" onclick="event.preventDefault();loadPromoUsage('${p.code}')" style="color:#1e2a4a;font-weight:700;text-decoration:underline;cursor:pointer;">${p.code}</a></td>
+                <td class="price">${discount}</td>
+                <td>${p.min_order > 0 ? mad(p.min_order) : '-'}</td>
+                <td>${p.times_used}</td>
+                <td>${maxText}</td>
+                <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                <td><button class="status-btn ${p.active ? 'cancel' : 'confirm'}" onclick="togglePromo(${p.id}, ${!p.active})">${p.active ? 'Disable' : 'Enable'}</button></td>
+            </tr>`;
+        }
+    }
+
+    async function createPromo() {
+        const code = document.getElementById('promo-code').value.trim();
+        const type = document.getElementById('promo-type').value;
+        const value = parseFloat(document.getElementById('promo-value').value) || 0;
+        const min = parseFloat(document.getElementById('promo-min').value) || 0;
+        const max = parseInt(document.getElementById('promo-max').value) || 0;
+        if (!code || !value) { alert('Code and discount value are required.'); return; }
+        const res = await fetch('/api/admin/promos/create', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code, discount_type: type, discount_value: value, min_order: min, max_uses: max })
+        });
+        const data = await res.json();
+        if (data.success) {
+            document.getElementById('promo-code').value = '';
+            document.getElementById('promo-value').value = '';
+            loadPromos();
+        } else { alert(data.error || 'Error creating promo.'); }
+    }
+
+    async function loadPromoUsage(code) {
+        const res = await fetch('/api/admin/promos/' + code + '/usage');
+        const usage = await res.json();
+        const card = document.getElementById('promo-usage-card');
+        const title = document.getElementById('promo-usage-title');
+        const tbody = document.querySelector('#promo-usage-table tbody');
+
+        title.textContent = code + ' — Used ' + usage.length + ' time' + (usage.length !== 1 ? 's' : '');
+        tbody.innerHTML = '';
+
+        if (usage.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#999;padding:20px;">No one has used this code yet</td></tr>';
+        } else {
+            let totalDiscount = 0;
+            for (const u of usage) {
+                const date = new Date(u.created_at).toLocaleString();
+                totalDiscount += u.discount_amount || 0;
+                tbody.innerHTML += `<tr>
+                    <td><strong>${u.customer_name}</strong></td>
+                    <td>${u.customer_email || '-'}</td>
+                    <td>${mad(u.total_price || 0)}</td>
+                    <td style="color:#2d7a4f;font-weight:600;">-${mad(u.discount_amount || 0)}</td>
+                    <td>${date}</td>
+                </tr>`;
+            }
+            tbody.innerHTML += `<tr style="background:#f5f0eb;font-weight:700;">
+                <td colspan="3">Total discount given</td>
+                <td style="color:#2d7a4f;">-${mad(totalDiscount)}</td>
+                <td></td>
+            </tr>`;
+        }
+
+        card.style.display = 'block';
+        card.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    async function togglePromo(id, active) {
+        await fetch(`/api/admin/promos/${id}/toggle`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ active })
+        });
+        loadPromos();
+    }
+
+    async function sendReply(id) {
+        const reply = document.getElementById('reply-text-' + id).value.trim();
+        if (!reply) { alert('Please write a reply.'); return; }
+        await fetch(`/api/admin/reviews/${id}/reply`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ reply })
+        });
+        loadAdminReviews();
     }
 </script>
 </body>

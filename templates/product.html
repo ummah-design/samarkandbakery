@@ -586,6 +586,10 @@
             font-weight: 500;
         }
 
+        @media (min-width: 640px) {
+            .review-thumb-wrap { display: block !important; }
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .product-hero {
@@ -757,7 +761,10 @@
         <div id="reviews-list"></div>
 
         <!-- Review form -->
-        <div class="review-form" id="review-form">
+        <div class="review-form" id="review-form" style="position:relative;">
+            <div class="review-thumb-wrap" style="display:none;position:absolute;top:24px;right:24px;">
+                <img src="{{ url_for('static', filename='products/' + item.image) }}" alt="{{ item.name }}" style="width:110px;height:110px;object-fit:cover;border-radius:10px;box-shadow:0 2px 8px rgba(30,42,74,0.08);">
+            </div>
             <h3>Leave a Review</h3>
             <label class="field-label">Your Rating</label>
             <div class="star-picker" id="star-picker"></div>
@@ -769,7 +776,7 @@
             <input class="field-input" type="email" id="rev-email" placeholder="your@email.com">
 
             <label class="field-label" for="rev-text">Your Review</label>
-            <textarea class="field-input" id="rev-text" placeholder="What did you think of this product?" required></textarea>
+            <textarea class="field-input" id="rev-text" placeholder="What did you think of this product?" style="min-height:80px;" required></textarea>
 
             <button class="btn-submit-review" id="rev-submit" onclick="submitReview()">Submit Review</button>
         </div>

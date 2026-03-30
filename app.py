@@ -12,6 +12,7 @@ import functools
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 
 from engine import load_data, calculate_cost, calculate_order
+from emailer import send_order_placed, send_order_confirmed, send_order_completed
 from database import (create_order, get_orders, get_order, update_order_status,
                       get_customers, get_customer_orders,
                       create_review, get_reviews, update_review_status, add_review_reply,
@@ -138,6 +139,23 @@ def api_submit_order():
         notes=req.get("notes")
     )
 
+    # Send order confirmation email
+    try:
+        send_order_placed({
+            "id": order_id,
+            "customer_name": req["customer_name"],
+            "customer_email": req.get("customer_email", ""),
+            "items": order_items,
+            "total_price": round(total_price, 2),
+            "delivery_type": req.get("delivery_type", "pickup"),
+            "delivery_address": req.get("delivery_address"),
+            "preferred_date": req.get("preferred_date"),
+            "promo_code": promo_code,
+            "discount_amount": round(discount_amt, 2)
+        })
+    except Exception:
+        pass  # Don't fail the order if email fails
+
     return jsonify({
         "success": True,
         "order_id": order_id,
@@ -249,6 +267,17 @@ def api_update_order_status(order_id):
     if new_status not in ("pending", "confirmed", "completed", "cancelled"):
         return jsonify({"error": "Invalid status"}), 400
     update_order_status(order_id, new_status)
+
+    # Send email notifications on status change
+    try:
+        order = get_order(order_id)
+        if order and new_status == "confirmed":
+            send_order_confirmed(order)
+        elif order and new_status == "completed":
+            send_order_completed(order)
+    except Exception:
+        pass  # Don't fail the status update if email fails
+
     return jsonify({"success": True})
 
 

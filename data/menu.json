@@ -1,0 +1,82 @@
+{
+    "categories": [
+        {
+            "name": "Samsa & Pies",
+            "product_keys": ["meat_samsa", "chicken_samsa", "ochiq_samsa"]
+        },
+        {
+            "name": "Flatbreads & Turnovers",
+            "product_keys": ["cheburek_potato", "cheburek_meat"]
+        },
+        {
+            "name": "Pide",
+            "product_keys": ["pide_minced_beef", "pide_cheese_spinach", "pide_cheese_sausage"]
+        },
+        {
+            "name": "Breads",
+            "product_keys": ["uzbek_bread", "turkish_bread"]
+        }
+    ],
+    "products": {
+        "meat_samsa": {
+            "name": "Meat Samsa",
+            "description": "A juicy minced meat & onion filling enveloped with a crunchy puff pastry to create these delicious oven baked meat pies.",
+            "price": 18.00,
+            "image": "meat_samsa.jpeg"
+        },
+        "chicken_samsa": {
+            "name": "Chicken Samsa",
+            "description": "Chicken meat, sliced carrot & onions are perfectly seasoned and wrapped in homemade flaky, golden puff pastry, creating a delicious savoury chicken pie.",
+            "price": 15.00,
+            "image": "chicken_samsa.jpeg"
+        },
+        "ochiq_samsa": {
+            "name": "Ochiq Samsa",
+            "description": "These open style Uzbek samosas are reminiscent of Eastern European Piroshki. A juicy minced meat, potato & onion filling is combined with a soft and silky dough.",
+            "price": 15.00,
+            "image": "ochiq_samsa.png"
+        },
+        "cheburek_potato": {
+            "name": "Cheburek (Potato)",
+            "description": "Savoury deep fried pies filled with a juicy potato and onion filling, seasoned with cumin and paprika.",
+            "price": 10.00,
+            "image": "cheburek.png"
+        },
+        "cheburek_meat": {
+            "name": "Cheburek (Meat)",
+            "description": "Savoury deep fried pies filled with a juicy minced meat and onion filling.",
+            "price": 18.00,
+            "image": "cheburek.png"
+        },
+        "pide_minced_beef": {
+            "name": "Pide (Minced Beef)",
+            "description": "Oven baked Turkish style pizza with fluffy yeasted dough topped with seasoned minced beef.",
+            "price": 20.00,
+            "image": "pide.png"
+        },
+        "pide_cheese_spinach": {
+            "name": "Pide (Cheese & Spinach)",
+            "description": "Oven baked Turkish style pizza with fluffy yeasted dough topped with spinach, white cheese and mozzarella.",
+            "price": 15.00,
+            "image": "pide.png"
+        },
+        "pide_cheese_sausage": {
+            "name": "Pide (Cheese & Sausage)",
+            "description": "Oven baked Turkish style pizza with fluffy yeasted dough topped with sausage and mozzarella cheese.",
+            "price": 18.00,
+            "image": "pide.png"
+        },
+        "uzbek_bread": {
+            "name": "Uzbek Bread",
+            "description": "Traditional Uzbek flatbread, oven baked with a beautifully patterned centre and black sesame seeds.",
+            "price": 10.00,
+            "image": "uzbek_bread.png"
+        },
+        "turkish_bread": {
+            "name": "Turkish Bread",
+            "description": "Soft, fluffy Turkish bread topped with sesame and nigella seeds. Perfect with any meal.",
+            "price": 10.00,
+            "image": "turkish_bread.png"
+        }
+    }
+}

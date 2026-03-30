@@ -1,0 +1,6 @@
+{
+    "_comment": "Electricity rate from bill (09/02/2026-10/03/2026): 230 kWh, 392.17 MAD total inc. tax",
+    "rate_mad_per_kwh": 1.71,
+    "oven_watts": 2000,
+    "stovetop_watts": 2000
+}

@@ -1,0 +1,10 @@
+{
+    "pastry_boxes": [
+        {"name": "Large box", "capacity": 12, "price": 2.80},
+        {"name": "Medium box", "capacity": 8, "price": 2.50},
+        {"name": "Small box", "capacity": 6, "price": 1.70}
+    ],
+    "bread_bags": [
+        {"name": "Paper bag + wrapping", "capacity": 5, "price": 2.00}
+    ]
+}

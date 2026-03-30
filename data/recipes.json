@@ -1,0 +1,326 @@
+{
+    "meat_samsa": {
+        "name": "Meat Samsa",
+        "selling_price": 18.00,
+        "packaging_type": "pastry_boxes",
+        "cooking": {
+            "method": "oven",
+            "minutes_per_load": 30,
+            "items_per_oven_load": 12
+        },
+        "components": {
+            "dough": {
+                "yields": 48,
+                "ingredients": {
+                    "flour_per_kg": 1.0,
+                    "salted_butter_per_kg": 0.25
+                }
+            },
+            "filling": {
+                "yields": 28,
+                "ingredients": {
+                    "minced_meat_per_kg": 0.3,
+                    "onion_per_kg": 0.45,
+                    "salt_per_kg": 0.041,
+                    "cumin_powder_per_kg": 0.014,
+                    "coriander_powder_per_kg": 0.014,
+                    "black_pepper_per_kg": 0.003
+                }
+            }
+        }
+    },
+
+    "chicken_samsa": {
+        "name": "Chicken Samsa",
+        "selling_price": 15.00,
+        "packaging_type": "pastry_boxes",
+        "cooking": {
+            "method": "oven",
+            "minutes_per_load": 30,
+            "items_per_oven_load": 12
+        },
+        "components": {
+            "dough": {
+                "yields": 48,
+                "ingredients": {
+                    "flour_per_kg": 1.0,
+                    "salted_butter_per_kg": 0.25
+                }
+            },
+            "filling": {
+                "yields": 28,
+                "ingredients": {
+                    "chicken_fillet_per_kg": 0.3,
+                    "onion_per_kg": 0.45,
+                    "salt_per_kg": 0.041,
+                    "cumin_powder_per_kg": 0.014,
+                    "coriander_powder_per_kg": 0.014,
+                    "black_pepper_per_kg": 0.003
+                }
+            }
+        }
+    },
+
+    "ochiq_samsa": {
+        "name": "Ochiq Samsa",
+        "selling_price": 15.00,
+        "packaging_type": "pastry_boxes",
+        "cooking": {
+            "method": "oven",
+            "minutes_per_load": 30,
+            "items_per_oven_load": 12
+        },
+        "components": {
+            "dough": {
+                "yields": 24,
+                "ingredients": {
+                    "flour_per_kg": 1.0,
+                    "milk_per_litre": 0.5,
+                    "dry_yeast_per_kg": 0.009,
+                    "sugar_per_kg": 0.004,
+                    "salt_per_kg": 0.012,
+                    "salted_butter_per_kg": 0.125,
+                    "egg_each": 1
+                }
+            },
+            "filling": {
+                "yields": 24,
+                "ingredients": {
+                    "minced_meat_per_kg": 0.4,
+                    "potato_per_kg": 0.2,
+                    "onion_per_kg": 0.3,
+                    "cumin_powder_per_kg": 0.003,
+                    "cumin_seeds_per_kg": 0.003,
+                    "crushed_coriander_seeds_per_kg": 0.003,
+                    "salt_per_kg": 0.009,
+                    "black_pepper_per_kg": 0.0015,
+                    "egg_each": 1,
+                    "milk_per_litre": 0.03,
+                    "sesame_seeds_per_kg": 0.01
+                }
+            }
+        }
+    },
+
+    "uzbek_bread": {
+        "name": "Uzbek Bread",
+        "selling_price": 10.00,
+        "packaging_type": "bread_bags",
+        "cooking": {
+            "method": "oven",
+            "minutes_per_load": 20,
+            "items_per_oven_load": 6
+        },
+        "components": {
+            "dough": {
+                "yields": 6,
+                "ingredients": {
+                    "flour_per_kg": 0.75,
+                    "milk_per_litre": 0.3,
+                    "sugar_per_kg": 0.009,
+                    "dry_yeast_per_kg": 0.009,
+                    "salted_butter_per_kg": 0.11,
+                    "salt_per_kg": 0.015,
+                    "egg_each": 1,
+                    "milk_per_litre__wash": 0.015
+                }
+            }
+        }
+    },
+
+    "turkish_bread": {
+        "name": "Turkish Bread",
+        "selling_price": 10.00,
+        "packaging_type": "bread_bags",
+        "cooking": {
+            "method": "oven",
+            "minutes_per_load": 20,
+            "items_per_oven_load": 1
+        },
+        "components": {
+            "dough": {
+                "yields": 4,
+                "ingredients": {
+                    "flour_per_kg": 1.0,
+                    "milk_per_litre": 0.25,
+                    "vegetable_oil_per_litre": 0.25,
+                    "egg_each": 1,
+                    "dry_yeast_per_kg": 0.009,
+                    "sugar_per_kg": 0.009,
+                    "salt_per_kg": 0.015,
+                    "yoghurt_per_pot": 1
+                }
+            }
+        }
+    },
+
+    "cheburek_potato": {
+        "name": "Cheburek (Potato)",
+        "selling_price": 10.00,
+        "packaging_type": "pastry_boxes",
+        "cooking": {
+            "method": "deep_fry",
+            "minutes_per_batch": 20,
+            "oil_per_batch_litres": 0.8
+        },
+        "components": {
+            "dough": {
+                "yields": 15,
+                "ingredients": {
+                    "flour_per_kg": 0.5,
+                    "salt_per_kg": 0.012,
+                    "water_litres": 0.3
+                }
+            },
+            "filling": {
+                "yields": 15,
+                "ingredients": {
+                    "potato_per_kg": 0.5,
+                    "salted_butter_per_kg": 0.03,
+                    "salt_per_kg": 0.009,
+                    "black_pepper_per_kg": 0.0015,
+                    "cumin_powder_per_kg": 0.003,
+                    "paprika_per_kg": 0.003,
+                    "onion_per_kg": 0.3,
+                    "fresh_parsley_per_kg": 0.03
+                }
+            }
+        }
+    },
+
+    "cheburek_meat": {
+        "name": "Cheburek (Meat)",
+        "selling_price": 18.00,
+        "packaging_type": "pastry_boxes",
+        "cooking": {
+            "method": "deep_fry",
+            "minutes_per_batch": 20,
+            "oil_per_batch_litres": 0.8
+        },
+        "components": {
+            "dough": {
+                "yields": 15,
+                "ingredients": {
+                    "flour_per_kg": 0.5,
+                    "salt_per_kg": 0.012,
+                    "water_litres": 0.3
+                }
+            },
+            "filling": {
+                "yields": 15,
+                "ingredients": {
+                    "minced_meat_per_kg": 0.3,
+                    "onion_per_kg": 0.2,
+                    "salt_per_kg": 0.009,
+                    "black_pepper_per_kg": 0.0015,
+                    "cumin_powder_per_kg": 0.003,
+                    "paprika_per_kg": 0.003,
+                    "fresh_parsley_per_kg": 0.03
+                }
+            }
+        }
+    },
+
+    "pide_minced_beef": {
+        "name": "Pide (Minced Beef)",
+        "selling_price": 20.00,
+        "packaging_type": "pastry_boxes",
+        "cooking": {
+            "method": "oven",
+            "minutes_per_load": 20,
+            "items_per_oven_load": 4
+        },
+        "components": {
+            "base": {
+                "yields": 14,
+                "ingredients": {
+                    "flour_per_kg": 1.0,
+                    "dry_yeast_per_kg": 0.009,
+                    "sugar_per_kg": 0.009,
+                    "salt_per_kg": 0.015,
+                    "vegetable_oil_per_litre": 0.125
+                }
+            },
+            "topping": {
+                "yields": 10,
+                "ingredients": {
+                    "minced_meat_per_kg": 0.5,
+                    "onion_per_kg": 0.15,
+                    "garlic_per_kg": 0.01,
+                    "tomato_paste_per_kg": 0.015,
+                    "paprika_per_kg": 0.003,
+                    "cumin_powder_per_kg": 0.003,
+                    "black_pepper_per_kg": 0.0015,
+                    "coriander_powder_per_kg": 0.003,
+                    "salt_per_kg": 0.006,
+                    "oregano_per_kg": 0.003,
+                    "olive_oil_per_litre": 0.03
+                }
+            }
+        }
+    },
+
+    "pide_cheese_spinach": {
+        "name": "Pide (Cheese & Spinach)",
+        "selling_price": 15.00,
+        "packaging_type": "pastry_boxes",
+        "cooking": {
+            "method": "oven",
+            "minutes_per_load": 20,
+            "items_per_oven_load": 4
+        },
+        "components": {
+            "base": {
+                "yields": 14,
+                "ingredients": {
+                    "flour_per_kg": 1.0,
+                    "dry_yeast_per_kg": 0.009,
+                    "sugar_per_kg": 0.009,
+                    "salt_per_kg": 0.015,
+                    "vegetable_oil_per_litre": 0.125
+                }
+            },
+            "topping": {
+                "yields": 8,
+                "ingredients": {
+                    "frozen_spinach_per_kg": 0.1,
+                    "white_cheese_per_tub": 1,
+                    "mozzarella_per_kg": 0.25,
+                    "egg_each": 1,
+                    "salted_butter_per_kg": 0.03,
+                    "garlic_per_kg": 0.01
+                }
+            }
+        }
+    },
+
+    "pide_cheese_sausage": {
+        "name": "Pide (Cheese & Sausage)",
+        "selling_price": 18.00,
+        "packaging_type": "pastry_boxes",
+        "cooking": {
+            "method": "oven",
+            "minutes_per_load": 20,
+            "items_per_oven_load": 4
+        },
+        "components": {
+            "base": {
+                "yields": 14,
+                "ingredients": {
+                    "flour_per_kg": 1.0,
+                    "dry_yeast_per_kg": 0.009,
+                    "sugar_per_kg": 0.009,
+                    "salt_per_kg": 0.015,
+                    "vegetable_oil_per_litre": 0.125
+                }
+            },
+            "topping": {
+                "yields": 10,
+                "ingredients": {
+                    "sausage_each": 0.5,
+                    "mozzarella_per_kg": 0.03
+                }
+            }
+        }
+    }
+}

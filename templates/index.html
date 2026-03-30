@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Samarkand Bakery — Dashboard</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f0eb; color: #2c2c2c; min-height: 100vh; }
+
+        header { background: #1e2a4a; color: white; padding: 15px 30px; display: flex; align-items: center; gap: 20px; }
+        header img { height: 60px; width: 60px; border-radius: 50%; object-fit: cover; border: 2px solid #b8860b; }
+        header h1 { font-size: 1.6em; font-weight: 600; letter-spacing: 1px; }
+        header span { font-size: 0.9em; opacity: 0.7; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 25px; }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 4px; margin-bottom: 25px; border-bottom: 2px solid #1e2a4a; flex-wrap: wrap; }
+        .tab { padding: 10px 18px; cursor: pointer; background: #e8e0d8; border: none; font-size: 0.88em; font-weight: 500; color: #555; border-radius: 8px 8px 0 0; transition: all 0.2s; }
+        .tab:hover { background: #d4c9be; }
+        .tab.active { background: #1e2a4a; color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Common */
+        .card { background: white; border-radius: 10px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .card h2 { color: #1e2a4a; margin-bottom: 15px; font-size: 1.2em; }
+        label { display: block; font-weight: 500; margin-bottom: 5px; color: #444; }
+        select, input[type="number"], input[type="text"], input[type="tel"], textarea { width: 100%; padding: 10px 14px; border: 1px solid #ccc; border-radius: 6px; font-size: 1em; margin-bottom: 12px; background: #fafafa; font-family: inherit; }
+        select:focus, input:focus, textarea:focus { outline: none; border-color: #1e2a4a; box-shadow: 0 0 0 2px rgba(30,42,74,0.15); }
+        textarea { resize: vertical; min-height: 60px; }
+
+        .btn { padding: 12px 28px; background: #1e2a4a; color: white; border: none; border-radius: 6px; font-size: 1em; cursor: pointer; font-weight: 500; transition: background 0.2s; }
+        .btn:hover { background: #2a3d6b; }
+        .btn-secondary { background: #b8860b; }
+        .btn-secondary:hover { background: #d4a017; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+        .profit { color: #2e7d32; }
+        .loss { color: #c62828; }
+
+        /* Results */
+        .result-section { margin-top: 20px; display: none; }
+        .result-section.visible { display: block; }
+        .result-header { background: #1e2a4a; color: white; padding: 15px 20px; border-radius: 10px 10px 0 0; font-size: 1.1em; font-weight: 600; }
+        .result-body { background: white; border: 1px solid #ddd; border-top: none; border-radius: 0 0 10px 10px; padding: 20px; }
+        .result-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+        .result-row:last-child { border-bottom: none; }
+        .result-row .label { color: #666; }
+        .result-row .value { font-weight: 600; color: #2c2c2c; }
+        .result-group { margin-bottom: 15px; }
+        .result-group-title { font-weight: 600; color: #1e2a4a; padding: 10px 0 5px; border-bottom: 2px solid #e8e0d8; margin-bottom: 5px; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px; }
+        .summary-row { display: flex; justify-content: space-between; padding: 10px 0; font-size: 1.05em; }
+        .summary-row.total { border-top: 2px solid #1e2a4a; margin-top: 10px; padding-top: 15px; font-size: 1.15em; }
+        .summary-row .label { color: #444; font-weight: 500; }
+        .summary-row .value { font-weight: 700; }
+
+        /* Tables */
+        .recipes-table, .order-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+        .recipes-table th, .order-table th { background: #1e2a4a; color: white; padding: 10px 12px; text-align: left; font-size: 0.9em; }
+        .order-table th:not(:first-child) { text-align: right; }
+        .recipes-table td, .order-table td { padding: 10px 12px; border-bottom: 1px solid #eee; }
+        .order-table td:not(:first-child) { text-align: right; font-weight: 500; }
+        .recipes-table tr:hover { background: #f9f6f2; }
+        .recipes-table .price { font-weight: 600; color: #b8860b; }
+        .order-table tr.total-row { background: #f5f0eb; font-weight: 700; }
+        .order-table tr.total-row td { border-top: 2px solid #1e2a4a; }
+
+        .prices-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .price-item { display: flex; justify-content: space-between; padding: 8px 12px; background: #fafafa; border-radius: 5px; }
+        .price-item .name { color: #555; }
+        .price-item .amount { font-weight: 600; color: #1e2a4a; }
+
+        /* Order quote builder */
+        .order-items { margin-bottom: 15px; }
+        .order-item-row { display: grid; grid-template-columns: 2fr 1fr auto; gap: 10px; align-items: end; margin-bottom: 10px; }
+        .order-item-row .remove-btn { padding: 10px 14px; background: #c62828; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 1em; margin-bottom: 12px; }
+
+        /* ===== ORDERING PAGE STYLES ===== */
+        .category-title { font-size: 1.3em; font-weight: 700; color: #1e2a4a; margin: 25px 0 12px; padding-bottom: 8px; border-bottom: 2px solid #b8860b; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 15px; }
+        .product-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: transform 0.2s; }
+        .product-card:hover { transform: translateY(-2px); }
+        .product-card img { width: 100%; height: 160px; object-fit: cover; }
+        .product-info { padding: 12px 15px; }
+        .product-name { font-weight: 700; font-size: 1.05em; color: #1e2a4a; margin-bottom: 4px; }
+        .product-desc { font-size: 0.82em; color: #777; line-height: 1.4; margin-bottom: 10px; }
+        .product-footer { display: flex; justify-content: space-between; align-items: center; }
+        .product-price { font-size: 1.15em; font-weight: 700; color: #b8860b; }
+        .add-btn { background: #1e2a4a; color: white; border: none; border-radius: 6px; padding: 8px 16px; cursor: pointer; font-size: 0.9em; font-weight: 500; }
+        .add-btn:hover { background: #2a3d6b; }
+        .qty-controls { display: flex; align-items: center; gap: 8px; }
+        .qty-btn { width: 30px; height: 30px; border-radius: 50%; border: none; font-size: 1.1em; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+        .qty-btn.minus { background: #e8e0d8; color: #555; }
+        .qty-btn.plus { background: #1e2a4a; color: white; }
+
+        /* Cart bar */
+        .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #1e2a4a; color: white; padding: 14px 20px; display: none; justify-content: space-between; align-items: center; z-index: 100; box-shadow: 0 -4px 15px rgba(0,0,0,0.2); }
+        .cart-bar.visible { display: flex; }
+        .cart-info { font-size: 0.95em; }
+        .cart-total { font-weight: 700; font-size: 1.1em; color: #b8860b; }
+        .checkout-btn { background: #b8860b; color: white; border: none; border-radius: 8px; padding: 12px 28px; font-size: 1em; cursor: pointer; font-weight: 600; }
+        .checkout-btn:hover { background: #d4a017; }
+
+        /* Checkout modal */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 200; overflow-y: auto; }
+        .modal-overlay.visible { display: flex; justify-content: center; align-items: flex-start; padding: 30px 15px; }
+        .modal { background: white; border-radius: 12px; width: 100%; max-width: 550px; padding: 25px; margin-top: 20px; }
+        .modal h2 { color: #1e2a4a; margin-bottom: 20px; font-size: 1.3em; }
+        .cart-summary { margin-bottom: 20px; }
+        .cart-item-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 0.9em; border-bottom: 1px solid #f0f0f0; }
+        .cart-total-row { display: flex; justify-content: space-between; padding: 12px 0 0; font-weight: 700; font-size: 1.1em; border-top: 2px solid #1e2a4a; margin-top: 8px; }
+        .cart-total-row .amount { color: #b8860b; }
+        .delivery-toggle { display: flex; gap: 10px; margin-bottom: 15px; }
+        .delivery-option { flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 8px; text-align: center; cursor: pointer; font-weight: 500; transition: all 0.2s; }
+        .delivery-option.active { border-color: #1e2a4a; background: #1e2a4a; color: white; }
+        .delivery-option small { display: block; font-size: 0.75em; opacity: 0.7; margin-top: 3px; font-weight: 400; }
+        #checkout-map { width: 100%; height: 250px; border-radius: 8px; margin-bottom: 12px; display: none; }
+        #checkout-map.visible { display: block; }
+        .map-hint { font-size: 0.8em; color: #888; margin-bottom: 12px; }
+        .btn-row { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-submit { flex: 1; padding: 14px; background: #b8860b; color: white; border: none; border-radius: 8px; font-size: 1.05em; cursor: pointer; font-weight: 600; }
+        .btn-submit:hover { background: #d4a017; }
+        .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
+        .btn-cancel { padding: 14px 20px; background: #eee; color: #555; border: none; border-radius: 8px; font-size: 1em; cursor: pointer; }
+        .success-screen { text-align: center; padding: 40px 20px; }
+        .success-screen .checkmark { font-size: 4em; color: #2e7d32; margin-bottom: 15px; }
+        .success-screen h2 { color: #2e7d32; margin-bottom: 10px; }
+        .success-screen p { color: #666; margin-bottom: 5px; }
+
+        /* ===== ADMIN ORDERS STYLES ===== */
+        .stats-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 25px; }
+        .stat-card { background: white; border-radius: 10px; padding: 15px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+        .stat-card .number { font-size: 1.5em; font-weight: 700; color: #1e2a4a; }
+        .stat-card .label { font-size: 0.8em; color: #888; margin-top: 3px; }
+        .filters { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .filter-btn { padding: 8px 18px; border: 2px solid #ddd; background: white; border-radius: 20px; cursor: pointer; font-size: 0.9em; font-weight: 500; }
+        .filter-btn.active { background: #1e2a4a; color: white; border-color: #1e2a4a; }
+        .order-card { background: white; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); overflow: hidden; }
+        .order-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; cursor: pointer; gap: 10px; flex-wrap: wrap; }
+        .order-header:hover { background: #fafafa; }
+        .order-id { font-weight: 700; color: #1e2a4a; font-size: 1.05em; }
+        .order-customer { color: #555; font-size: 0.9em; }
+        .order-time { color: #999; font-size: 0.82em; }
+        .order-amount { font-weight: 700; color: #b8860b; font-size: 1.05em; }
+        .status-badge { padding: 4px 12px; border-radius: 12px; font-size: 0.78em; font-weight: 600; text-transform: uppercase; }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-confirmed { background: #d4edda; color: #155724; }
+        .status-completed { background: #d1ecf1; color: #0c5460; }
+        .status-cancelled { background: #f8d7da; color: #721c24; }
+        .order-details { display: none; padding: 0 18px 18px; border-top: 1px solid #f0f0f0; }
+        .order-details.visible { display: block; }
+        .detail-section { margin-top: 12px; }
+        .detail-section h4 { font-size: 0.85em; text-transform: uppercase; color: #999; margin-bottom: 6px; }
+        .detail-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.9em; }
+        .detail-row .label { color: #666; }
+        .detail-row .value { font-weight: 500; }
+        .status-actions { display: flex; gap: 8px; margin-top: 12px; }
+        .status-btn { padding: 6px 14px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85em; font-weight: 500; }
+        .status-btn.confirm { background: #d4edda; color: #155724; }
+        .status-btn.complete { background: #d1ecf1; color: #0c5460; }
+        .status-btn.cancel { background: #f8d7da; color: #721c24; }
+        .empty-state { text-align: center; padding: 60px 20px; color: #999; }
+
+        .page-bottom-spacer { height: 80px; }
+
+        @media (max-width: 600px) {
+            .form-row, .prices-grid { grid-template-columns: 1fr; }
+            .order-item-row { grid-template-columns: 1fr; }
+            .product-grid { grid-template-columns: 1fr; }
+            .tabs { gap: 3px; }
+            .tab { padding: 8px 12px; font-size: 0.8em; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Samarkand Bakery Logo">
+    <div style="flex:1;">
+        <h1>SAMARKAND TURKIC BAKERY</h1>
+        <span>Admin Dashboard</span>
+    </div>
+    <a href="/order" target="_blank" style="color:#b8860b; text-decoration:none; font-size:0.9em; font-weight:500; border:1px solid #b8860b; padding:8px 16px; border-radius:6px;">View Customer Page</a>
+</header>
+
+<div class="container">
+
+    <div class="tabs">
+        <button class="tab active" onclick="showTab('shop', this)">Order Page</button>
+        <button class="tab" onclick="showTab('admin', this)">Orders Admin</button>
+        <button class="tab" onclick="showTab('cost', this)">Product Cost</button>
+        <button class="tab" onclick="showTab('quote', this)">Order Quote</button>
+        <button class="tab" onclick="showTab('recipes', this)">All Products</button>
+        <button class="tab" onclick="showTab('prices', this)">Ingredient Prices</button>
+    </div>
+
+    <!-- ===== ORDER PAGE TAB ===== -->
+    <div id="tab-shop" class="tab-content active">
+        <div style="background:#1e2a4a; color:white; padding:14px 20px; border-radius:10px; margin-bottom:20px; display:flex; align-items:center; gap:12px;">
+            <span style="font-size:1.5em;">&#128197;</span>
+            <div>
+                <div style="font-weight:600; font-size:1.05em;">Deliveries & Collections: Saturday & Sunday only</div>
+                <div style="font-size:0.85em; opacity:0.8;">You can place your order any time — we deliver and prepare orders on weekends.</div>
+            </div>
+        </div>
+        {% for category in menu.categories %}
+        <div class="category-title">{{ category.name }}</div>
+        <div class="product-grid">
+            {% for item_key in category.product_keys %}
+            {% set item = menu.products[item_key] %}
+            <div class="product-card" id="card-{{ item_key }}">
+                <img src="{{ url_for('static', filename='products/' + item.image) }}" alt="{{ item.name }}">
+                <div class="product-info">
+                    <div class="product-name">{{ item.name }}</div>
+                    <div class="product-desc">{{ item.description }}</div>
+                    <div class="product-footer">
+                        <div class="product-price">{{ "%.2f"|format(item.price) }} MAD</div>
+                        <div id="controls-{{ item_key }}">
+                            <button class="add-btn" onclick="addToCart('{{ item_key }}')">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+        <div class="page-bottom-spacer"></div>
+    </div>
+
+    <!-- ===== ORDERS ADMIN TAB ===== -->
+    <div id="tab-admin" class="tab-content">
+        <div class="stats-bar">
+            <div class="stat-card"><div class="number" id="stat-total">0</div><div class="label">Total Orders</div></div>
+            <div class="stat-card"><div class="number" id="stat-pending">0</div><div class="label">Pending</div></div>
+            <div class="stat-card"><div class="number" id="stat-revenue">0</div><div class="label">Revenue (MAD)</div></div>
+            <div class="stat-card"><div class="number" id="stat-profit">0</div><div class="label">Profit (MAD)</div></div>
+        </div>
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterOrders(null, this)">All</button>
+            <button class="filter-btn" onclick="filterOrders('pending', this)">Pending</button>
+            <button class="filter-btn" onclick="filterOrders('confirmed', this)">Confirmed</button>
+            <button class="filter-btn" onclick="filterOrders('completed', this)">Completed</button>
+            <button class="filter-btn" onclick="filterOrders('cancelled', this)">Cancelled</button>
+        </div>
+        <div id="orders-list"></div>
+    </div>
+
+    <!-- ===== PRODUCT COST TAB ===== -->
+    <div id="tab-cost" class="tab-content">
+        <div class="card">
+            <h2>Calculate Product Cost</h2>
+            <div class="form-row">
+                <div>
+                    <label for="recipe-select">Product</label>
+                    <select id="recipe-select">
+                        {% for key, name in recipes.items() %}
+                        <option value="{{ key }}">{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="quantity-input">Quantity</label>
+                    <input type="number" id="quantity-input" value="1" min="1">
+                </div>
+            </div>
+            <button class="btn" onclick="calculateCost()">Calculate Cost</button>
+        </div>
+        <div id="cost-result" class="result-section">
+            <div class="result-header" id="cost-result-title"></div>
+            <div class="result-body" id="cost-result-body"></div>
+        </div>
+    </div>
+
+    <!-- ===== ORDER QUOTE TAB ===== -->
+    <div id="tab-quote" class="tab-content">
+        <div class="card">
+            <h2>Order Quote</h2>
+            <div id="order-items" class="order-items">
+                <div class="order-item-row">
+                    <div>
+                        <label>Product</label>
+                        <select class="order-recipe">
+                            {% for key, name in recipes.items() %}
+                            <option value="{{ key }}">{{ name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label>Qty</label>
+                        <input type="number" class="order-qty" value="1" min="1">
+                    </div>
+                    <button class="remove-btn" onclick="removeOrderItem(this)">X</button>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-secondary btn" onclick="addOrderItem()">+ Add Item</button>
+                <button class="btn" onclick="calculateOrder()">Get Quote</button>
+            </div>
+        </div>
+        <div id="order-result" class="result-section">
+            <div class="result-header">Order Summary</div>
+            <div class="result-body" id="order-result-body"></div>
+        </div>
+    </div>
+
+    <!-- ===== ALL PRODUCTS TAB ===== -->
+    <div id="tab-recipes" class="tab-content">
+        <div class="card">
+            <h2>All Products</h2>
+            <table class="recipes-table" id="recipes-table">
+                <thead><tr><th></th><th>Product</th><th>Selling Price</th><th>Method</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ===== INGREDIENT PRICES TAB ===== -->
+    <div id="tab-prices" class="tab-content">
+        <div class="card">
+            <h2>Current Ingredient Prices (MAD)</h2>
+            <div class="prices-grid" id="prices-grid"></div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Cart bar (for Order Page tab) -->
+<div class="cart-bar" id="cart-bar">
+    <div>
+        <div class="cart-info" id="cart-info">0 items</div>
+        <div class="cart-total" id="cart-total-display">0.00 MAD</div>
+    </div>
+    <button class="checkout-btn" onclick="openCheckout()">Checkout</button>
+</div>
+
+<!-- Checkout modal -->
+<div class="modal-overlay" id="checkout-modal">
+    <div class="modal">
+        <div id="checkout-form-section">
+            <h2>Your Order</h2>
+            <div class="cart-summary" id="checkout-cart-summary"></div>
+            <label for="customer-name">Your Name</label>
+            <input type="text" id="customer-name" placeholder="Enter your name">
+            <label for="customer-phone">Phone / WhatsApp</label>
+            <input type="tel" id="customer-phone" placeholder="+212 6XX XXX XXX">
+            <label>How would you like to receive your order?</label>
+            <div class="delivery-toggle">
+                <div class="delivery-option active" onclick="setDelivery('pickup')" id="opt-pickup">Pickup<small>Wilaya Centre</small></div>
+                <div class="delivery-option" onclick="setDelivery('delivery')" id="opt-delivery">Delivery<small>We come to you</small></div>
+            </div>
+            <div id="delivery-fields" style="display:none;">
+                <div class="map-hint" id="map-hint">Tap the map to set your delivery location</div>
+                <div id="checkout-map"></div>
+                <label for="delivery-address">Address details (optional)</label>
+                <input type="text" id="delivery-address" placeholder="Building, floor, apartment...">
+            </div>
+            <label for="order-notes">Notes (optional)</label>
+            <textarea id="order-notes" placeholder="Any special requests..."></textarea>
+            <div class="btn-row">
+                <button class="btn-cancel" onclick="closeCheckout()">Back</button>
+                <button class="btn-submit" id="submit-btn" onclick="submitOrder()">Place Order</button>
+            </div>
+        </div>
+        <div id="success-section" class="success-screen" style="display:none;">
+            <div class="checkmark">&#10003;</div>
+            <h2>Order Received!</h2>
+            <p id="success-message"></p>
+            <p id="success-order-id"></p>
+            <br>
+            <button class="btn-submit" onclick="resetOrder()">New Order</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const recipes = {{ recipes | tojson }};
+    const menuData = {{ menu | tojson }};
+
+    // ===== TAB SWITCHING =====
+    function showTab(name, btn) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+        document.getElementById('tab-' + name).classList.add('active');
+        if (btn) btn.classList.add('active');
+
+        // Show/hide cart bar only on shop tab
+        const cartBar = document.getElementById('cart-bar');
+        if (name === 'shop') { updateCartUI(); }
+        else { cartBar.classList.remove('visible'); }
+
+        if (name === 'recipes') loadRecipes();
+        if (name === 'prices') loadPrices();
+        if (name === 'admin') loadAdminOrders();
+    }
+
+    function mad(val) { return parseFloat(val).toFixed(2) + ' MAD'; }
+
+    // ===== ORDERING (SHOP) =====
+    let cart = {};
+    let deliveryType = 'pickup';
+    let checkoutMap = null;
+    let marker = null;
+    let selectedLat = null;
+    let selectedLng = null;
+
+    function addToCart(key) {
+        if (!cart[key]) cart[key] = 0;
+        cart[key]++;
+        updateCartUI();
+        updateCardControls(key);
+    }
+
+    function removeFromCart(key) {
+        if (cart[key]) { cart[key]--; if (cart[key] <= 0) delete cart[key]; }
+        updateCartUI();
+        updateCardControls(key);
+    }
+
+    function updateCardControls(key) {
+        const container = document.getElementById('controls-' + key);
+        if (!container) return;
+        if (cart[key] && cart[key] > 0) {
+            container.innerHTML = `<div class="qty-controls">
+                <button class="qty-btn minus" onclick="removeFromCart('${key}')">-</button>
+                <span class="qty-value">${cart[key]}</span>
+                <button class="qty-btn plus" onclick="addToCart('${key}')">+</button>
+            </div>`;
+        } else {
+            container.innerHTML = `<button class="add-btn" onclick="addToCart('${key}')">Add</button>`;
+        }
+    }
+
+    function updateCartUI() {
+        const bar = document.getElementById('cart-bar');
+        let totalItems = 0, totalPrice = 0;
+        for (const [key, qty] of Object.entries(cart)) {
+            totalItems += qty;
+            totalPrice += menuData.products[key].price * qty;
+        }
+        if (totalItems > 0 && document.getElementById('tab-shop').classList.contains('active')) {
+            bar.classList.add('visible');
+            document.getElementById('cart-info').textContent = totalItems + ' item' + (totalItems > 1 ? 's' : '');
+            document.getElementById('cart-total-display').textContent = totalPrice.toFixed(2) + ' MAD';
+        } else {
+            bar.classList.remove('visible');
+        }
+    }
+
+    function openCheckout() {
+        document.getElementById('checkout-modal').classList.add('visible');
+        document.getElementById('checkout-form-section').style.display = 'block';
+        document.getElementById('success-section').style.display = 'none';
+        let html = '', total = 0;
+        for (const [key, qty] of Object.entries(cart)) {
+            const item = menuData.products[key];
+            const subtotal = item.price * qty;
+            total += subtotal;
+            html += `<div class="cart-item-row"><span>${item.name} x${qty}</span><span>${subtotal.toFixed(2)} MAD</span></div>`;
+        }
+        html += `<div class="cart-total-row"><span>Total</span><span class="amount">${total.toFixed(2)} MAD</span></div>`;
+        document.getElementById('checkout-cart-summary').innerHTML = html;
+        setTimeout(() => {
+            if (!checkoutMap) {
+                checkoutMap = L.map('checkout-map').setView([35.5785, -5.3684], 14);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(checkoutMap);
+                checkoutMap.on('click', function(e) {
+                    selectedLat = e.latlng.lat; selectedLng = e.latlng.lng;
+                    if (marker) checkoutMap.removeLayer(marker);
+                    marker = L.marker([selectedLat, selectedLng]).addTo(checkoutMap);
+                    document.getElementById('map-hint').textContent = 'Location selected!';
+                });
+            }
+            if (checkoutMap) checkoutMap.invalidateSize();
+        }, 300);
+    }
+
+    function closeCheckout() { document.getElementById('checkout-modal').classList.remove('visible'); }
+
+    function setDelivery(type) {
+        deliveryType = type;
+        document.getElementById('opt-pickup').classList.toggle('active', type === 'pickup');
+        document.getElementById('opt-delivery').classList.toggle('active', type === 'delivery');
+        const fields = document.getElementById('delivery-fields');
+        const mapEl = document.getElementById('checkout-map');
+        if (type === 'delivery') {
+            fields.style.display = 'block'; mapEl.classList.add('visible');
+            setTimeout(() => { if (checkoutMap) checkoutMap.invalidateSize(); }, 100);
+        } else {
+            fields.style.display = 'none'; mapEl.classList.remove('visible');
+        }
+    }
+
+    async function submitOrder() {
+        const name = document.getElementById('customer-name').value.trim();
+        const phone = document.getElementById('customer-phone').value.trim();
+        if (!name || !phone) { alert('Please enter your name and phone number.'); return; }
+        if (deliveryType === 'delivery' && !selectedLat) { alert('Please tap on the map to set your delivery location.'); return; }
+        const btn = document.getElementById('submit-btn');
+        btn.disabled = true; btn.textContent = 'Sending...';
+        const items = Object.entries(cart).map(([key, qty]) => ({ key, quantity: qty }));
+        try {
+            const res = await fetch('/api/orders/submit', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ customer_name: name, customer_phone: phone, delivery_type: deliveryType, delivery_address: document.getElementById('delivery-address')?.value, delivery_lat: selectedLat, delivery_lng: selectedLng, items, notes: document.getElementById('order-notes').value })
+            });
+            const data = await res.json();
+            if (data.success) {
+                document.getElementById('checkout-form-section').style.display = 'none';
+                document.getElementById('success-section').style.display = 'block';
+                document.getElementById('success-message').textContent = data.message;
+                document.getElementById('success-order-id').textContent = 'Total: ' + data.total_price.toFixed(2) + ' MAD';
+            } else { alert(data.error || 'Error'); btn.disabled = false; btn.textContent = 'Place Order'; }
+        } catch(e) { alert('Connection error.'); btn.disabled = false; btn.textContent = 'Place Order'; }
+    }
+
+    function resetOrder() {
+        cart = {}; selectedLat = null; selectedLng = null;
+        if (marker && checkoutMap) checkoutMap.removeLayer(marker); marker = null;
+        for (const key of Object.keys(menuData.products)) updateCardControls(key);
+        updateCartUI(); closeCheckout();
+        document.getElementById('customer-name').value = '';
+        document.getElementById('customer-phone').value = '';
+        document.getElementById('delivery-address').value = '';
+        document.getElementById('order-notes').value = '';
+        document.getElementById('submit-btn').disabled = false;
+        document.getElementById('submit-btn').textContent = 'Place Order';
+        document.getElementById('map-hint').textContent = 'Tap the map to set your delivery location';
+        setDelivery('pickup');
+    }
+
+    // ===== ADMIN ORDERS =====
+    let allOrders = [];
+    let detailMaps = {};
+
+    async function loadAdminOrders(status) {
+        let url = '/api/admin/orders';
+        if (status) url += '?status=' + status;
+        const res = await fetch(url);
+        allOrders = await res.json();
+        renderAdminOrders(allOrders);
+        updateAdminStats(allOrders);
+    }
+
+    function updateAdminStats(orders) {
+        document.getElementById('stat-total').textContent = orders.length;
+        document.getElementById('stat-pending').textContent = orders.filter(o => o.status === 'pending').length;
+        document.getElementById('stat-revenue').textContent = orders.filter(o => o.status !== 'cancelled').reduce((s, o) => s + (o.total_price || 0), 0).toFixed(0);
+        document.getElementById('stat-profit').textContent = orders.filter(o => o.status !== 'cancelled').reduce((s, o) => s + (o.total_profit || 0), 0).toFixed(0);
+    }
+
+    function renderAdminOrders(orders) {
+        const container = document.getElementById('orders-list');
+        if (orders.length === 0) { container.innerHTML = '<div class="empty-state"><h3>No orders yet</h3><p>Orders will appear here when customers place them.</p></div>'; return; }
+        let html = '';
+        for (const order of orders) {
+            const sc = 'status-' + order.status;
+            const pc = (order.total_profit || 0) >= 0 ? 'profit' : 'loss';
+            const time = new Date(order.created_at).toLocaleString();
+            html += `<div class="order-card">
+                <div class="order-header" onclick="toggleOrder(${order.id})">
+                    <span class="order-id">#${order.id}</span><span class="order-customer">${order.customer_name}</span>
+                    <span class="order-time">${time}</span><span class="order-amount">${(order.total_price||0).toFixed(2)} MAD</span>
+                    <span class="status-badge ${sc}">${order.status}</span>
+                </div>
+                <div class="order-details" id="details-${order.id}">
+                    <div class="detail-section"><h4>Customer</h4>
+                        <div class="detail-row"><span class="label">Name</span><span class="value">${order.customer_name}</span></div>
+                        <div class="detail-row"><span class="label">Phone</span><span class="value">${order.customer_phone}</span></div>
+                        <div class="detail-row"><span class="label">Type</span><span class="value">${order.delivery_type==='delivery'?'Delivery':'Pickup (Wilaya Centre)'}</span></div>
+                        ${order.delivery_address?`<div class="detail-row"><span class="label">Address</span><span class="value">${order.delivery_address}</span></div>`:''}
+                        ${order.notes?`<div class="detail-row"><span class="label">Notes</span><span class="value">${order.notes}</span></div>`:''}
+                    </div>
+                    ${order.delivery_lat?`<div class="detail-section"><h4>Delivery Location</h4><div id="map-${order.id}" style="width:100%;height:200px;border-radius:8px;"></div></div>`:''}
+                    <div class="detail-section"><h4>Items</h4>
+                        ${order.items.map(i=>`<div class="detail-row"><span class="label">${i.name} x${i.quantity}</span><span class="value">${(i.subtotal||0).toFixed(2)} MAD</span></div>`).join('')}
+                    </div>
+                    <div class="detail-section"><h4>Financials</h4>
+                        <div class="detail-row"><span class="label">Revenue</span><span class="value">${(order.total_price||0).toFixed(2)} MAD</span></div>
+                        <div class="detail-row"><span class="label">Cost</span><span class="value">${(order.total_cost||0).toFixed(2)} MAD</span></div>
+                        <div class="detail-row"><span class="label">Profit</span><span class="value ${pc}">${(order.total_profit||0).toFixed(2)} MAD</span></div>
+                    </div>
+                    <div class="status-actions">
+                        ${order.status==='pending'?'<button class="status-btn confirm" onclick="changeStatus('+order.id+',\'confirmed\')">Confirm</button>':''}
+                        ${order.status==='confirmed'?'<button class="status-btn complete" onclick="changeStatus('+order.id+',\'completed\')">Complete</button>':''}
+                        ${order.status!=='cancelled'&&order.status!=='completed'?'<button class="status-btn cancel" onclick="changeStatus('+order.id+',\'cancelled\')">Cancel</button>':''}
+                    </div>
+                </div>
+            </div>`;
+        }
+        container.innerHTML = html;
+    }
+
+    function toggleOrder(id) {
+        const details = document.getElementById('details-' + id);
+        details.classList.toggle('visible');
+        const order = allOrders.find(o => o.id === id);
+        if (order && order.delivery_lat && details.classList.contains('visible') && !detailMaps[id]) {
+            setTimeout(() => {
+                const mapEl = document.getElementById('map-' + id);
+                if (mapEl) {
+                    const m = L.map(mapEl).setView([order.delivery_lat, order.delivery_lng], 16);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(m);
+                    L.marker([order.delivery_lat, order.delivery_lng]).addTo(m);
+                    detailMaps[id] = m;
+                }
+            }, 100);
+        }
+    }
+
+    async function changeStatus(id, status) {
+        await fetch(`/api/admin/orders/${id}/status`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }) });
+        loadAdminOrders();
+    }
+
+    function filterOrders(status, btn) {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        loadAdminOrders(status);
+    }
+
+    // ===== PRODUCT COST =====
+    async function calculateCost() {
+        const recipe = document.getElementById('recipe-select').value;
+        const quantity = document.getElementById('quantity-input').value;
+        const res = await fetch(`/api/cost?recipe=${recipe}&quantity=${quantity}`);
+        const data = await res.json();
+        if (data.error) { alert(data.error); return; }
+        document.getElementById('cost-result-title').textContent = `${data.name} — ${data.quantity} unit${data.quantity > 1 ? 's' : ''}`;
+        let html = '';
+        for (const [compName, comp] of Object.entries(data.components)) {
+            html += `<div class="result-group"><div class="result-group-title">${compName}</div>`;
+            html += `<div class="result-row"><span class="label">Full batch yields</span><span class="value">${comp.batch_yield} items (batch cost: ${mad(comp.batch_cost)})</span></div>`;
+            html += `<div class="result-row"><span class="label">Used for this order</span><span class="value">${comp.fraction_used} of a batch</span></div>`;
+            if (comp.leftover > 0) html += `<div class="result-row"><span class="label">Leftover</span><span class="value" style="color:#2e7d32">${comp.leftover} (kept in fridge)</span></div>`;
+            html += `<div class="result-row"><span class="label">Cost charged</span><span class="value">${mad(comp.total_cost)}</span></div></div>`;
+        }
+        const energy = data.energy;
+        html += `<div class="result-group">`;
+        if (energy.oven_loads !== undefined) { html += `<div class="result-group-title">Baking</div><div class="result-row"><span class="label">Oven loads</span><span class="value">${energy.oven_loads} (${energy.minutes_per_load} min each = ${energy.total_minutes} min)</span></div>`; }
+        else if (energy.fry_batches !== undefined) { html += `<div class="result-group-title">Frying</div><div class="result-row"><span class="label">Fry batches</span><span class="value">${energy.fry_batches} (${energy.minutes_per_batch} min each = ${energy.total_minutes} min)</span></div>`; }
+        html += `<div class="result-row"><span class="label">Energy cost</span><span class="value">${mad(energy.cost)}</span></div></div>`;
+        if (data.frying_oil && data.frying_oil.cost > 0) html += `<div class="result-group"><div class="result-group-title">Frying Oil</div><div class="result-row"><span class="label">Oil used</span><span class="value">${data.frying_oil.litres} litres</span></div><div class="result-row"><span class="label">Oil cost</span><span class="value">${mad(data.frying_oil.cost)}</span></div></div>`;
+        html += `<div class="result-group"><div class="result-group-title">Packaging</div>`;
+        for (const pkg of data.packaging.items) html += `<div class="result-row"><span class="label">${pkg.name} x${pkg.count}</span><span class="value">${mad(pkg.cost)}</span></div>`;
+        html += `<div class="result-row"><span class="label">Total packaging</span><span class="value">${mad(data.packaging.total_cost)}</span></div></div>`;
+        const pc = data.profit >= 0 ? 'profit' : 'loss';
+        html += `<div class="result-group"><div class="summary-row total"><span class="label">TOTAL COST</span><span class="value">${mad(data.total_cost)}</span></div>`;
+        html += `<div class="summary-row"><span class="label">Cost per unit</span><span class="value">${mad(data.cost_per_unit)}</span></div>`;
+        html += `<div class="summary-row"><span class="label">Selling price</span><span class="value">${mad(data.selling_price)}</span></div>`;
+        html += `<div class="summary-row"><span class="label">Profit per unit</span><span class="value ${pc}">${mad(data.profit_per_unit)}</span></div>`;
+        html += `<div class="summary-row"><span class="label">Margin</span><span class="value ${pc}">${data.margin_percent}%</span></div>`;
+        html += `<div class="summary-row"><span class="label">Revenue (${data.quantity} pcs)</span><span class="value">${mad(data.revenue)}</span></div>`;
+        html += `<div class="summary-row"><span class="label">Total profit</span><span class="value ${pc}">${mad(data.profit)}</span></div></div>`;
+        document.getElementById('cost-result-body').innerHTML = html;
+        document.getElementById('cost-result').classList.add('visible');
+    }
+
+    // ===== ORDER QUOTE =====
+    function addOrderItem() {
+        const container = document.getElementById('order-items');
+        let options = '';
+        for (const [key, name] of Object.entries(recipes)) options += `<option value="${key}">${name}</option>`;
+        const row = document.createElement('div');
+        row.className = 'order-item-row';
+        row.innerHTML = `<div><label>Product</label><select class="order-recipe">${options}</select></div><div><label>Qty</label><input type="number" class="order-qty" value="1" min="1"></div><button class="remove-btn" onclick="removeOrderItem(this)">X</button>`;
+        container.appendChild(row);
+    }
+
+    function removeOrderItem(btn) { const c = document.getElementById('order-items'); if (c.children.length > 1) btn.parentElement.remove(); }
+
+    async function calculateOrder() {
+        const rows = document.querySelectorAll('.order-item-row');
+        const items = [];
+        rows.forEach(row => { items.push({ recipe_key: row.querySelector('.order-recipe').value, quantity: parseInt(row.querySelector('.order-qty').value) || 1 }); });
+        const res = await fetch('/api/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items }) });
+        const data = await res.json();
+        if (data.error) { alert(data.error); return; }
+        let html = '<table class="order-table"><thead><tr><th>Product</th><th>Qty</th><th>Cost</th><th>Revenue</th><th>Profit</th></tr></thead><tbody>';
+        for (const item of data.items) { const pc = item.profit >= 0 ? 'profit' : 'loss'; html += `<tr><td>${item.name}</td><td>${item.quantity}</td><td>${mad(item.total_cost)}</td><td>${mad(item.revenue)}</td><td class="${pc}">${mad(item.profit)}</td></tr>`; }
+        const tpc = data.total_profit >= 0 ? 'profit' : 'loss';
+        html += `<tr class="total-row"><td>TOTAL</td><td></td><td>${mad(data.total_cost)}</td><td>${mad(data.total_revenue)}</td><td class="${tpc}">${mad(data.total_profit)}</td></tr></tbody></table>`;
+        html += `<div class="summary-row"><span class="label">Packaging total</span><span class="value">${mad(data.total_packaging)}</span></div>`;
+        html += `<div class="summary-row"><span class="label">Profit margin</span><span class="value ${tpc}">${data.margin_percent}%</span></div>`;
+        document.getElementById('order-result-body').innerHTML = html;
+        document.getElementById('order-result').classList.add('visible');
+    }
+
+    // ===== RECIPES & PRICES =====
+    async function loadRecipes() {
+        const res = await fetch('/api/recipes'); const data = await res.json();
+        const tbody = document.querySelector('#recipes-table tbody'); tbody.innerHTML = '';
+        for (const r of data) {
+            const imgSrc = r.image ? `/static/products/${r.image}` : '';
+            const imgHtml = imgSrc ? `<img src="${imgSrc}" alt="${r.name}" style="width:48px;height:48px;object-fit:cover;border-radius:8px;">` : '';
+            tbody.innerHTML += `<tr><td style="width:60px;">${imgHtml}</td><td>${r.name}</td><td class="price">${mad(r.selling_price)}</td><td>${r.cooking_method === 'deep_fry' ? 'Deep fried' : 'Oven baked'}</td></tr>`;
+        }
+    }
+
+    async function loadPrices() {
+        const res = await fetch('/api/prices'); const data = await res.json();
+        const grid = document.getElementById('prices-grid'); grid.innerHTML = '';
+        for (const [key, price] of Object.entries(data)) {
+            const label = key.replace(/_per_kg/g,' /kg').replace(/_per_litre/g,' /L').replace(/_each/g,' each').replace(/_per_pot/g,' /pot').replace(/_per_tub/g,' /tub').replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+            grid.innerHTML += `<div class="price-item"><span class="name">${label}</span><span class="amount">${mad(price)}</span></div>`;
+        }
+    }
+</script>
+</body>
+</html>

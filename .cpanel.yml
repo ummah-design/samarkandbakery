@@ -1,0 +1,28 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/samarkandbakery/samarkand/
+    - /bin/cp -R app.py $DEPLOYPATH
+    - /bin/cp -R engine.py $DEPLOYPATH
+    - /bin/cp -R database.py $DEPLOYPATH
+    - /bin/cp -R cost.py $DEPLOYPATH
+    - /bin/mkdir -p $DEPLOYPATH/data
+    - /bin/cp -R data/ingredients.json $DEPLOYPATH/data/
+    - /bin/cp -R data/recipes.json $DEPLOYPATH/data/
+    - /bin/cp -R data/energy.json $DEPLOYPATH/data/
+    - /bin/cp -R data/packaging.json $DEPLOYPATH/data/
+    - /bin/cp -R data/menu.json $DEPLOYPATH/data/
+    - /bin/mkdir -p $DEPLOYPATH/templates
+    - /bin/cp -R templates/index.html $DEPLOYPATH/templates/
+    - /bin/cp -R templates/order.html $DEPLOYPATH/templates/
+    - /bin/cp -R templates/admin_orders.html $DEPLOYPATH/templates/
+    - /bin/mkdir -p $DEPLOYPATH/static
+    - /bin/cp -R static/logo.png $DEPLOYPATH/static/
+    - /bin/mkdir -p $DEPLOYPATH/static/products
+    - /bin/cp -R static/products/meat_samsa.jpeg $DEPLOYPATH/static/products/
+    - /bin/cp -R static/products/chicken_samsa.jpeg $DEPLOYPATH/static/products/
+    - /bin/cp -R static/products/ochiq_samsa.png $DEPLOYPATH/static/products/
+    - /bin/cp -R static/products/cheburek.png $DEPLOYPATH/static/products/
+    - /bin/cp -R static/products/pide.png $DEPLOYPATH/static/products/
+    - /bin/cp -R static/products/uzbek_bread.png $DEPLOYPATH/static/products/
+    - /bin/cp -R static/products/turkish_bread.png $DEPLOYPATH/static/products/

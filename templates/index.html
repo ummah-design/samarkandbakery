@@ -328,6 +328,20 @@
             </div>
             <div id="admin-reviews-list"></div>
         </div>
+
+        <!-- Review Requests Tracking -->
+        <div class="card" style="margin-top:20px;">
+            <h2>Review Requests</h2>
+            <p style="color:#888;font-size:0.88em;margin-bottom:16px;">Track review request emails sent to customers after order completion.</p>
+            <div class="filters" id="rr-filters">
+                <button class="filter-btn active" onclick="filterRR('all', this)">All Sent</button>
+                <button class="filter-btn" onclick="filterRR('waiting', this)">Awaiting Review</button>
+                <button class="filter-btn" onclick="filterRR('reviewed', this)">Reviewed</button>
+                <button class="filter-btn" onclick="filterRR('unrequested', this)">Not Yet Sent</button>
+            </div>
+            <div id="rr-stats" style="display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap;"></div>
+            <div id="rr-list"></div>
+        </div>
     </div>
 
     <!-- ===== PROMO CODES TAB ===== -->
@@ -473,7 +487,7 @@
         if (name === 'admin') loadAdminOrders();
         if (name === 'customers') loadCustomers();
         if (name === 'promos') loadPromos();
-        if (name === 'reviews') loadAdminReviews();
+        if (name === 'reviews') { loadAdminReviews(); loadReviewRequests(); }
     }
 
     function mad(val) { return parseFloat(val).toFixed(2) + ' MAD'; }
@@ -959,6 +973,161 @@
         document.getElementById('reply-box-' + id).style.display = 'block';
     }
 
+    async function sendReply(id) {
+        const text = document.getElementById('reply-text-' + id).value.trim();
+        if (!text) return;
+        await fetch('/api/admin/reviews/' + id + '/reply', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ reply: text })
+        });
+        loadAdminReviews();
+    }
+
+    // ===== REVIEW REQUESTS =====
+    let rrCurrentFilter = 'all';
+
+    async function loadReviewRequests(filter) {
+        filter = filter || rrCurrentFilter;
+        rrCurrentFilter = filter;
+        const container = document.getElementById('rr-list');
+        const statsDiv = document.getElementById('rr-stats');
+
+        if (filter === 'unrequested') {
+            const res = await fetch('/api/admin/review-requests/unrequested');
+            const orders = await res.json();
+            renderUnrequested(orders);
+            statsDiv.innerHTML = '';
+            return;
+        }
+
+        const res = await fetch('/api/admin/review-requests');
+        const requests = await res.json();
+
+        // Stats
+        const total = requests.length;
+        const reviewed = requests.filter(r => r.status === 'reviewed').length;
+        const waiting = requests.filter(r => r.status !== 'reviewed').length;
+        const rate = total > 0 ? Math.round(reviewed / total * 100) : 0;
+        statsDiv.innerHTML = `
+            <div style="background:#f5f0eb;padding:12px 18px;border-radius:8px;text-align:center;flex:1;min-width:100px;">
+                <div style="font-size:1.4em;font-weight:700;color:#1e2a4a;">${total}</div>
+                <div style="font-size:0.78em;color:#888;">Requests Sent</div>
+            </div>
+            <div style="background:#e8f5e9;padding:12px 18px;border-radius:8px;text-align:center;flex:1;min-width:100px;">
+                <div style="font-size:1.4em;font-weight:700;color:#2d7a4f;">${reviewed}</div>
+                <div style="font-size:0.78em;color:#888;">Reviews Received</div>
+            </div>
+            <div style="background:#fff3e0;padding:12px 18px;border-radius:8px;text-align:center;flex:1;min-width:100px;">
+                <div style="font-size:1.4em;font-weight:700;color:#e65100;">${waiting}</div>
+                <div style="font-size:0.78em;color:#888;">Awaiting</div>
+            </div>
+            <div style="background:#e3f2fd;padding:12px 18px;border-radius:8px;text-align:center;flex:1;min-width:100px;">
+                <div style="font-size:1.4em;font-weight:700;color:#1565c0;">${rate}%</div>
+                <div style="font-size:0.78em;color:#888;">Response Rate</div>
+            </div>`;
+
+        let filtered = requests;
+        if (filter === 'waiting') filtered = requests.filter(r => r.status !== 'reviewed');
+        else if (filter === 'reviewed') filtered = requests.filter(r => r.status === 'reviewed');
+
+        renderReviewRequests(filtered);
+    }
+
+    function renderReviewRequests(requests) {
+        const container = document.getElementById('rr-list');
+        if (requests.length === 0) {
+            container.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">No review requests found</div>';
+            return;
+        }
+        let html = '';
+        for (const r of requests) {
+            const date = new Date(r.sent_at).toLocaleString();
+            const items = r.items.map(i => i.name).join(', ');
+            const sc = r.status === 'reviewed' ? 'status-confirmed' : r.status === 'reminded' ? 'status-pending' : 'status-pending';
+            const statusLabel = r.status === 'reviewed' ? 'Reviewed' : r.status === 'reminded' ? 'Reminded' : 'Sent';
+            const reminderBtn = r.status !== 'reviewed'
+                ? `<button class="status-btn confirm" style="font-size:0.78em;padding:4px 12px;" onclick="sendReminder(${r.order_id})">Send Reminder</button>`
+                : '';
+            html += `<div class="order-card" style="margin-bottom:10px;">
+                <div style="padding:14px 18px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                        <div>
+                            <strong style="color:#1e2a4a;">${r.customer_name}</strong>
+                            <span style="color:#999;font-size:0.82em;margin-left:8px;">${r.customer_email}</span>
+                        </div>
+                        <span class="status-badge ${sc}">${statusLabel}</span>
+                    </div>
+                    <div style="font-size:0.85em;color:#888;margin-bottom:4px;">Order #${r.order_id} — ${items}</div>
+                    <div style="font-size:0.82em;color:#999;display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+                        <span>Sent: ${date}</span>
+                        ${r.reminder_sent_at ? '<span>Reminder: ' + new Date(r.reminder_sent_at).toLocaleString() + '</span>' : ''}
+                        ${r.reviews_received > 0 ? '<span style="color:#2d7a4f;font-weight:600;">' + r.reviews_received + ' review(s) received</span>' : ''}
+                        ${reminderBtn}
+                    </div>
+                </div>
+            </div>`;
+        }
+        container.innerHTML = html;
+    }
+
+    function renderUnrequested(orders) {
+        const container = document.getElementById('rr-list');
+        if (orders.length === 0) {
+            container.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">All completed orders have review requests sent</div>';
+            return;
+        }
+        let html = `<p style="color:#666;font-size:0.88em;margin-bottom:12px;">${orders.length} completed order(s) without review request:</p>`;
+        for (const o of orders) {
+            const date = new Date(o.created_at).toLocaleString();
+            const items = o.items.map(i => i.name).join(', ');
+            html += `<div class="order-card" style="margin-bottom:10px;">
+                <div style="padding:14px 18px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                        <div>
+                            <strong style="color:#1e2a4a;">${o.customer_name}</strong>
+                            <span style="color:#999;font-size:0.82em;margin-left:8px;">${o.customer_email}</span>
+                        </div>
+                        <button class="status-btn confirm" onclick="sendReviewRequest(${o.id})">Send Request</button>
+                    </div>
+                    <div style="font-size:0.85em;color:#888;">Order #${o.id} — ${items} — ${date}</div>
+                </div>
+            </div>`;
+        }
+        container.innerHTML = html;
+    }
+
+    function filterRR(filter, btn) {
+        document.querySelectorAll('#rr-filters .filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        loadReviewRequests(filter);
+    }
+
+    async function sendReviewRequest(orderId) {
+        const res = await fetch('/api/admin/review-requests/send', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ order_id: orderId })
+        });
+        const data = await res.json();
+        if (data.success) {
+            loadReviewRequests(rrCurrentFilter);
+        } else {
+            alert(data.error || 'Failed to send');
+        }
+    }
+
+    async function sendReminder(orderId) {
+        if (!confirm('Send a review reminder email for this order?')) return;
+        const res = await fetch('/api/admin/review-requests/' + orderId + '/remind', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await res.json();
+        if (data.success) {
+            loadReviewRequests(rrCurrentFilter);
+        } else {
+            alert(data.error || 'Failed to send');
+        }
+    }
+
     // ===== PROMO CODES =====
     async function loadPromos() {
         const res = await fetch('/api/admin/promos');
@@ -1049,15 +1218,7 @@
         loadPromos();
     }
 
-    async function sendReply(id) {
-        const reply = document.getElementById('reply-text-' + id).value.trim();
-        if (!reply) { alert('Please write a reply.'); return; }
-        await fetch(`/api/admin/reviews/${id}/reply`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ reply })
-        });
-        loadAdminReviews();
-    }
+
 </script>
 </body>
 </html>

@@ -23,7 +23,10 @@ from database import (create_order, get_orders, get_order, update_order_status,
                       create_review, get_reviews, update_review_status, add_review_reply,
                       get_product_review_summary, is_known_customer, get_customer_review_count,
                       create_promo, validate_promo, use_promo, get_promos, toggle_promo,
-                      get_promo_usage)
+                      get_promo_usage,
+                      record_review_request, record_review_reminder,
+                      get_review_requests, get_customer_review_stats,
+                      get_unrequested_completed_orders)
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "samarkand-bakery-secret-2026-change-me")
@@ -275,15 +278,18 @@ def api_update_order_status(order_id):
     update_order_status(order_id, new_status)
 
     # Send email notifications on status change
-    if send_order_confirmed and send_order_completed:
-        try:
-            order = get_order(order_id)
-            if order and new_status == "confirmed":
-                send_order_confirmed(order)
-            elif order and new_status == "completed":
+    try:
+        order = get_order(order_id)
+        if order and new_status == "confirmed" and send_order_confirmed:
+            send_order_confirmed(order)
+        elif order and new_status == "completed":
+            if send_order_completed:
                 send_order_completed(order)
-        except Exception:
-            pass
+            # Track the review request
+            if order.get("customer_email"):
+                record_review_request(order_id, order["customer_email"], order["customer_name"])
+    except Exception:
+        pass
 
     return jsonify({"success": True})
 
@@ -372,6 +378,70 @@ def api_admin_review_reply(review_id):
         return jsonify({"error": "Reply cannot be empty"}), 400
     add_review_reply(review_id, reply)
     return jsonify({"success": True})
+
+
+# ── Admin Review Requests API ──
+
+@app.route("/api/admin/review-requests")
+@admin_required
+def api_admin_review_requests():
+    """Get all review request tracking data."""
+    return jsonify(get_review_requests())
+
+
+@app.route("/api/admin/review-requests/unrequested")
+@admin_required
+def api_admin_unrequested():
+    """Get completed orders that haven't had a review request sent."""
+    return jsonify(get_unrequested_completed_orders())
+
+
+@app.route("/api/admin/review-requests/send", methods=["POST"])
+@admin_required
+def api_admin_send_review_request():
+    """Manually send a review request email for an order."""
+    order_id = request.json.get("order_id")
+    order = get_order(order_id)
+    if not order:
+        return jsonify({"error": "Order not found"}), 404
+    if not order.get("customer_email"):
+        return jsonify({"error": "No email address for this customer"}), 400
+
+    if send_order_completed:
+        try:
+            send_order_completed(order)
+        except Exception:
+            return jsonify({"error": "Failed to send email"}), 500
+
+    record_review_request(order_id, order["customer_email"], order["customer_name"])
+    return jsonify({"success": True})
+
+
+@app.route("/api/admin/review-requests/<int:order_id>/remind", methods=["POST"])
+@admin_required
+def api_admin_send_reminder(order_id):
+    """Send a reminder review request email."""
+    order = get_order(order_id)
+    if not order:
+        return jsonify({"error": "Order not found"}), 404
+    if not order.get("customer_email"):
+        return jsonify({"error": "No email address"}), 400
+
+    if send_order_completed:
+        try:
+            send_order_completed(order)
+        except Exception:
+            return jsonify({"error": "Failed to send email"}), 500
+
+    record_review_reminder(order_id)
+    return jsonify({"success": True})
+
+
+@app.route("/api/admin/review-requests/stats/<path:email>")
+@admin_required
+def api_admin_customer_review_stats(email):
+    """Get review stats for a specific customer."""
+    return jsonify(get_customer_review_stats(email))
 
 
 # ── Public Promo API ──

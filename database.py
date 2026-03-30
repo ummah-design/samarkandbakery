@@ -422,7 +422,139 @@ def toggle_promo(promo_id, active):
     conn.close()
 
 
+# ── Review Requests Tracking ──
+
+def init_review_requests_table():
+    """Create review_requests table to track sent review request emails."""
+    conn = get_db()
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS review_requests (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            order_id INTEGER NOT NULL,
+            customer_email TEXT NOT NULL,
+            customer_name TEXT NOT NULL,
+            status TEXT DEFAULT 'sent',
+            sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            reminder_sent_at TIMESTAMP,
+            UNIQUE(order_id)
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+
+def record_review_request(order_id, customer_email, customer_name):
+    """Record that a review request email was sent for an order."""
+    conn = get_db()
+    try:
+        conn.execute(
+            "INSERT OR IGNORE INTO review_requests (order_id, customer_email, customer_name) VALUES (?, ?, ?)",
+            (order_id, customer_email.lower().strip(), customer_name)
+        )
+        conn.commit()
+    except Exception:
+        pass
+    conn.close()
+
+
+def record_review_reminder(order_id):
+    """Record that a reminder was sent for an order."""
+    conn = get_db()
+    conn.execute(
+        "UPDATE review_requests SET status = 'reminded', reminder_sent_at = CURRENT_TIMESTAMP WHERE order_id = ?",
+        (order_id,)
+    )
+    conn.commit()
+    conn.close()
+
+
+def get_review_requests():
+    """Get all review requests with order details and review status."""
+    conn = get_db()
+    rows = conn.execute("""
+        SELECT rr.*, o.items, o.total_price, o.status as order_status, o.created_at as order_date
+        FROM review_requests rr
+        JOIN orders o ON rr.order_id = o.id
+        ORDER BY rr.sent_at DESC
+    """).fetchall()
+    conn.close()
+
+    results = []
+    for row in rows:
+        r = dict(row)
+        r["items"] = json.loads(r["items"])
+        # Check if this customer left any reviews after the request was sent
+        reviews = get_reviews_by_email_after(r["customer_email"], r["sent_at"])
+        r["reviews_received"] = len(reviews)
+        if r["reviews_received"] > 0:
+            r["status"] = "reviewed"
+        results.append(r)
+    return results
+
+
+def get_reviews_by_email_after(email, after_date):
+    """Get reviews by a customer email submitted after a given date."""
+    conn = get_db()
+    rows = conn.execute(
+        "SELECT * FROM reviews WHERE LOWER(customer_email) = ? AND created_at >= ?",
+        (email.lower().strip(), after_date)
+    ).fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
+
+
+def get_customer_review_stats(email):
+    """Get per-customer review stats: total reviews, avg rating, response rate."""
+    conn = get_db()
+    email = email.lower().strip()
+
+    # Total reviews submitted
+    review_row = conn.execute(
+        "SELECT COUNT(*) as total, AVG(rating) as avg_rating FROM reviews WHERE LOWER(customer_email) = ?",
+        (email,)
+    ).fetchone()
+
+    # Total review requests sent to this customer
+    request_row = conn.execute(
+        "SELECT COUNT(*) as total FROM review_requests WHERE customer_email = ?",
+        (email,)
+    ).fetchone()
+
+    conn.close()
+
+    total_reviews = review_row["total"] if review_row else 0
+    avg_rating = round(review_row["avg_rating"], 1) if review_row and review_row["avg_rating"] else 0
+    total_requests = request_row["total"] if request_row else 0
+    response_rate = round((total_reviews / total_requests * 100)) if total_requests > 0 else 0
+
+    return {
+        "total_reviews": total_reviews,
+        "avg_rating": avg_rating,
+        "total_requests": total_requests,
+        "response_rate": min(response_rate, 100)
+    }
+
+
+def get_unrequested_completed_orders():
+    """Get completed orders that haven't had a review request sent yet."""
+    conn = get_db()
+    rows = conn.execute("""
+        SELECT o.* FROM orders o
+        LEFT JOIN review_requests rr ON o.id = rr.order_id
+        WHERE o.status = 'completed' AND rr.id IS NULL AND o.customer_email != ''
+        ORDER BY o.created_at DESC
+    """).fetchall()
+    conn.close()
+    results = []
+    for row in rows:
+        r = dict(row)
+        r["items"] = json.loads(r["items"])
+        results.append(r)
+    return results
+
+
 # Initialize database on import
 init_db()
 init_reviews_table()
 init_promo_table()
+init_review_requests_table()

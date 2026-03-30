@@ -2,6 +2,7 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/samarkandbakery/samarkand/
+    - /bin/cp -R requirements.txt $DEPLOYPATH
     - /bin/cp -R app.py $DEPLOYPATH
     - /bin/cp -R engine.py $DEPLOYPATH
     - /bin/cp -R database.py $DEPLOYPATH

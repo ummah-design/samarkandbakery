@@ -55,8 +55,8 @@
             background: rgba(30,42,74,0.97);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            padding: 0 24px;
-            height: 72px;
+            padding: 1px 24px;
+            height: auto;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -66,37 +66,16 @@
         .header-inner {
             display: flex;
             align-items: center;
-            gap: 16px;
+            justify-content: center;
             max-width: 1200px;
             width: 100%;
-            justify-content: center;
         }
 
         .header-logo {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            border: 2px solid var(--gold);
-            object-fit: cover;
+            height: 64px;
+            width: auto;
             flex-shrink: 0;
-        }
-
-        .header-text { text-align: center; }
-
-        .header-title {
-            font-family: var(--font-display);
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #fff;
-            letter-spacing: 2px;
-        }
-
-        .header-subtitle {
-            font-size: 0.75rem;
-            font-weight: 300;
-            color: rgba(255,255,255,0.6);
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            display: block;
         }
 
         /* ===== MAIN CONTAINER ===== */
@@ -695,11 +674,7 @@
 <!-- HEADER -->
 <header class="site-header">
     <div class="header-inner">
-        <img class="header-logo" src="{{ url_for('static', filename='logo.svg') }}" alt="Samarkand Bakery">
-        <div class="header-text">
-            <div class="header-title">SAMARKAND TURKIC BAKERY</div>
-            <div class="header-subtitle">Tetouan, Morocco</div>
-        </div>
+        <img class="header-logo" src="{{ url_for('static', filename='logo.svg') }}" alt="Samarkand Turkic Bakery">
     </div>
 </header>
 
@@ -853,13 +828,11 @@ let marker = null;
 let selectedLat = null;
 let selectedLng = null;
 
-// Load cart from localStorage (items added from product detail pages)
+// Load cart from localStorage (persisted across page navigations)
 (function loadCartFromStorage() {
     const stored = JSON.parse(localStorage.getItem('samarkand_cart') || '{}');
     if (Object.keys(stored).length > 0) {
         cart = stored;
-        localStorage.removeItem('samarkand_cart');
-        // Update all controls and cart bar after page loads
         setTimeout(() => {
             for (const key of Object.keys(cart)) updateControls(key);
             updateCartBar();
@@ -867,14 +840,20 @@ let selectedLng = null;
     }
 })();
 
+function saveCart() {
+    localStorage.setItem('samarkand_cart', JSON.stringify(cart));
+}
+
 function addToCart(key) {
     if (!cart[key]) cart[key] = 0;
     cart[key]++;
+    saveCart();
     refreshUI(key);
 }
 
 function removeFromCart(key) {
     if (cart[key]) { cart[key]--; if (cart[key] <= 0) delete cart[key]; }
+    saveCart();
     refreshUI(key);
 }
 
@@ -995,7 +974,8 @@ async function submitOrder() {
         if (data.success) {
             document.getElementById('checkout-form').style.display = 'none';
             document.getElementById('success-view').style.display = 'block';
-            document.getElementById('success-msg').textContent = data.message;
+            localStorage.removeItem('samarkand_cart');
+                document.getElementById('success-msg').textContent = data.message;
             document.getElementById('success-total').textContent = 'Total: ' + data.total_price.toFixed(2) + ' MAD';
         } else {
             alert(data.error || 'Something went wrong.');
@@ -1008,7 +988,7 @@ async function submitOrder() {
 }
 
 function resetOrder() {
-    cart = {}; selectedLat = null; selectedLng = null;
+    cart = {}; localStorage.removeItem('samarkand_cart'); selectedLat = null; selectedLng = null;
     if (marker && checkoutMap) checkoutMap.removeLayer(marker); marker = null;
     for (const k of Object.keys(menuData.products)) updateControls(k);
     updateCartBar(); closeCheckout();

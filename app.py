@@ -14,11 +14,10 @@ from flask import Flask, render_template, request, jsonify, session, redirect, u
 from engine import load_data, calculate_cost, calculate_order
 try:
     from emailer import send_order_placed, send_order_confirmed, send_order_completed
-except ImportError:
-    # Fallback stubs if emailer module not found
-    def send_order_placed(order): return False
-    def send_order_confirmed(order): return False
-    def send_order_completed(order): return False
+except Exception:
+    send_order_placed = None
+    send_order_confirmed = None
+    send_order_completed = None
 from database import (create_order, get_orders, get_order, update_order_status,
                       get_customers, get_customer_orders,
                       create_review, get_reviews, update_review_status, add_review_reply,
@@ -146,21 +145,22 @@ def api_submit_order():
     )
 
     # Send order confirmation email
-    try:
-        send_order_placed({
-            "id": order_id,
-            "customer_name": req["customer_name"],
-            "customer_email": req.get("customer_email", ""),
-            "items": order_items,
-            "total_price": round(total_price, 2),
-            "delivery_type": req.get("delivery_type", "pickup"),
-            "delivery_address": req.get("delivery_address"),
-            "preferred_date": req.get("preferred_date"),
-            "promo_code": promo_code,
-            "discount_amount": round(discount_amt, 2)
-        })
-    except Exception:
-        pass  # Don't fail the order if email fails
+    if send_order_placed:
+        try:
+            send_order_placed({
+                "id": order_id,
+                "customer_name": req["customer_name"],
+                "customer_email": req.get("customer_email", ""),
+                "items": order_items,
+                "total_price": round(total_price, 2),
+                "delivery_type": req.get("delivery_type", "pickup"),
+                "delivery_address": req.get("delivery_address"),
+                "preferred_date": req.get("preferred_date"),
+                "promo_code": promo_code,
+                "discount_amount": round(discount_amt, 2)
+            })
+        except Exception:
+            pass
 
     return jsonify({
         "success": True,
@@ -275,14 +275,15 @@ def api_update_order_status(order_id):
     update_order_status(order_id, new_status)
 
     # Send email notifications on status change
-    try:
-        order = get_order(order_id)
-        if order and new_status == "confirmed":
-            send_order_confirmed(order)
-        elif order and new_status == "completed":
-            send_order_completed(order)
-    except Exception:
-        pass  # Don't fail the status update if email fails
+    if send_order_confirmed and send_order_completed:
+        try:
+            order = get_order(order_id)
+            if order and new_status == "confirmed":
+                send_order_confirmed(order)
+            elif order and new_status == "completed":
+                send_order_completed(order)
+        except Exception:
+            pass
 
     return jsonify({"success": True})
 

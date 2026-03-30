@@ -265,6 +265,54 @@ def api_recipes():
     return jsonify(result)
 
 
+@app.route("/api/admin/product/<product_key>/update", methods=["POST"])
+@admin_required
+def api_update_product(product_key):
+    """Update product description, price, and optionally image."""
+    menu = load_menu()
+    if product_key not in menu["products"]:
+        return jsonify({"error": "Product not found"}), 404
+
+    # Update description if provided
+    description = request.form.get("description")
+    price = request.form.get("price")
+
+    if description is not None:
+        menu["products"][product_key]["description"] = description
+    if price is not None:
+        try:
+            menu["products"][product_key]["price"] = float(price)
+        except ValueError:
+            pass
+
+    # Handle image upload
+    if "image" in request.files:
+        file = request.files["image"]
+        if file.filename:
+            import werkzeug.utils
+            # Keep original extension
+            ext = os.path.splitext(file.filename)[1].lower()
+            if ext not in (".jpg", ".jpeg", ".png", ".webp"):
+                return jsonify({"error": "Only JPG, PNG, WEBP images allowed"}), 400
+            filename = product_key + ext
+            filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "products", filename)
+            file.save(filepath)
+            # Remove old image if different filename
+            old_image = menu["products"][product_key].get("image", "")
+            if old_image and old_image != filename:
+                old_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "products", old_image)
+                if os.path.exists(old_path):
+                    os.remove(old_path)
+            menu["products"][product_key]["image"] = filename
+
+    # Save menu.json
+    menu_path = os.path.join(DATA_DIR, "menu.json")
+    with open(menu_path, "w", encoding="utf-8") as f:
+        json.dump(menu, f, indent=4, ensure_ascii=False)
+
+    return jsonify({"success": True, "image": menu["products"][product_key].get("image", "")})
+
+
 @app.route("/api/prices")
 @admin_required
 def api_prices():

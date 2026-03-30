@@ -21,62 +21,125 @@
         "meat_samsa": {
             "name": "Meat Samsa",
             "description": "A juicy minced meat & onion filling enveloped with a crunchy puff pastry to create these delicious oven baked meat pies.",
+            "description_long": "Our signature Meat Samsa is a traditional Uzbek pastry made with layers of flaky, buttery puff pastry wrapped around a savoury filling of seasoned minced beef and onions. Each samsa is hand-shaped and oven-baked until golden and crispy. The filling is seasoned with cumin, coriander, and black pepper for an authentic Central Asian flavour.",
             "price": 18.00,
-            "image": "meat_samsa.jpeg"
+            "image": "meat_samsa.jpeg",
+            "ingredients": ["Wheat flour", "Salted butter", "Minced beef", "Onions", "Salt", "Cumin", "Coriander", "Black pepper"],
+            "allergens": ["Gluten (wheat)", "Dairy (butter)"],
+            "may_contain": ["Sesame"],
+            "nutrition": {"calories": 285, "protein": 12, "carbs": 24, "fat": 16, "fibre": 1, "serving": "1 piece (~90g)"},
+            "cooking_method": "Oven baked"
         },
         "chicken_samsa": {
             "name": "Chicken Samsa",
             "description": "Chicken meat, sliced carrot & onions are perfectly seasoned and wrapped in homemade flaky, golden puff pastry, creating a delicious savoury chicken pie.",
+            "description_long": "Our Chicken Samsa features tender chicken fillet with finely sliced carrots and onions, all perfectly seasoned and encased in our signature hand-made flaky puff pastry. Oven baked to a beautiful golden colour, each samsa delivers a lighter alternative to the meat version while being equally satisfying.",
             "price": 15.00,
-            "image": "chicken_samsa.jpeg"
+            "image": "chicken_samsa.jpeg",
+            "ingredients": ["Wheat flour", "Salted butter", "Chicken fillet", "Onions", "Salt", "Cumin", "Coriander", "Black pepper"],
+            "allergens": ["Gluten (wheat)", "Dairy (butter)"],
+            "may_contain": ["Sesame"],
+            "nutrition": {"calories": 248, "protein": 14, "carbs": 24, "fat": 11, "fibre": 1, "serving": "1 piece (~90g)"},
+            "cooking_method": "Oven baked"
         },
         "ochiq_samsa": {
             "name": "Ochiq Samsa",
             "description": "These open style Uzbek samosas are reminiscent of Eastern European Piroshki. A juicy minced meat, potato & onion filling is combined with a soft and silky dough.",
+            "description_long": "Ochiq means 'open' in Uzbek, and these distinctive open-topped pastries showcase their filling proudly. Made with a soft yeasted dough enriched with milk, butter, and egg, the filling combines minced beef, diced potato, and onions seasoned with cumin seeds, coriander, and black pepper. Finished with an egg wash and sesame seeds, then baked until golden. Inspired by the culinary traditions of Central Asia, Russia, and Eastern Europe.",
             "price": 15.00,
-            "image": "ochiq_samsa.png"
+            "image": "ochiq_samsa.png",
+            "ingredients": ["Wheat flour", "Milk", "Butter", "Egg", "Dry yeast", "Sugar", "Minced beef", "Potato", "Onions", "Cumin powder", "Cumin seeds", "Coriander seeds", "Salt", "Black pepper", "Sesame seeds"],
+            "allergens": ["Gluten (wheat)", "Dairy (butter, milk)", "Eggs", "Sesame"],
+            "may_contain": [],
+            "nutrition": {"calories": 265, "protein": 11, "carbs": 28, "fat": 12, "fibre": 2, "serving": "1 piece (~95g)"},
+            "cooking_method": "Oven baked"
         },
         "cheburek_potato": {
             "name": "Cheburek (Potato)",
             "description": "Savoury deep fried pies filled with a juicy potato and onion filling, seasoned with cumin and paprika.",
+            "description_long": "Cheburek is a beloved deep-fried turnover found across Central Asia and the Caucasus. Our potato version features a thin, crispy dough filled with a seasoned mixture of potato, onions, butter, cumin, paprika, and fresh parsley. Deep fried until the pastry is golden and bubbly with a satisfying crunch. A delicious vegetarian option.",
             "price": 10.00,
-            "image": "cheburek.png"
+            "image": "cheburek.png",
+            "ingredients": ["Wheat flour", "Potato", "Butter", "Onions", "Salt", "Black pepper", "Cumin", "Paprika", "Fresh parsley", "Vegetable oil (for frying)"],
+            "allergens": ["Gluten (wheat)", "Dairy (butter)"],
+            "may_contain": [],
+            "nutrition": {"calories": 220, "protein": 4, "carbs": 26, "fat": 12, "fibre": 2, "serving": "1 piece (~80g)"},
+            "cooking_method": "Deep fried",
+            "dietary": ["Vegetarian"]
         },
         "cheburek_meat": {
             "name": "Cheburek (Meat)",
             "description": "Savoury deep fried pies filled with a juicy minced meat and onion filling.",
+            "description_long": "The classic Cheburek features a thin, hand-rolled dough filled with seasoned minced beef and onions, then deep fried until the pastry turns golden and irresistibly crispy. The filling stays juicy inside the crispy shell, seasoned with cumin, paprika, and fresh parsley. A traditional street food favourite from Uzbekistan.",
             "price": 18.00,
-            "image": "cheburek.png"
+            "image": "cheburek.png",
+            "ingredients": ["Wheat flour", "Minced beef", "Onions", "Salt", "Black pepper", "Cumin", "Paprika", "Fresh parsley", "Vegetable oil (for frying)"],
+            "allergens": ["Gluten (wheat)"],
+            "may_contain": [],
+            "nutrition": {"calories": 295, "protein": 13, "carbs": 22, "fat": 18, "fibre": 1, "serving": "1 piece (~85g)"},
+            "cooking_method": "Deep fried"
         },
         "pide_minced_beef": {
             "name": "Pide (Minced Beef)",
             "description": "Oven baked Turkish style pizza with fluffy yeasted dough topped with seasoned minced beef.",
+            "description_long": "Turkish Pide is often called 'Turkish pizza' — a boat-shaped flatbread with a soft, fluffy yeasted base and a generous topping. Our Minced Beef Pide features seasoned ground beef cooked with onions, garlic, tomato paste, cumin, paprika, coriander, oregano, and a drizzle of olive oil. Baked until the edges are golden and the topping is perfectly cooked.",
             "price": 20.00,
-            "image": "pide.png"
+            "image": "pide.png",
+            "ingredients": ["Wheat flour", "Dry yeast", "Sugar", "Salt", "Vegetable oil", "Minced beef", "Onions", "Garlic", "Tomato paste", "Paprika", "Cumin", "Black pepper", "Coriander", "Oregano", "Olive oil"],
+            "allergens": ["Gluten (wheat)"],
+            "may_contain": ["Sesame"],
+            "nutrition": {"calories": 380, "protein": 18, "carbs": 38, "fat": 17, "fibre": 2, "serving": "1 pide (~180g)"},
+            "cooking_method": "Oven baked"
         },
         "pide_cheese_spinach": {
             "name": "Pide (Cheese & Spinach)",
             "description": "Oven baked Turkish style pizza with fluffy yeasted dough topped with spinach, white cheese and mozzarella.",
+            "description_long": "A vegetarian favourite — our Cheese & Spinach Pide combines a soft yeasted base with a rich topping of spinach, crumbled white cheese (similar to feta), melted mozzarella, egg, butter, and garlic. The cheeses melt together beautifully during baking, creating a gooey, flavourful filling with the earthy spinach.",
             "price": 15.00,
-            "image": "pide.png"
+            "image": "pide.png",
+            "ingredients": ["Wheat flour", "Dry yeast", "Sugar", "Salt", "Vegetable oil", "Frozen spinach", "White cheese", "Mozzarella cheese", "Egg", "Butter", "Garlic"],
+            "allergens": ["Gluten (wheat)", "Dairy (butter, cheese, mozzarella)", "Eggs"],
+            "may_contain": ["Sesame"],
+            "nutrition": {"calories": 340, "protein": 16, "carbs": 34, "fat": 16, "fibre": 2, "serving": "1 pide (~170g)"},
+            "cooking_method": "Oven baked",
+            "dietary": ["Vegetarian"]
         },
         "pide_cheese_sausage": {
             "name": "Pide (Cheese & Sausage)",
             "description": "Oven baked Turkish style pizza with fluffy yeasted dough topped with sausage and mozzarella cheese.",
+            "description_long": "Our Cheese & Sausage Pide pairs sliced sausage with melted mozzarella on a soft, fluffy yeasted base. Simple but incredibly satisfying — the sausage adds a savoury, slightly smoky flavour while the mozzarella melts into stretchy, golden perfection. A crowd pleaser for all ages.",
             "price": 18.00,
-            "image": "pide.png"
+            "image": "pide.png",
+            "ingredients": ["Wheat flour", "Dry yeast", "Sugar", "Salt", "Vegetable oil", "Sausage", "Mozzarella cheese"],
+            "allergens": ["Gluten (wheat)", "Dairy (mozzarella)"],
+            "may_contain": ["Sesame", "Soya"],
+            "nutrition": {"calories": 365, "protein": 15, "carbs": 36, "fat": 18, "fibre": 1, "serving": "1 pide (~175g)"},
+            "cooking_method": "Oven baked"
         },
         "uzbek_bread": {
             "name": "Uzbek Bread",
             "description": "Traditional Uzbek flatbread, oven baked with a beautifully patterned centre and black sesame seeds.",
+            "description_long": "Non — traditional Uzbek bread — is the centrepiece of every Uzbek meal. Our version is made with flour, milk, butter, and a touch of yeast, then hand-shaped with the traditional patterned centre using a bread stamp (chekich). Topped with sesame or nigella seeds and baked until golden. Soft inside with a slightly crisp crust. Each loaf is made fresh to order.",
             "price": 10.00,
-            "image": "uzbek_bread.png"
+            "image": "uzbek_bread.png",
+            "ingredients": ["Wheat flour", "Milk", "Butter", "Egg", "Dry yeast", "Sugar", "Salt"],
+            "allergens": ["Gluten (wheat)", "Dairy (butter, milk)", "Eggs"],
+            "may_contain": ["Sesame"],
+            "nutrition": {"calories": 210, "protein": 6, "carbs": 36, "fat": 5, "fibre": 1, "serving": "1 slice (~80g)"},
+            "cooking_method": "Oven baked"
         },
         "turkish_bread": {
             "name": "Turkish Bread",
             "description": "Soft, fluffy Turkish bread topped with sesame and nigella seeds. Perfect with any meal.",
+            "description_long": "Our Turkish Bread is a soft, pillowy loaf made with flour, milk, yoghurt, egg, and vegetable oil, leavened with yeast for a light and airy texture. The dough is shaped into a round loaf, topped with sesame and nigella seeds, and baked until beautifully golden. Pairs perfectly with dips, soups, grilled meats, or simply with butter.",
             "price": 10.00,
-            "image": "turkish_bread.png"
+            "image": "turkish_bread.png",
+            "ingredients": ["Wheat flour", "Milk", "Yoghurt", "Egg", "Vegetable oil", "Dry yeast", "Sugar", "Salt"],
+            "allergens": ["Gluten (wheat)", "Dairy (milk, yoghurt)", "Eggs"],
+            "may_contain": ["Sesame"],
+            "nutrition": {"calories": 235, "protein": 7, "carbs": 38, "fat": 6, "fibre": 1, "serving": "1 slice (~90g)"},
+            "cooking_method": "Oven baked"
         }
-    }
+    },
+    "allergen_notice": "Our products are prepared in a home kitchen where allergens including gluten, dairy, eggs, and sesame are present. Cross-contamination may occur. If you have a severe allergy, please contact us before ordering. Nutritional values are approximate estimates and may vary."
 }

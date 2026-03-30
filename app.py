@@ -84,6 +84,17 @@ def api_order():
     return jsonify(result)
 
 
+# ── Product Detail Page ──
+
+@app.route("/product/<product_key>")
+def product_page(product_key):
+    menu = load_menu()
+    item = menu["products"].get(product_key)
+    if not item:
+        return "Product not found", 404
+    return render_template("product.html", item=item, product_key=product_key, allergen_notice=menu.get("allergen_notice", ""))
+
+
 # ── Public Ordering Page ──
 
 @app.route("/order")

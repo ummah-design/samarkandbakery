@@ -728,12 +728,12 @@
             {% for item_key in category.product_keys %}
             {% set item = menu.products[item_key] %}
             <article class="product-card">
-                <div class="product-img-wrap">
+                <a href="/product/{{ item_key }}" class="product-img-wrap" style="display:block; text-decoration:none;">
                     <img class="product-img" src="{{ url_for('static', filename='products/' + item.image) }}" alt="{{ item.name }}" loading="lazy">
                     <div class="product-img-overlay"></div>
-                </div>
+                </a>
                 <div class="product-body">
-                    <h3 class="product-name">{{ item.name }}</h3>
+                    <a href="/product/{{ item_key }}" style="text-decoration:none; color:inherit;"><h3 class="product-name">{{ item.name }}</h3></a>
                     <p class="product-desc">{{ item.description }}</p>
                     <div class="product-footer">
                         <div class="product-price">

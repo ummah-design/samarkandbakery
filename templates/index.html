@@ -655,20 +655,20 @@
             const time = new Date(order.created_at).toLocaleString();
             html += `<div class="order-card">
                 <div class="order-header" onclick="toggleOrder(${order.id})">
-                    <span class="order-id">#${order.id}</span><span class="order-customer">${order.customer_name}</span>
+                    <span class="order-id">#${order.id}</span><span class="order-customer" dir="auto">${order.customer_name}</span>
                     <span class="order-time">${time}</span><span class="order-amount">${(order.total_price||0).toFixed(2)} MAD</span>
                     <span class="status-badge ${sc}">${order.status}</span>
                 </div>
                 <div class="order-details" id="details-${order.id}">
                     <div class="detail-section"><h4>Customer</h4>
-                        <div class="detail-row"><span class="label">Name:</span><span class="value">${order.customer_name}</span></div>
+                        <div class="detail-row"><span class="label">Name:</span><span class="value" dir="auto">${order.customer_name}</span></div>
                         <div class="detail-row"><span class="label">Email:</span><span class="value">${order.customer_email || '-'}</span></div>
                         <div class="detail-row"><span class="label">Phone:</span><span class="value">${order.customer_phone}</span></div>
                         <div class="detail-row"><span class="label">Type:</span><span class="value">${order.delivery_type==='delivery'?'Delivery':'Pickup (Wilaya Centre)'}</span></div>
                         ${order.preferred_date?`<div class="detail-row"><span class="label">Delivery Date:</span><span class="value" style="font-weight:700;color:#b8860b;">${order.preferred_date}</span></div>`:''}
                         ${order.promo_code?`<div class="detail-row"><span class="label">Promo Code:</span><span class="value" style="font-weight:600;color:#2d7a4f;">${order.promo_code} (-${(order.discount_amount||0).toFixed(2)} MAD)</span></div>`:''}
-                        ${order.delivery_address?`<div class="detail-row"><span class="label">Address:</span><span class="value">${order.delivery_address}</span></div>`:''}
-                        ${order.notes?`<div class="detail-row"><span class="label">Notes:</span><span class="value">${order.notes}</span></div>`:''}
+                        ${order.delivery_address?`<div class="detail-row"><span class="label">Address:</span><span class="value" dir="auto">${order.delivery_address}</span></div>`:''}
+                        ${order.notes?`<div class="detail-row"><span class="label">Notes:</span><span class="value" dir="auto">${order.notes}</span></div>`:''}
                     </div>
                     ${order.delivery_lat?`<div class="detail-section"><h4>Delivery Location</h4><div id="map-${order.id}" style="width:100%;height:200px;border-radius:8px;"></div></div>`:''}
                     <div class="detail-section"><h4>Items Ordered</h4>
@@ -825,7 +825,7 @@
             const lastOrder = c.last_order ? new Date(c.last_order).toLocaleDateString() : '-';
             const profitClass = (c.total_profit || 0) >= 0 ? 'profit' : 'loss';
             tbody.innerHTML += `<tr style="cursor:pointer;" onclick="loadCustomerOrders('${encodeURIComponent(c.customer_email)}', '${c.customer_name.replace(/'/g, "\\'")}')">
-                <td><strong>${c.customer_name}</strong></td>
+                <td dir="auto"><strong>${c.customer_name}</strong></td>
                 <td>${c.customer_email || '-'}</td>
                 <td>${c.customer_phone}</td>
                 <td>${c.total_orders}</td>
@@ -869,9 +869,9 @@
                     <div class="detail-section"><h4>Order Details</h4>
                         <div class="detail-row"><span class="label">Type:</span><span class="value">${o.delivery_type==='delivery'?'Delivery':'Pickup (Wilaya Centre)'}</span></div>
                         ${o.preferred_date?`<div class="detail-row"><span class="label">Delivery Date:</span><span class="value" style="font-weight:700;color:#b8860b;">${o.preferred_date}</span></div>`:''}
-                        ${o.delivery_address?`<div class="detail-row"><span class="label">Address:</span><span class="value">${o.delivery_address}</span></div>`:''}
+                        ${o.delivery_address?`<div class="detail-row"><span class="label">Address:</span><span class="value" dir="auto">${o.delivery_address}</span></div>`:''}
                         ${o.promo_code?`<div class="detail-row"><span class="label">Promo Code:</span><span class="value" style="font-weight:600;color:#2d7a4f;">${o.promo_code} (-${(o.discount_amount||0).toFixed(2)} MAD)</span></div>`:''}
-                        ${o.notes?`<div class="detail-row"><span class="label">Notes:</span><span class="value">${o.notes}</span></div>`:''}
+                        ${o.notes?`<div class="detail-row"><span class="label">Notes:</span><span class="value" dir="auto">${o.notes}</span></div>`:''}
                     </div>
                     <div class="detail-section"><h4>Items Ordered</h4>
                         <table style="width:100%;border-collapse:collapse;font-size:0.9em;">
@@ -934,10 +934,10 @@
                     </div>
                     <div style="color:#b8860b;font-size:1.1em;margin-bottom:4px;">${stars}</div>
                     <div style="font-size:0.85em;color:#999;margin-bottom:6px;">Product: <strong>${r.product_key}</strong> — ${date}</div>
-                    <div style="font-size:0.95em;color:#444;margin-bottom:12px;">${r.review_text}</div>
+                    <div style="font-size:0.95em;color:#444;margin-bottom:12px;" dir="auto">${r.review_text}</div>
                     ${r.admin_reply ? `<div style="padding:10px 14px;background:#faf6f1;border-left:3px solid #b8860b;border-radius:6px;margin-bottom:12px;">
                         <div style="font-size:0.78em;font-weight:600;color:#b8860b;margin-bottom:3px;">Your Reply</div>
-                        <div style="font-size:0.9em;color:#555;">${r.admin_reply}</div>
+                        <div style="font-size:0.9em;color:#555;" dir="auto">${r.admin_reply}</div>
                     </div>` : ''}
                     <div style="display:flex;gap:8px;flex-wrap:wrap;">
                         ${r.status === 'pending' ? `<button class="status-btn confirm" onclick="reviewAction(${r.id}, 'approve')">Approve</button>
@@ -1052,7 +1052,7 @@
                 <div style="padding:14px 18px;">
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
                         <div>
-                            <strong style="color:#1e2a4a;">${r.customer_name}</strong>
+                            <strong style="color:#1e2a4a;" dir="auto">${r.customer_name}</strong>
                             <span style="color:#999;font-size:0.82em;margin-left:8px;">${r.customer_email}</span>
                         </div>
                         <span class="status-badge ${sc}">${statusLabel}</span>
@@ -1084,7 +1084,7 @@
                 <div style="padding:14px 18px;">
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
                         <div>
-                            <strong style="color:#1e2a4a;">${o.customer_name}</strong>
+                            <strong style="color:#1e2a4a;" dir="auto">${o.customer_name}</strong>
                             <span style="color:#999;font-size:0.82em;margin-left:8px;">${o.customer_email}</span>
                         </div>
                         <button class="status-btn confirm" onclick="sendReviewRequest(${o.id})">Send Request</button>

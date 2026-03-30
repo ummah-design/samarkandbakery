@@ -44,6 +44,28 @@ def load_menu():
         return json.load(f)
 
 
+def load_translations():
+    """Load UI translations."""
+    with open(os.path.join(DATA_DIR, "translations.json"), "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def get_lang():
+    """Get current language from query param, session, or default to 'en'."""
+    lang = request.args.get("lang")
+    if lang in ("en", "fr", "ar"):
+        session["lang"] = lang
+        return lang
+    return session.get("lang", "en")
+
+
+def get_t():
+    """Get translations dict for current language."""
+    lang = get_lang()
+    translations = load_translations()
+    return translations.get(lang, translations["en"])
+
+
 def admin_required(f):
     """Decorator to protect admin routes with login."""
     @functools.wraps(f)
@@ -60,22 +82,31 @@ def admin_required(f):
 def index():
     """Public-facing ordering page — this is what customers see."""
     menu = load_menu()
-    return render_template("order.html", menu=menu)
+    t = get_t()
+    lang = get_lang()
+    return render_template("order.html", menu=menu, t=t, lang=lang)
 
 
 @app.route("/order")
 def order_page():
     menu = load_menu()
-    return render_template("order.html", menu=menu)
+    t = get_t()
+    lang = get_lang()
+    return render_template("order.html", menu=menu, t=t, lang=lang)
 
 
 @app.route("/product/<product_key>")
 def product_page(product_key):
     menu = load_menu()
+    t = get_t()
+    lang = get_lang()
     item = menu["products"].get(product_key)
     if not item:
         return "Product not found", 404
-    return render_template("product.html", item=item, product_key=product_key, allergen_notice=menu.get("allergen_notice", ""))
+    # Get translated allergen notice
+    suffix = "_" + lang if lang != "en" else ""
+    allergen_notice = menu.get("allergen_notice" + suffix, menu.get("allergen_notice", ""))
+    return render_template("product.html", item=item, product_key=product_key, allergen_notice=allergen_notice, t=t, lang=lang)
 
 
 # ── Public API ──

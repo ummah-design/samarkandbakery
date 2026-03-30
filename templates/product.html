@@ -149,17 +149,50 @@
 
         .product-price-large {
             font-family: var(--font-display);
-            font-size: 2.2rem;
+            font-size: 3.2rem;
             font-weight: 700;
             color: var(--gold);
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .product-price-unit {
             font-family: var(--font-body);
+            font-size: 1.2rem;
             font-size: 1rem;
             font-weight: 400;
             color: var(--text-muted);
+        }
+
+        .order-controls { display: flex; align-items: center; gap: 16px; }
+
+        .qty-stepper-large {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--warm-cream);
+            border-radius: var(--radius-sm);
+            padding: 6px;
+        }
+
+        .qty-btn-lg {
+            width: 44px; height: 44px;
+            display: flex; align-items: center; justify-content: center;
+            border: none; border-radius: 8px;
+            cursor: pointer; transition: all 200ms ease;
+            background: transparent; color: var(--text-primary);
+            font-size: 1.2rem; font-weight: 700;
+        }
+
+        .qty-btn-lg:hover { background: rgba(30,42,74,0.08); }
+        .qty-btn-lg:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+        .qty-btn-lg svg { width: 20px; height: 20px; }
+        .qty-btn-lg--minus { color: var(--text-secondary); }
+        .qty-btn-lg--plus { background: var(--navy); color: #fff; }
+        .qty-btn-lg--plus:hover { background: var(--navy-light); }
+
+        .qty-value-lg {
+            min-width: 40px; text-align: center;
+            font-weight: 700; font-size: 1.3rem; color: var(--navy);
         }
 
         .btn-add-large {
@@ -439,10 +472,21 @@
                 {{ "%.0f"|format(item.price) }}<span class="product-price-unit"> MAD</span>
             </div>
 
-            <a href="/" class="btn-add-large" style="text-decoration:none; display:inline-flex;">
-                <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/></svg>
-                Order Now
-            </a>
+            <div class="order-controls">
+                <div class="qty-stepper-large">
+                    <button class="qty-btn-lg qty-btn-lg--minus" onclick="changeQty(-1)" aria-label="Decrease quantity">
+                        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14"/></svg>
+                    </button>
+                    <span class="qty-value-lg" id="qty-display">1</span>
+                    <button class="qty-btn-lg qty-btn-lg--plus" onclick="changeQty(1)" aria-label="Increase quantity">
+                        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                    </button>
+                </div>
+                <button class="btn-add-large" onclick="addToOrder()" id="add-btn">
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/></svg>
+                    Add to Order
+                </button>
+            </div>
         </div>
     </div>
 
@@ -525,5 +569,29 @@
 
 </main>
 
+<script>
+let qty = 1;
+const productKey = "{{ product_key }}";
+
+function changeQty(delta) {
+    qty = Math.max(1, qty + delta);
+    document.getElementById('qty-display').textContent = qty;
+}
+
+function addToOrder() {
+    // Save to localStorage so the main ordering page can pick it up
+    const existing = JSON.parse(localStorage.getItem('samarkand_cart') || '{}');
+    existing[productKey] = (existing[productKey] || 0) + qty;
+    localStorage.setItem('samarkand_cart', JSON.stringify(existing));
+
+    // Visual feedback
+    const btn = document.getElementById('add-btn');
+    btn.textContent = 'Added!';
+    btn.style.background = '#2d7a4f';
+    setTimeout(() => {
+        window.location.href = '/';
+    }, 600);
+}
+</script>
 </body>
 </html>

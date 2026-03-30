@@ -853,6 +853,20 @@ let marker = null;
 let selectedLat = null;
 let selectedLng = null;
 
+// Load cart from localStorage (items added from product detail pages)
+(function loadCartFromStorage() {
+    const stored = JSON.parse(localStorage.getItem('samarkand_cart') || '{}');
+    if (Object.keys(stored).length > 0) {
+        cart = stored;
+        localStorage.removeItem('samarkand_cart');
+        // Update all controls and cart bar after page loads
+        setTimeout(() => {
+            for (const key of Object.keys(cart)) updateControls(key);
+            updateCartBar();
+        }, 100);
+    }
+})();
+
 function addToCart(key) {
     if (!cart[key]) cart[key] = 0;
     cart[key]++;

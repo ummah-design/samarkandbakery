@@ -18,7 +18,7 @@ deployment:
     - /bin/cp -R templates/order.html $DEPLOYPATH/templates/
     - /bin/cp -R templates/admin_orders.html $DEPLOYPATH/templates/
     - /bin/mkdir -p $DEPLOYPATH/static
-    - /bin/cp -R static/logo.png $DEPLOYPATH/static/
+    - /bin/cp -R static/logo.svg $DEPLOYPATH/static/
     - /bin/mkdir -p $DEPLOYPATH/static/products
     - /bin/cp -R static/products/meat_samsa.jpeg $DEPLOYPATH/static/products/
     - /bin/cp -R static/products/chicken_samsa.jpeg $DEPLOYPATH/static/products/

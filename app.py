@@ -2,20 +2,26 @@
 """
 Samarkand Bakery — Web App
 Run: python3 app.py
-- Costing tool: http://localhost:5050
-- Ordering page: http://localhost:5050/order
-- Admin orders: http://localhost:5050/admin/orders
+- Customer page: http://localhost:5050
+- Admin dashboard: http://localhost:5050/admin (login required)
 """
 
 import json
 import os
-from flask import Flask, render_template, request, jsonify
+import functools
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+
 from engine import load_data, calculate_cost, calculate_order
-from database import create_order, get_orders, get_order, update_order_status
+from database import create_order, get_orders, get_order, update_order_status, get_customers, get_customer_orders
 
 app = Flask(__name__)
+app.secret_key = os.environ.get("FLASK_SECRET_KEY", "samarkand-bakery-secret-2026-change-me")
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
+
+# Admin credentials — change these!
+ADMIN_USERNAME = "admin"
+ADMIN_PASSWORD = "Samarkand2026!"
 
 
 def load_menu():
@@ -24,7 +30,17 @@ def load_menu():
         return json.load(f)
 
 
-# ── Costing Tool ──
+def admin_required(f):
+    """Decorator to protect admin routes with login."""
+    @functools.wraps(f)
+    def decorated(*args, **kwargs):
+        if not session.get("admin_logged_in"):
+            return redirect(url_for("admin_login", next=request.url))
+        return f(*args, **kwargs)
+    return decorated
+
+
+# ── Public Pages ──
 
 @app.route("/")
 def index():
@@ -33,58 +49,11 @@ def index():
     return render_template("order.html", menu=menu)
 
 
-@app.route("/admin")
-def admin_dashboard():
-    """Admin dashboard — only accessible via /admin URL."""
-    data = load_data()
-    recipes = {k: v["name"] for k, v in data["recipes"].items()}
+@app.route("/order")
+def order_page():
     menu = load_menu()
-    return render_template("index.html", recipes=recipes, menu=menu)
+    return render_template("order.html", menu=menu)
 
-
-@app.route("/api/recipes")
-def api_recipes():
-    data = load_data()
-    menu = load_menu()
-    result = []
-    for key, recipe in data["recipes"].items():
-        menu_item = menu["products"].get(key, {})
-        result.append({
-            "key": key,
-            "name": recipe["name"],
-            "selling_price": recipe["selling_price"],
-            "cooking_method": recipe["cooking"]["method"],
-            "image": menu_item.get("image", ""),
-            "description": menu_item.get("description", "")
-        })
-    return jsonify(result)
-
-
-@app.route("/api/prices")
-def api_prices():
-    data = load_data()
-    prices = {k: v for k, v in data["ingredients"].items() if not k.startswith("_")}
-    return jsonify(prices)
-
-
-@app.route("/api/cost")
-def api_cost():
-    data = load_data()
-    recipe_key = request.args.get("recipe")
-    quantity = int(request.args.get("quantity", 1))
-    result = calculate_cost(recipe_key, quantity, data)
-    return jsonify(result)
-
-
-@app.route("/api/order", methods=["POST"])
-def api_order():
-    data = load_data()
-    order_items = request.json.get("items", [])
-    result = calculate_order(order_items, data)
-    return jsonify(result)
-
-
-# ── Product Detail Page ──
 
 @app.route("/product/<product_key>")
 def product_page(product_key):
@@ -95,13 +64,7 @@ def product_page(product_key):
     return render_template("product.html", item=item, product_key=product_key, allergen_notice=menu.get("allergen_notice", ""))
 
 
-# ── Public Ordering Page ──
-
-@app.route("/order")
-def order_page():
-    menu = load_menu()
-    return render_template("order.html", menu=menu)
-
+# ── Public API ──
 
 @app.route("/api/menu")
 def api_menu():
@@ -119,7 +82,6 @@ def api_submit_order():
     if not req.get("customer_name") or not req.get("customer_phone"):
         return jsonify({"error": "Name and phone are required"}), 400
 
-    # Calculate total price
     menu = load_menu()
     total_price = 0
     order_items = []
@@ -137,16 +99,15 @@ def api_submit_order():
             "subtotal": subtotal
         })
 
-    # Calculate cost for profit tracking
     data = load_data()
     cost_items = [{"recipe_key": i["key"], "quantity": i["quantity"]} for i in items]
     cost_result = calculate_order(cost_items, data)
     total_cost = cost_result.get("total_cost", 0)
     total_profit = cost_result.get("total_profit", 0)
 
-    # Save order
     order_id = create_order(
         customer_name=req["customer_name"],
+        customer_email=req.get("customer_email", ""),
         customer_phone=req["customer_phone"],
         delivery_type=req.get("delivery_type", "pickup"),
         delivery_address=req.get("delivery_address"),
@@ -167,14 +128,96 @@ def api_submit_order():
     })
 
 
-# ── Admin Orders Page ──
+# ── Admin Login ──
+
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+    error = None
+    if request.method == "POST":
+        username = request.form.get("username", "")
+        password = request.form.get("password", "")
+        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+            session["admin_logged_in"] = True
+            next_url = request.args.get("next", url_for("admin_dashboard"))
+            return redirect(next_url)
+        else:
+            error = "Invalid username or password"
+    return render_template("login.html", error=error)
+
+
+@app.route("/admin/logout")
+def admin_logout():
+    session.pop("admin_logged_in", None)
+    return redirect(url_for("index"))
+
+
+# ── Admin Pages (all protected) ──
+
+@app.route("/admin")
+@admin_required
+def admin_dashboard():
+    data = load_data()
+    recipes = {k: v["name"] for k, v in data["recipes"].items()}
+    menu = load_menu()
+    return render_template("index.html", recipes=recipes, menu=menu)
+
 
 @app.route("/admin/orders")
+@admin_required
 def admin_orders_page():
     return render_template("admin_orders.html")
 
 
+# ── Admin API (all protected) ──
+
+@app.route("/api/recipes")
+@admin_required
+def api_recipes():
+    data = load_data()
+    menu = load_menu()
+    result = []
+    for key, recipe in data["recipes"].items():
+        menu_item = menu["products"].get(key, {})
+        result.append({
+            "key": key,
+            "name": recipe["name"],
+            "selling_price": recipe["selling_price"],
+            "cooking_method": recipe["cooking"]["method"],
+            "image": menu_item.get("image", ""),
+            "description": menu_item.get("description", "")
+        })
+    return jsonify(result)
+
+
+@app.route("/api/prices")
+@admin_required
+def api_prices():
+    data = load_data()
+    prices = {k: v for k, v in data["ingredients"].items() if not k.startswith("_")}
+    return jsonify(prices)
+
+
+@app.route("/api/cost")
+@admin_required
+def api_cost():
+    data = load_data()
+    recipe_key = request.args.get("recipe")
+    quantity = int(request.args.get("quantity", 1))
+    result = calculate_cost(recipe_key, quantity, data)
+    return jsonify(result)
+
+
+@app.route("/api/order", methods=["POST"])
+@admin_required
+def api_order():
+    data = load_data()
+    order_items = request.json.get("items", [])
+    result = calculate_order(order_items, data)
+    return jsonify(result)
+
+
 @app.route("/api/admin/orders")
+@admin_required
 def api_admin_orders():
     status = request.args.get("status")
     orders = get_orders(status=status)
@@ -182,12 +225,51 @@ def api_admin_orders():
 
 
 @app.route("/api/admin/orders/<int:order_id>/status", methods=["POST"])
+@admin_required
 def api_update_order_status(order_id):
     new_status = request.json.get("status")
     if new_status not in ("pending", "confirmed", "completed", "cancelled"):
         return jsonify({"error": "Invalid status"}), 400
     update_order_status(order_id, new_status)
     return jsonify({"success": True})
+
+
+@app.route("/api/admin/customers")
+@admin_required
+def api_admin_customers():
+    customers = get_customers()
+    return jsonify(customers)
+
+
+@app.route("/api/admin/customers/<path:email>/orders")
+@admin_required
+def api_admin_customer_orders(email):
+    orders = get_customer_orders(email)
+    return jsonify(orders)
+
+
+# ── Public API: Recent orders for social proof ──
+
+@app.route("/api/recent-orders")
+def api_recent_orders():
+    """Return recent orders for social proof pop-ups (first name only)."""
+    # Show confirmed and completed orders (not pending or cancelled)
+    all_orders = get_orders(limit=50)
+    orders = [o for o in all_orders if o["status"] in ("confirmed", "completed")]
+    recent = []
+    for o in orders:
+        first_name = o["customer_name"].split()[0] if o["customer_name"] else "Someone"
+        items_summary = ", ".join(
+            f"{i['quantity']} {i['name']}" for i in o["items"][:2]
+        )
+        if len(o["items"]) > 2:
+            items_summary += f" +{len(o['items']) - 2} more"
+        recent.append({
+            "name": first_name,
+            "items": items_summary,
+            "time": o["created_at"]
+        })
+    return jsonify(recent)
 
 
 if __name__ == "__main__":

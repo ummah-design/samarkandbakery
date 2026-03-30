@@ -3,7 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ item.name }} — Samarkand Turkic Bakery</title>
+    <title>{{ item.name }} — Samarkand Turkic Bakery | {{ "%.0f"|format(item.price) }} MAD</title>
+    <meta name="description" content="{{ item.description }} Order fresh from Samarkand Turkic Bakery in Tetouan. {{ "%.0f"|format(item.price) }} MAD.">
+    <link rel="canonical" href="https://samarkandbakery.com/product/{{ product_key }}">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="product">
+    <meta property="og:title" content="{{ item.name }} — Samarkand Turkic Bakery">
+    <meta property="og:description" content="{{ item.description }}">
+    <meta property="og:url" content="https://samarkandbakery.com/product/{{ product_key }}">
+    <meta property="og:image" content="https://samarkandbakery.com/static/products/{{ item.image }}">
+    <meta property="og:site_name" content="Samarkand Turkic Bakery">
+    <meta property="product:price:amount" content="{{ item.price }}">
+    <meta property="product:price:currency" content="MAD">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ item.name }} — {{ "%.0f"|format(item.price) }} MAD">
+    <meta name="twitter:description" content="{{ item.description }}">
+    <meta name="twitter:image" content="https://samarkandbakery.com/static/products/{{ item.image }}">
+
+    <!-- Google Analytics (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2WFWSZVETF"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-2WFWSZVETF');</script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">

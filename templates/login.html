@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login — Samarkand Bakery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #1e2a4a;
+            --navy-light: #2a3d6b;
+            --gold: #b8860b;
+            --gold-light: #d4a017;
+            --warm-bg: #faf6f1;
+            --warm-card: #ffffff;
+            --text-primary: #1a1a2e;
+            --text-secondary: #6b6b80;
+            --text-muted: #9a9aad;
+            --border: #e8e0d8;
+            --danger: #b53d2e;
+            --font-display: 'Playfair Display', Georgia, serif;
+            --font-body: 'Source Sans 3', 'Segoe UI', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--navy);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--warm-card);
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 24px 48px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .login-logo {
+            height: 60px;
+            width: auto;
+            margin-bottom: 24px;
+        }
+
+        .login-title {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 28px;
+        }
+
+        .field {
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .field-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            background: var(--warm-bg);
+            transition: border-color 200ms ease, box-shadow 200ms ease;
+        }
+
+        .field-input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(184,134,11,0.12);
+        }
+
+        .error-msg {
+            background: #fef2f2;
+            color: var(--danger);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .error-msg svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: var(--navy);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 200ms ease, transform 200ms ease;
+            margin-top: 8px;
+        }
+
+        .btn-login:hover { background: var(--navy-light); transform: translateY(-1px); }
+        .btn-login:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 200ms ease;
+        }
+
+        .back-link:hover { color: var(--gold); }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <img class="login-logo" src="{{ url_for('static', filename='logo.svg') }}" alt="Samarkand Bakery">
+    <h1 class="login-title">Admin Login</h1>
+    <p class="login-subtitle">Enter your credentials to access the dashboard</p>
+
+    {% if error %}
+    <div class="error-msg">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"/></svg>
+        {{ error }}
+    </div>
+    {% endif %}
+
+    <form method="POST">
+        <div class="field">
+            <label class="field-label" for="username">Username</label>
+            <input class="field-input" type="text" id="username" name="username" required autofocus>
+        </div>
+        <div class="field">
+            <label class="field-label" for="password">Password</label>
+            <input class="field-input" type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn-login">Sign In</button>
+    </form>
+
+    <a href="/" class="back-link">Back to bakery</a>
+</div>
+
+</body>
+</html>

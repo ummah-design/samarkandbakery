@@ -185,6 +185,7 @@
         <span>Admin Dashboard</span>
     </div>
     <a href="/" target="_blank" style="color:#b8860b; text-decoration:none; font-size:0.9em; font-weight:500; border:1px solid #b8860b; padding:8px 16px; border-radius:6px;">View Customer Page</a>
+    <a href="/admin/logout" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:0.85em; margin-left:10px;">Logout</a>
 </header>
 
 <div class="container">
@@ -195,6 +196,7 @@
         <button class="tab" onclick="showTab('cost', this)">Product Cost</button>
         <button class="tab" onclick="showTab('quote', this)">Order Quote</button>
         <button class="tab" onclick="showTab('recipes', this)">All Products</button>
+        <button class="tab" onclick="showTab('customers', this)">Customers</button>
         <button class="tab" onclick="showTab('prices', this)">Ingredient Prices</button>
     </div>
 
@@ -318,6 +320,24 @@
         </div>
     </div>
 
+    <!-- ===== CUSTOMERS TAB ===== -->
+    <div id="tab-customers" class="tab-content">
+        <div class="card">
+            <h2>Top Customers</h2>
+            <table class="recipes-table" id="customers-table">
+                <thead><tr><th>Customer</th><th>Email</th><th>Phone</th><th>Orders</th><th>Revenue</th><th>Profit</th><th>Last Order</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div id="customer-detail" class="card" style="display:none;">
+            <h2 id="customer-detail-name">Order History</h2>
+            <table class="order-table" id="customer-orders-table">
+                <thead><tr><th>Date</th><th>Items</th><th>Total</th><th>Status</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
     <!-- ===== INGREDIENT PRICES TAB ===== -->
     <div id="tab-prices" class="tab-content">
         <div class="card">
@@ -395,6 +415,7 @@
         if (name === 'recipes') loadRecipes();
         if (name === 'prices') loadPrices();
         if (name === 'admin') loadAdminOrders();
+        if (name === 'customers') loadCustomers();
     }
 
     function mad(val) { return parseFloat(val).toFixed(2) + ' MAD'; }
@@ -569,6 +590,7 @@
                 <div class="order-details" id="details-${order.id}">
                     <div class="detail-section"><h4>Customer</h4>
                         <div class="detail-row"><span class="label">Name</span><span class="value">${order.customer_name}</span></div>
+                        <div class="detail-row"><span class="label">Email</span><span class="value">${order.customer_email || '-'}</span></div>
                         <div class="detail-row"><span class="label">Phone</span><span class="value">${order.customer_phone}</span></div>
                         <div class="detail-row"><span class="label">Type</span><span class="value">${order.delivery_type==='delivery'?'Delivery':'Pickup (Wilaya Centre)'}</span></div>
                         ${order.delivery_address?`<div class="detail-row"><span class="label">Address</span><span class="value">${order.delivery_address}</span></div>`:''}
@@ -707,6 +729,57 @@
             const label = key.replace(/_per_kg/g,' /kg').replace(/_per_litre/g,' /L').replace(/_each/g,' each').replace(/_per_pot/g,' /pot').replace(/_per_tub/g,' /tub').replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
             grid.innerHTML += `<div class="price-item"><span class="name">${label}</span><span class="amount">${mad(price)}</span></div>`;
         }
+    }
+
+    // ===== CUSTOMERS =====
+    async function loadCustomers() {
+        const res = await fetch('/api/admin/customers');
+        const data = await res.json();
+        const tbody = document.querySelector('#customers-table tbody');
+        tbody.innerHTML = '';
+        if (data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#999;padding:40px;">No customers yet</td></tr>';
+            return;
+        }
+        for (const c of data) {
+            const lastOrder = c.last_order ? new Date(c.last_order).toLocaleDateString() : '-';
+            const profitClass = (c.total_profit || 0) >= 0 ? 'profit' : 'loss';
+            tbody.innerHTML += `<tr style="cursor:pointer;" onclick="loadCustomerOrders('${encodeURIComponent(c.customer_email)}', '${c.customer_name.replace(/'/g, "\\'")}')">
+                <td><strong>${c.customer_name}</strong></td>
+                <td>${c.customer_email || '-'}</td>
+                <td>${c.customer_phone}</td>
+                <td>${c.total_orders}</td>
+                <td class="price">${mad(c.total_revenue || 0)}</td>
+                <td class="${profitClass}">${mad(c.total_profit || 0)}</td>
+                <td>${lastOrder}</td>
+            </tr>`;
+        }
+    }
+
+    async function loadCustomerOrders(email, name) {
+        const res = await fetch('/api/admin/customers/' + email + '/orders');
+        const orders = await res.json();
+        const detail = document.getElementById('customer-detail');
+        const title = document.getElementById('customer-detail-name');
+        const tbody = document.querySelector('#customer-orders-table tbody');
+
+        title.textContent = name + ' — Order History';
+        tbody.innerHTML = '';
+
+        for (const o of orders) {
+            const date = new Date(o.created_at).toLocaleString();
+            const items = o.items.map(i => `${i.quantity}x ${i.name}`).join(', ');
+            const sc = 'status-' + o.status;
+            tbody.innerHTML += `<tr>
+                <td>${date}</td>
+                <td>${items}</td>
+                <td>${mad(o.total_price || 0)}</td>
+                <td><span class="status-badge ${sc}">${o.status}</span></td>
+            </tr>`;
+        }
+
+        detail.style.display = 'block';
+        detail.scrollIntoView({ behavior: 'smooth' });
     }
 </script>
 </body>

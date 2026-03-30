@@ -3,7 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Samarkand Turkic Bakery — Order Online</title>
+    <title>Samarkand Turkic Bakery — Order Fresh Uzbek & Turkish Baked Goods in Tetouan</title>
+    <meta name="description" content="Order fresh handmade Uzbek and Turkish pastries, breads, and pies from Samarkand Turkic Bakery in Tetouan, Morocco. Meat Samsa, Pide, Cheburek, Uzbek Bread and more. Delivery & pickup available on weekends.">
+    <meta name="keywords" content="Samarkand Bakery, Tetouan bakery, Uzbek food, Turkish bakery, samsa, pide, cheburek, order online, Morocco">
+    <meta name="author" content="Samarkand Turkic Bakery">
+    <link rel="canonical" href="https://samarkandbakery.com/">
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Samarkand Turkic Bakery — Order Online">
+    <meta property="og:description" content="Fresh handmade Uzbek & Turkish pastries, breads, and pies in Tetouan. Order online for weekend delivery or pickup.">
+    <meta property="og:url" content="https://samarkandbakery.com/">
+    <meta property="og:image" content="https://samarkandbakery.com/static/profile-pic.png">
+    <meta property="og:site_name" content="Samarkand Turkic Bakery">
+    <meta property="og:locale" content="en_GB">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Samarkand Turkic Bakery — Order Online">
+    <meta name="twitter:description" content="Fresh handmade Uzbek & Turkish pastries in Tetouan. Order online for weekend delivery or pickup.">
+    <meta name="twitter:image" content="https://samarkandbakery.com/static/profile-pic.png">
+
+    <!-- Google Analytics (GA4) — replace G-2WFWSZVETF with your Measurement ID -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2WFWSZVETF"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-2WFWSZVETF');</script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -662,6 +686,50 @@
             .product-grid { grid-template-columns: repeat(3, 1fr); }
         }
 
+        /* Social proof toast */
+        .social-proof {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            background: var(--warm-card);
+            border-radius: var(--radius-md);
+            padding: 14px 18px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 90;
+            max-width: 320px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 400ms ease, transform 400ms ease;
+            pointer-events: none;
+            border-left: 3px solid var(--gold);
+        }
+
+        .social-proof.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .social-proof-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--gold-pale);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .social-proof-icon svg { width: 18px; height: 18px; stroke: var(--gold); }
+
+        .social-proof-text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; }
+        .social-proof-name { font-weight: 600; color: var(--text-primary); }
+        .social-proof-time { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+
         /* WhatsApp floating button */
         .whatsapp-float {
             position: fixed;
@@ -799,8 +867,11 @@
             </div>
 
             <div class="field">
+                <label class="field-label" for="c-email">Email</label>
+                <input class="field-input" type="email" id="c-email" placeholder="your@email.com" required>
+
                 <label class="field-label" for="c-phone">Phone / WhatsApp</label>
-                <input class="field-input" type="tel" id="c-phone" placeholder="+212 6XX XXX XXX" required>
+                <input class="field-input" type="tel" id="c-phone" placeholder="e.g. 0680 342 679 or +212 680 342 679" required>
             </div>
 
             <label class="field-label">Collection Method</label>
@@ -934,15 +1005,38 @@ function openCheckout() {
     document.getElementById('checkout-form').style.display = 'block';
     document.getElementById('success-view').style.display = 'none';
 
+    renderCheckoutSummary();
+}
+
+function renderCheckoutSummary() {
     let html = '', total = 0;
-    for (const [k, q] of Object.entries(cart)) {
+    const keys = Object.keys(cart);
+    if (keys.length === 0) { closeCheckout(); updateCartBar(); return; }
+    for (const k of keys) {
+        const q = cart[k];
         const p = menuData.products[k];
         const sub = p.price * q;
         total += sub;
-        html += `<div class="cart-line"><span class="cart-line-name">${p.name} x${q}</span><span class="cart-line-price">${sub.toFixed(2)} MAD</span></div>`;
+        html += `<div class="cart-line">
+            <span class="cart-line-name">${p.name} x${q}</span>
+            <span style="display:flex;align-items:center;gap:10px;">
+                <span class="cart-line-price">${sub.toFixed(2)} MAD</span>
+                <button onclick="removeFromCheckout('${k}')" style="background:none;border:none;cursor:pointer;padding:4px;opacity:0.4;transition:opacity 200ms;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'" aria-label="Remove ${p.name}">
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+                </button>
+            </span>
+        </div>`;
     }
     html += `<div class="cart-line-total"><span>Total</span><span class="amount">${total.toFixed(2)} MAD</span></div>`;
     document.getElementById('checkout-summary').innerHTML = html;
+}
+
+function removeFromCheckout(key) {
+    delete cart[key];
+    saveCart();
+    updateControls(key);
+    updateCartBar();
+    renderCheckoutSummary();
 
     setTimeout(() => {
         if (!checkoutMap) {
@@ -977,8 +1071,23 @@ function setDelivery(type) {
 
 async function submitOrder() {
     const name = document.getElementById('c-name').value.trim();
-    const phone = document.getElementById('c-phone').value.trim();
-    if (!name || !phone) { alert('Please enter your name and phone number.'); return; }
+    const email = document.getElementById('c-email').value.trim().toLowerCase();
+    let phone = document.getElementById('c-phone').value.trim();
+    if (!name || !email || !phone) { alert('Please enter your name, email, and phone number.'); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('Please enter a valid email address.'); return; }
+    // Normalise phone: keep only + and digits
+    phone = phone.replace(/[^\d+]/g, '');
+    // Moroccan local: 0680... -> +212680...
+    if (phone.startsWith('0') && phone.length === 10) phone = '+212' + phone.substring(1);
+    // 9 digits starting with 5/6/7 (Moroccan mobile without prefix)
+    else if (phone.length === 9 && '567'.includes(phone[0])) phone = '+212' + phone;
+    // Starts with 00 (international)
+    else if (phone.startsWith('00')) phone = '+' + phone.substring(2);
+    // Has country code but no +
+    else if (phone.length > 10 && phone[0] !== '+') phone = '+' + phone;
+    // Already has +
+    // Validate minimum length
+    if (phone.replace(/\D/g, '').length < 9) { alert('Please enter a valid phone number (e.g. 0680 342 679 or +212 680 342 679)'); return; }
     if (deliveryType === 'delivery' && !selectedLat) { alert('Please tap on the map to set your delivery location.'); return; }
 
     const btn = document.getElementById('submit-btn');
@@ -990,6 +1099,7 @@ async function submitOrder() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 customer_name: name,
+                customer_email: email,
                 customer_phone: phone,
                 delivery_type: deliveryType,
                 delivery_address: document.getElementById('c-address')?.value || null,
@@ -1022,6 +1132,7 @@ function resetOrder() {
     for (const k of Object.keys(menuData.products)) updateControls(k);
     updateCartBar(); closeCheckout();
     document.getElementById('c-name').value = '';
+    document.getElementById('c-email').value = '';
     document.getElementById('c-phone').value = '';
     if (document.getElementById('c-address')) document.getElementById('c-address').value = '';
     document.getElementById('c-notes').value = '';
@@ -1031,6 +1142,17 @@ function resetOrder() {
     setDelivery('pickup');
 }
 </script>
+
+<!-- Social proof toast -->
+<div class="social-proof" id="social-proof">
+    <div class="social-proof-icon">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"/></svg>
+    </div>
+    <div>
+        <div class="social-proof-text"><span class="social-proof-name" id="sp-name"></span> ordered <span id="sp-items"></span></div>
+        <div class="social-proof-time" id="sp-time"></div>
+    </div>
+</div>
 
 <!-- WhatsApp floating button -->
 <a href="https://wa.me/212680342679" target="_blank" rel="noopener" class="whatsapp-float" aria-label="Chat on WhatsApp" id="whatsapp-btn">
@@ -1045,6 +1167,47 @@ const observer = new MutationObserver(() => {
     waBtn.style.bottom = cartBarEl.classList.contains('visible') ? '84px' : '24px';
 });
 observer.observe(cartBarEl, { attributes: true, attributeFilter: ['class'] });
+
+// Social proof pop-ups
+(async function initSocialProof() {
+    try {
+        const res = await fetch('/api/recent-orders');
+        const orders = await res.json();
+        if (!orders || orders.length === 0) return;
+
+        const toast = document.getElementById('social-proof');
+        const nameEl = document.getElementById('sp-name');
+        const itemsEl = document.getElementById('sp-items');
+        const timeEl = document.getElementById('sp-time');
+        let idx = 0;
+
+        function timeAgo(dateStr) {
+            const diff = Date.now() - new Date(dateStr).getTime();
+            const mins = Math.floor(diff / 60000);
+            if (mins < 60) return mins + ' min ago';
+            const hrs = Math.floor(mins / 60);
+            if (hrs < 24) return hrs + ' hour' + (hrs > 1 ? 's' : '') + ' ago';
+            const days = Math.floor(hrs / 24);
+            return days + ' day' + (days > 1 ? 's' : '') + ' ago';
+        }
+
+        function showNext() {
+            const order = orders[idx % orders.length];
+            nameEl.textContent = order.name;
+            itemsEl.textContent = order.items;
+            timeEl.textContent = timeAgo(order.time);
+            toast.classList.add('visible');
+            setTimeout(() => { toast.classList.remove('visible'); }, 5000);
+            idx++;
+        }
+
+        // First pop-up after 8 seconds, then every 25 seconds
+        setTimeout(() => {
+            showNext();
+            setInterval(showNext, 25000);
+        }, 8000);
+    } catch(e) { /* silently fail if no orders */ }
+})();
 </script>
 
 </body>

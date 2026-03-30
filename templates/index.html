@@ -11,7 +11,7 @@
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f0eb; color: #2c2c2c; min-height: 100vh; }
 
         header { background: #1e2a4a; color: white; padding: 15px 30px; display: flex; align-items: center; gap: 20px; }
-        header img { height: 60px; width: 60px; border-radius: 50%; object-fit: cover; border: 2px solid #b8860b; }
+        header img { height: 48px; width: auto; }
         header h1 { font-size: 1.6em; font-weight: 600; letter-spacing: 1px; }
         header span { font-size: 0.9em; opacity: 0.7; }
 
@@ -179,7 +179,7 @@
 <body>
 
 <header>
-    <img src="{{ url_for('static', filename='logo.svg') }}" alt="Samarkand Bakery Logo">
+    <img src="{{ url_for('static', filename='logo.svg') }}" alt="Samarkand Bakery Logo" style="height:48px;width:auto;">
     <div style="flex:1;">
         <h1>SAMARKAND TURKIC BAKERY</h1>
         <span>Admin Dashboard</span>
@@ -191,8 +191,8 @@
 <div class="container">
 
     <div class="tabs">
-        <button class="tab active" onclick="showTab('shop', this)">Order Page</button>
-        <button class="tab" onclick="showTab('admin', this)">Orders Admin</button>
+        <button class="tab active" onclick="showTab('admin', this)">Orders Admin</button>
+        <button class="tab" onclick="showTab('shop', this)">Order Page</button>
         <button class="tab" onclick="showTab('cost', this)">Product Cost</button>
         <button class="tab" onclick="showTab('quote', this)">Order Quote</button>
         <button class="tab" onclick="showTab('recipes', this)">All Products</button>
@@ -201,14 +201,7 @@
     </div>
 
     <!-- ===== ORDER PAGE TAB ===== -->
-    <div id="tab-shop" class="tab-content active">
-        <div style="background:#1e2a4a; color:white; padding:14px 20px; border-radius:10px; margin-bottom:20px; display:flex; align-items:center; gap:12px;">
-            <span style="font-size:1.5em;">&#128197;</span>
-            <div>
-                <div style="font-weight:600; font-size:1.05em;">Deliveries & Collections: Saturday & Sunday only</div>
-                <div style="font-size:0.85em; opacity:0.8;">You can place your order any time — we deliver and prepare orders on weekends.</div>
-            </div>
-        </div>
+    <div id="tab-shop" class="tab-content">
         {% for category in menu.categories %}
         <div class="category-title">{{ category.name }}</div>
         <div class="product-grid">
@@ -234,7 +227,7 @@
     </div>
 
     <!-- ===== ORDERS ADMIN TAB ===== -->
-    <div id="tab-admin" class="tab-content">
+    <div id="tab-admin" class="tab-content active">
         <div class="stats-bar">
             <div class="stat-card"><div class="number" id="stat-total">0</div><div class="label">Total Orders</div></div>
             <div class="stat-card"><div class="number" id="stat-pending">0</div><div class="label">Pending</div></div>
@@ -755,6 +748,9 @@
             </tr>`;
         }
     }
+
+    // Load orders on page load since admin tab is default
+    loadAdminOrders();
 
     async function loadCustomerOrders(email, name) {
         const res = await fetch('/api/admin/customers/' + email + '/orders');

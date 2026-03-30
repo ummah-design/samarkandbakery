@@ -323,6 +323,11 @@
                 <input type="hidden" id="edit-product-key">
 
                 <div style="margin-bottom:16px;">
+                    <label style="display:block;font-size:0.82rem;font-weight:600;color:#6b6b80;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Product Name</label>
+                    <input id="edit-name" type="text" style="width:100%;padding:12px 16px;border:1px solid #e8e0d8;border-radius:8px;font-family:inherit;font-size:0.95rem;background:#faf6f1;" placeholder="Product name">
+                </div>
+
+                <div style="margin-bottom:16px;">
                     <label style="display:block;font-size:0.82rem;font-weight:600;color:#6b6b80;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Product Image</label>
                     <div id="edit-image-preview" style="width:100%;height:200px;border-radius:12px;overflow:hidden;margin-bottom:10px;background:#f0ebe3;display:flex;align-items:center;justify-content:center;">
                         <img id="edit-image-img" style="width:100%;height:100%;object-fit:cover;" src="" alt="">
@@ -336,8 +341,13 @@
                 </div>
 
                 <div style="margin-bottom:16px;">
-                    <label style="display:block;font-size:0.82rem;font-weight:600;color:#6b6b80;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Description</label>
-                    <textarea id="edit-description" style="width:100%;padding:12px 16px;border:1px solid #e8e0d8;border-radius:8px;font-family:inherit;font-size:0.95rem;min-height:100px;resize:vertical;background:#faf6f1;" placeholder="Product description..."></textarea>
+                    <label style="display:block;font-size:0.82rem;font-weight:600;color:#6b6b80;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Short Description <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:0.9em;">(shown on homepage menu cards)</span></label>
+                    <textarea id="edit-description" style="width:100%;padding:12px 16px;border:1px solid #e8e0d8;border-radius:8px;font-family:inherit;font-size:0.95rem;min-height:70px;resize:vertical;background:#faf6f1;" placeholder="Short description for menu cards..."></textarea>
+                </div>
+
+                <div style="margin-bottom:16px;">
+                    <label style="display:block;font-size:0.82rem;font-weight:600;color:#6b6b80;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Full Description <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:0.9em;">(shown on product detail page)</span></label>
+                    <textarea id="edit-description-long" style="width:100%;padding:12px 16px;border:1px solid #e8e0d8;border-radius:8px;font-family:inherit;font-size:0.95rem;min-height:120px;resize:vertical;background:#faf6f1;" placeholder="Full product description..."></textarea>
                 </div>
 
                 <div style="margin-bottom:24px;">
@@ -841,17 +851,24 @@
                 <td><strong>${r.name}</strong></td>
                 <td style="font-size:0.85em;color:#6b6b80;max-width:300px;" dir="auto">${desc}</td>
                 <td class="price">${mad(r.selling_price)}</td>
-                <td><button class="status-btn complete" style="font-size:0.78em;padding:6px 14px;" onclick="openProductEdit('${r.key}','${r.name.replace(/'/g,"\\'")}','${(r.description||'').replace(/'/g,"\\'")}',${r.selling_price},'${r.image||''}')">Edit</button></td>
+                <td><button class="status-btn complete" style="font-size:0.78em;padding:6px 14px;" data-key="${r.key}" onclick="openProductEditFromData(this)">Edit</button></td>
             </tr>`;
+            // Store full data on the button for edit
+            const btns = tbody.querySelectorAll('[data-key="' + r.key + '"]');
+            if (btns.length) btns[btns.length-1]._data = r;
         }
     }
 
-    function openProductEdit(key, name, desc, price, image) {
-        document.getElementById('edit-product-key').value = key;
-        document.getElementById('edit-description').value = desc;
-        document.getElementById('edit-price').value = price;
+    function openProductEditFromData(btn) {
+        const r = btn._data;
+        if (!r) return;
+        document.getElementById('edit-product-key').value = r.key;
+        document.getElementById('edit-name').value = r.name || '';
+        document.getElementById('edit-description').value = r.description || '';
+        document.getElementById('edit-description-long').value = r.description_long || '';
+        document.getElementById('edit-price').value = r.selling_price;
         const img = document.getElementById('edit-image-img');
-        img.src = image ? '/static/products/' + image + '?t=' + Date.now() : '';
+        img.src = r.image ? '/static/products/' + r.image + '?t=' + Date.now() : '';
         document.getElementById('edit-image-file').value = '';
         document.getElementById('product-edit-backdrop').style.display = 'flex';
     }
@@ -876,7 +893,9 @@
         btn.textContent = 'Saving...'; btn.disabled = true;
 
         const formData = new FormData();
+        formData.append('name', document.getElementById('edit-name').value);
         formData.append('description', document.getElementById('edit-description').value);
+        formData.append('description_long', document.getElementById('edit-description-long').value);
         formData.append('price', document.getElementById('edit-price').value);
 
         const fileInput = document.getElementById('edit-image-file');

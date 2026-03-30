@@ -256,11 +256,12 @@ def api_recipes():
         menu_item = menu["products"].get(key, {})
         result.append({
             "key": key,
-            "name": recipe["name"],
+            "name": menu_item.get("name", recipe["name"]),
             "selling_price": recipe["selling_price"],
             "cooking_method": recipe["cooking"]["method"],
             "image": menu_item.get("image", ""),
-            "description": menu_item.get("description", "")
+            "description": menu_item.get("description", ""),
+            "description_long": menu_item.get("description_long", "")
         })
     return jsonify(result)
 
@@ -273,12 +274,18 @@ def api_update_product(product_key):
     if product_key not in menu["products"]:
         return jsonify({"error": "Product not found"}), 404
 
-    # Update description if provided
+    # Update fields if provided
+    name = request.form.get("name")
     description = request.form.get("description")
+    description_long = request.form.get("description_long")
     price = request.form.get("price")
 
+    if name is not None and name.strip():
+        menu["products"][product_key]["name"] = name.strip()
     if description is not None:
         menu["products"][product_key]["description"] = description
+    if description_long is not None:
+        menu["products"][product_key]["description_long"] = description_long
     if price is not None:
         try:
             menu["products"][product_key]["price"] = float(price)

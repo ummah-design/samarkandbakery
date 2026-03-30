@@ -28,6 +28,14 @@ def load_menu():
 
 @app.route("/")
 def index():
+    """Public-facing ordering page — this is what customers see."""
+    menu = load_menu()
+    return render_template("order.html", menu=menu)
+
+
+@app.route("/admin")
+def admin_dashboard():
+    """Admin dashboard — only accessible via /admin URL."""
     data = load_data()
     recipes = {k: v["name"] for k, v in data["recipes"].items()}
     menu = load_menu()

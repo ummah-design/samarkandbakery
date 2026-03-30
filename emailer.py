@@ -52,7 +52,7 @@ def _email_wrapper(content_html, title=""):
 
     <!-- Content card -->
     <div style="background:#ffffff;border-radius:12px;padding:28px;box-shadow:0 2px 8px rgba(30,42,74,0.06);">
-        {f'<h2 style="font-family:Georgia,serif;font-size:1.3em;color:#1e2a4a;margin:0 0 16px;">{title}</h2>' if title else ''}
+        {'<h2 style="font-family:Georgia,serif;font-size:1.3em;color:#1e2a4a;margin:0 0 16px;">' + title + '</h2>' if title else ''}
         {content_html}
     </div>
 
@@ -107,7 +107,7 @@ def send_order_placed(order):
         <p style="margin:0;font-size:0.88em;color:#6b6b80;">
             <strong style="color:#1e2a4a;">Order #{order['id']}</strong><br>
             {delivery_info}<br>
-            {f"Preferred date: <strong style='color:#b8860b;'>{order.get('preferred_date', 'Not specified')}</strong>" if order.get('preferred_date') else ''}
+            {"Preferred date: <strong style='color:#b8860b;'>" + str(order.get('preferred_date', 'Not specified')) + "</strong>" if order.get('preferred_date') else ''}
         </p>
     </div>
 
@@ -145,7 +145,7 @@ def send_order_confirmed(order):
         <p style="margin:0;font-size:0.92em;color:#2d7a4f;font-weight:600;">
             Order #{order['id']} — Confirmed
         </p>
-        {f"<p style='margin:6px 0 0;font-size:0.88em;color:#444;'>Delivery date: <strong style=\"color:#b8860b;\">{order.get('preferred_date')}</strong></p>" if order.get('preferred_date') else ''}
+        {"<p style='margin:6px 0 0;font-size:0.88em;color:#444;'>Delivery date: <strong style='color:#b8860b;'>" + str(order.get('preferred_date', '')) + "</strong></p>" if order.get('preferred_date') else ''}
     </div>
 
     <table style="width:100%;border-collapse:collapse;font-size:0.92em;margin-bottom:16px;">

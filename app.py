@@ -266,6 +266,15 @@ def api_admin_customer_orders(email):
     return jsonify(orders)
 
 
+@app.route("/api/admin/customer-orders")
+@admin_required
+def api_admin_customer_orders_by_query():
+    """Alternative endpoint using query param to avoid URL encoding issues."""
+    email = request.args.get("email", "")
+    orders = get_customer_orders(email)
+    return jsonify(orders)
+
+
 # ── Public Reviews API ──
 
 @app.route("/api/reviews/<product_key>")

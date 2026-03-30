@@ -829,7 +829,8 @@
     loadAdminOrders();
 
     async function loadCustomerOrders(email, name) {
-        const res = await fetch('/api/admin/customers/' + email + '/orders');
+        email = decodeURIComponent(email);
+        const res = await fetch('/api/admin/customer-orders?email=' + encodeURIComponent(email));
         const orders = await res.json();
         const detail = document.getElementById('customer-detail');
         const title = document.getElementById('customer-detail-name');

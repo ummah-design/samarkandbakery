@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit {{ item.name }} — Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #1e2a4a;
+            --navy-light: #2a3d6b;
+            --gold: #b8860b;
+            --gold-light: #d4a017;
+            --warm-bg: #faf6f1;
+            --warm-card: #ffffff;
+            --warm-cream: #f0ebe3;
+            --text-primary: #1a1a2e;
+            --text-secondary: #6b6b80;
+            --text-muted: #9a9aad;
+            --border: #e8e0d8;
+            --success: #2d7a4f;
+            --font-display: 'Playfair Display', Georgia, serif;
+            --font-body: 'Source Sans 3', 'Segoe UI', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--warm-bg);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.5;
+        }
+
+        .top-bar {
+            background: var(--navy);
+            padding: 0 24px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .top-bar a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 200ms;
+        }
+
+        .top-bar a:hover { color: #fff; }
+        .top-bar a svg { width: 18px; height: 18px; }
+
+        .top-bar-title {
+            color: #fff;
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 32px 20px 80px;
+        }
+
+        .page-title {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 32px;
+        }
+
+        .section-card {
+            background: var(--warm-card);
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(30,42,74,0.04);
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 4px;
+        }
+
+        .section-desc {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .field { margin-bottom: 18px; }
+
+        .field-label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .field-hint {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .field-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            background: var(--warm-bg);
+            transition: border-color 200ms, box-shadow 200ms;
+        }
+
+        .field-input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(184,134,11,0.12);
+        }
+
+        textarea.field-input { resize: vertical; }
+
+        .slug-row {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            background: var(--warm-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .slug-prefix {
+            padding: 12px 14px;
+            background: var(--warm-cream);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            white-space: nowrap;
+            border-right: 1px solid var(--border);
+        }
+
+        .slug-input {
+            flex: 1;
+            padding: 12px 14px;
+            border: none;
+            background: transparent;
+            font-family: monospace;
+            font-size: 0.92rem;
+            color: var(--text-primary);
+        }
+
+        .slug-input:focus { outline: none; }
+
+        .image-preview {
+            width: 100%;
+            max-width: 360px;
+            height: 240px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--warm-cream);
+            margin-bottom: 12px;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .btn-upload {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--navy);
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 600;
+            transition: background 200ms;
+        }
+
+        .btn-upload:hover { background: var(--navy-light); }
+        .btn-upload svg { width: 16px; height: 16px; }
+
+        .char-count {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: right;
+            margin-top: 4px;
+        }
+
+        .char-count.warn { color: #c17b1e; }
+        .char-count.over { color: #b53d2e; }
+
+        .seo-preview {
+            background: var(--warm-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .seo-preview-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        .seo-preview-title {
+            font-size: 1.1rem;
+            color: #1a0dab;
+            font-weight: 400;
+            margin-bottom: 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .seo-preview-url {
+            font-size: 0.82rem;
+            color: #006621;
+            margin-bottom: 4px;
+        }
+
+        .seo-preview-desc {
+            font-size: 0.85rem;
+            color: #545454;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .actions-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--warm-card);
+            border-top: 1px solid var(--border);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            z-index: 50;
+            box-shadow: 0 -4px 16px rgba(30,42,74,0.06);
+        }
+
+        .btn-cancel {
+            padding: 12px 24px;
+            background: var(--warm-cream);
+            color: var(--text-secondary);
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 200ms;
+        }
+
+        .btn-cancel:hover { background: var(--border); }
+
+        .btn-save {
+            padding: 12px 32px;
+            background: var(--gold);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 200ms, transform 200ms;
+        }
+
+        .btn-save:hover { background: var(--gold-light); transform: translateY(-1px); }
+        .btn-save:disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed; transform: none; }
+
+        .save-status {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+
+        @media (max-width: 768px) {
+            .two-col { grid-template-columns: 1fr; }
+            .container { padding: 20px 16px 100px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-bar">
+    <a href="/admin">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/></svg>
+        Back to Admin
+    </a>
+    <span class="top-bar-title">Edit Product</span>
+    <a href="/product/{{ product_key }}" target="_blank">
+        View Live
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+    </a>
+</div>
+
+<div class="container">
+    <h1 class="page-title">{{ item.name }}</h1>
+    <p class="page-subtitle">Edit product details, images, and SEO settings</p>
+
+    <!-- Basic Info -->
+    <div class="section-card">
+        <h2 class="section-title">Product Information</h2>
+        <p class="section-desc">Name, price, and descriptions shown to customers</p>
+
+        <div class="two-col">
+            <div class="field">
+                <label class="field-label" for="f-name">Product Name</label>
+                <input class="field-input" type="text" id="f-name" value="{{ item.name }}">
+            </div>
+            <div class="field">
+                <label class="field-label" for="f-price">Selling Price (MAD)</label>
+                <input class="field-input" type="number" step="0.5" min="0" id="f-price" value="{{ item.price }}">
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="field-label" for="f-desc">Short Description <span style="font-weight:400;text-transform:none;letter-spacing:0;">— shown on homepage menu cards</span></label>
+            <textarea class="field-input" id="f-desc" rows="3" oninput="updateCharCount('f-desc', 'desc-count', 160)">{{ item.description }}</textarea>
+            <div class="char-count" id="desc-count"></div>
+        </div>
+
+        <div class="field">
+            <label class="field-label" for="f-desc-long">Full Description <span style="font-weight:400;text-transform:none;letter-spacing:0;">— shown on product detail page</span></label>
+            <textarea class="field-input" id="f-desc-long" rows="5">{{ item.description_long }}</textarea>
+        </div>
+    </div>
+
+    <!-- Image -->
+    <div class="section-card">
+        <h2 class="section-title">Product Image</h2>
+        <p class="section-desc">Any size works — images are auto-cropped to fit. Square or landscape (~600x400px) looks best.</p>
+
+        <div class="image-preview" id="img-preview">
+            <img id="img-tag" src="/static/products/{{ item.image }}" alt="{{ item.name }}">
+        </div>
+        <label class="btn-upload">
+            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"/></svg>
+            Replace Image
+            <input type="file" id="f-image" accept=".jpg,.jpeg,.png,.webp" style="display:none;" onchange="previewImage(this)">
+        </label>
+        <span class="field-hint" style="margin-left:12px;">JPG, PNG, or WEBP</span>
+    </div>
+
+    <!-- SEO -->
+    <div class="section-card">
+        <h2 class="section-title">SEO Settings</h2>
+        <p class="section-desc">Control how this product appears in Google search results</p>
+
+        <div class="field">
+            <label class="field-label" for="f-slug">URL Slug</label>
+            <div class="slug-row">
+                <span class="slug-prefix">samarkandbakery.com/product/</span>
+                <input class="slug-input" type="text" id="f-slug" value="{{ product_key }}">
+            </div>
+            <p class="field-hint">Only lowercase letters, numbers, and underscores. Changing this will change the product URL.</p>
+        </div>
+
+        <div class="field">
+            <label class="field-label" for="f-meta-title">Meta Title <span style="font-weight:400;text-transform:none;letter-spacing:0;">— shown in browser tab & Google results</span></label>
+            <input class="field-input" type="text" id="f-meta-title" value="{{ item.meta_title or '' }}" placeholder="{{ item.name }} — Samarkand Turkic Bakery | {{ '%.0f'|format(item.price) }} MAD" oninput="updateCharCount('f-meta-title', 'meta-title-count', 60); updateSeoPreview()">
+            <div class="char-count" id="meta-title-count"></div>
+            <p class="field-hint">Leave blank to auto-generate from product name. Recommended: 50–60 characters.</p>
+        </div>
+
+        <div class="field">
+            <label class="field-label" for="f-meta-desc">Meta Description <span style="font-weight:400;text-transform:none;letter-spacing:0;">— shown below the title in Google results</span></label>
+            <textarea class="field-input" id="f-meta-desc" rows="3" placeholder="{{ item.description }}" oninput="updateCharCount('f-meta-desc', 'meta-desc-count', 160); updateSeoPreview()">{{ item.meta_description or '' }}</textarea>
+            <div class="char-count" id="meta-desc-count"></div>
+            <p class="field-hint">Leave blank to auto-generate from short description. Recommended: 120–160 characters.</p>
+        </div>
+
+        <div class="seo-preview">
+            <div class="seo-preview-label">Google Search Preview</div>
+            <div class="seo-preview-title" id="seo-title"></div>
+            <div class="seo-preview-url" id="seo-url"></div>
+            <div class="seo-preview-desc" id="seo-desc"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Fixed save bar -->
+<div class="actions-bar">
+    <span class="save-status" id="save-status"></span>
+    <a class="btn-cancel" href="/admin">Cancel</a>
+    <button class="btn-save" id="save-btn" onclick="saveProduct()">Save Changes</button>
+</div>
+
+<script>
+const productKey = "{{ product_key }}";
+
+function previewImage(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('img-tag').src = e.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function updateCharCount(inputId, countId, limit) {
+    const len = document.getElementById(inputId).value.length;
+    const el = document.getElementById(countId);
+    el.textContent = len + ' / ' + limit;
+    el.className = 'char-count' + (len > limit ? ' over' : len > limit * 0.85 ? ' warn' : '');
+}
+
+function updateSeoPreview() {
+    const title = document.getElementById('f-meta-title').value || document.getElementById('f-meta-title').placeholder;
+    const desc = document.getElementById('f-meta-desc').value || document.getElementById('f-meta-desc').placeholder;
+    const slug = document.getElementById('f-slug').value || productKey;
+    document.getElementById('seo-title').textContent = title;
+    document.getElementById('seo-url').textContent = 'samarkandbakery.com/product/' + slug;
+    document.getElementById('seo-desc').textContent = desc;
+}
+
+// Init
+updateCharCount('f-desc', 'desc-count', 160);
+updateCharCount('f-meta-title', 'meta-title-count', 60);
+updateCharCount('f-meta-desc', 'meta-desc-count', 160);
+updateSeoPreview();
+
+// Auto-update slug when name changes
+document.getElementById('f-slug').addEventListener('input', updateSeoPreview);
+
+async function saveProduct() {
+    const btn = document.getElementById('save-btn');
+    const status = document.getElementById('save-status');
+    btn.disabled = true; btn.textContent = 'Saving...';
+    status.textContent = '';
+
+    const formData = new FormData();
+    formData.append('name', document.getElementById('f-name').value);
+    formData.append('price', document.getElementById('f-price').value);
+    formData.append('description', document.getElementById('f-desc').value);
+    formData.append('description_long', document.getElementById('f-desc-long').value);
+    formData.append('meta_title', document.getElementById('f-meta-title').value);
+    formData.append('meta_description', document.getElementById('f-meta-desc').value);
+    formData.append('slug', document.getElementById('f-slug').value);
+
+    const fileInput = document.getElementById('f-image');
+    if (fileInput.files.length > 0) {
+        formData.append('image', fileInput.files[0]);
+    }
+
+    try {
+        const res = await fetch('/api/admin/product/' + productKey + '/update', {
+            method: 'POST',
+            body: formData
+        });
+        const data = await res.json();
+        if (data.success) {
+            status.textContent = 'Saved!';
+            // If slug changed, redirect to new edit URL
+            if (data.key !== productKey) {
+                window.location.href = '/admin/product/' + data.key + '/edit';
+            } else {
+                setTimeout(() => { status.textContent = ''; }, 3000);
+            }
+        } else {
+            status.style.color = '#b53d2e';
+            status.textContent = data.error || 'Failed to save';
+        }
+    } catch(e) {
+        status.style.color = '#b53d2e';
+        status.textContent = 'Connection error';
+    }
+    btn.disabled = false; btn.textContent = 'Save Changes';
+}
+</script>
+
+</body>
+</html>

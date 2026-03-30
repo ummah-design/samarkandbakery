@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ item.name }} — Samarkand Turkic Bakery | {{ "%.0f"|format(item.price) }} MAD</title>
-    <meta name="description" content="{{ item.description }} Order fresh from Samarkand Turkic Bakery in Tetouan. {{ "%.0f"|format(item.price) }} MAD.">
+    <title>{{ item.meta_title if item.meta_title else item.name + ' — Samarkand Turkic Bakery | ' + "%.0f"|format(item.price) + ' MAD' }}</title>
+    <meta name="description" content="{{ item.meta_description if item.meta_description else item.description + ' Order fresh from Samarkand Turkic Bakery in Tetouan. ' + '%.0f'|format(item.price) + ' MAD.' }}">
     <link rel="canonical" href="https://samarkandbakery.com/product/{{ product_key }}">
 
     <!-- Open Graph -->

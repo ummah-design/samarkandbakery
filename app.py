@@ -244,6 +244,16 @@ def admin_orders_page():
     return render_template("admin_orders.html")
 
 
+@app.route("/admin/product/<product_key>/edit")
+@admin_required
+def admin_product_edit(product_key):
+    menu = load_menu()
+    item = menu["products"].get(product_key)
+    if not item:
+        return "Product not found", 404
+    return render_template("product_edit.html", item=item, product_key=product_key)
+
+
 # ── Admin API (all protected) ──
 
 @app.route("/api/recipes")
@@ -261,7 +271,9 @@ def api_recipes():
             "cooking_method": recipe["cooking"]["method"],
             "image": menu_item.get("image", ""),
             "description": menu_item.get("description", ""),
-            "description_long": menu_item.get("description_long", "")
+            "description_long": menu_item.get("description_long", ""),
+            "meta_title": menu_item.get("meta_title", ""),
+            "meta_description": menu_item.get("meta_description", "")
         })
     return jsonify(result)
 
@@ -279,6 +291,9 @@ def api_update_product(product_key):
     description = request.form.get("description")
     description_long = request.form.get("description_long")
     price = request.form.get("price")
+    meta_title = request.form.get("meta_title")
+    meta_description = request.form.get("meta_description")
+    slug = request.form.get("slug")
 
     if name is not None and name.strip():
         menu["products"][product_key]["name"] = name.strip()
@@ -291,6 +306,26 @@ def api_update_product(product_key):
             menu["products"][product_key]["price"] = float(price)
         except ValueError:
             pass
+    if meta_title is not None:
+        menu["products"][product_key]["meta_title"] = meta_title
+    if meta_description is not None:
+        menu["products"][product_key]["meta_description"] = meta_description
+
+    # Handle slug change — rename the product key
+    new_key = product_key
+    if slug is not None and slug.strip():
+        import re
+        new_slug = re.sub(r'[^a-z0-9_]', '_', slug.strip().lower())
+        new_slug = re.sub(r'_+', '_', new_slug).strip('_')
+        if new_slug and new_slug != product_key and new_slug not in menu["products"]:
+            # Move the product to new key
+            menu["products"][new_slug] = menu["products"].pop(product_key)
+            # Update category references
+            for cat in menu.get("categories", []):
+                if product_key in cat["product_keys"]:
+                    idx = cat["product_keys"].index(product_key)
+                    cat["product_keys"][idx] = new_slug
+            new_key = new_slug
 
     # Handle image upload
     if "image" in request.files:
@@ -317,7 +352,7 @@ def api_update_product(product_key):
     with open(menu_path, "w", encoding="utf-8") as f:
         json.dump(menu, f, indent=4, ensure_ascii=False)
 
-    return jsonify({"success": True, "image": menu["products"][product_key].get("image", "")})
+    return jsonify({"success": True, "key": new_key, "image": menu["products"][new_key].get("image", "")})
 
 
 @app.route("/api/prices")

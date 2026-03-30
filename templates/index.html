@@ -853,7 +853,7 @@
                 <td><strong>${r.name}</strong></td>
                 <td style="font-size:0.85em;color:#6b6b80;max-width:300px;" dir="auto">${desc}</td>
                 <td class="price">${mad(r.selling_price)}</td>
-                <td><button class="status-btn complete" style="font-size:0.78em;padding:6px 14px;" onclick="openProductEdit('${r.key}')">Edit</button></td>
+                <td><a href="/admin/product/${r.key}/edit" class="status-btn complete" style="font-size:0.78em;padding:6px 14px;text-decoration:none;display:inline-block;">Edit</a></td>
             </tr>`;
         }
     }

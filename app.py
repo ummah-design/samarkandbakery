@@ -772,6 +772,23 @@ def api_admin_review_status(review_id):
 
 @app.route("/api/admin/reviews/<int:review_id>/reply", methods=["POST"])
 @admin_required
+@app.route("/api/admin/reviews/<int:review_id>/date", methods=["POST"])
+@admin_required
+def api_admin_review_update_date(review_id):
+    """Update review date (admin only)."""
+    new_date = request.json.get("date")
+    if not new_date:
+        return jsonify({"error": "Date required"}), 400
+    from database import get_db
+    conn = get_db()
+    conn.execute("UPDATE reviews SET created_at = ? WHERE id = ?", (new_date, review_id))
+    conn.commit()
+    conn.close()
+    return jsonify({"success": True})
+
+
+@app.route("/api/admin/reviews/<int:review_id>/reply", methods=["POST"])
+@admin_required
 def api_admin_review_reply(review_id):
     reply = request.json.get("reply", "").strip()
     if not reply:

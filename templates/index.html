@@ -547,7 +547,10 @@
             <p style="color:#6b6b80;font-size:0.85em;margin-bottom:12px;">Add an order on behalf of a customer (phone/email/walk-in).</p>
             <div class="cart-summary" id="checkout-cart-summary"></div>
             <label for="customer-email">Customer Email</label>
-            <input type="email" id="customer-email" placeholder="customer@email.com" required>
+            <div style="position:relative;">
+                <input type="email" id="customer-email" placeholder="customer@email.com" required autocomplete="off">
+                <div id="email-suggestions" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #ccc;border-top:none;border-radius:0 0 6px 6px;max-height:180px;overflow-y:auto;z-index:100;margin-top:-12px;"></div>
+            </div>
             <div id="customer-lookup-msg" style="display:none;margin:-8px 0 12px;padding:8px 12px;border-radius:6px;font-size:0.85em;"></div>
             <label for="customer-name">Customer Name</label>
             <input type="text" id="customer-name" placeholder="Full name">
@@ -611,32 +614,78 @@
 
     function mad(val) { return parseFloat(val).toFixed(2) + ' MAD'; }
 
-    // ===== CUSTOMER EMAIL LOOKUP =====
+    // ===== CUSTOMER EMAIL LOOKUP WITH AUTOCOMPLETE =====
+    let allCustomers = [];
     let lookupTimeout = null;
-    document.getElementById('customer-email').addEventListener('input', function() {
-        clearTimeout(lookupTimeout);
-        const email = this.value.trim().toLowerCase();
+
+    async function loadCustomerEmails() {
+        try {
+            const res = await fetch('/api/admin/customers');
+            allCustomers = await res.json();
+        } catch(e) { allCustomers = []; }
+    }
+    loadCustomerEmails();
+
+    function selectCustomerEmail(email) {
+        document.getElementById('customer-email').value = email;
+        document.getElementById('email-suggestions').style.display = 'none';
+        // Trigger lookup
+        doCustomerLookup(email);
+    }
+
+    async function doCustomerLookup(email) {
         const msg = document.getElementById('customer-lookup-msg');
         if (!email || !email.includes('@')) { msg.style.display = 'none'; return; }
-        lookupTimeout = setTimeout(async () => {
-            try {
-                const res = await fetch('/api/admin/customer-lookup?email=' + encodeURIComponent(email));
-                const data = await res.json();
-                if (data.found) {
-                    document.getElementById('customer-name').value = data.customer_name;
-                    document.getElementById('customer-phone').value = data.customer_phone;
-                    msg.style.display = 'block';
-                    msg.style.background = '#e8f5e9';
-                    msg.style.color = '#2d7a4f';
-                    msg.innerHTML = '<strong>Returning customer</strong> — ' + data.order_count + ' previous order' + (data.order_count > 1 ? 's' : '') + ' (' + data.total_spent.toFixed(0) + ' MAD total)';
-                } else {
-                    msg.style.display = 'block';
-                    msg.style.background = '#fff3e0';
-                    msg.style.color = '#b8860b';
-                    msg.innerHTML = 'New customer';
-                }
-            } catch(e) { msg.style.display = 'none'; }
-        }, 500);
+        try {
+            const res = await fetch('/api/admin/customer-lookup?email=' + encodeURIComponent(email));
+            const data = await res.json();
+            if (data.found) {
+                document.getElementById('customer-name').value = data.customer_name;
+                document.getElementById('customer-phone').value = data.customer_phone;
+                msg.style.display = 'block';
+                msg.style.background = '#e8f5e9';
+                msg.style.color = '#2d7a4f';
+                msg.innerHTML = '<strong>Returning customer</strong> — ' + data.order_count + ' previous order' + (data.order_count > 1 ? 's' : '') + ' (' + data.total_spent.toFixed(0) + ' MAD total)';
+            } else {
+                msg.style.display = 'block';
+                msg.style.background = '#fff3e0';
+                msg.style.color = '#b8860b';
+                msg.innerHTML = 'New customer';
+            }
+        } catch(e) { msg.style.display = 'none'; }
+    }
+
+    document.getElementById('customer-email').addEventListener('input', function() {
+        clearTimeout(lookupTimeout);
+        const val = this.value.trim().toLowerCase();
+        const sugBox = document.getElementById('email-suggestions');
+        const msg = document.getElementById('customer-lookup-msg');
+        msg.style.display = 'none';
+
+        if (val.length < 3) { sugBox.style.display = 'none'; return; }
+
+        // Filter matching customers
+        const matches = allCustomers.filter(c => c.customer_email && c.customer_email.toLowerCase().includes(val)).slice(0, 8);
+        if (matches.length > 0) {
+            sugBox.innerHTML = matches.map(c =>
+                '<div onclick="selectCustomerEmail(\'' + c.customer_email.replace(/'/g, "\\'") + '\')" style="padding:8px 14px;cursor:pointer;border-bottom:1px solid #f0ebe3;font-size:0.9em;display:flex;justify-content:space-between;align-items:center;" onmouseover="this.style.background=\'#f5f0eb\'" onmouseout="this.style.background=\'#fff\'">' +
+                '<span><strong>' + c.customer_email + '</strong><br><span style="color:#6b6b80;font-size:0.85em;">' + (c.customer_name || '') + '</span></span>' +
+                '<span style="color:#b8860b;font-size:0.85em;font-weight:600;">' + c.total_orders + ' orders</span></div>'
+            ).join('');
+            sugBox.style.display = 'block';
+        } else {
+            sugBox.style.display = 'none';
+        }
+
+        // Also do delayed lookup for exact match / new customer
+        lookupTimeout = setTimeout(() => doCustomerLookup(val), 600);
+    });
+
+    // Hide suggestions on click outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('#customer-email') && !e.target.closest('#email-suggestions')) {
+            document.getElementById('email-suggestions').style.display = 'none';
+        }
     });
 
     // ===== ORDERING (SHOP) =====

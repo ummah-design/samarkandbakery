@@ -1600,12 +1600,12 @@
 
 
     // ===== PRODUCTION PLANNING =====
-    let prodDatesInit = false;
-    let currentShoppingList = [];
-    let shoppingSortCol = 'name';
-    let shoppingSortAsc = true;
+    var prodDatesInit = false;
+    var currentShoppingList = [];
+    var shoppingSortCol = 'name';
+    var shoppingSortAsc = true;
 
-    let adminBlockedDates = [];
+    var adminBlockedDates = [];
 
     async function loadBlockedDates() {
         try {
@@ -1692,7 +1692,7 @@
         container.innerHTML = html;
     }
 
-    let checkedIngredients = {};
+    var checkedIngredients = {};
 
     function toggleIngredient(key, cb) {
         checkedIngredients[key] = cb.checked;
@@ -1815,8 +1815,8 @@
         renderPrepCards(orders, date);
     }
 
-    let currentProdOrders = [];
-    let currentProdDate = '';
+    var currentProdOrders = [];
+    var currentProdDate = '';
 
     function renderPrepCards(orders, date) {
         const d = new Date(date + 'T00:00:00');

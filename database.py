@@ -90,9 +90,20 @@ def init_db():
             discount_amount REAL DEFAULT 0,
             preferred_date TEXT,
             notes TEXT,
+            payment_method TEXT DEFAULT 'cod',
+            payment_status TEXT DEFAULT 'unpaid',
+            paypal_order_id TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
+    # Migrate existing databases: add payment columns if missing
+    try:
+        conn.execute("SELECT payment_method FROM orders LIMIT 1")
+    except Exception:
+        conn.execute("ALTER TABLE orders ADD COLUMN payment_method TEXT DEFAULT 'cod'")
+        conn.execute("ALTER TABLE orders ADD COLUMN payment_status TEXT DEFAULT 'unpaid'")
+        conn.execute("ALTER TABLE orders ADD COLUMN paypal_order_id TEXT")
+        conn.commit()
     conn.commit()
     conn.close()
 
@@ -101,7 +112,8 @@ def create_order(customer_name, customer_email, customer_phone, delivery_type,
                  delivery_address, delivery_lat, delivery_lng,
                  items, total_price, total_cost=None, total_profit=None,
                  promo_code=None, discount_amount=0,
-                 preferred_date=None, notes=None):
+                 preferred_date=None, notes=None,
+                 payment_method='cod', payment_status='unpaid', paypal_order_id=None):
     """Save a new order. items should be a list of dicts."""
     customer_phone = normalise_phone(customer_phone)
     if customer_email:
@@ -111,18 +123,33 @@ def create_order(customer_name, customer_email, customer_phone, delivery_type,
         INSERT INTO orders (customer_name, customer_email, customer_phone, delivery_type,
                           delivery_address, delivery_lat, delivery_lng,
                           items, total_price, total_cost, total_profit,
-                          promo_code, discount_amount, preferred_date, notes)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                          promo_code, discount_amount, preferred_date, notes,
+                          payment_method, payment_status, paypal_order_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         customer_name, customer_email, customer_phone, delivery_type,
         delivery_address, delivery_lat, delivery_lng,
         json.dumps(items), total_price, total_cost, total_profit,
-        promo_code, discount_amount, preferred_date, notes
+        promo_code, discount_amount, preferred_date, notes,
+        payment_method, payment_status, paypal_order_id
     ))
     conn.commit()
     order_id = cursor.lastrowid
     conn.close()
     return order_id
+
+
+def update_payment_status(order_id, payment_status, paypal_order_id=None):
+    """Update payment status for an order."""
+    conn = get_db()
+    if paypal_order_id:
+        conn.execute("UPDATE orders SET payment_status = ?, paypal_order_id = ? WHERE id = ?",
+                     (payment_status, paypal_order_id, order_id))
+    else:
+        conn.execute("UPDATE orders SET payment_status = ? WHERE id = ?",
+                     (payment_status, order_id))
+    conn.commit()
+    conn.close()
 
 
 def get_orders(status=None, limit=50):

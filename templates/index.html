@@ -704,6 +704,8 @@
                 <div class="order-header" onclick="toggleOrder(${order.id})">
                     <span class="order-id">#${order.id}</span><span class="order-customer" dir="auto">${order.customer_name}</span>
                     <span class="order-time">${time}</span><span class="order-amount">${(order.total_price||0).toFixed(2)} MAD</span>
+                    ${order.payment_method==='paypal'?'<span style="font-size:0.7em;padding:2px 8px;border-radius:10px;background:#0070ba;color:#fff;font-weight:600;">PayPal</span>':'<span style="font-size:0.7em;padding:2px 8px;border-radius:10px;background:#e8e0d8;color:#666;font-weight:600;">COD</span>'}
+                    ${order.payment_status==='paid'?'<span style="font-size:0.7em;padding:2px 8px;border-radius:10px;background:#2d7a4f;color:#fff;font-weight:600;">Paid</span>':'<span style="font-size:0.7em;padding:2px 8px;border-radius:10px;background:#d4a017;color:#fff;font-weight:600;">Unpaid</span>'}
                     <span class="status-badge ${sc}">${order.status}</span>
                 </div>
                 <div class="order-details" id="details-${order.id}">
@@ -716,6 +718,8 @@
                         ${order.promo_code?`<div class="detail-row"><span class="label">Promo Code:</span><span class="value" style="font-weight:600;color:#2d7a4f;">${order.promo_code} (-${(order.discount_amount||0).toFixed(2)} MAD)</span></div>`:''}
                         ${order.delivery_address?`<div class="detail-row"><span class="label">Address:</span><span class="value" dir="auto">${order.delivery_address}</span></div>`:''}
                         ${order.notes?`<div class="detail-row"><span class="label">Notes:</span><span class="value" dir="auto">${order.notes}</span></div>`:''}
+                        <div class="detail-row"><span class="label">Payment:</span><span class="value">${order.payment_method==='paypal'?'PayPal':'Cash on Delivery'} — <strong style="color:${order.payment_status==='paid'?'#2d7a4f':'#b8860b'}">${(order.payment_status||'unpaid').toUpperCase()}</strong></span></div>
+                        ${order.paypal_order_id?`<div class="detail-row"><span class="label">PayPal ID:</span><span class="value" style="font-family:monospace;font-size:0.85em;">${order.paypal_order_id}</span></div>`:''}
                     </div>
                     ${order.delivery_lat?`<div class="detail-section"><h4>Delivery Location</h4><div id="map-${order.id}" style="width:100%;height:200px;border-radius:8px;"></div></div>`:''}
                     <div class="detail-section"><h4>Items Ordered</h4>

@@ -26,7 +26,11 @@ from database import (create_order, get_orders, get_order, update_order_status,
                       get_promo_usage,
                       record_review_request, record_review_reminder,
                       get_review_requests, get_customer_review_stats,
-                      get_unrequested_completed_orders)
+                      get_unrequested_completed_orders,
+                      update_payment_status)
+import urllib.request
+import urllib.parse
+import base64
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "samarkand-bakery-secret-2026-change-me")
@@ -36,6 +40,54 @@ DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 # Admin credentials — change these!
 ADMIN_USERNAME = "admin"
 ADMIN_PASSWORD = "Samarkand2026!"
+
+# PayPal configuration
+PAYPAL_CLIENT_ID = os.environ.get("PAYPAL_CLIENT_ID", "AfoPR4vq6Of0--mbKy8unlX8mYn2BB_rYg4ea4b6AG0-AeZ6Go-jU-LjpHdZ6Xwx-NtuemNo_k3hqfeE")
+PAYPAL_SECRET = os.environ.get("PAYPAL_SECRET", "EHmnwExzUv7LWltcVUeCBR9cq2KuQVpGrsCp0Rqp9p1-LeHkblqXHOXg01992bvcida_d8LPUEH_GjZ7")
+PAYPAL_BASE_URL = os.environ.get("PAYPAL_BASE_URL", "https://api-m.paypal.com")  # Use sandbox for testing
+
+
+def paypal_get_access_token():
+    """Get PayPal OAuth2 access token."""
+    url = PAYPAL_BASE_URL + "/v1/oauth2/token"
+    credentials = base64.b64encode((PAYPAL_CLIENT_ID + ":" + PAYPAL_SECRET).encode()).decode()
+    data = urllib.parse.urlencode({"grant_type": "client_credentials"}).encode()
+    req = urllib.request.Request(url, data=data, method="POST")
+    req.add_header("Authorization", "Basic " + credentials)
+    req.add_header("Content-Type", "application/x-www-form-urlencoded")
+    resp = urllib.request.urlopen(req)
+    return json.loads(resp.read().decode())["access_token"]
+
+
+def paypal_create_order(amount, currency="MAD"):
+    """Create a PayPal order and return the order ID."""
+    token = paypal_get_access_token()
+    url = PAYPAL_BASE_URL + "/v2/checkout/orders"
+    body = json.dumps({
+        "intent": "CAPTURE",
+        "purchase_units": [{
+            "amount": {
+                "currency_code": currency,
+                "value": str(round(amount, 2))
+            }
+        }]
+    }).encode()
+    req = urllib.request.Request(url, data=body, method="POST")
+    req.add_header("Authorization", "Bearer " + token)
+    req.add_header("Content-Type", "application/json")
+    resp = urllib.request.urlopen(req)
+    return json.loads(resp.read().decode())
+
+
+def paypal_capture_order(paypal_order_id):
+    """Capture a PayPal order after customer approval."""
+    token = paypal_get_access_token()
+    url = PAYPAL_BASE_URL + "/v2/checkout/orders/" + paypal_order_id + "/capture"
+    req = urllib.request.Request(url, data=b"", method="POST")
+    req.add_header("Authorization", "Bearer " + token)
+    req.add_header("Content-Type", "application/json")
+    resp = urllib.request.urlopen(req)
+    return json.loads(resp.read().decode())
 
 
 def load_menu():
@@ -84,7 +136,7 @@ def index():
     menu = load_menu()
     t = get_t()
     lang = get_lang()
-    return render_template("order.html", menu=menu, t=t, lang=lang)
+    return render_template("order.html", menu=menu, t=t, lang=lang, paypal_client_id=PAYPAL_CLIENT_ID)
 
 
 @app.route("/order")
@@ -92,7 +144,7 @@ def order_page():
     menu = load_menu()
     t = get_t()
     lang = get_lang()
-    return render_template("order.html", menu=menu, t=t, lang=lang)
+    return render_template("order.html", menu=menu, t=t, lang=lang, paypal_client_id=PAYPAL_CLIENT_ID)
 
 
 @app.route("/product/<product_key>")
@@ -160,6 +212,14 @@ def api_submit_order():
     total_cost = cost_result.get("total_cost", 0)
     total_profit = round(total_price - total_cost, 2)
 
+    payment_method = req.get("payment_method", "cod")
+    payment_status = "unpaid"
+    paypal_oid = None
+    if payment_method == "paypal":
+        paypal_oid = req.get("paypal_order_id")
+        if paypal_oid:
+            payment_status = "paid"
+
     order_id = create_order(
         customer_name=req["customer_name"],
         customer_email=req.get("customer_email", ""),
@@ -175,7 +235,10 @@ def api_submit_order():
         promo_code=promo_code,
         discount_amount=round(discount_amt, 2),
         preferred_date=req.get("preferred_date"),
-        notes=req.get("notes")
+        notes=req.get("notes"),
+        payment_method=payment_method,
+        payment_status=payment_status,
+        paypal_order_id=paypal_oid
     )
 
     # Send order confirmation email
@@ -200,8 +263,43 @@ def api_submit_order():
         "success": True,
         "order_id": order_id,
         "total_price": round(total_price, 2),
+        "payment_method": payment_method,
         "message": f"Order #{order_id} received! We will contact you shortly."
     })
+
+
+# ── PayPal API ──
+
+@app.route("/api/paypal/create", methods=["POST"])
+def api_paypal_create():
+    """Create a PayPal order for the given amount."""
+    req = request.json
+    amount = req.get("amount", 0)
+    if amount <= 0:
+        return jsonify({"error": "Invalid amount"}), 400
+    try:
+        result = paypal_create_order(amount)
+        return jsonify({"id": result["id"]})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/paypal/capture", methods=["POST"])
+def api_paypal_capture():
+    """Capture a PayPal order after customer approval."""
+    req = request.json
+    paypal_oid = req.get("paypal_order_id")
+    if not paypal_oid:
+        return jsonify({"error": "Missing PayPal order ID"}), 400
+    try:
+        result = paypal_capture_order(paypal_oid)
+        status = result.get("status", "")
+        if status == "COMPLETED":
+            return jsonify({"success": True, "paypal_order_id": paypal_oid})
+        else:
+            return jsonify({"error": "Payment not completed", "status": status}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 # ── Admin Login ──

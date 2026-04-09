@@ -373,7 +373,7 @@ def api_recipes():
         result.append({
             "key": key,
             "name": menu_item.get("name", recipe["name"]),
-            "selling_price": recipe["selling_price"],
+            "selling_price": menu_item.get("price", recipe["selling_price"]),
             "cooking_method": recipe["cooking"]["method"],
             "image": menu_item.get("image", ""),
             "description": menu_item.get("description", ""),
@@ -409,7 +409,16 @@ def api_update_product(product_key):
         menu["products"][product_key]["description_long"] = description_long
     if price is not None:
         try:
-            menu["products"][product_key]["price"] = float(price)
+            new_price = float(price)
+            menu["products"][product_key]["price"] = new_price
+            # Also update recipes.json to keep costing engine in sync
+            recipes_path = os.path.join(DATA_DIR, "recipes.json")
+            with open(recipes_path, "r", encoding="utf-8") as f:
+                recipes_data = json.load(f)
+            if product_key in recipes_data:
+                recipes_data[product_key]["selling_price"] = new_price
+                with open(recipes_path, "w", encoding="utf-8") as f:
+                    json.dump(recipes_data, f, indent=4, ensure_ascii=False)
         except ValueError:
             pass
     if meta_title is not None:

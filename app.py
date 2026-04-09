@@ -59,7 +59,11 @@ def paypal_get_access_token():
     return json.loads(resp.read().decode())["access_token"]
 
 
-def paypal_create_order(amount, currency="MAD"):
+# MAD to USD conversion rate — update periodically
+MAD_TO_USD = 0.10  # 1 MAD ≈ 0.10 USD (i.e. 10 MAD ≈ 1 USD)
+
+
+def paypal_create_order(amount, currency="USD"):
     """Create a PayPal order and return the order ID."""
     token = paypal_get_access_token()
     url = PAYPAL_BASE_URL + "/v2/checkout/orders"
@@ -272,14 +276,17 @@ def api_submit_order():
 
 @app.route("/api/paypal/create", methods=["POST"])
 def api_paypal_create():
-    """Create a PayPal order for the given amount."""
+    """Create a PayPal order for the given amount (MAD converted to USD)."""
     req = request.json
-    amount = req.get("amount", 0)
-    if amount <= 0:
+    amount_mad = req.get("amount", 0)
+    if amount_mad <= 0:
         return jsonify({"error": "Invalid amount"}), 400
     try:
-        result = paypal_create_order(amount)
-        return jsonify({"id": result["id"]})
+        amount_usd = round(amount_mad * MAD_TO_USD, 2)
+        if amount_usd < 0.01:
+            amount_usd = 0.01
+        result = paypal_create_order(amount_usd)
+        return jsonify({"id": result["id"], "amount_usd": amount_usd})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

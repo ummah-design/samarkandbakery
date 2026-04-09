@@ -1793,6 +1793,8 @@ window.addEventListener('scroll', () => {
 });
 
 // Mini calendar
+const blockedDates = {{ blocked_dates | tojson }};
+
 (function buildCalendar() {
     const container = document.getElementById('mini-cal');
     const today = new Date();
@@ -1834,7 +1836,8 @@ window.addEventListener('scroll', () => {
             const isWeekend = dow === 0 || dow === 6;
             const isToday = d.getTime() === today.getTime();
             const isFuture = d.getTime() > today.getTime();
-            const isAvailable = isWeekend && isFuture;
+            const isBlocked = blockedDates.includes(dateStr);
+            const isAvailable = isWeekend && isFuture && !isBlocked;
             const dateStr = d.toISOString().split('T')[0];
             const dayLabel = dow === 6 ? 'Sat' : dow === 0 ? 'Sun' : '';
 

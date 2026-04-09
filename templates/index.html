@@ -470,6 +470,17 @@
             <h2 style="margin-bottom:16px;">Production Planning</h2>
             <p style="color:#6b6b80;margin-bottom:16px;">Select a delivery date to see all orders and the total ingredients needed.</p>
             <div id="prod-date-buttons" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;"></div>
+            <details style="margin-bottom:8px;">
+                <summary style="cursor:pointer;font-weight:600;color:#1e2a4a;font-size:0.9em;">Manage Blocked Dates</summary>
+                <div style="margin-top:10px;padding:12px;background:#f5f0eb;border-radius:8px;">
+                    <p style="font-size:0.85em;color:#6b6b80;margin-bottom:8px;">Block dates to prevent customers from ordering delivery on those days.</p>
+                    <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">
+                        <input type="date" id="block-date-input" style="padding:8px;border:1px solid #e8e0d8;border-radius:6px;font-size:0.9em;">
+                        <button onclick="blockDate()" style="padding:8px 16px;background:#c0392b;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:0.9em;">Block Date</button>
+                    </div>
+                    <div id="blocked-dates-list"></div>
+                </div>
+            </details>
         </div>
         <div id="prod-results" style="display:none;">
             <div class="card" style="margin-top:12px;">
@@ -1594,9 +1605,62 @@
     let shoppingSortCol = 'name';
     let shoppingSortAsc = true;
 
+    let adminBlockedDates = [];
+
+    async function loadBlockedDates() {
+        try {
+            const res = await fetch('/api/admin/blocked-dates');
+            adminBlockedDates = await res.json();
+            renderBlockedDates();
+        } catch(e) {}
+    }
+
+    function renderBlockedDates() {
+        const container = document.getElementById('blocked-dates-list');
+        if (!adminBlockedDates.length) {
+            container.innerHTML = '<p style="font-size:0.85em;color:#9a9aad;">No blocked dates.</p>';
+            return;
+        }
+        let html = '';
+        adminBlockedDates.forEach(d => {
+            const dt = new Date(d + 'T00:00:00');
+            const label = dt.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+            html += '<div style="display:inline-flex;align-items:center;gap:6px;background:#fff;padding:4px 10px;border-radius:16px;margin:2px 4px 2px 0;font-size:0.85em;border:1px solid #e8e0d8;">';
+            html += '<span style="color:#c0392b;font-weight:600;">' + label + '</span>';
+            html += '<button onclick="unblockDate(\'' + d + '\')" style="background:none;border:none;cursor:pointer;color:#999;font-size:1.1em;padding:0 2px;" title="Unblock">x</button>';
+            html += '</div>';
+        });
+        container.innerHTML = html;
+    }
+
+    async function blockDate() {
+        const input = document.getElementById('block-date-input');
+        const date = input.value;
+        if (!date) { alert('Please select a date.'); return; }
+        await fetch('/api/admin/blocked-dates', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ date: date, action: 'block' })
+        });
+        input.value = '';
+        await loadBlockedDates();
+        prodDatesInit = false;
+        initProductionDates();
+    }
+
+    async function unblockDate(date) {
+        await fetch('/api/admin/blocked-dates', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ date: date, action: 'unblock' })
+        });
+        await loadBlockedDates();
+        prodDatesInit = false;
+        initProductionDates();
+    }
+
     function initProductionDates() {
         if (prodDatesInit) return;
         prodDatesInit = true;
+        loadBlockedDates();
         const container = document.getElementById('prod-date-buttons');
         const today = new Date();
         const dates = [];

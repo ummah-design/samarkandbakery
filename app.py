@@ -107,6 +107,23 @@ def load_translations():
         return json.load(f)
 
 
+def load_blocked_dates():
+    """Load blocked delivery dates."""
+    path = os.path.join(DATA_DIR, "blocked_dates.json")
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return []
+
+
+def save_blocked_dates(dates):
+    """Save blocked delivery dates."""
+    path = os.path.join(DATA_DIR, "blocked_dates.json")
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(dates, f, indent=2)
+
+
 def get_lang():
     """Get current language from query param, session, or default to 'en'."""
     lang = request.args.get("lang")
@@ -141,7 +158,7 @@ def index():
     menu = load_menu()
     t = get_t()
     lang = get_lang()
-    return render_template("order.html", menu=menu, t=t, lang=lang, paypal_client_id=PAYPAL_CLIENT_ID)
+    return render_template("order.html", menu=menu, t=t, lang=lang, paypal_client_id=PAYPAL_CLIENT_ID, blocked_dates=load_blocked_dates())
 
 
 @app.route("/order")
@@ -149,7 +166,7 @@ def order_page():
     menu = load_menu()
     t = get_t()
     lang = get_lang()
-    return render_template("order.html", menu=menu, t=t, lang=lang, paypal_client_id=PAYPAL_CLIENT_ID)
+    return render_template("order.html", menu=menu, t=t, lang=lang, paypal_client_id=PAYPAL_CLIENT_ID, blocked_dates=load_blocked_dates())
 
 
 @app.route("/product/<product_key>")
@@ -581,6 +598,25 @@ def api_customer_lookup():
             "total_spent": round(sum(o["total_price"] for o in orders), 2)
         })
     return jsonify({"found": False})
+
+
+@app.route("/api/admin/blocked-dates", methods=["GET", "POST"])
+@admin_required
+def api_blocked_dates():
+    """Get or update blocked delivery dates."""
+    if request.method == "GET":
+        return jsonify(load_blocked_dates())
+    req = request.json
+    date = req.get("date")
+    action = req.get("action", "block")
+    dates = load_blocked_dates()
+    if action == "block" and date not in dates:
+        dates.append(date)
+        dates.sort()
+    elif action == "unblock" and date in dates:
+        dates.remove(date)
+    save_blocked_dates(dates)
+    return jsonify({"success": True, "blocked_dates": dates})
 
 
 @app.route("/api/admin/production/<date>")

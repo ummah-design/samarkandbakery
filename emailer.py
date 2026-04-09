@@ -17,23 +17,38 @@ FROM_NAME = "Samarkand Turkic Bakery"
 FROM_EMAIL = SMTP_USER
 SITE_URL = "https://samarkandbakery.com"
 
+# Admin notification recipients
+ADMIN_EMAIL = "azizadadaami@gmail.com"
+ADMIN_CC = "ummah.design@gmail.com"
 
-def _send_email(to_email, subject, html_body):
+
+def _send_email(to_email, subject, html_body, cc=None):
     """Send an HTML email via SMTP SSL."""
     try:
         msg = MIMEMultipart("alternative")
-        msg["From"] = f"{FROM_NAME} <{FROM_EMAIL}>"
+        msg["From"] = FROM_NAME + " <" + FROM_EMAIL + ">"
         msg["To"] = to_email
         msg["Subject"] = subject
+        if cc:
+            msg["Cc"] = cc
         msg.attach(MIMEText(html_body, "html", "utf-8"))
+
+        recipients = [to_email]
+        if cc:
+            recipients.append(cc)
 
         with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT) as server:
             server.login(SMTP_USER, SMTP_PASS)
-            server.sendmail(FROM_EMAIL, to_email, msg.as_string())
+            server.sendmail(FROM_EMAIL, recipients, msg.as_string())
         return True
     except Exception as e:
-        print(f"Email error: {e}")
+        print("Email error: " + str(e))
         return False
+
+
+def _send_admin_notification(subject, html_body):
+    """Send notification to admin with CC."""
+    return _send_email(ADMIN_EMAIL, subject, html_body, cc=ADMIN_CC)
 
 
 def _email_wrapper(content_html, title=""):
@@ -126,7 +141,12 @@ def send_order_placed(order):
     """
 
     html = _email_wrapper(content, "Order Received!")
-    return _send_email(order["customer_email"], f"Order #{order['id']} Received — Samarkand Bakery", html)
+    subject = "Order #" + str(order["id"]) + " Received — Samarkand Bakery"
+    # Send to customer
+    _send_email(order["customer_email"], subject, html)
+    # Notify admin
+    _send_admin_notification("New Order #" + str(order["id"]) + " — " + order["customer_name"], html)
+    return True
 
 
 def send_order_confirmed(order):

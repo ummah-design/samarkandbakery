@@ -382,7 +382,7 @@
     "turkish_ezme": {
         "name": "Turkish Ezme Salad",
         "selling_price": 7.0,
-        "packaging_type": "pastry_boxes",
+        "packaging_type": "dip_pots",
         "cooking": {
             "method": "oven",
             "minutes_per_load": 0,

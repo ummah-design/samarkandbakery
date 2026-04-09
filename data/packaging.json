@@ -6,5 +6,8 @@
     ],
     "bread_bags": [
         {"name": "Paper bag + wrapping", "capacity": 5, "price": 2.00}
+    ],
+    "dip_pots": [
+        {"name": "Small dip pot", "capacity": 1, "price": 1.00}
     ]
 }

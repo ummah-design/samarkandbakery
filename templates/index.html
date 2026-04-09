@@ -553,7 +553,10 @@
             </div>
             <div id="customer-lookup-msg" style="display:none;margin:-8px 0 12px;padding:8px 12px;border-radius:6px;font-size:0.85em;"></div>
             <label for="customer-name">Customer Name</label>
-            <input type="text" id="customer-name" placeholder="Full name">
+            <div style="position:relative;">
+                <input type="text" id="customer-name" placeholder="Full name" autocomplete="off">
+                <div id="name-suggestions" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #ccc;border-top:none;border-radius:0 0 6px 6px;max-height:180px;overflow-y:auto;z-index:100;margin-top:-12px;"></div>
+            </div>
             <label for="customer-phone">Phone / WhatsApp</label>
             <input type="tel" id="customer-phone" placeholder="+212 6XX XXX XXX">
             <label for="preferred-date">Delivery Date</label>
@@ -681,10 +684,39 @@
         lookupTimeout = setTimeout(() => doCustomerLookup(val), 600);
     });
 
+    // Name autocomplete
+    document.getElementById('customer-name').addEventListener('input', function() {
+        const val = this.value.trim().toLowerCase();
+        const sugBox = document.getElementById('name-suggestions');
+        if (val.length < 3) { sugBox.style.display = 'none'; return; }
+        const matches = allCustomers.filter(c => c.customer_name && c.customer_name.toLowerCase().includes(val)).slice(0, 8);
+        if (matches.length > 0) {
+            sugBox.innerHTML = matches.map(c =>
+                '<div onclick="selectCustomerByName(\'' + (c.customer_email || '').replace(/'/g, "\\'") + '\')" style="padding:8px 14px;cursor:pointer;border-bottom:1px solid #f0ebe3;font-size:0.9em;display:flex;justify-content:space-between;align-items:center;" onmouseover="this.style.background=\'#f5f0eb\'" onmouseout="this.style.background=\'#fff\'">' +
+                '<span><strong>' + c.customer_name + '</strong><br><span style="color:#6b6b80;font-size:0.85em;">' + (c.customer_email || '') + '</span></span>' +
+                '<span style="color:#b8860b;font-size:0.85em;font-weight:600;">' + c.total_orders + ' orders</span></div>'
+            ).join('');
+            sugBox.style.display = 'block';
+        } else {
+            sugBox.style.display = 'none';
+        }
+    });
+
+    function selectCustomerByName(email) {
+        document.getElementById('name-suggestions').style.display = 'none';
+        if (email) {
+            document.getElementById('customer-email').value = email;
+            doCustomerLookup(email);
+        }
+    }
+
     // Hide suggestions on click outside
     document.addEventListener('click', function(e) {
         if (!e.target.closest('#customer-email') && !e.target.closest('#email-suggestions')) {
             document.getElementById('email-suggestions').style.display = 'none';
+        }
+        if (!e.target.closest('#customer-name') && !e.target.closest('#name-suggestions')) {
+            document.getElementById('name-suggestions').style.display = 'none';
         }
     });
 

@@ -779,8 +779,9 @@ def api_admin_review_update_date(review_id):
     new_date = request.json.get("date")
     if not new_date:
         return jsonify({"error": "Date required"}), 400
-    from database import get_db
-    conn = get_db()
+    import sqlite3
+    db_path = os.path.join(DATA_DIR, "orders.db")
+    conn = sqlite3.connect(db_path)
     conn.execute("UPDATE reviews SET created_at = ? WHERE id = ?", (new_date, review_id))
     conn.commit()
     conn.close()

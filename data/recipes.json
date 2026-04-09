@@ -342,5 +342,41 @@
                 }
             }
         }
+    },
+    "uzbek_honey_cake": {
+        "name": "Uzbek Honey Cake",
+        "selling_price": 20.0,
+        "packaging_type": "pastry_boxes",
+        "cooking": {
+            "method": "oven",
+            "minutes_per_load": 20,
+            "items_per_oven_load": 1
+        },
+        "components": {
+            "sponge_base": {
+                "yields": 8,
+                "ingredients": {
+                    "egg_each": 8,
+                    "sugar_per_kg": 0.1,
+                    "flour_per_kg": 0.375
+                }
+            },
+            "honey_mix": {
+                "yields": 8,
+                "ingredients": {
+                    "honey_per_kg": 0.17,
+                    "sugar_per_kg": 0.1,
+                    "bicarbonate_soda_per_kg": 0.015,
+                    "salted_butter_per_kg": 0.03
+                }
+            },
+            "butter_cream": {
+                "yields": 8,
+                "ingredients": {
+                    "unsalted_butter_per_kg": 0.25,
+                    "condensed_milk_per_tin": 1
+                }
+            }
+        }
     }
 }

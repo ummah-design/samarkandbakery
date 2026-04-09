@@ -38,6 +38,14 @@
                 "uzbek_bread",
                 "turkish_bread"
             ]
+        },
+        {
+            "name": "Cakes & Desserts",
+            "name_fr": "Gâteaux & Desserts",
+            "name_ar": "كيك وحلويات",
+            "product_keys": [
+                "uzbek_honey_cake"
+            ]
         }
     ],
     "products": {
@@ -921,6 +929,76 @@
                 "خميرة",
                 "ملح"
             ]
+        },
+        "uzbek_honey_cake": {
+            "name": "Uzbek Honey Cake",
+            "name_fr": "Gâteau au Miel Ouzbek",
+            "name_ar": "كيكة العسل الأوزبكية",
+            "description": "A rich layered honey cake (Medovik) with delicate sponge layers soaked in honey syrup, filled with a silky butter cream. Sold by the slice.",
+            "description_fr": "Un riche gâteau au miel en couches (Medovik) avec des couches de génoise délicates imbibées de sirop de miel, garnies d'une crème au beurre soyeuse. Vendu à la tranche.",
+            "description_ar": "كيكة عسل غنية متعددة الطبقات (ميدوفيك) مع طبقات إسفنجية رقيقة منقوعة في شراب العسل، محشوة بكريمة زبدة ناعمة. تباع بالشريحة.",
+            "description_long": "The Uzbek Honey Cake, known as Medovik, is a beloved Central Asian dessert with roots in Russian imperial baking traditions. Our version features multiple thin, golden sponge layers made with eggs, flour, and a fragrant honey-sugar syrup infused with bicarbonate of soda for that signature lightness. Each layer is generously filled with a luxurious butter cream made from pure unsalted butter and condensed milk, creating a melt-in-your-mouth experience. The cake is assembled and left to rest, allowing the cream to soften the sponge layers into a perfectly moist, harmonious dessert. Each slice is approximately 7cm x 7cm — the perfect portion with tea or coffee.",
+            "description_long_fr": "Le gâteau au miel ouzbek, connu sous le nom de Medovik, est un dessert d'Asie centrale bien-aimé aux racines dans les traditions pâtissières de l'empire russe. Notre version présente plusieurs fines couches de génoise dorée, préparées avec des œufs, de la farine et un sirop de miel parfumé au bicarbonate de soude pour cette légèreté caractéristique. Chaque couche est généreusement garnie d'une crème au beurre luxueuse à base de beurre non salé et de lait concentré, créant une expérience fondante. Le gâteau est assemblé et laissé reposer, permettant à la crème d'adoucir les couches en un dessert parfaitement moelleux et harmonieux. Chaque tranche mesure environ 7cm x 7cm.",
+            "description_long_ar": "كيكة العسل الأوزبكية، المعروفة باسم ميدوفيك، هي حلوى آسيوية وسطى محبوبة ذات جذور في تقاليد الخبز الإمبراطوري الروسي. نسختنا تتميز بعدة طبقات رقيقة ذهبية من الإسفنج المصنوع من البيض والدقيق وشراب العسل والسكر المعطر ببيكربونات الصودا لتلك الخفة المميزة. كل طبقة محشوة بسخاء بكريمة زبدة فاخرة مصنوعة من الزبدة غير المملحة والحليب المكثف. يتم تجميع الكيكة وتركها لترتاح، مما يسمح للكريمة بتليين طبقات الإسفنج. كل شريحة حوالي 7 سم × 7 سم.",
+            "price": 20.0,
+            "image": "honey_cake.jpeg",
+            "cooking_method": "oven",
+            "cooking_method_fr": "four",
+            "cooking_method_ar": "فرن",
+            "allergens": [
+                "gluten",
+                "eggs",
+                "dairy"
+            ],
+            "allergens_fr": [
+                "gluten",
+                "œufs",
+                "produits laitiers"
+            ],
+            "allergens_ar": [
+                "جلوتين",
+                "بيض",
+                "منتجات الألبان"
+            ],
+            "ingredients": [
+                "Eggs",
+                "Flour",
+                "Sugar",
+                "Honey",
+                "Unsalted Butter",
+                "Condensed Milk",
+                "Bicarbonate of Soda",
+                "Butter"
+            ],
+            "ingredients_fr": [
+                "Œufs",
+                "Farine",
+                "Sucre",
+                "Miel",
+                "Beurre non salé",
+                "Lait concentré",
+                "Bicarbonate de soude",
+                "Beurre"
+            ],
+            "ingredients_ar": [
+                "بيض",
+                "دقيق",
+                "سكر",
+                "عسل",
+                "زبدة غير مملحة",
+                "حليب مكثف",
+                "بيكربونات الصودا",
+                "زبدة"
+            ],
+            "nutrition": {
+                "calories": "380 kcal",
+                "protein": "6g",
+                "carbs": "42g",
+                "fat": "22g",
+                "fibre": "0.5g"
+            },
+            "meta_title": "Uzbek Honey Cake (Medovik) — Layered Honey Cake | Samarkand Bakery",
+            "meta_description": "Order fresh Uzbek Honey Cake (Medovik) in Tetouan. Rich layered sponge with honey syrup and butter cream. 20 MAD per slice. Delivery & pickup available."
         }
     },
     "allergen_notice": "Our products are prepared in a home kitchen where allergens including gluten, dairy, eggs, and sesame are present. Cross-contamination may occur. If you have a severe allergy, please contact us before ordering. Nutritional values are approximate estimates and may vary.",

@@ -52,7 +52,8 @@
             "name_fr": "Accompagnements",
             "name_ar": "مقبلات وصلصات",
             "product_keys": [
-                "turkish_ezme"
+                "turkish_ezme",
+                "walnut_fig_jam"
             ]
         }
     ],
@@ -1089,6 +1090,58 @@
             },
             "meta_title": "Turkish Ezme Salad — Fresh Spicy Tomato Dip | Samarkand Bakery",
             "meta_description": "Order fresh Turkish Ezme Salad in Tetouan. Finely chopped tomatoes, peppers, herbs with olive oil and pomegranate molasses. 7 MAD per pot. Delivery & pickup."
+        },
+        "walnut_fig_jam": {
+            "name": "Walnut & Fig Jam",
+            "name_fr": "Confiture de Noix & Figues",
+            "name_ar": "مربى الجوز والتين",
+            "description": "A rich, naturally sweet jam made from dried figs and crushed walnuts. Perfect as a dip with our breads and pastries.",
+            "description_fr": "Une confiture riche et naturellement sucrée à base de figues séchées et de noix concassées. Parfaite en accompagnement de nos pains et pâtisseries.",
+            "description_ar": "مربى غنية وحلوة طبيعياً مصنوعة من التين المجفف والجوز المكسر. مثالية كمقبلة مع خبزنا ومعجناتنا.",
+            "description_long": "Our Walnut & Fig Jam is a rustic, wholesome spread inspired by Central Asian and Mediterranean traditions. Dried figs are gently simmered with water and a touch of sugar until they break down into a thick, luscious jam, then folded through with coarsely crushed walnuts for texture and depth. The natural sweetness of the figs pairs beautifully with the earthy, slightly bitter crunch of the walnuts. Served in a small 60g pot — the perfect companion to our Uzbek Bread, Turkish Bread, or Simit.",
+            "description_long_fr": "Notre Confiture de Noix & Figues est une tartinade rustique et saine inspirée des traditions d'Asie centrale et de la Méditerranée. Les figues séchées sont doucement mijotées avec de l'eau et une touche de sucre jusqu'à ce qu'elles se transforment en une confiture épaisse et onctueuse, puis mélangées avec des noix grossièrement concassées pour la texture. Servie en petit pot de 60g.",
+            "description_long_ar": "مربى الجوز والتين لدينا هي مربى ريفية صحية مستوحاة من تقاليد آسيا الوسطى والبحر المتوسط. يُطهى التين المجفف برفق مع الماء ولمسة من السكر حتى يتحول إلى مربى سميكة وفاخرة، ثم يُخلط مع الجوز المكسر بشكل خشن للقوام والعمق. تقدم في وعاء صغير 60 جم.",
+            "price": 7.0,
+            "image": "walnut_fig_jam.jpg",
+            "cooking_method": "stovetop",
+            "cooking_method_fr": "cuisinière",
+            "cooking_method_ar": "على الموقد",
+            "allergens": [
+                "nuts"
+            ],
+            "allergens_fr": [
+                "fruits à coque"
+            ],
+            "allergens_ar": [
+                "مكسرات"
+            ],
+            "ingredients": [
+                "Dried Figs",
+                "Walnuts",
+                "Sugar",
+                "Water"
+            ],
+            "ingredients_fr": [
+                "Figues séchées",
+                "Noix",
+                "Sucre",
+                "Eau"
+            ],
+            "ingredients_ar": [
+                "تين مجفف",
+                "جوز",
+                "سكر",
+                "ماء"
+            ],
+            "nutrition": {
+                "calories": "95 kcal",
+                "protein": "1.5g",
+                "carbs": "16g",
+                "fat": "3g",
+                "fibre": "2g"
+            },
+            "meta_title": "Walnut & Fig Jam — Natural Fruit Dip | Samarkand Bakery",
+            "meta_description": "Order Walnut & Fig Jam in Tetouan. Naturally sweet dried fig jam with crushed walnuts. 7 MAD per pot. Perfect with bread. Delivery & pickup available."
         }
     },
     "allergen_notice": "Our products are prepared in a home kitchen where allergens including gluten, dairy, eggs, and sesame are present. Cross-contamination may occur. If you have a severe allergy, please contact us before ordering. Nutritional values are approximate estimates and may vary.",

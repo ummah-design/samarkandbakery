@@ -411,5 +411,26 @@
                 }
             }
         }
+    },
+    "walnut_fig_jam": {
+        "name": "Walnut & Fig Jam",
+        "selling_price": 7.0,
+        "packaging_type": "dip_pots",
+        "cooking": {
+            "method": "oven",
+            "minutes_per_load": 0,
+            "items_per_oven_load": 1
+        },
+        "components": {
+            "jam": {
+                "yields": 10,
+                "ingredients": {
+                    "dried_figs_per_kg": 0.25,
+                    "walnuts_per_kg": 0.09,
+                    "sugar_per_kg": 0.036,
+                    "water_ml": 200
+                }
+            }
+        }
     }
 }

@@ -46,6 +46,14 @@
             "product_keys": [
                 "uzbek_honey_cake"
             ]
+        },
+        {
+            "name": "Sides & Dips",
+            "name_fr": "Accompagnements",
+            "name_ar": "مقبلات وصلصات",
+            "product_keys": [
+                "turkish_ezme"
+            ]
         }
     ],
     "products": {
@@ -999,6 +1007,88 @@
             },
             "meta_title": "Uzbek Honey Cake (Medovik) — Layered Honey Cake | Samarkand Bakery",
             "meta_description": "Order fresh Uzbek Honey Cake (Medovik) in Tetouan. Rich layered sponge with honey syrup and butter cream. 20 MAD per slice. Delivery & pickup available."
+        },
+        "turkish_ezme": {
+            "name": "Turkish Ezme Salad",
+            "name_fr": "Salade Ezme Turque",
+            "name_ar": "سلطة إزمة التركية",
+            "description": "A vibrant, spicy Turkish salad of finely chopped tomatoes, peppers, onion and herbs, dressed with olive oil, pomegranate molasses and sumac. Served in a small pot.",
+            "description_fr": "Une salade turque vibrante et épicée de tomates, poivrons, oignon et herbes finement hachés, assaisonnée d'huile d'olive, de mélasse de grenade et de sumac. Servie en petit pot.",
+            "description_ar": "سلطة تركية حيوية وحارة من الطماطم والفلفل والبصل والأعشاب المفرومة ناعماً، متبلة بزيت الزيتون ودبس الرمان والسماق. تقدم في وعاء صغير.",
+            "description_long": "Ezme is one of Turkey's most popular mezes — a finely chopped salad bursting with fresh Mediterranean flavours. Ripe tomatoes, red and green bell peppers, onion, parsley, and fresh mint are finely diced and combined with garlic, tomato paste, and red pepper paste. The dressing brings everything together: fruity olive oil, tangy lemon juice, sweet-tart pomegranate molasses, and aromatic sumac and dried mint. A touch of Aleppo pepper flakes adds gentle warmth without overpowering heat. Each small pot (60-80g) is the perfect accompaniment to our breads and pastries, or enjoyed on its own as a refreshing side.",
+            "description_long_fr": "L'Ezme est l'un des mezze les plus populaires de Turquie — une salade finement hachée débordante de saveurs méditerranéennes fraîches. Des tomates mûres, des poivrons rouges et verts, de l'oignon, du persil et de la menthe fraîche sont finement coupés et combinés avec de l'ail, de la pâte de tomate et de la pâte de poivron rouge. L'assaisonnement réunit le tout : huile d'olive fruitée, jus de citron acidulé, mélasse de grenade aigre-douce, et sumac et menthe séchée aromatiques. Chaque petit pot (60-80g) est l'accompagnement parfait pour nos pains et pâtisseries.",
+            "description_long_ar": "الإزمة هي واحدة من أشهر المقبلات التركية — سلطة مفرومة ناعماً مليئة بنكهات البحر المتوسط الطازجة. طماطم ناضجة وفلفل أحمر وأخضر وبصل وبقدونس ونعناع طازج مفرومة ناعماً ومخلوطة مع الثوم ومعجون الطماطم ومعجون الفلفل الأحمر. التتبيلة تجمع كل شيء معاً: زيت زيتون فاكهي وعصير ليمون حامض ودبس رمان حلو-حامض وسماق ونعناع مجفف عطري. كل وعاء صغير (60-80 جم) هو المرافق المثالي لخبزنا ومعجناتنا.",
+            "price": 7.0,
+            "image": "ezme.jpg",
+            "cooking_method": "fresh",
+            "cooking_method_fr": "frais",
+            "cooking_method_ar": "طازج",
+            "allergens": [],
+            "allergens_fr": [],
+            "allergens_ar": [],
+            "ingredients": [
+                "Tomatoes",
+                "Red Bell Pepper",
+                "Green Bell Pepper",
+                "Parsley",
+                "Fresh Mint",
+                "Onion",
+                "Garlic",
+                "Tomato Paste",
+                "Red Pepper Paste",
+                "Olive Oil",
+                "Lemon",
+                "Pomegranate Molasses",
+                "Sumac",
+                "Dried Mint",
+                "Salt",
+                "Black Pepper"
+            ],
+            "ingredients_fr": [
+                "Tomates",
+                "Poivron rouge",
+                "Poivron vert",
+                "Persil",
+                "Menthe fraiche",
+                "Oignon",
+                "Ail",
+                "Concentre de tomate",
+                "Pate de poivron rouge",
+                "Huile d'olive",
+                "Citron",
+                "Melasse de grenade",
+                "Sumac",
+                "Menthe sechee",
+                "Sel",
+                "Poivre noir"
+            ],
+            "ingredients_ar": [
+                "طماطم",
+                "فلفل أحمر",
+                "فلفل أخضر",
+                "بقدونس",
+                "نعناع طازج",
+                "بصل",
+                "ثوم",
+                "معجون طماطم",
+                "معجون فلفل أحمر",
+                "زيت زيتون",
+                "ليمون",
+                "دبس رمان",
+                "سماق",
+                "نعناع مجفف",
+                "ملح",
+                "فلفل أسود"
+            ],
+            "nutrition": {
+                "calories": "65 kcal",
+                "protein": "1g",
+                "carbs": "5g",
+                "fat": "5g",
+                "fibre": "1g"
+            },
+            "meta_title": "Turkish Ezme Salad — Fresh Spicy Tomato Dip | Samarkand Bakery",
+            "meta_description": "Order fresh Turkish Ezme Salad in Tetouan. Finely chopped tomatoes, peppers, herbs with olive oil and pomegranate molasses. 7 MAD per pot. Delivery & pickup."
         }
     },
     "allergen_notice": "Our products are prepared in a home kitchen where allergens including gluten, dairy, eggs, and sesame are present. Cross-contamination may occur. If you have a severe allergy, please contact us before ordering. Nutritional values are approximate estimates and may vary.",

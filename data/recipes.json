@@ -378,5 +378,38 @@
                 }
             }
         }
+    },
+    "turkish_ezme": {
+        "name": "Turkish Ezme Salad",
+        "selling_price": 7.0,
+        "packaging_type": "pastry_boxes",
+        "cooking": {
+            "method": "oven",
+            "minutes_per_load": 0,
+            "items_per_oven_load": 1
+        },
+        "components": {
+            "salad": {
+                "yields": 8,
+                "ingredients": {
+                    "tomato_per_kg": 0.8,
+                    "bell_pepper_each": 2,
+                    "onion_per_kg": 0.15,
+                    "fresh_parsley_per_kg": 0.05,
+                    "fresh_mint_per_kg": 0.02,
+                    "garlic_per_kg": 0.01,
+                    "tomato_paste_per_kg": 0.015,
+                    "red_pepper_paste_per_kg": 0.015,
+                    "paprika_per_kg": 0.001,
+                    "sumac_per_kg": 0.003,
+                    "dried_mint_per_kg": 0.004,
+                    "salt_per_kg": 0.005,
+                    "black_pepper_per_kg": 0.001,
+                    "olive_oil_per_litre": 0.12,
+                    "lemon_each": 0.5,
+                    "pomegranate_molasses_per_litre": 0.025
+                }
+            }
+        }
     }
 }

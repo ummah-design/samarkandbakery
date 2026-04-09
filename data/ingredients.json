@@ -35,5 +35,12 @@
     "pomegranate_molasses_per_litre": 200.0,
     "honey_per_kg": 134.12,
     "bicarbonate_soda_per_kg": 54.67,
-    "unsalted_butter_per_kg": 100.0
+    "unsalted_butter_per_kg": 100.0,
+    "tomato_per_kg": 7.0,
+    "bell_pepper_each": 2.5,
+    "red_pepper_paste_per_kg": 40.0,
+    "sumac_per_kg": 200.0,
+    "dried_mint_per_kg": 100.0,
+    "lemon_each": 1.0,
+    "fresh_mint_per_kg": 40.0
 }

@@ -1578,7 +1578,6 @@
         const container = document.getElementById('prod-date-buttons');
         const today = new Date();
         const dates = [];
-        // Find next 8 Saturdays and Sundays (4 weeks)
         for (let i = 0; i < 30; i++) {
             const d = new Date(today);
             d.setDate(today.getDate() + i);
@@ -1589,12 +1588,11 @@
             }
         }
         let html = '';
-        dates.forEach((d, idx) => {
+        dates.forEach((d) => {
             const dateStr = d.toISOString().split('T')[0];
             const dayName = d.toLocaleDateString('en-GB', { weekday: 'short' });
             const dateLabel = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
-            const isWeekend = idx < 2 ? ' style="background:var(--navy);color:#fff;"' : '';
-            html += '<button class="status-btn" ' + isWeekend + ' onclick="loadProduction(\'' + dateStr + '\', this)" style="padding:10px 16px;border-radius:8px;cursor:pointer;border:1px solid #e8e0d8;background:' + (idx < 2 ? 'var(--navy);color:#fff' : '#fff;color:#1e2a4a') + ';font-weight:600;">' + dayName + '<br><span style="font-size:0.85em;font-weight:400;">' + dateLabel + '</span></button>';
+            html += '<button class="prod-date-btn" onclick="loadProduction(\'' + dateStr + '\', this)" style="padding:10px 16px;border-radius:8px;cursor:pointer;border:1px solid #e8e0d8;background:#fff;color:#1e2a4a;font-weight:600;font-size:1em;line-height:1.4;">' + dayName + '<br><span style="font-size:0.85em;font-weight:400;">' + dateLabel + '</span></button>';
         });
         container.innerHTML = html;
     }
@@ -1650,10 +1648,10 @@
 
     async function loadProduction(date, btn) {
         // Highlight selected button
-        document.querySelectorAll('#prod-date-buttons .status-btn').forEach(b => {
+        document.querySelectorAll('#prod-date-buttons .prod-date-btn').forEach(b => {
             b.style.background = '#fff'; b.style.color = '#1e2a4a';
         });
-        if (btn) { btn.style.background = 'var(--navy)'; btn.style.color = '#fff'; }
+        if (btn) { btn.style.background = '#1e2a4a'; btn.style.color = '#fff'; }
 
         const res = await fetch('/api/admin/production/' + date);
         const data = await res.json();

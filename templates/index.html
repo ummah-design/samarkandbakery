@@ -497,6 +497,7 @@
                 <table style="width:100%;border-collapse:collapse;" id="prod-ingredients-table">
                     <thead>
                         <tr style="border-bottom:2px solid #1e2a4a;">
+                            <th style="width:30px;padding:10px 0;"></th>
                             <th style="text-align:left;padding:10px 0;color:#1e2a4a;cursor:pointer;" onclick="sortShoppingList('name')">Ingredient <span id="sort-ing-name"></span></th>
                             <th style="text-align:right;padding:10px 0;color:#1e2a4a;cursor:pointer;" onclick="sortShoppingList('amount')">Amount <span id="sort-ing-amount"></span></th>
                             <th style="text-align:right;padding:10px 0;color:#1e2a4a;cursor:pointer;" onclick="sortShoppingList('cost')">Est. Cost <span id="sort-ing-cost"></span></th>
@@ -505,7 +506,7 @@
                     <tbody id="prod-ingredients-body"></tbody>
                     <tfoot>
                         <tr style="border-top:2px solid #1e2a4a;">
-                            <td style="padding:12px 0;font-weight:700;color:#1e2a4a;">Total Ingredient Cost</td>
+                            <td colspan="2" style="padding:12px 0;font-weight:700;color:#1e2a4a;">Total Ingredient Cost</td>
                             <td></td>
                             <td style="padding:12px 0;text-align:right;font-weight:700;color:#b8860b;" id="prod-total-cost">0.00 MAD</td>
                         </tr>
@@ -1567,6 +1568,21 @@
         container.innerHTML = html;
     }
 
+    let checkedIngredients = {};
+
+    function toggleIngredient(key, cb) {
+        checkedIngredients[key] = cb.checked;
+        const row = cb.closest('tr');
+        if (cb.checked) {
+            row.style.background = '#f0f0f0';
+            row.querySelectorAll('td').forEach(td => { td.style.color = '#b0b0b0'; });
+            cb.parentElement.style.color = '';
+        } else {
+            row.style.background = '';
+            row.querySelectorAll('td').forEach(td => { td.style.color = ''; });
+        }
+    }
+
     function renderShoppingList() {
         const sorted = [...currentShoppingList].sort((a, b) => {
             let va = a[shoppingSortCol], vb = b[shoppingSortCol];
@@ -1577,13 +1593,17 @@
         });
         let html = '';
         sorted.forEach(item => {
-            html += '<tr style="border-bottom:1px solid #f0ebe3;">';
-            html += '<td style="padding:8px 0;">' + item.name + '</td>';
-            html += '<td style="padding:8px 0;text-align:right;font-weight:600;">' + item.amount.toFixed(3) + ' ' + item.unit + '</td>';
-            html += '<td style="padding:8px 0;text-align:right;color:#b8860b;font-weight:600;">' + item.cost.toFixed(2) + ' MAD</td>';
+            const checked = checkedIngredients[item.key] ? ' checked' : '';
+            const rowStyle = checked ? 'border-bottom:1px solid #f0ebe3;background:#f0f0f0;' : 'border-bottom:1px solid #f0ebe3;';
+            const textStyle = checked ? 'color:#b0b0b0;' : '';
+            html += '<tr style="' + rowStyle + '">';
+            html += '<td style="padding:8px 4px;"><input type="checkbox" onchange="toggleIngredient(\'' + item.key + '\', this)" style="width:18px;height:18px;cursor:pointer;accent-color:#2d7a4f;"' + checked + '></td>';
+            html += '<td style="padding:8px 0;' + textStyle + '">' + item.name + '</td>';
+            html += '<td style="padding:8px 0;text-align:right;font-weight:600;' + textStyle + '">' + item.amount.toFixed(3) + ' ' + item.unit + '</td>';
+            html += '<td style="padding:8px 0;text-align:right;font-weight:600;' + (checked ? 'color:#b0b0b0;' : 'color:#b8860b;') + '">' + item.cost.toFixed(2) + ' MAD</td>';
             html += '</tr>';
         });
-        document.getElementById('prod-ingredients-body').innerHTML = html || '<tr><td colspan="3" style="padding:8px 0;color:#9a9aad;">No ingredients needed.</td></tr>';
+        document.getElementById('prod-ingredients-body').innerHTML = html || '<tr><td colspan="4" style="padding:8px 0;color:#9a9aad;">No ingredients needed.</td></tr>';
         // Update sort indicators
         ['name', 'amount', 'cost'].forEach(c => {
             const el = document.getElementById('sort-ing-' + c);

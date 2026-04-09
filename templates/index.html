@@ -627,11 +627,19 @@
     const menuData = {{ menu | tojson }};
 
     // ===== TAB SWITCHING =====
-    function showTab(name, btn) {
+    function showTab(name, btn, skipHistory) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
         document.getElementById('tab-' + name).classList.add('active');
         if (btn) btn.classList.add('active');
+        else {
+            document.querySelectorAll('.tab').forEach(b => {
+                if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + name + "'")) b.classList.add('active');
+            });
+        }
+
+        // Update URL hash for back button support
+        if (!skipHistory) history.pushState({ tab: name }, '', '/admin#' + name);
 
         // Show/hide cart bar only on shop tab
         const cartBar = document.getElementById('cart-bar');
@@ -646,6 +654,20 @@
         if (name === 'reviews') { loadAdminReviews(); loadReviewRequests(); }
         if (name === 'production') initProductionDates();
     }
+
+    // Back/forward button support
+    window.addEventListener('popstate', function(e) {
+        const tab = (e.state && e.state.tab) || window.location.hash.replace('#', '') || 'admin';
+        showTab(tab, null, true);
+    });
+
+    // Load tab from URL hash on page load
+    (function() {
+        const hash = window.location.hash.replace('#', '');
+        if (hash && document.getElementById('tab-' + hash)) {
+            showTab(hash, null, true);
+        }
+    })();
 
     function mad(val) { return parseFloat(val).toFixed(2) + ' MAD'; }
 

@@ -201,6 +201,7 @@
         <button class="tab" onclick="showTab('promos', this)">Promo Codes</button>
         <button class="tab" onclick="showTab('customers', this)">Customers</button>
         <button class="tab" onclick="showTab('prices', this)">Ingredient Prices</button>
+        <button class="tab" onclick="showTab('production', this)">Production</button>
     </div>
 
     <!-- ===== ORDER PAGE TAB ===== -->
@@ -463,6 +464,70 @@
         </div>
     </div>
 
+    <!-- ===== PRODUCTION PLANNING TAB ===== -->
+    <div id="tab-production" class="tab-content">
+        <div class="card">
+            <h2 style="margin-bottom:16px;">Production Planning</h2>
+            <p style="color:#6b6b80;margin-bottom:16px;">Select a delivery date to see all orders and the total ingredients needed.</p>
+            <div id="prod-date-buttons" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;"></div>
+        </div>
+        <div id="prod-results" style="display:none;">
+            <div class="card" style="margin-top:12px;">
+                <h3 style="margin-bottom:12px;" id="prod-date-title"></h3>
+                <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:16px;">
+                    <div style="background:#f5f0eb;padding:12px 20px;border-radius:8px;text-align:center;">
+                        <div style="font-size:1.8em;font-weight:700;color:#1e2a4a;" id="prod-order-count">0</div>
+                        <div style="font-size:0.85em;color:#6b6b80;">Orders</div>
+                    </div>
+                    <div style="background:#f5f0eb;padding:12px 20px;border-radius:8px;text-align:center;">
+                        <div style="font-size:1.8em;font-weight:700;color:#b8860b;" id="prod-total-items">0</div>
+                        <div style="font-size:0.85em;color:#6b6b80;">Items</div>
+                    </div>
+                    <div style="background:#f5f0eb;padding:12px 20px;border-radius:8px;text-align:center;">
+                        <div style="font-size:1.8em;font-weight:700;color:#2d7a4f;" id="prod-total-revenue">0</div>
+                        <div style="font-size:0.85em;color:#6b6b80;">Revenue (MAD)</div>
+                    </div>
+                </div>
+                <h4 style="margin:16px 0 8px;">Orders</h4>
+                <div id="prod-orders-list"></div>
+            </div>
+            <div class="card" style="margin-top:12px;">
+                <h3 style="margin-bottom:4px;">Shopping List</h3>
+                <p style="color:#6b6b80;font-size:0.85em;margin-bottom:12px;">Total ingredients needed to fulfil all orders for this date.</p>
+                <table style="width:100%;border-collapse:collapse;" id="prod-ingredients-table">
+                    <thead>
+                        <tr style="border-bottom:2px solid #1e2a4a;">
+                            <th style="text-align:left;padding:10px 0;color:#1e2a4a;">Ingredient</th>
+                            <th style="text-align:right;padding:10px 0;color:#1e2a4a;">Amount</th>
+                            <th style="text-align:right;padding:10px 0;color:#1e2a4a;">Est. Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody id="prod-ingredients-body"></tbody>
+                    <tfoot>
+                        <tr style="border-top:2px solid #1e2a4a;">
+                            <td style="padding:12px 0;font-weight:700;color:#1e2a4a;">Total Ingredient Cost</td>
+                            <td></td>
+                            <td style="padding:12px 0;text-align:right;font-weight:700;color:#b8860b;" id="prod-total-cost">0.00 MAD</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="card" style="margin-top:12px;">
+                <h3 style="margin-bottom:4px;">Product Breakdown</h3>
+                <p style="color:#6b6b80;font-size:0.85em;margin-bottom:12px;">Quantity of each product to prepare.</p>
+                <table style="width:100%;border-collapse:collapse;" id="prod-products-table">
+                    <thead>
+                        <tr style="border-bottom:2px solid #1e2a4a;">
+                            <th style="text-align:left;padding:10px 0;color:#1e2a4a;">Product</th>
+                            <th style="text-align:right;padding:10px 0;color:#1e2a4a;">Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody id="prod-products-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <!-- Cart bar (for Order Page tab) -->
@@ -535,6 +600,7 @@
         if (name === 'customers') loadCustomers();
         if (name === 'promos') loadPromos();
         if (name === 'reviews') { loadAdminReviews(); loadReviewRequests(); }
+        if (name === 'production') initProductionDates();
     }
 
     function mad(val) { return parseFloat(val).toFixed(2) + ' MAD'; }
@@ -1344,6 +1410,113 @@
             body: JSON.stringify({ active })
         });
         loadPromos();
+    }
+
+
+    // ===== PRODUCTION PLANNING =====
+    let prodDatesInit = false;
+
+    function initProductionDates() {
+        if (prodDatesInit) return;
+        prodDatesInit = true;
+        const container = document.getElementById('prod-date-buttons');
+        const today = new Date();
+        const dates = [];
+        // Find next 8 Saturdays and Sundays (4 weeks)
+        for (let i = 0; i < 30; i++) {
+            const d = new Date(today);
+            d.setDate(today.getDate() + i);
+            const day = d.getDay();
+            if (day === 0 || day === 6) {
+                dates.push(d);
+                if (dates.length >= 8) break;
+            }
+        }
+        let html = '';
+        dates.forEach((d, idx) => {
+            const dateStr = d.toISOString().split('T')[0];
+            const dayName = d.toLocaleDateString('en-GB', { weekday: 'short' });
+            const dateLabel = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+            const isWeekend = idx < 2 ? ' style="background:var(--navy);color:#fff;"' : '';
+            html += '<button class="status-btn" ' + isWeekend + ' onclick="loadProduction(\'' + dateStr + '\', this)" style="padding:10px 16px;border-radius:8px;cursor:pointer;border:1px solid #e8e0d8;background:' + (idx < 2 ? 'var(--navy);color:#fff' : '#fff;color:#1e2a4a') + ';font-weight:600;">' + dayName + '<br><span style="font-size:0.85em;font-weight:400;">' + dateLabel + '</span></button>';
+        });
+        container.innerHTML = html;
+    }
+
+    async function loadProduction(date, btn) {
+        // Highlight selected button
+        document.querySelectorAll('#prod-date-buttons .status-btn').forEach(b => {
+            b.style.background = '#fff'; b.style.color = '#1e2a4a';
+        });
+        if (btn) { btn.style.background = 'var(--navy)'; btn.style.color = '#fff'; }
+
+        const res = await fetch('/api/admin/production/' + date);
+        const data = await res.json();
+        const results = document.getElementById('prod-results');
+        results.style.display = 'block';
+
+        // Date title
+        const d = new Date(date + 'T00:00:00');
+        document.getElementById('prod-date-title').textContent = d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+        // Stats
+        const orders = data.orders || [];
+        let totalItems = 0;
+        let totalRevenue = 0;
+        orders.forEach(o => {
+            o.items.forEach(i => { totalItems += i.quantity; });
+            totalRevenue += o.total_price || 0;
+        });
+        document.getElementById('prod-order-count').textContent = orders.length;
+        document.getElementById('prod-total-items').textContent = totalItems;
+        document.getElementById('prod-total-revenue').textContent = totalRevenue.toFixed(0);
+
+        // Orders list
+        let ordersHtml = '';
+        if (orders.length === 0) {
+            ordersHtml = '<p style="color:#9a9aad;font-style:italic;">No orders for this date.</p>';
+        } else {
+            ordersHtml = '<table style="width:100%;border-collapse:collapse;font-size:0.9em;">';
+            ordersHtml += '<tr style="border-bottom:2px solid #1e2a4a;"><th style="text-align:left;padding:8px 0;">Order</th><th style="text-align:left;padding:8px 0;">Customer</th><th style="text-align:left;padding:8px 0;">Items</th><th style="text-align:right;padding:8px 0;">Total</th><th style="text-align:center;padding:8px 0;">Status</th></tr>';
+            orders.forEach(o => {
+                const itemsSummary = o.items.map(i => i.name + ' x' + i.quantity).join(', ');
+                const sc = 'status-' + o.status;
+                ordersHtml += '<tr style="border-bottom:1px solid #f0ebe3;">';
+                ordersHtml += '<td style="padding:8px 0;font-weight:600;">#' + o.id + '</td>';
+                ordersHtml += '<td style="padding:8px 0;" dir="auto">' + o.customer_name + '</td>';
+                ordersHtml += '<td style="padding:8px 0;color:#666;font-size:0.9em;">' + itemsSummary + '</td>';
+                ordersHtml += '<td style="padding:8px 0;text-align:right;font-weight:600;color:#b8860b;">' + (o.total_price || 0).toFixed(2) + ' MAD</td>';
+                ordersHtml += '<td style="padding:8px 0;text-align:center;"><span class="status-badge ' + sc + '">' + o.status + '</span></td>';
+                ordersHtml += '</tr>';
+            });
+            ordersHtml += '</table>';
+        }
+        document.getElementById('prod-orders-list').innerHTML = ordersHtml;
+
+        // Product breakdown
+        const products = data.product_totals || {};
+        let prodHtml = '';
+        for (const [key, qty] of Object.entries(products)) {
+            const name = key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+            prodHtml += '<tr style="border-bottom:1px solid #f0ebe3;">';
+            prodHtml += '<td style="padding:8px 0;">' + name + '</td>';
+            prodHtml += '<td style="padding:8px 0;text-align:right;font-weight:600;">' + qty + '</td>';
+            prodHtml += '</tr>';
+        }
+        document.getElementById('prod-products-body').innerHTML = prodHtml || '<tr><td colspan="2" style="padding:8px 0;color:#9a9aad;">No products.</td></tr>';
+
+        // Shopping list
+        const shopping = data.shopping_list || [];
+        let shopHtml = '';
+        shopping.forEach(item => {
+            shopHtml += '<tr style="border-bottom:1px solid #f0ebe3;">';
+            shopHtml += '<td style="padding:8px 0;">' + item.name + '</td>';
+            shopHtml += '<td style="padding:8px 0;text-align:right;font-weight:600;">' + item.amount.toFixed(3) + ' ' + item.unit + '</td>';
+            shopHtml += '<td style="padding:8px 0;text-align:right;color:#b8860b;font-weight:600;">' + item.cost.toFixed(2) + ' MAD</td>';
+            shopHtml += '</tr>';
+        });
+        document.getElementById('prod-ingredients-body').innerHTML = shopHtml || '<tr><td colspan="3" style="padding:8px 0;color:#9a9aad;">No ingredients needed.</td></tr>';
+        document.getElementById('prod-total-cost').textContent = (data.total_ingredient_cost || 0).toFixed(2) + ' MAD';
     }
 
 

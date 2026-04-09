@@ -175,6 +175,22 @@ def get_orders(status=None, limit=50):
     return orders
 
 
+def get_orders_by_date(date_str):
+    """Get all non-cancelled orders for a specific preferred_date."""
+    conn = get_db()
+    rows = conn.execute(
+        "SELECT * FROM orders WHERE preferred_date = ? AND status != 'cancelled' ORDER BY created_at",
+        (date_str,)
+    ).fetchall()
+    conn.close()
+    orders = []
+    for row in rows:
+        order = dict(row)
+        order["items"] = json.loads(order["items"])
+        orders.append(order)
+    return orders
+
+
 def get_order(order_id):
     """Get a single order by ID."""
     conn = get_db()

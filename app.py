@@ -18,7 +18,8 @@ except Exception:
     send_order_placed = None
     send_order_confirmed = None
     send_order_completed = None
-from database import (create_order, get_orders, get_order, update_order_status,
+from database import (create_order, get_orders, get_order, get_orders_by_date,
+                      update_order_status,
                       get_customers, get_customer_orders,
                       create_review, get_reviews, update_review_status, add_review_reply,
                       get_product_review_summary, is_known_customer, get_customer_review_count,
@@ -551,6 +552,77 @@ def api_admin_customer_orders_by_query():
     email = request.args.get("email", "")
     orders = get_customer_orders(email)
     return jsonify(orders)
+
+
+@app.route("/api/admin/production/<date>")
+@admin_required
+def api_production_plan(date):
+    """Get orders for a specific delivery date and calculate total ingredients needed."""
+    import math
+    orders = get_orders_by_date(date)
+    data = load_data()
+    recipes = data["recipes"]
+    ingredients_db = data["ingredients"]
+
+    # Aggregate product quantities across all orders
+    product_totals = {}
+    for order in orders:
+        for item in order.get("items", []):
+            key = item["key"]
+            qty = item["quantity"]
+            product_totals[key] = product_totals.get(key, 0) + qty
+
+    # Calculate total ingredients needed (proportional costing)
+    ingredient_totals = {}
+    for recipe_key, quantity in product_totals.items():
+        recipe = recipes.get(recipe_key)
+        if not recipe:
+            continue
+        for comp_name, comp in recipe["components"].items():
+            batch_yield = comp["yields"]
+            fraction = quantity / batch_yield
+            for ing_key, amount_per_batch in comp["ingredients"].items():
+                base_key = ing_key.split("__")[0]
+                needed = amount_per_batch * fraction
+                if base_key not in ingredient_totals:
+                    ingredient_totals[base_key] = 0.0
+                ingredient_totals[base_key] += needed
+
+    # Build ingredient list with costs
+    shopping_list = []
+    total_cost = 0.0
+    for ing_key, amount in sorted(ingredient_totals.items()):
+        if ing_key.startswith("water"):
+            continue
+        price = ingredients_db.get(ing_key, 0)
+        cost = price * amount
+        total_cost += cost
+        # Format name nicely
+        name = ing_key.replace("_per_kg", "").replace("_per_litre", "").replace("_per_pot", "").replace("_each", "").replace("_", " ").title()
+        unit = "kg"
+        if "per_litre" in ing_key:
+            unit = "L"
+        elif "per_pot" in ing_key:
+            unit = "pots"
+        elif "_each" in ing_key:
+            unit = "pcs"
+        elif "per_tub" in ing_key:
+            unit = "tubs"
+        shopping_list.append({
+            "key": ing_key,
+            "name": name,
+            "amount": round(amount, 3),
+            "unit": unit,
+            "cost": round(cost, 2)
+        })
+
+    return jsonify({
+        "date": date,
+        "orders": orders,
+        "product_totals": product_totals,
+        "shopping_list": shopping_list,
+        "total_ingredient_cost": round(total_cost, 2)
+    })
 
 
 # ── Public Reviews API ──

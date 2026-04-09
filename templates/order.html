@@ -1843,7 +1843,7 @@ function buildCalendar() {
 
         for (const d of month.days) {
             const dow = d.getDay();
-            const dateStr = d.toISOString().split('T')[0];
+            const dateStr = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
             const isWeekend = dow === 0 || dow === 6;
             const isToday = d.getTime() === today.getTime();
             const isFuture = d.getTime() > today.getTime();

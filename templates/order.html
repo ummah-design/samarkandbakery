@@ -1762,6 +1762,8 @@ let cart = {};
 let deliveryType = 'pickup';
 let paymentMethod = 'cod';
 let paypalRendered = false;
+let appliedPromo = null;
+let discountAmount = 0;
 
 function switchLang(lang) {
     window.location.href = '/?lang=' + lang + window.location.hash;
@@ -1833,12 +1835,12 @@ const blockedDates = {{ blocked_dates | default([]) | tojson }};
 
         for (const d of month.days) {
             const dow = d.getDay();
+            const dateStr = d.toISOString().split('T')[0];
             const isWeekend = dow === 0 || dow === 6;
             const isToday = d.getTime() === today.getTime();
             const isFuture = d.getTime() > today.getTime();
             const isBlocked = blockedDates.includes(dateStr);
             const isAvailable = isWeekend && isFuture && !isBlocked;
-            const dateStr = d.toISOString().split('T')[0];
             const dayLabel = dow === 6 ? 'Sat' : dow === 0 ? 'Sun' : '';
 
             let classes = 'mini-cal-day';
@@ -1975,9 +1977,6 @@ function renderCheckoutSummary() {
     }
     document.getElementById('checkout-summary').innerHTML = html;
 }
-
-let appliedPromo = null;
-let discountAmount = 0;
 
 async function applyPromo() {
     const code = document.getElementById('c-promo').value.trim();

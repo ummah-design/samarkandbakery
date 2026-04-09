@@ -563,6 +563,26 @@ def api_admin_customer_orders_by_query():
     return jsonify(orders)
 
 
+@app.route("/api/admin/customer-lookup")
+@admin_required
+def api_customer_lookup():
+    """Look up a customer by email for manual order auto-fill."""
+    email = request.args.get("email", "").strip().lower()
+    if not email:
+        return jsonify({"found": False})
+    orders = get_customer_orders(email)
+    if orders:
+        latest = orders[0]
+        return jsonify({
+            "found": True,
+            "customer_name": latest["customer_name"],
+            "customer_phone": latest["customer_phone"],
+            "order_count": len(orders),
+            "total_spent": round(sum(o["total_price"] for o in orders), 2)
+        })
+    return jsonify({"found": False})
+
+
 @app.route("/api/admin/production/<date>")
 @admin_required
 def api_production_plan(date):

@@ -546,10 +546,11 @@
             <h2>Manual Order</h2>
             <p style="color:#6b6b80;font-size:0.85em;margin-bottom:12px;">Add an order on behalf of a customer (phone/email/walk-in).</p>
             <div class="cart-summary" id="checkout-cart-summary"></div>
+            <label for="customer-email">Customer Email</label>
+            <input type="email" id="customer-email" placeholder="customer@email.com" required>
+            <div id="customer-lookup-msg" style="display:none;margin:-8px 0 12px;padding:8px 12px;border-radius:6px;font-size:0.85em;"></div>
             <label for="customer-name">Customer Name</label>
             <input type="text" id="customer-name" placeholder="Full name">
-            <label for="customer-email">Email (optional)</label>
-            <input type="email" id="customer-email" placeholder="customer@email.com">
             <label for="customer-phone">Phone / WhatsApp</label>
             <input type="tel" id="customer-phone" placeholder="+212 6XX XXX XXX">
             <label for="preferred-date">Delivery Date</label>
@@ -609,6 +610,34 @@
     }
 
     function mad(val) { return parseFloat(val).toFixed(2) + ' MAD'; }
+
+    // ===== CUSTOMER EMAIL LOOKUP =====
+    let lookupTimeout = null;
+    document.getElementById('customer-email').addEventListener('input', function() {
+        clearTimeout(lookupTimeout);
+        const email = this.value.trim().toLowerCase();
+        const msg = document.getElementById('customer-lookup-msg');
+        if (!email || !email.includes('@')) { msg.style.display = 'none'; return; }
+        lookupTimeout = setTimeout(async () => {
+            try {
+                const res = await fetch('/api/admin/customer-lookup?email=' + encodeURIComponent(email));
+                const data = await res.json();
+                if (data.found) {
+                    document.getElementById('customer-name').value = data.customer_name;
+                    document.getElementById('customer-phone').value = data.customer_phone;
+                    msg.style.display = 'block';
+                    msg.style.background = '#e8f5e9';
+                    msg.style.color = '#2d7a4f';
+                    msg.innerHTML = '<strong>Returning customer</strong> — ' + data.order_count + ' previous order' + (data.order_count > 1 ? 's' : '') + ' (' + data.total_spent.toFixed(0) + ' MAD total)';
+                } else {
+                    msg.style.display = 'block';
+                    msg.style.background = '#fff3e0';
+                    msg.style.color = '#b8860b';
+                    msg.innerHTML = 'New customer';
+                }
+            } catch(e) { msg.style.display = 'none'; }
+        }, 500);
+    });
 
     // ===== ORDERING (SHOP) =====
     let cart = {};
@@ -710,6 +739,7 @@
         const email = (document.getElementById('customer-email').value || '').trim().toLowerCase();
         const phone = document.getElementById('customer-phone').value.trim();
         const preferredDate = document.getElementById('preferred-date').value;
+        if (!email) { alert('Please enter customer email.'); return; }
         if (!name || !phone) { alert('Please enter customer name and phone number.'); return; }
         if (deliveryType === 'delivery' && !selectedLat) { alert('Please tap on the map to set your delivery location.'); return; }
         const btn = document.getElementById('submit-btn');
@@ -737,6 +767,7 @@
         updateCartUI(); closeCheckout();
         document.getElementById('customer-name').value = '';
         document.getElementById('customer-email').value = '';
+        document.getElementById('customer-lookup-msg').style.display = 'none';
         document.getElementById('customer-phone').value = '';
         document.getElementById('preferred-date').value = '';
         document.getElementById('delivery-address').value = '';

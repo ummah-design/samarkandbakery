@@ -888,30 +888,6 @@
                 "جلوتين",
                 "سمسم"
             ],
-            "ingredients_list": [
-                "Flour",
-                "Water",
-                "Sesame Seeds",
-                "Pomegranate Molasses",
-                "Yeast",
-                "Salt"
-            ],
-            "ingredients_list_fr": [
-                "Farine",
-                "Eau",
-                "Graines de sésame",
-                "Mélasse de grenade",
-                "Levure",
-                "Sel"
-            ],
-            "ingredients_list_ar": [
-                "دقيق",
-                "ماء",
-                "بذور السمسم",
-                "دبس الرمان",
-                "خميرة",
-                "ملح"
-            ],
             "nutrition": {
                 "calories": "280 kcal",
                 "protein": "8g",
@@ -920,7 +896,31 @@
                 "fibre": "3g"
             },
             "meta_title": "Turkish Simit — Authentic Sesame Bread Ring | Samarkand Bakery",
-            "meta_description": "Order fresh handmade Turkish Simit in Tetouan. Crunchy sesame-crusted bread ring with molasses glaze, baked to golden perfection. Delivery & pickup available."
+            "meta_description": "Order fresh handmade Turkish Simit in Tetouan. Crunchy sesame-crusted bread ring with molasses glaze, baked to golden perfection. Delivery & pickup available.",
+            "ingredients": [
+                "Flour",
+                "Water",
+                "Sesame Seeds",
+                "Pomegranate Molasses",
+                "Yeast",
+                "Salt"
+            ],
+            "ingredients_fr": [
+                "Farine",
+                "Eau",
+                "Graines de sésame",
+                "Mélasse de grenade",
+                "Levure",
+                "Sel"
+            ],
+            "ingredients_ar": [
+                "دقيق",
+                "ماء",
+                "بذور السمسم",
+                "دبس الرمان",
+                "خميرة",
+                "ملح"
+            ]
         }
     },
     "allergen_notice": "Our products are prepared in a home kitchen where allergens including gluten, dairy, eggs, and sesame are present. Cross-contamination may occur. If you have a severe allergy, please contact us before ordering. Nutritional values are approximate estimates and may vary.",

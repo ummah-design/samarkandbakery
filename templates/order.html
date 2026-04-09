@@ -1793,7 +1793,7 @@ window.addEventListener('scroll', () => {
 });
 
 // Mini calendar
-const blockedDates = {{ blocked_dates | tojson }};
+const blockedDates = {{ blocked_dates | default([]) | tojson }};
 
 (function buildCalendar() {
     const container = document.getElementById('mini-cal');

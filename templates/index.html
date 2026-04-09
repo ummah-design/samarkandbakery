@@ -497,9 +497,9 @@
                 <table style="width:100%;border-collapse:collapse;" id="prod-ingredients-table">
                     <thead>
                         <tr style="border-bottom:2px solid #1e2a4a;">
-                            <th style="text-align:left;padding:10px 0;color:#1e2a4a;">Ingredient</th>
-                            <th style="text-align:right;padding:10px 0;color:#1e2a4a;">Amount</th>
-                            <th style="text-align:right;padding:10px 0;color:#1e2a4a;">Est. Cost</th>
+                            <th style="text-align:left;padding:10px 0;color:#1e2a4a;cursor:pointer;" onclick="sortShoppingList('name')">Ingredient <span id="sort-ing-name"></span></th>
+                            <th style="text-align:right;padding:10px 0;color:#1e2a4a;cursor:pointer;" onclick="sortShoppingList('amount')">Amount <span id="sort-ing-amount"></span></th>
+                            <th style="text-align:right;padding:10px 0;color:#1e2a4a;cursor:pointer;" onclick="sortShoppingList('cost')">Est. Cost <span id="sort-ing-cost"></span></th>
                         </tr>
                     </thead>
                     <tbody id="prod-ingredients-body"></tbody>
@@ -1536,6 +1536,9 @@
 
     // ===== PRODUCTION PLANNING =====
     let prodDatesInit = false;
+    let currentShoppingList = [];
+    let shoppingSortCol = 'name';
+    let shoppingSortAsc = true;
 
     function initProductionDates() {
         if (prodDatesInit) return;
@@ -1562,6 +1565,36 @@
             html += '<button class="status-btn" ' + isWeekend + ' onclick="loadProduction(\'' + dateStr + '\', this)" style="padding:10px 16px;border-radius:8px;cursor:pointer;border:1px solid #e8e0d8;background:' + (idx < 2 ? 'var(--navy);color:#fff' : '#fff;color:#1e2a4a') + ';font-weight:600;">' + dayName + '<br><span style="font-size:0.85em;font-weight:400;">' + dateLabel + '</span></button>';
         });
         container.innerHTML = html;
+    }
+
+    function renderShoppingList() {
+        const sorted = [...currentShoppingList].sort((a, b) => {
+            let va = a[shoppingSortCol], vb = b[shoppingSortCol];
+            if (typeof va === 'string') { va = va.toLowerCase(); vb = vb.toLowerCase(); }
+            if (va < vb) return shoppingSortAsc ? -1 : 1;
+            if (va > vb) return shoppingSortAsc ? 1 : -1;
+            return 0;
+        });
+        let html = '';
+        sorted.forEach(item => {
+            html += '<tr style="border-bottom:1px solid #f0ebe3;">';
+            html += '<td style="padding:8px 0;">' + item.name + '</td>';
+            html += '<td style="padding:8px 0;text-align:right;font-weight:600;">' + item.amount.toFixed(3) + ' ' + item.unit + '</td>';
+            html += '<td style="padding:8px 0;text-align:right;color:#b8860b;font-weight:600;">' + item.cost.toFixed(2) + ' MAD</td>';
+            html += '</tr>';
+        });
+        document.getElementById('prod-ingredients-body').innerHTML = html || '<tr><td colspan="3" style="padding:8px 0;color:#9a9aad;">No ingredients needed.</td></tr>';
+        // Update sort indicators
+        ['name', 'amount', 'cost'].forEach(c => {
+            const el = document.getElementById('sort-ing-' + c);
+            if (el) el.textContent = shoppingSortCol === c ? (shoppingSortAsc ? '\u25B2' : '\u25BC') : '';
+        });
+    }
+
+    function sortShoppingList(col) {
+        if (shoppingSortCol === col) { shoppingSortAsc = !shoppingSortAsc; }
+        else { shoppingSortCol = col; shoppingSortAsc = true; }
+        renderShoppingList();
     }
 
     async function loadProduction(date, btn) {
@@ -1627,16 +1660,9 @@
         document.getElementById('prod-products-body').innerHTML = prodHtml || '<tr><td colspan="2" style="padding:8px 0;color:#9a9aad;">No products.</td></tr>';
 
         // Shopping list
-        const shopping = data.shopping_list || [];
-        let shopHtml = '';
-        shopping.forEach(item => {
-            shopHtml += '<tr style="border-bottom:1px solid #f0ebe3;">';
-            shopHtml += '<td style="padding:8px 0;">' + item.name + '</td>';
-            shopHtml += '<td style="padding:8px 0;text-align:right;font-weight:600;">' + item.amount.toFixed(3) + ' ' + item.unit + '</td>';
-            shopHtml += '<td style="padding:8px 0;text-align:right;color:#b8860b;font-weight:600;">' + item.cost.toFixed(2) + ' MAD</td>';
-            shopHtml += '</tr>';
-        });
-        document.getElementById('prod-ingredients-body').innerHTML = shopHtml || '<tr><td colspan="3" style="padding:8px 0;color:#9a9aad;">No ingredients needed.</td></tr>';
+        currentShoppingList = data.shopping_list || [];
+        shoppingSortCol = 'name'; shoppingSortAsc = true;
+        renderShoppingList();
         document.getElementById('prod-total-cost').textContent = (data.total_ingredient_cost || 0).toFixed(2) + ' MAD';
     }
 

@@ -872,7 +872,7 @@
             "description_long_fr": "Le street food turc le plus apprécié, le Simit est un pain en forme d'anneau recouvert de sésame, un incontournable depuis l'Empire ottoman du XVIe siècle. Chaque simit est torsadé à la main à partir de deux cordes de pâte dense et moelleuse, trempé dans un glaçage sucré à la mélasse de grenade, puis généreusement roulé dans des graines de sésame grillées avant d'être cuit au four jusqu'à une perfection dorée. Le résultat est une combinaison irrésistible d'extérieur croustillant au sésame et d'intérieur moelleux. Parfait avec du fromage frais, des olives, ou simplement dégusté seul avec une tasse de thé turc.",
             "description_long_ar": "أشهر طعام شارع تركي، السميت هو خبز دائري مغطى بالسمسم كان عنصرًا أساسيًا منذ الإمبراطورية العثمانية في القرن السادس عشر. يُلف كل سميت يدويًا من حبلين من العجين الكثيف والمطاطي، ويُغمس في طلاء حلو من دبس الرمان، ثم يُلف بسخاء في بذور السمسم المحمصة قبل خبزه في الفرن حتى يصبح ذهبيًا مثاليًا. النتيجة هي مزيج لا يقاوم من الخارج المقرمش بالسمسم والداخل الطري. مثالي مع الجبن الكريمي أو الزيتون أو ببساطة يُستمتع به وحده مع كوب من الشاي التركي.",
             "price": 12.0,
-            "image": "simit.png",
+            "image": "simit.avif",
             "cooking_method": "oven",
             "cooking_method_fr": "four",
             "cooking_method_ar": "فرن",

@@ -1,7 +1,7 @@
 {
     "meat_samsa": {
         "name": "Meat Samsa",
-        "selling_price": 18.00,
+        "selling_price": 18.0,
         "packaging_type": "pastry_boxes",
         "cooking": {
             "method": "oven",
@@ -29,10 +29,9 @@
             }
         }
     },
-
     "chicken_samsa": {
         "name": "Chicken Samsa",
-        "selling_price": 15.00,
+        "selling_price": 15.0,
         "packaging_type": "pastry_boxes",
         "cooking": {
             "method": "oven",
@@ -60,10 +59,9 @@
             }
         }
     },
-
     "ochiq_samsa": {
         "name": "Ochiq Samsa",
-        "selling_price": 15.00,
+        "selling_price": 15.0,
         "packaging_type": "pastry_boxes",
         "cooking": {
             "method": "oven",
@@ -101,10 +99,9 @@
             }
         }
     },
-
     "uzbek_bread": {
         "name": "Uzbek Bread",
-        "selling_price": 10.00,
+        "selling_price": 10.0,
         "packaging_type": "bread_bags",
         "cooking": {
             "method": "oven",
@@ -127,10 +124,9 @@
             }
         }
     },
-
     "turkish_bread": {
         "name": "Turkish Bread",
-        "selling_price": 10.00,
+        "selling_price": 10.0,
         "packaging_type": "bread_bags",
         "cooking": {
             "method": "oven",
@@ -153,10 +149,9 @@
             }
         }
     },
-
     "cheburek_potato": {
         "name": "Cheburek (Potato)",
-        "selling_price": 10.00,
+        "selling_price": 10.0,
         "packaging_type": "pastry_boxes",
         "cooking": {
             "method": "deep_fry",
@@ -187,10 +182,9 @@
             }
         }
     },
-
     "cheburek_meat": {
         "name": "Cheburek (Meat)",
-        "selling_price": 18.00,
+        "selling_price": 18.0,
         "packaging_type": "pastry_boxes",
         "cooking": {
             "method": "deep_fry",
@@ -220,10 +214,9 @@
             }
         }
     },
-
     "pide_minced_beef": {
         "name": "Pide (Minced Beef)",
-        "selling_price": 20.00,
+        "selling_price": 20.0,
         "packaging_type": "pastry_boxes",
         "cooking": {
             "method": "oven",
@@ -259,10 +252,9 @@
             }
         }
     },
-
     "pide_cheese_spinach": {
         "name": "Pide (Cheese & Spinach)",
-        "selling_price": 15.00,
+        "selling_price": 15.0,
         "packaging_type": "pastry_boxes",
         "cooking": {
             "method": "oven",
@@ -293,10 +285,9 @@
             }
         }
     },
-
     "pide_cheese_sausage": {
         "name": "Pide (Cheese & Sausage)",
-        "selling_price": 18.00,
+        "selling_price": 18.0,
         "packaging_type": "pastry_boxes",
         "cooking": {
             "method": "oven",
@@ -319,6 +310,35 @@
                 "ingredients": {
                     "sausage_each": 0.5,
                     "mozzarella_per_kg": 0.03
+                }
+            }
+        }
+    },
+    "turkish_simit": {
+        "name": "Turkish Simit",
+        "selling_price": 12.0,
+        "packaging_type": "bread_bags",
+        "cooking": {
+            "method": "oven",
+            "minutes_per_load": 18,
+            "items_per_oven_load": 12
+        },
+        "components": {
+            "dough": {
+                "yields": 12,
+                "ingredients": {
+                    "flour_per_kg": 1.0,
+                    "dry_yeast_per_kg": 0.007,
+                    "salt_per_kg": 0.015,
+                    "water_ml": 600
+                }
+            },
+            "coating": {
+                "yields": 12,
+                "ingredients": {
+                    "pomegranate_molasses_per_litre": 0.1,
+                    "sesame_seeds_per_kg": 0.2,
+                    "flour_per_kg": 0.008
                 }
             }
         }

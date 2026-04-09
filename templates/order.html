@@ -2290,6 +2290,51 @@ function resetOrder() {
         const totalWidth = reviews.length * 340;
         const duration = Math.max(20, reviews.length * 8);
         track.style.animationDuration = duration + 's';
+
+        // Mouse/touch drag support
+        const wrapper = document.querySelector('.reviews-track-wrapper');
+        let isDragging = false, startX, scrollStart, dragMoved = false;
+
+        wrapper.style.overflow = 'hidden';
+        wrapper.style.cursor = 'grab';
+
+        function onDragStart(e) {
+            isDragging = true; dragMoved = false;
+            startX = (e.touches ? e.touches[0].clientX : e.clientX);
+            track.style.animation = 'none';
+            scrollStart = track.getBoundingClientRect().left - wrapper.getBoundingClientRect().left;
+            track.style.transform = 'translateX(' + scrollStart + 'px)';
+            wrapper.style.cursor = 'grabbing';
+        }
+        function onDragMove(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            const x = (e.touches ? e.touches[0].clientX : e.clientX);
+            const diff = x - startX;
+            if (Math.abs(diff) > 3) dragMoved = true;
+            track.style.transform = 'translateX(' + (scrollStart + diff) + 'px)';
+        }
+        function onDragEnd() {
+            if (!isDragging) return;
+            isDragging = false;
+            wrapper.style.cursor = 'grab';
+            // Resume auto-scroll after 3 seconds
+            setTimeout(function() {
+                if (!isDragging) {
+                    track.style.transform = '';
+                    track.style.animationDuration = duration + 's';
+                    track.style.animation = '';
+                }
+            }, 3000);
+        }
+
+        wrapper.addEventListener('mousedown', onDragStart);
+        window.addEventListener('mousemove', onDragMove);
+        window.addEventListener('mouseup', onDragEnd);
+        wrapper.addEventListener('touchstart', onDragStart, {passive: true});
+        wrapper.addEventListener('touchmove', onDragMove, {passive: false});
+        wrapper.addEventListener('touchend', onDragEnd);
+
     } catch(e) {
         document.getElementById('reviews-track').innerHTML = '<div class="reviews-empty">No reviews yet. Be the first to share your experience!</div>';
         document.getElementById('reviews-track').style.animation = 'none';

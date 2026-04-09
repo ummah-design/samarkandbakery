@@ -114,14 +114,23 @@ def load_blocked_dates():
         with open(path, "r", encoding="utf-8") as f:
             return json.load(f)
     except Exception:
+        # Create file if missing
+        try:
+            with open(path, "w", encoding="utf-8") as f:
+                json.dump([], f)
+        except Exception:
+            pass
         return []
 
 
 def save_blocked_dates(dates):
     """Save blocked delivery dates."""
     path = os.path.join(DATA_DIR, "blocked_dates.json")
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(dates, f, indent=2)
+    try:
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(dates, f, indent=2)
+    except Exception as e:
+        print("Error saving blocked dates: " + str(e))
 
 
 def get_lang():

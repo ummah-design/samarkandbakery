@@ -1637,14 +1637,23 @@
         const input = document.getElementById('block-date-input');
         const date = input.value;
         if (!date) { alert('Please select a date.'); return; }
-        await fetch('/api/admin/blocked-dates', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ date: date, action: 'block' })
-        });
-        input.value = '';
-        await loadBlockedDates();
-        prodDatesInit = false;
-        initProductionDates();
+        try {
+            const res = await fetch('/api/admin/blocked-dates', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ date: date, action: 'block' })
+            });
+            const data = await res.json();
+            if (data.success) {
+                input.value = '';
+                await loadBlockedDates();
+                prodDatesInit = false;
+                initProductionDates();
+            } else {
+                alert('Error: ' + (data.error || 'Failed to block date'));
+            }
+        } catch(e) {
+            alert('Error blocking date: ' + e.message);
+        }
     }
 
     async function unblockDate(date) {

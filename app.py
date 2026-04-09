@@ -520,6 +520,16 @@ def api_update_order_status(order_id):
     return jsonify({"success": True})
 
 
+@app.route("/api/admin/orders/<int:order_id>/payment", methods=["POST"])
+@admin_required
+def api_update_payment_status(order_id):
+    new_status = request.json.get("payment_status")
+    if new_status not in ("paid", "unpaid"):
+        return jsonify({"error": "Invalid payment status"}), 400
+    update_payment_status(order_id, new_status)
+    return jsonify({"success": True})
+
+
 @app.route("/api/admin/customers")
 @admin_required
 def api_admin_customers():

@@ -770,8 +770,6 @@ def api_admin_review_status(review_id):
     return jsonify({"success": True})
 
 
-@app.route("/api/admin/reviews/<int:review_id>/reply", methods=["POST"])
-@admin_required
 @app.route("/api/admin/reviews/<int:review_id>/date", methods=["POST"])
 @admin_required
 def api_admin_review_update_date(review_id):

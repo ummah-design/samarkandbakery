@@ -526,10 +526,40 @@
                     <tbody id="prod-products-body"></tbody>
                 </table>
             </div>
+            <div class="card" style="margin-top:12px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                    <div>
+                        <h3 style="margin-bottom:4px;">Kitchen Prep Cards</h3>
+                        <p style="color:#6b6b80;font-size:0.85em;">Print-ready order cards for the kitchen.</p>
+                    </div>
+                    <button onclick="printPrepCards()" style="padding:10px 20px;background:var(--navy,#1e2a4a);color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.9em;">Print Cards</button>
+                </div>
+                <div id="prep-cards-preview" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;"></div>
+            </div>
         </div>
     </div>
 
 </div>
+
+<!-- Print stylesheet for kitchen prep cards -->
+<style>
+@media print {
+    body * { visibility: hidden !important; }
+    #prep-print-area, #prep-print-area * { visibility: visible !important; }
+    #prep-print-area {
+        position: fixed !important; left: 0; top: 0; width: 210mm; min-height: 297mm;
+        display: grid !important; grid-template-columns: repeat(3, 1fr); gap: 4mm;
+        padding: 5mm; box-sizing: border-box;
+    }
+    .prep-card-print {
+        border: 1px solid #999 !important; border-radius: 4px !important;
+        padding: 3mm !important; font-size: 9pt !important; page-break-inside: avoid;
+    }
+    .prep-card-print h4 { font-size: 10pt !important; margin: 0 0 2mm !important; }
+    .prep-card-print .prep-item { font-size: 8.5pt !important; padding: 1mm 0 !important; }
+}
+</style>
+<div id="prep-print-area" style="display:none;"></div>
 
 <!-- Cart bar (for Order Page tab) -->
 <div class="cart-bar" id="cart-bar">
@@ -1684,6 +1714,74 @@
         shoppingSortCol = 'name'; shoppingSortAsc = true;
         renderShoppingList();
         document.getElementById('prod-total-cost').textContent = (data.total_ingredient_cost || 0).toFixed(2) + ' MAD';
+
+        // Kitchen prep cards
+        currentProdOrders = orders;
+        currentProdDate = date;
+        renderPrepCards(orders, date);
+    }
+
+    let currentProdOrders = [];
+    let currentProdDate = '';
+
+    function renderPrepCards(orders, date) {
+        const d = new Date(date + 'T00:00:00');
+        const dateLabel = d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+        const container = document.getElementById('prep-cards-preview');
+        if (!orders.length) { container.innerHTML = '<p style="color:#9a9aad;grid-column:1/-1;">No orders for this date.</p>'; return; }
+        let html = '';
+        orders.forEach(o => {
+            html += '<div style="border:1.5px solid #e8e0d8;border-radius:8px;padding:12px;background:#fff;">';
+            html += '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;border-bottom:1.5px solid #1e2a4a;padding-bottom:6px;">';
+            html += '<div><strong style="font-size:1em;color:#1e2a4a;" dir="auto">' + o.customer_name + '</strong>';
+            html += '<div style="font-size:0.75em;color:#6b6b80;">' + dateLabel + '</div></div>';
+            html += '<span style="font-size:0.75em;background:#f5f0eb;padding:2px 8px;border-radius:10px;font-weight:600;color:#1e2a4a;">#' + o.id + '</span>';
+            html += '</div>';
+            o.items.forEach(item => {
+                html += '<div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px dashed #f0ebe3;">';
+                html += '<input type="checkbox" style="width:16px;height:16px;cursor:pointer;accent-color:#2d7a4f;flex-shrink:0;" onchange="this.closest(\'div\').style.opacity=this.checked?\'0.4\':\'1\'">';
+                html += '<span style="flex:1;font-size:0.88em;">' + item.name + '</span>';
+                html += '<span style="font-weight:700;font-size:0.88em;color:#1e2a4a;">x' + item.quantity + '</span>';
+                html += '</div>';
+            });
+            if (o.delivery_type === 'delivery') {
+                html += '<div style="margin-top:6px;font-size:0.75em;color:#b8860b;font-weight:600;">DELIVERY</div>';
+            }
+            if (o.notes) {
+                html += '<div style="margin-top:4px;font-size:0.75em;color:#6b6b80;font-style:italic;" dir="auto">' + o.notes + '</div>';
+            }
+            html += '</div>';
+        });
+        container.innerHTML = html;
+    }
+
+    function printPrepCards() {
+        if (!currentProdOrders.length) { alert('No orders to print.'); return; }
+        const d = new Date(currentProdDate + 'T00:00:00');
+        const dateLabel = d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+        let html = '';
+        currentProdOrders.forEach(o => {
+            html += '<div class="prep-card-print" style="border:1.5px solid #999;border-radius:4px;padding:8px;">';
+            html += '<h4 style="margin:0 0 4px;font-size:11pt;border-bottom:1.5px solid #333;padding-bottom:3px;">';
+            html += '<span dir="auto">' + o.customer_name + '</span> <span style="float:right;font-size:9pt;color:#666;">#' + o.id + '</span></h4>';
+            html += '<div style="font-size:8pt;color:#666;margin-bottom:4px;">' + dateLabel + (o.delivery_type === 'delivery' ? ' | DELIVERY' : ' | PICKUP') + '</div>';
+            o.items.forEach(item => {
+                html += '<div class="prep-item" style="display:flex;align-items:center;gap:4px;padding:2px 0;border-bottom:1px dashed #ccc;font-size:9pt;">';
+                html += '<span style="display:inline-block;width:12px;height:12px;border:1.5px solid #666;border-radius:2px;flex-shrink:0;"></span>';
+                html += '<span style="flex:1;">' + item.name + '</span>';
+                html += '<strong>x' + item.quantity + '</strong>';
+                html += '</div>';
+            });
+            if (o.notes) {
+                html += '<div style="margin-top:3px;font-size:8pt;color:#666;font-style:italic;" dir="auto">Note: ' + o.notes + '</div>';
+            }
+            html += '</div>';
+        });
+        const printArea = document.getElementById('prep-print-area');
+        printArea.innerHTML = html;
+        printArea.style.display = 'grid';
+        window.print();
+        setTimeout(() => { printArea.style.display = 'none'; }, 500);
     }
 
 

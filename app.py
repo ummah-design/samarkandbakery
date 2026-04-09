@@ -200,6 +200,12 @@ def api_menu():
     return jsonify(menu)
 
 
+@app.route("/api/blocked-dates")
+def api_public_blocked_dates():
+    """Public endpoint for customer calendar to check blocked dates."""
+    return jsonify(load_blocked_dates())
+
+
 @app.route("/api/orders/submit", methods=["POST"])
 def api_submit_order():
     req = request.json

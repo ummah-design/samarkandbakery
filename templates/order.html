@@ -1795,9 +1795,17 @@ window.addEventListener('scroll', () => {
 });
 
 // Mini calendar
-const blockedDates = {{ blocked_dates | default([]) | tojson }};
+var blockedDates = {{ blocked_dates | default([]) | tojson }};
 
-(function buildCalendar() {
+// Also fetch fresh blocked dates in case template cache is stale
+fetch('/api/blocked-dates').then(r => r.json()).then(dates => {
+    if (JSON.stringify(dates) !== JSON.stringify(blockedDates)) {
+        blockedDates = dates;
+        buildCalendar();
+    }
+}).catch(() => {});
+
+function buildCalendar() {
     const container = document.getElementById('mini-cal');
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -1859,7 +1867,8 @@ const blockedDates = {{ blocked_dates | default([]) | tojson }};
         html += '</div>';
     }
     container.innerHTML = html;
-})();
+}
+buildCalendar();
 
 function selectDate(dateStr, el) {
     document.getElementById('c-date').value = dateStr;

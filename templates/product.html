@@ -128,12 +128,14 @@
             border-radius: var(--radius-lg);
             overflow: hidden;
             box-shadow: var(--shadow-lg);
+            line-height: 0;
         }
 
         .product-image {
             width: 100%;
-            aspect-ratio: 4/3;
+            height: 360px;
             object-fit: cover;
+            object-position: center center;
             display: block;
         }
 
@@ -597,7 +599,7 @@
                 gap: 24px;
             }
 
-            .product-image { aspect-ratio: 4/3; }
+            .product-image { height: 260px; }
             .product-title { font-size: 1.6rem; }
             .product-price-large { font-size: 1.8rem; }
             .info-grid { grid-template-columns: 1fr; }

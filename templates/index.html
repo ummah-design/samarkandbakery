@@ -740,7 +740,7 @@
                         ${order.status==='pending'?'<button class="status-btn confirm" onclick="changeStatus('+order.id+',\'confirmed\')">Confirm</button>':''}
                         ${order.status==='confirmed'?'<button class="status-btn complete" onclick="changeStatus('+order.id+',\'completed\')">Complete</button>':''}
                         ${order.status!=='cancelled'&&order.status!=='completed'?'<button class="status-btn cancel" onclick="changeStatus('+order.id+',\'cancelled\')">Cancel</button>':''}
-                        ${order.payment_status!=='paid'?'<button class="status-btn confirm" style="background:#2d7a4f;" onclick="markPaid('+order.id+')">Mark Paid</button>':''}
+                        ${order.payment_status!=='paid'&&order.status==='completed'?'<button class="status-btn" style="background:#2d7a4f;color:#fff;" onclick="markPaid('+order.id+')">Mark Paid</button>':''}
                     </div>
                 </div>
             </div>`;

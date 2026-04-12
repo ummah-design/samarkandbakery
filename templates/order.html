@@ -1878,13 +1878,17 @@ function selectDate(dateStr, el) {
 
 // Cart from localStorage
 (function loadCartFromStorage() {
-    const stored = JSON.parse(localStorage.getItem('samarkand_cart') || '{}');
+    var stored = JSON.parse(localStorage.getItem('samarkand_cart') || '{}');
     if (Object.keys(stored).length > 0) {
         cart = stored;
-        setTimeout(() => {
-            for (const key of Object.keys(cart)) updateControls(key);
+        setTimeout(function() {
+            for (var key in cart) { if (cart.hasOwnProperty(key)) updateControls(key); }
             updateCartBar();
-        }, 100);
+            // Auto-open checkout if redirected from product page
+            if (window.location.search.indexOf('checkout=1') > -1) {
+                openCheckout();
+            }
+        }, 200);
     }
 })();
 

@@ -1412,7 +1412,7 @@
             "description_long": "Our Olive Buns are soft, pillowy bread rolls made with self-raising flour, dried yeast, and a generous amount of labneh (cream cheese) worked into the dough for extra richness and tenderness. The dough is studded with sliced green olives and fresh chopped parsley, shaped into individual buns, brushed with egg wash, and sprinkled with black seeds (nigella) before baking to golden perfection. Each bun has a beautiful golden crust with a soft, flavourful interior. Perfect for breakfast, afternoon tea, or as a side with soups and salads.",
             "description_long_fr": "Nos Petits Pains aux Olives sont des pains moelleux faits avec de la farine auto-levante, de la levure sechee et une genereuse quantite de labneh travaillee dans la pate pour plus de richesse. La pate est parsemee d'olives vertes tranchees et de persil frais hache, faconnee en petits pains individuels, badigeonnee d'oeuf et saupoudree de graines de nigelle avant d'etre cuite a la perfection doree.",
             "description_long_ar": "خبز الزيتون لدينا هو خبز طري مصنوع من دقيق ذاتي الرفع والخميرة الجافة وكمية سخية من اللبنة المعجونة في العجين لمزيد من الغنى والطراوة. العجين مرصع بشرائح الزيتون الاخضر والبقدونس الطازج المفروم، يشكل على هيئة كعكات فردية، يدهن بالبيض ويرش بحبة البركة قبل الخبز.",
-            "price": 20.0,
+            "price": 5.0,
             "image": "olive_buns.png",
             "cooking_method": "oven",
             "cooking_method_fr": "four",

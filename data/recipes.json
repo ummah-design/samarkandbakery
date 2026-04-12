@@ -558,7 +558,7 @@
     },
     "olive_buns": {
         "name": "Olive Buns",
-        "selling_price": 20.0,
+        "selling_price": 5.0,
         "packaging_type": "pastry_boxes",
         "cooking": {
             "method": "oven",

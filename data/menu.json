@@ -394,7 +394,8 @@
                 "Vegetarian"
             ],
             "recommended": [
-                "turkish_ezme"
+                "turkish_ezme",
+                "cheese_garlic_herb_dip"
             ]
         },
         "cheburek_meat": {
@@ -466,7 +467,8 @@
             "cooking_method_fr": "Frit",
             "cooking_method_ar": "مقلي",
             "recommended": [
-                "turkish_ezme"
+                "turkish_ezme",
+                "cheese_garlic_herb_dip"
             ]
         },
         "pide_minced_beef": {
@@ -1031,7 +1033,7 @@
             "description_long": "Ezme is one of Turkey's most popular mezes — a finely chopped salad bursting with fresh Mediterranean flavours. Ripe tomatoes, red and green bell peppers, onion, parsley, and fresh mint are finely diced and combined with garlic, tomato paste, and red pepper paste. The dressing brings everything together: fruity olive oil, tangy lemon juice, sweet-tart pomegranate molasses, and aromatic sumac and dried mint. A touch of Aleppo pepper flakes adds gentle warmth without overpowering heat. Each small pot (60-80g) is the perfect accompaniment to our breads and pastries, or enjoyed on its own as a refreshing side.",
             "description_long_fr": "L'Ezme est l'un des mezze les plus populaires de Turquie — une salade finement hachée débordante de saveurs méditerranéennes fraîches. Des tomates mûres, des poivrons rouges et verts, de l'oignon, du persil et de la menthe fraîche sont finement coupés et combinés avec de l'ail, de la pâte de tomate et de la pâte de poivron rouge. L'assaisonnement réunit le tout : huile d'olive fruitée, jus de citron acidulé, mélasse de grenade aigre-douce, et sumac et menthe séchée aromatiques. Chaque petit pot (60-80g) est l'accompagnement parfait pour nos pains et pâtisseries.",
             "description_long_ar": "الإزمة هي واحدة من أشهر المقبلات التركية — سلطة مفرومة ناعماً مليئة بنكهات البحر المتوسط الطازجة. طماطم ناضجة وفلفل أحمر وأخضر وبصل وبقدونس ونعناع طازج مفرومة ناعماً ومخلوطة مع الثوم ومعجون الطماطم ومعجون الفلفل الأحمر. التتبيلة تجمع كل شيء معاً: زيت زيتون فاكهي وعصير ليمون حامض ودبس رمان حلو-حامض وسماق ونعناع مجفف عطري. كل وعاء صغير (60-80 جم) هو المرافق المثالي لخبزنا ومعجناتنا.",
-            "price": 7.0,
+            "price": 8.0,
             "image": "ezme.jpg",
             "cooking_method": "fresh",
             "cooking_method_fr": "frais",

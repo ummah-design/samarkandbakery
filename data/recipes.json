@@ -541,7 +541,11 @@
                     "salt_per_kg": 0.005,
                     "black_pepper_per_kg": 0.0015,
                     "paprika_per_kg": 0.003,
-                    "salted_butter_per_kg": 0.045
+                    "salted_butter_per_kg": 0.045,
+                    "vegetable_oil_per_litre": 0.045,
+                    "milk_per_litre": 0.12,
+                    "egg_each": 1,
+                    "yoghurt_per_pot": 0.27
                 }
             },
             "cheese": {

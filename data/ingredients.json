@@ -53,5 +53,7 @@
     "labneh_per_kg": 78.95,
     "spring_onion_per_bunch": 5.0,
     "dried_mixed_herbs_per_kg": 2333.33,
-    "tinned_spinach_per_tin": 19.0
+    "tinned_spinach_per_tin": 19.0,
+    "green_olives_per_kg": 40.0,
+    "black_seed_per_kg": 250.0
 }

@@ -555,5 +555,32 @@
                 }
             }
         }
+    },
+    "olive_buns": {
+        "name": "Olive Buns",
+        "selling_price": 20.0,
+        "packaging_type": "pastry_boxes",
+        "cooking": {
+            "method": "oven",
+            "minutes_per_load": 30,
+            "items_per_oven_load": 12
+        },
+        "components": {
+            "dough": {
+                "yields": 24,
+                "ingredients": {
+                    "flour_per_kg": 1.0,
+                    "salt_per_kg": 0.015,
+                    "vegetable_oil_per_litre": 0.12,
+                    "dry_yeast_per_kg": 0.007,
+                    "water_ml": 500,
+                    "labneh_per_kg": 0.19,
+                    "fresh_parsley_per_kg": 0.03,
+                    "egg_each": 1,
+                    "black_seed_per_kg": 0.005,
+                    "green_olives_per_kg": 0.14
+                }
+            }
+        }
     }
 }

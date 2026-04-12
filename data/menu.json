@@ -39,7 +39,8 @@
             "name_ar": "خبز",
             "product_keys": [
                 "uzbek_bread",
-                "turkish_bread"
+                "turkish_bread",
+                "olive_buns"
             ]
         },
         {
@@ -1400,6 +1401,82 @@
             },
             "meta_title": "Chicken & Spinach Borek — Large Turkish Baked Pastry | Samarkand Bakery",
             "meta_description": "Order a large Chicken and Spinach Borek in Tetouan. Layered Turkish pastry with chicken, spinach, and melted mozzarella. 80 MAD. Delivery and pickup available."
+        },
+        "olive_buns": {
+            "name": "Olive Buns",
+            "name_fr": "Petits Pains aux Olives",
+            "name_ar": "خبز بالزيتون",
+            "description": "Soft, fluffy buns filled with sliced green olives and labneh, topped with black seeds. A savoury treat perfect with tea or as a snack.",
+            "description_fr": "Petits pains moelleux garnis d'olives vertes tranchees et de labneh, parsemes de graines de nigelle. Un regal sale parfait avec le the.",
+            "description_ar": "خبز طري ورقيق محشو بشرائح الزيتون الاخضر واللبنة، مرشوش بحبة البركة. وجبة خفيفة لذيذة مثالية مع الشاي.",
+            "description_long": "Our Olive Buns are soft, pillowy bread rolls made with self-raising flour, dried yeast, and a generous amount of labneh (cream cheese) worked into the dough for extra richness and tenderness. The dough is studded with sliced green olives and fresh chopped parsley, shaped into individual buns, brushed with egg wash, and sprinkled with black seeds (nigella) before baking to golden perfection. Each bun has a beautiful golden crust with a soft, flavourful interior. Perfect for breakfast, afternoon tea, or as a side with soups and salads.",
+            "description_long_fr": "Nos Petits Pains aux Olives sont des pains moelleux faits avec de la farine auto-levante, de la levure sechee et une genereuse quantite de labneh travaillee dans la pate pour plus de richesse. La pate est parsemee d'olives vertes tranchees et de persil frais hache, faconnee en petits pains individuels, badigeonnee d'oeuf et saupoudree de graines de nigelle avant d'etre cuite a la perfection doree.",
+            "description_long_ar": "خبز الزيتون لدينا هو خبز طري مصنوع من دقيق ذاتي الرفع والخميرة الجافة وكمية سخية من اللبنة المعجونة في العجين لمزيد من الغنى والطراوة. العجين مرصع بشرائح الزيتون الاخضر والبقدونس الطازج المفروم، يشكل على هيئة كعكات فردية، يدهن بالبيض ويرش بحبة البركة قبل الخبز.",
+            "price": 20.0,
+            "image": "olive_buns.png",
+            "cooking_method": "oven",
+            "cooking_method_fr": "four",
+            "cooking_method_ar": "فرن",
+            "allergens": [
+                "gluten",
+                "eggs",
+                "dairy"
+            ],
+            "allergens_fr": [
+                "gluten",
+                "oeufs",
+                "produits laitiers"
+            ],
+            "allergens_ar": [
+                "جلوتين",
+                "بيض",
+                "منتجات الالبان"
+            ],
+            "ingredients": [
+                "Self-Raising Flour",
+                "Green Olives",
+                "Labneh",
+                "Parsley",
+                "Egg",
+                "Vegetable Oil",
+                "Dried Yeast",
+                "Black Seed",
+                "Salt",
+                "Water"
+            ],
+            "ingredients_fr": [
+                "Farine auto-levante",
+                "Olives vertes",
+                "Labneh",
+                "Persil",
+                "Oeuf",
+                "Huile vegetale",
+                "Levure sechee",
+                "Graine de nigelle",
+                "Sel",
+                "Eau"
+            ],
+            "ingredients_ar": [
+                "دقيق ذاتي الرفع",
+                "زيتون اخضر",
+                "لبنة",
+                "بقدونس",
+                "بيض",
+                "زيت نباتي",
+                "خميرة جافة",
+                "حبة البركة",
+                "ملح",
+                "ماء"
+            ],
+            "nutrition": {
+                "calories": "195 kcal",
+                "protein": "5g",
+                "carbs": "26g",
+                "fat": "8g",
+                "fibre": "2g"
+            },
+            "meta_title": "Olive Buns — Soft Bread Rolls with Green Olives | Samarkand Bakery",
+            "meta_description": "Order fresh Olive Buns in Tetouan. Soft bread rolls with green olives, labneh, and black seeds. 20 MAD each. Delivery and pickup available."
         }
     },
     "allergen_notice": "Our products are prepared in a home kitchen where allergens including gluten, dairy, eggs, and sesame are present. Cross-contamination may occur. If you have a severe allergy, please contact us before ordering. Nutritional values are approximate estimates and may vary.",

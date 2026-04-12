@@ -510,5 +510,46 @@
                 }
             }
         }
+    },
+    "chicken_spinach_borek": {
+        "name": "Chicken & Spinach Borek",
+        "selling_price": 80.0,
+        "packaging_type": "large_box",
+        "packaging_cost": 5.0,
+        "cooking": {
+            "method": "oven",
+            "minutes_per_load": 30,
+            "items_per_oven_load": 1
+        },
+        "components": {
+            "dough": {
+                "yields": 3.25,
+                "ingredients": {
+                    "flour_per_kg": 1.0,
+                    "salt_per_kg": 0.015,
+                    "water_ml": 500
+                }
+            },
+            "filling": {
+                "yields": 1.5,
+                "ingredients": {
+                    "onion_per_kg": 0.15,
+                    "chicken_fillet_per_kg": 0.25,
+                    "garlic_per_kg": 0.01,
+                    "lemon_each": 0.5,
+                    "tinned_spinach_per_tin": 1,
+                    "salt_per_kg": 0.005,
+                    "black_pepper_per_kg": 0.0015,
+                    "paprika_per_kg": 0.003,
+                    "salted_butter_per_kg": 0.045
+                }
+            },
+            "cheese": {
+                "yields": 1,
+                "ingredients": {
+                    "mozzarella_per_kg": 0.144
+                }
+            }
+        }
     }
 }

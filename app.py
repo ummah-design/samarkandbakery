@@ -486,12 +486,14 @@ def api_update_product(product_key):
             filename = product_key + ext
             filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "products", filename)
             file.save(filepath)
-            # Remove old image if different filename
+            # Remove old image if different filename AND no other product uses it
             old_image = menu["products"][product_key].get("image", "")
             if old_image and old_image != filename:
-                old_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "products", old_image)
-                if os.path.exists(old_path):
-                    os.remove(old_path)
+                other_uses = any(p.get("image") == old_image for k, p in menu["products"].items() if k != product_key)
+                if not other_uses:
+                    old_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "products", old_image)
+                    if os.path.exists(old_path):
+                        os.remove(old_path)
             menu["products"][product_key]["image"] = filename
 
     # Save menu.json

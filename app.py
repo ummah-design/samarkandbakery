@@ -9,7 +9,11 @@ Run: python3 app.py
 import json
 import os
 import functools
-from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+import shutil
+import glob
+import zipfile
+from datetime import datetime
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for, send_from_directory
 
 from engine import load_data, calculate_cost, calculate_order
 try:
@@ -36,7 +40,10 @@ import base64
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "samarkand-bakery-secret-2026-change-me")
 
-DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(BASE_DIR, "data")
+BACKUP_DIR = os.path.join(BASE_DIR, "backups")
+os.makedirs(BACKUP_DIR, exist_ok=True)
 
 # Admin credentials — change these!
 ADMIN_USERNAME = "admin"
@@ -1010,6 +1017,106 @@ def api_recent_orders():
             "time": o["created_at"]
         })
     return jsonify(recent)
+
+
+# ── Backup & Restore API ──
+
+@app.route("/api/admin/backup/create", methods=["POST"])
+@admin_required
+def api_admin_backup_create():
+    """Create a timestamped backup zip of all data, database, and product images."""
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = "backup_" + timestamp + ".zip"
+    zip_path = os.path.join(BACKUP_DIR, filename)
+
+    data_files = glob.glob(os.path.join(DATA_DIR, "*.json"))
+    db_path = os.path.join(DATA_DIR, "orders.db")
+    products_dir = os.path.join(BASE_DIR, "static", "products")
+
+    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
+        # Add JSON data files
+        for fp in data_files:
+            arcname = "data/" + os.path.basename(fp)
+            zf.write(fp, arcname)
+        # Add database
+        if os.path.exists(db_path):
+            zf.write(db_path, "data/orders.db")
+        # Add product images
+        if os.path.isdir(products_dir):
+            for img in os.listdir(products_dir):
+                img_path = os.path.join(products_dir, img)
+                if os.path.isfile(img_path):
+                    zf.write(img_path, "static/products/" + img)
+
+    size = os.path.getsize(zip_path)
+    return jsonify({"filename": filename, "size": size})
+
+
+@app.route("/api/admin/backups")
+@admin_required
+def api_admin_backups():
+    """List all backup zip files."""
+    backups = []
+    for f in sorted(os.listdir(BACKUP_DIR), reverse=True):
+        if f.endswith(".zip") and f.startswith("backup_"):
+            fp = os.path.join(BACKUP_DIR, f)
+            stat = os.stat(fp)
+            backups.append({
+                "filename": f,
+                "size": stat.st_size,
+                "date": datetime.fromtimestamp(stat.st_mtime).strftime("%Y-%m-%d %H:%M:%S")
+            })
+    return jsonify(backups)
+
+
+@app.route("/api/admin/backup/restore", methods=["POST"])
+@admin_required
+def api_admin_backup_restore():
+    """Restore data from a backup zip file."""
+    filename = request.json.get("filename", "")
+    if not filename or ".." in filename:
+        return jsonify({"error": "Invalid filename"}), 400
+    zip_path = os.path.join(BACKUP_DIR, filename)
+    if not os.path.exists(zip_path):
+        return jsonify({"error": "Backup not found"}), 404
+
+    with zipfile.ZipFile(zip_path, "r") as zf:
+        for member in zf.namelist():
+            if member.startswith("data/"):
+                target = os.path.join(BASE_DIR, member)
+                os.makedirs(os.path.dirname(target), exist_ok=True)
+                with zf.open(member) as src, open(target, "wb") as dst:
+                    dst.write(src.read())
+            elif member.startswith("static/products/"):
+                target = os.path.join(BASE_DIR, member)
+                os.makedirs(os.path.dirname(target), exist_ok=True)
+                with zf.open(member) as src, open(target, "wb") as dst:
+                    dst.write(src.read())
+
+    return jsonify({"success": True})
+
+
+@app.route("/api/admin/backup/download/<filename>")
+@admin_required
+def api_admin_backup_download(filename):
+    """Download a backup zip file."""
+    if ".." in filename:
+        return jsonify({"error": "Invalid filename"}), 400
+    return send_from_directory(BACKUP_DIR, filename, as_attachment=True)
+
+
+@app.route("/api/admin/backup/delete", methods=["POST"])
+@admin_required
+def api_admin_backup_delete():
+    """Delete a backup zip file."""
+    filename = request.json.get("filename", "")
+    if not filename or ".." in filename:
+        return jsonify({"error": "Invalid filename"}), 400
+    zip_path = os.path.join(BACKUP_DIR, filename)
+    if not os.path.exists(zip_path):
+        return jsonify({"error": "Backup not found"}), 404
+    os.remove(zip_path)
+    return jsonify({"success": True})
 
 
 if __name__ == "__main__":

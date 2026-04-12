@@ -513,7 +513,7 @@
     },
     "chicken_spinach_borek": {
         "name": "Chicken & Spinach Borek",
-        "selling_price": 80.0,
+        "selling_price": 85.0,
         "packaging_type": "large_box",
         "packaging_cost": 5.0,
         "cooking": {

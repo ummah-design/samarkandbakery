@@ -1480,9 +1480,9 @@
             "meta_description": "Order fresh Olive Buns in Tetouan. Soft bread rolls with green olives, labneh, and black seeds. 20 MAD each. Delivery and pickup available."
         },
         "black_olive_knots": {
-            "name": "Black Olive Knots",
-            "name_fr": "Noeuds aux Olives Noires",
-            "name_ar": "عقد الزيتون الاسود",
+            "name": "Black Olive Pogaca",
+            "name_fr": "Pogaca aux Olives Noires",
+            "name_ar": "بوغاتشا بالزيتون الاسود",
             "description": "Soft pogaca dough rolled thin, spread with homemade black olive paste, rolled into a log and knotted into a beautiful bun. Oven baked to golden perfection.",
             "description_fr": "Pate de pogaca moelleuse etalee finement, tartinee de pate d'olives noires maison, roulee en boudin et nouee en un joli petit pain. Cuit au four jusqu'a perfection doree.",
             "description_ar": "عجينة بوغاتشا طرية مفرودة رقيقة، مدهونة بمعجون الزيتون الاسود المنزلي، ملفوفة ومعقودة على شكل كعكة جميلة. مخبوزة في الفرن حتى تصبح ذهبية.",
@@ -1552,7 +1552,7 @@
                 "fat": "7g",
                 "fibre": "1.5g"
             },
-            "meta_title": "Black Olive Knots — Olive Swirl Bread Rolls | Samarkand Bakery",
+            "meta_title": "Black Olive Pogaca — Olive Swirl Bread Rolls | Samarkand Bakery",
             "meta_description": "Order fresh Black Olive Knots in Tetouan. Soft pogaca dough knotted with homemade black olive paste. 5 MAD each. Delivery and pickup available."
         }
     },

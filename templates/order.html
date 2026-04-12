@@ -1509,6 +1509,7 @@
         <div class="product-grid">
             {% for item_key in category.product_keys %}
             {% set item = menu.products[item_key] %}
+            {% if item.draft %}{% continue %}{% endif %}
             <article class="product-card">
                 <a href="/product/{{ item_key }}" class="product-img-wrap" style="display:block; text-decoration:none;">
                     <img class="product-img" src="{{ url_for('static', filename='products/' + item.image) }}" alt="{{ item.name }}" loading="lazy">

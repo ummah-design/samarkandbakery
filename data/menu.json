@@ -1553,7 +1553,8 @@
                 "fibre": "1.5g"
             },
             "meta_title": "Black Olive Pogaca — Olive Swirl Bread Rolls | Samarkand Bakery",
-            "meta_description": "Order fresh Black Olive Knots in Tetouan. Soft pogaca dough knotted with homemade black olive paste. 5 MAD each. Delivery and pickup available."
+            "meta_description": "Order fresh Black Olive Knots in Tetouan. Soft pogaca dough knotted with homemade black olive paste. 5 MAD each. Delivery and pickup available.",
+            "draft": true
         }
     },
     "allergen_notice": "Our products are prepared in a home kitchen where allergens including gluten, dairy, eggs, and sesame are present. Cross-contamination may occur. If you have a severe allergy, please contact us before ordering. Nutritional values are approximate estimates and may vary.",

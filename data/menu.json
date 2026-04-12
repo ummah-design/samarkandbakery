@@ -746,7 +746,7 @@
             "description_long_fr": "Le Non — pain ouzbek traditionnel — est la pièce maîtresse de chaque repas ouzbek. Notre version est faite avec de la farine, du lait, du beurre et une touche de levure, puis façonnée à la main avec le motif central traditionnel à l'aide d'un tampon à pain (chekich). Garni de graines de sésame ou de nigelle et cuit jusqu'à obtenir une couleur dorée. Moelleux à l'intérieur avec une croûte légèrement croustillante.",
             "description_long_ar": "النان — الخبز الأوزبكي التقليدي — هو محور كل وجبة أوزبكية. نسختنا مصنوعة من الدقيق والحليب والزبدة ولمسة من الخميرة، ثم تُشكل يدوياً بالنقش التقليدي في المنتصف باستخدام ختم الخبز (تشيكيتش). مزين ببذور السمسم أو الحبة السوداء ومخبوز حتى يصبح ذهبياً. طري من الداخل مع قشرة مقرمشة قليلاً.",
             "price": 10.0,
-            "image": "uzbek_bread.png",
+            "image": "uzbek_bread.jpg",
             "ingredients": [
                 "Wheat flour",
                 "Milk",
@@ -906,7 +906,7 @@
             "description_long_fr": "Le street food turc le plus apprécié, le Simit est un pain en forme d'anneau recouvert de sésame, un incontournable depuis l'Empire ottoman du XVIe siècle. Chaque simit est torsadé à la main à partir de deux cordes de pâte dense et moelleuse, trempé dans un glaçage sucré à la mélasse de grenade, puis généreusement roulé dans des graines de sésame grillées avant d'être cuit au four jusqu'à une perfection dorée. Le résultat est une combinaison irrésistible d'extérieur croustillant au sésame et d'intérieur moelleux. Parfait avec du fromage frais, des olives, ou simplement dégusté seul avec une tasse de thé turc.",
             "description_long_ar": "أشهر طعام شارع تركي، السميت هو خبز دائري مغطى بالسمسم كان عنصرًا أساسيًا منذ الإمبراطورية العثمانية في القرن السادس عشر. يُلف كل سميت يدويًا من حبلين من العجين الكثيف والمطاطي، ويُغمس في طلاء حلو من دبس الرمان، ثم يُلف بسخاء في بذور السمسم المحمصة قبل خبزه في الفرن حتى يصبح ذهبيًا مثاليًا. النتيجة هي مزيج لا يقاوم من الخارج المقرمش بالسمسم والداخل الطري. مثالي مع الجبن الكريمي أو الزيتون أو ببساطة يُستمتع به وحده مع كوب من الشاي التركي.",
             "price": 12.0,
-            "image": "simit.avif",
+            "image": "turkish_simit.jpg",
             "cooking_method": "oven",
             "cooking_method_fr": "four",
             "cooking_method_ar": "فرن",

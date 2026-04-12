@@ -892,6 +892,20 @@ function addToOrder() {
         btn.innerHTML = '\u{1F6D2} {{ t.add_to_order if t.add_to_order else "Add to Order" }}';
         btn.style.background = 'var(--navy)';
     }, 1500);
+    updateProductCartBar();
+}
+
+function updateProductCartBar() {
+    var cart = JSON.parse(localStorage.getItem('samarkand_cart') || '{}');
+    var total = 0;
+    for (var k in cart) { if (cart.hasOwnProperty(k)) total += cart[k]; }
+    var bar = document.getElementById('product-cart-bar');
+    if (total > 0) {
+        document.getElementById('product-cart-count').textContent = total;
+        bar.style.transform = 'translateY(0)';
+    } else {
+        bar.style.transform = 'translateY(100%)';
+    }
 }
 
 // ===== REVIEWS =====
@@ -995,7 +1009,8 @@ function addCrossSell(key, name, price) {
     var btn = event.target;
     btn.textContent = 'Added!';
     btn.style.background = 'var(--success)';
-    setTimeout(function() { btn.textContent = '+ Add'; btn.style.background = 'var(--navy)'; }, 1500);
+    btn.disabled = true;
+    updateProductCartBar();
 }
 
 function switchImage(thumb) {
@@ -1005,6 +1020,18 @@ function switchImage(thumb) {
     for (var i = 0; i < thumbs.length; i++) { thumbs[i].classList.remove('active'); }
     thumb.classList.add('active');
 }
+
+// Init cart bar on page load
+updateProductCartBar();
 </script>
+
+<!-- Floating cart bar -->
+<div id="product-cart-bar" style="position:fixed;bottom:0;left:0;right:0;background:var(--navy);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;z-index:1000;transform:translateY(100%);transition:transform 0.3s ease;box-shadow:0 -4px 20px rgba(0,0,0,0.15);">
+    <div style="display:flex;align-items:center;gap:10px;">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:22px;height:22px;"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/></svg>
+        <span><span id="product-cart-count">0</span> item(s) in cart</span>
+    </div>
+    <a href="/" style="background:var(--gold);color:#fff;text-decoration:none;padding:10px 24px;border-radius:24px;font-weight:600;font-size:0.9rem;">View Cart & Checkout</a>
+</div>
 </body>
 </html>

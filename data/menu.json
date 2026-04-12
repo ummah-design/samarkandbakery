@@ -7,7 +7,8 @@
             "product_keys": [
                 "meat_samsa",
                 "chicken_samsa",
-                "ochiq_samsa"
+                "ochiq_samsa",
+                "veggie_pogaca"
             ]
         },
         {
@@ -1142,6 +1143,97 @@
             },
             "meta_title": "Walnut & Fig Jam — Natural Fruit Dip | Samarkand Bakery",
             "meta_description": "Order Walnut & Fig Jam in Tetouan. Naturally sweet dried fig jam with crushed walnuts. 7 MAD per pot. Perfect with bread. Delivery & pickup available."
+        },
+        "veggie_pogaca": {
+            "name": "Veggie Pogaca",
+            "name_fr": "Pogaca aux Légumes",
+            "name_ar": "بوغاتشا بالخضار",
+            "description": "A soft, golden Turkish pastry filled with a savoury mix of carrot, courgette, potato, peppers, onion and herbs. Oven baked to perfection.",
+            "description_fr": "Une pâtisserie turque dorée et moelleuse, garnie d'un mélange savoureux de carotte, courgette, pomme de terre, poivrons, oignon et herbes. Cuite au four à la perfection.",
+            "description_ar": "معجنات تركية ذهبية طرية محشوة بمزيج لذيذ من الجزر والكوسا والبطاطس والفلفل والبصل والأعشاب. مخبوزة في الفرن حتى الكمال.",
+            "description_long": "Our Veggie Pogaca is a beloved Turkish filled bread roll, soft and pillowy on the inside with a golden crust on the outside. The dough is enriched with milk, yoghurt, and egg for a tender, brioche-like texture. The filling is a hearty mix of sautéed carrot, courgette, potato, green and red bell peppers, and onion, seasoned with paprika, black pepper, and fresh parsley. Each pogaca is hand-shaped, filled generously, and baked until beautifully golden. Perfect as a snack, breakfast item, or alongside soups and salads.",
+            "description_long_fr": "Notre Pogaca aux Légumes est un petit pain fourré turc apprécié, moelleux à l'intérieur avec une croûte dorée à l'extérieur. La pâte est enrichie de lait, yaourt et œuf pour une texture tendre de type brioche. La garniture est un mélange copieux de carotte, courgette, pomme de terre, poivrons verts et rouges, et oignon sautés, assaisonnés de paprika, poivre noir et persil frais.",
+            "description_long_ar": "بوغاتشا الخضار لدينا هي خبز محشو تركي محبوب، طري ومنفوش من الداخل مع قشرة ذهبية من الخارج. العجينة غنية بالحليب والزبادي والبيض لقوام طري شبيه بالبريوش. الحشوة مزيج شهي من الجزر والكوسا والبطاطس والفلفل الأخضر والأحمر والبصل المقلي، متبل بالبابريكا والفلفل الأسود والبقدونس الطازج.",
+            "price": 10.0,
+            "image": "veggie_pogaca.png",
+            "cooking_method": "oven",
+            "cooking_method_fr": "four",
+            "cooking_method_ar": "فرن",
+            "allergens": [
+                "gluten",
+                "eggs",
+                "dairy"
+            ],
+            "allergens_fr": [
+                "gluten",
+                "œufs",
+                "produits laitiers"
+            ],
+            "allergens_ar": [
+                "جلوتين",
+                "بيض",
+                "منتجات الألبان"
+            ],
+            "ingredients": [
+                "Flour",
+                "Egg",
+                "Milk",
+                "Yoghurt",
+                "Oil",
+                "Carrot",
+                "Courgette",
+                "Potato",
+                "Bell Pepper",
+                "Onion",
+                "Parsley",
+                "Yeast",
+                "Salt",
+                "Paprika",
+                "Black Pepper"
+            ],
+            "ingredients_fr": [
+                "Farine",
+                "Œuf",
+                "Lait",
+                "Yaourt",
+                "Huile",
+                "Carotte",
+                "Courgette",
+                "Pomme de terre",
+                "Poivron",
+                "Oignon",
+                "Persil",
+                "Levure",
+                "Sel",
+                "Paprika",
+                "Poivre noir"
+            ],
+            "ingredients_ar": [
+                "دقيق",
+                "بيض",
+                "حليب",
+                "زبادي",
+                "زيت",
+                "جزر",
+                "كوسا",
+                "بطاطس",
+                "فلفل",
+                "بصل",
+                "بقدونس",
+                "خميرة",
+                "ملح",
+                "بابريكا",
+                "فلفل أسود"
+            ],
+            "nutrition": {
+                "calories": "220 kcal",
+                "protein": "5g",
+                "carbs": "30g",
+                "fat": "9g",
+                "fibre": "2g"
+            },
+            "meta_title": "Veggie Pogaca — Turkish Filled Bread Roll | Samarkand Bakery",
+            "meta_description": "Order fresh Veggie Pogaca in Tetouan. Soft Turkish bread roll filled with carrot, courgette, potato and peppers. 10 MAD each. Delivery & pickup available."
         }
     },
     "allergen_notice": "Our products are prepared in a home kitchen where allergens including gluten, dairy, eggs, and sesame are present. Cross-contamination may occur. If you have a severe allergy, please contact us before ordering. Nutritional values are approximate estimates and may vary.",

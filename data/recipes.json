@@ -473,5 +473,42 @@
                 }
             }
         }
+    },
+    "cheese_pogaca": {
+        "name": "Cheese Pogaca",
+        "selling_price": 10.0,
+        "packaging_type": "pastry_boxes",
+        "cooking": {
+            "method": "oven",
+            "minutes_per_load": 30,
+            "items_per_oven_load": 6
+        },
+        "components": {
+            "dough": {
+                "yields": 17,
+                "ingredients": {
+                    "flour_per_kg": 1.0,
+                    "sugar_per_kg": 0.012,
+                    "salt_per_kg": 0.015,
+                    "yeast_per_kg": 0.007,
+                    "egg_each": 1,
+                    "vegetable_oil_per_litre": 0.24,
+                    "milk_per_litre": 0.24,
+                    "yoghurt_per_pot": 1,
+                    "water_ml": 240
+                }
+            },
+            "cheese_filling": {
+                "yields": 2,
+                "ingredients": {
+                    "mozzarella_per_kg": 0.03,
+                    "labneh_per_kg": 0.03,
+                    "dried_mixed_herbs_per_kg": 0.001,
+                    "paprika_per_kg": 0.001,
+                    "garlic_per_kg": 0.005,
+                    "spring_onion_per_bunch": 0.167
+                }
+            }
+        }
     }
 }

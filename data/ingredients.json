@@ -49,5 +49,8 @@
     "peas_per_kg": 36.19,
     "chickpeas_per_tin": 20.85,
     "dried_figs_per_kg": 135.0,
-    "walnuts_per_kg": 129.0
+    "walnuts_per_kg": 129.0,
+    "labneh_per_kg": 78.95,
+    "spring_onion_per_bunch": 5.0,
+    "dried_mixed_herbs_per_kg": 2333.33
 }

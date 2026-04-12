@@ -8,7 +8,8 @@
                 "meat_samsa",
                 "chicken_samsa",
                 "ochiq_samsa",
-                "veggie_pogaca"
+                "veggie_pogaca",
+                "cheese_pogaca"
             ]
         },
         {
@@ -1234,6 +1235,94 @@
             },
             "meta_title": "Veggie Pogaca — Turkish Filled Bread Roll | Samarkand Bakery",
             "meta_description": "Order fresh Veggie Pogaca in Tetouan. Soft Turkish bread roll filled with carrot, courgette, potato and peppers. 10 MAD each. Delivery & pickup available."
+        },
+        "cheese_pogaca": {
+            "name": "Cheese Pogaca",
+            "name_fr": "Pogaca au Fromage",
+            "name_ar": "بوغاتشا بالجبنة",
+            "description": "A soft, golden Turkish pastry filled with melted mozzarella, creamy labneh, garlic, spring onion and herbs. Oven baked to perfection.",
+            "description_fr": "Une patisserie turque doree et moelleuse, garnie de mozzarella fondue, de labneh cremeux, d'ail, d'oignon vert et d'herbes. Cuite au four a la perfection.",
+            "description_ar": "معجنات تركية ذهبية طرية محشوة بالموزاريلا الذائبة واللبنة الكريمية والثوم والبصل الاخضر والاعشاب. مخبوزة في الفرن حتى الكمال.",
+            "description_long": "Our Cheese Pogaca is a Turkish filled bread roll with a rich, savoury cheese filling. The soft, pillowy dough enriched with milk, yoghurt, and egg wraps around a generous filling of grated mozzarella and creamy labneh (Jibn Jebli), seasoned with grated garlic, chopped spring onion, dried mixed herbs, and a sprinkle of red pepper flakes for gentle warmth. Each pogaca is hand-shaped and baked until golden, with the cheese melting into a deliciously gooey centre. Perfect for breakfast, snacking, or as a side with soups.",
+            "description_long_fr": "Notre Pogaca au Fromage est un petit pain fourre turc avec une garniture de fromage riche et savoureuse. La pate moelleuse enrichie de lait, yaourt et oeuf enveloppe une genereuse garniture de mozzarella rapee et de labneh cremeux, assaisonnee d'ail rape, d'oignon vert hache, d'herbes sechees melangees et d'une pincee de flocons de piment rouge.",
+            "description_long_ar": "بوغاتشا الجبنة لدينا هي خبز محشو تركي بحشوة جبنة غنية ولذيذة. العجينة الطرية الغنية بالحليب والزبادي والبيض تلف حشوة سخية من الموزاريلا المبشورة واللبنة الكريمية، متبلة بالثوم المبشور والبصل الاخضر المفروم والاعشاب المجففة المشكلة ورشة من رقائق الفلفل الاحمر.",
+            "price": 10.0,
+            "image": "pogaca.png",
+            "cooking_method": "oven",
+            "cooking_method_fr": "four",
+            "cooking_method_ar": "فرن",
+            "allergens": [
+                "gluten",
+                "eggs",
+                "dairy"
+            ],
+            "allergens_fr": [
+                "gluten",
+                "oeufs",
+                "produits laitiers"
+            ],
+            "allergens_ar": [
+                "جلوتين",
+                "بيض",
+                "منتجات الالبان"
+            ],
+            "ingredients": [
+                "Flour",
+                "Egg",
+                "Milk",
+                "Yoghurt",
+                "Oil",
+                "Mozzarella",
+                "Labneh",
+                "Garlic",
+                "Spring Onion",
+                "Dried Mixed Herbs",
+                "Red Pepper Flakes",
+                "Yeast",
+                "Salt",
+                "Sugar"
+            ],
+            "ingredients_fr": [
+                "Farine",
+                "Oeuf",
+                "Lait",
+                "Yaourt",
+                "Huile",
+                "Mozzarella",
+                "Labneh",
+                "Ail",
+                "Oignon vert",
+                "Herbes sechees",
+                "Flocons de piment",
+                "Levure",
+                "Sel",
+                "Sucre"
+            ],
+            "ingredients_ar": [
+                "دقيق",
+                "بيض",
+                "حليب",
+                "زبادي",
+                "زيت",
+                "موزاريلا",
+                "لبنة",
+                "ثوم",
+                "بصل اخضر",
+                "اعشاب مجففة",
+                "رقائق فلفل احمر",
+                "خميرة",
+                "ملح",
+                "سكر"
+            ],
+            "nutrition": {
+                "calories": "240 kcal",
+                "protein": "8g",
+                "carbs": "28g",
+                "fat": "11g",
+                "fibre": "1g"
+            },
+            "meta_title": "Cheese Pogaca — Turkish Cheese Filled Bread Roll | Samarkand Bakery",
+            "meta_description": "Order fresh Cheese Pogaca in Tetouan. Soft Turkish bread roll filled with mozzarella, labneh, garlic and herbs. 10 MAD each. Delivery and pickup available."
         }
     },
     "allergen_notice": "Our products are prepared in a home kitchen where allergens including gluten, dairy, eggs, and sesame are present. Cross-contamination may occur. If you have a severe allergy, please contact us before ordering. Nutritional values are approximate estimates and may vary.",

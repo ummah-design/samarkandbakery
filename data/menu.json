@@ -58,7 +58,8 @@
             "name_ar": "مقبلات وصلصات",
             "product_keys": [
                 "turkish_ezme",
-                "walnut_fig_jam"
+                "walnut_fig_jam",
+                "cheese_garlic_herb_dip"
             ]
         }
     ],
@@ -407,7 +408,7 @@
             "description_long_fr": "Le Cheburek classique présente une pâte fine roulée à la main, garnie de bœuf haché assaisonné et d'oignons, puis frit jusqu'à ce que la pâte devienne dorée et irrésistiblement croustillante. La garniture reste juteuse à l'intérieur de la coque croustillante. Un favori de la cuisine de rue traditionnelle d'Ouzbékistan.",
             "description_long_ar": "الشيبوريك الكلاسيكي يتميز بعجينة رقيقة مفرودة يدوياً محشوة بلحم بقري مفروم متبل وبصل، ثم مقلية حتى تصبح ذهبية ومقرمشة بشكل لا يقاوم. الحشوة تبقى طرية داخل القشرة المقرمشة. طعام شارع تقليدي محبوب من أوزبكستان.",
             "price": 18.0,
-            "image": "cheburek.png",
+            "image": "cheburek_meat.jpg",
             "ingredients": [
                 "Wheat flour",
                 "Minced beef",
@@ -1561,6 +1562,64 @@
             "meta_title": "Black Olive Pogaca — Olive Swirl Bread Rolls | Samarkand Bakery",
             "meta_description": "Order fresh Black Olive Knots in Tetouan. Soft pogaca dough knotted with homemade black olive paste. 5 MAD each. Delivery and pickup available.",
             "draft": true
+        },
+        "cheese_garlic_herb_dip": {
+            "name": "Cheese, Garlic & Herb Dip",
+            "name_fr": "Dip Fromage, Ail et Herbes",
+            "name_ar": "صلصة الجبنة والثوم والأعشاب",
+            "description": "A creamy blend of soured cream and labneh with garlic, spring onion, dried herbs and a hint of red pepper flakes. Perfect for dipping.",
+            "description_fr": "Un melange cremeux de creme aigre et de labneh avec de l'ail, de l'oignon vert, des herbes sechees et une pointe de flocons de piment rouge. Parfait pour tremper.",
+            "description_ar": "مزيج كريمي من الكريمة الحامضة واللبنة مع الثوم والبصل الاخضر والاعشاب المجففة ولمسة من رقائق الفلفل الاحمر. مثالي للغمس.",
+            "description_long": "Our Cheese, Garlic and Herb Dip is a rich, creamy dip made with soured cream and labneh (Jibn Jebli) as the base, infused with freshly grated garlic, finely chopped spring onion, aromatic dried mixed herbs, and a gentle sprinkle of red pepper flakes for a subtle warmth. Served in a small pot — the perfect accompaniment to our Cheburek, Pogaca, Samsa, and breads.",
+            "description_long_fr": "Notre Dip Fromage, Ail et Herbes est une sauce cremieuse et riche a base de creme aigre et de labneh, infusee d'ail fraichement rape, d'oignon vert finement hache, d'herbes sechees aromatiques et d'une legere pincee de flocons de piment rouge. Servie en petit pot — l'accompagnement parfait pour nos Cheburek, Pogaca, Samsa et pains.",
+            "description_long_ar": "صلصة الجبنة والثوم والاعشاب لدينا هي صلصة كريمية غنية مصنوعة من الكريمة الحامضة واللبنة كقاعدة، منكهة بالثوم المبشور الطازج والبصل الاخضر المفروم ناعماً والاعشاب المجففة العطرية ورشة خفيفة من رقائق الفلفل الاحمر. تقدم في وعاء صغير.",
+            "price": 8.0,
+            "image": "cheese_garlic_herb_dip.jpg",
+            "cooking_method": "fresh",
+            "cooking_method_fr": "frais",
+            "cooking_method_ar": "طازج",
+            "allergens": [
+                "dairy"
+            ],
+            "allergens_fr": [
+                "produits laitiers"
+            ],
+            "allergens_ar": [
+                "منتجات الالبان"
+            ],
+            "ingredients": [
+                "Soured Cream",
+                "Labneh",
+                "Garlic",
+                "Spring Onion",
+                "Dried Mixed Herbs",
+                "Red Pepper Flakes"
+            ],
+            "ingredients_fr": [
+                "Creme aigre",
+                "Labneh",
+                "Ail",
+                "Oignon vert",
+                "Herbes sechees",
+                "Flocons de piment"
+            ],
+            "ingredients_ar": [
+                "كريمة حامضة",
+                "لبنة",
+                "ثوم",
+                "بصل اخضر",
+                "اعشاب مجففة",
+                "رقائق فلفل احمر"
+            ],
+            "nutrition": {
+                "calories": "85 kcal",
+                "protein": "2g",
+                "carbs": "2g",
+                "fat": "8g",
+                "fibre": "0g"
+            },
+            "meta_title": "Cheese, Garlic & Herb Dip — Creamy Dipping Sauce | Samarkand Bakery",
+            "meta_description": "Order Cheese, Garlic and Herb Dip in Tetouan. Creamy soured cream and labneh dip with garlic, spring onion and herbs. 8 MAD per pot."
         }
     },
     "allergen_notice": "Our products are prepared in a home kitchen where allergens including gluten, dairy, eggs, and sesame are present. Cross-contamination may occur. If you have a severe allergy, please contact us before ordering. Nutritional values are approximate estimates and may vary.",

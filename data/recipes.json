@@ -615,5 +615,29 @@
                 }
             }
         }
+    },
+    "cheese_garlic_herb_dip": {
+        "name": "Cheese, Garlic & Herb Dip",
+        "selling_price": 8.0,
+        "packaging_type": "dip_pots",
+        "packaging_cost": 1.0,
+        "cooking": {
+            "method": "oven",
+            "minutes_per_load": 0,
+            "items_per_oven_load": 1
+        },
+        "components": {
+            "dip": {
+                "yields": 2,
+                "ingredients": {
+                    "soured_cream_per_kg": 0.03,
+                    "labneh_per_kg": 0.03,
+                    "dried_mixed_herbs_per_kg": 0.001,
+                    "paprika_per_kg": 0.001,
+                    "garlic_per_kg": 0.005,
+                    "spring_onion_per_bunch": 0.167
+                }
+            }
+        }
     }
 }

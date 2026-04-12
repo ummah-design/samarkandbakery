@@ -10,7 +10,8 @@
                 "ochiq_samsa",
                 "veggie_pogaca",
                 "cheese_pogaca",
-                "chicken_spinach_borek"
+                "chicken_spinach_borek",
+                "black_olive_knots"
             ]
         },
         {
@@ -1477,6 +1478,82 @@
             },
             "meta_title": "Olive Buns — Soft Bread Rolls with Green Olives | Samarkand Bakery",
             "meta_description": "Order fresh Olive Buns in Tetouan. Soft bread rolls with green olives, labneh, and black seeds. 20 MAD each. Delivery and pickup available."
+        },
+        "black_olive_knots": {
+            "name": "Black Olive Knots",
+            "name_fr": "Noeuds aux Olives Noires",
+            "name_ar": "عقد الزيتون الاسود",
+            "description": "Soft pogaca dough rolled thin, spread with homemade black olive paste, rolled into a log and knotted into a beautiful bun. Oven baked to golden perfection.",
+            "description_fr": "Pate de pogaca moelleuse etalee finement, tartinee de pate d'olives noires maison, roulee en boudin et nouee en un joli petit pain. Cuit au four jusqu'a perfection doree.",
+            "description_ar": "عجينة بوغاتشا طرية مفرودة رقيقة، مدهونة بمعجون الزيتون الاسود المنزلي، ملفوفة ومعقودة على شكل كعكة جميلة. مخبوزة في الفرن حتى تصبح ذهبية.",
+            "description_long": "Our Black Olive Knots start with the same soft, enriched pogaca dough made with flour, milk, yoghurt, and egg. Each ball of dough is rolled out into a thin circle and spread with a light homemade black olive paste — simply black olives blended with a touch of olive oil for a smooth, savoury spread. The circle is then rolled up tightly into a log and tied into an elegant knot before baking. The result is a beautifully shaped bun with swirls of olive paste running through the soft, fluffy bread. Perfect as a snack, with breakfast, or alongside soups and dips.",
+            "description_long_fr": "Nos Noeuds aux Olives Noires commencent avec la meme pate de pogaca moelleuse et enrichie. Chaque boule est etalee en un cercle fin et tartinee d'une pate d'olives noires maison legere. Le cercle est ensuite roule en boudin et noue en un noeud elegant avant la cuisson. Le resultat est un petit pain joliment forme avec des spirales de pate d'olive a travers le pain moelleux.",
+            "description_long_ar": "عقد الزيتون الاسود لدينا تبدا بنفس عجينة البوغاتشا الطرية الغنية. كل كرة عجين تفرد على شكل دائرة رقيقة وتدهن بمعجون الزيتون الاسود المنزلي الخفيف. ثم تلف بإحكام على شكل اسطوانة وتعقد على شكل عقدة انيقة قبل الخبز. النتيجة هي كعكة جميلة الشكل مع لفائف من معجون الزيتون عبر الخبز الطري.",
+            "price": 5.0,
+            "image": "pogaca.png",
+            "cooking_method": "oven",
+            "cooking_method_fr": "four",
+            "cooking_method_ar": "فرن",
+            "allergens": [
+                "gluten",
+                "eggs",
+                "dairy"
+            ],
+            "allergens_fr": [
+                "gluten",
+                "oeufs",
+                "produits laitiers"
+            ],
+            "allergens_ar": [
+                "جلوتين",
+                "بيض",
+                "منتجات الالبان"
+            ],
+            "ingredients": [
+                "Flour",
+                "Black Olives",
+                "Olive Oil",
+                "Egg",
+                "Milk",
+                "Yoghurt",
+                "Vegetable Oil",
+                "Yeast",
+                "Sugar",
+                "Salt"
+            ],
+            "ingredients_fr": [
+                "Farine",
+                "Olives noires",
+                "Huile d'olive",
+                "Oeuf",
+                "Lait",
+                "Yaourt",
+                "Huile vegetale",
+                "Levure",
+                "Sucre",
+                "Sel"
+            ],
+            "ingredients_ar": [
+                "دقيق",
+                "زيتون اسود",
+                "زيت زيتون",
+                "بيض",
+                "حليب",
+                "زبادي",
+                "زيت نباتي",
+                "خميرة",
+                "سكر",
+                "ملح"
+            ],
+            "nutrition": {
+                "calories": "180 kcal",
+                "protein": "4g",
+                "carbs": "24g",
+                "fat": "7g",
+                "fibre": "1.5g"
+            },
+            "meta_title": "Black Olive Knots — Olive Swirl Bread Rolls | Samarkand Bakery",
+            "meta_description": "Order fresh Black Olive Knots in Tetouan. Soft pogaca dough knotted with homemade black olive paste. 5 MAD each. Delivery and pickup available."
         }
     },
     "allergen_notice": "Our products are prepared in a home kitchen where allergens including gluten, dairy, eggs, and sesame are present. Cross-contamination may occur. If you have a severe allergy, please contact us before ordering. Nutritional values are approximate estimates and may vary.",

@@ -555,6 +555,30 @@ def api_gallery_remove():
     return jsonify({"success": True})
 
 
+@app.route("/api/admin/product/<product_key>/set-cover", methods=["POST"])
+@admin_required
+def api_set_cover(product_key):
+    req = request.get_json()
+    filename = req.get("filename")
+    menu = load_menu()
+    if product_key not in menu["products"]:
+        return jsonify({"error": "Product not found"}), 404
+    gallery = menu["products"][product_key].get("gallery", [])
+    if filename not in gallery:
+        return jsonify({"error": "Image not in gallery"}), 400
+    # Swap: old cover goes to gallery, selected gallery image becomes cover
+    old_cover = menu["products"][product_key].get("image", "")
+    menu["products"][product_key]["image"] = filename
+    gallery.remove(filename)
+    if old_cover:
+        gallery.insert(0, old_cover)
+    menu["products"][product_key]["gallery"] = gallery
+    menu_path = os.path.join(DATA_DIR, "menu.json")
+    with open(menu_path, "w", encoding="utf-8") as f:
+        json.dump(menu, f, indent=4, ensure_ascii=False)
+    return jsonify({"success": True})
+
+
 @app.route("/api/prices")
 @admin_required
 def api_prices():

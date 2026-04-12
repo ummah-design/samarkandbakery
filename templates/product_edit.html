@@ -385,23 +385,39 @@
 
         <!-- Gallery -->
         <div style="margin-top:24px; border-top:1px solid var(--border-light); padding-top:20px;">
-            <h3 style="font-family:var(--font-display);font-size:1.1rem;color:var(--navy);margin-bottom:8px;">Gallery Images</h3>
-            <p class="field-hint" style="margin-bottom:12px;">Add extra images that customers can browse on the product page. Thumbnails appear below the main image.</p>
-            <div id="gallery-list" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+            <h3 style="font-family:var(--font-display);font-size:1.1rem;color:var(--navy);margin-bottom:4px;">All Images</h3>
+            <p class="field-hint" style="margin-bottom:14px;">The cover image is highlighted with a gold border. Click "Set as Cover" on any image to change it. Select multiple files or drag & drop to upload.</p>
+
+            <div id="gallery-grid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));gap:12px;margin-bottom:16px;">
+                <!-- Cover image -->
+                <div class="gallery-item" id="cover-item" style="position:relative;border-radius:10px;overflow:hidden;border:3px solid var(--gold);box-shadow:0 2px 8px rgba(184,134,11,0.2);">
+                    <img src="/static/products/{{ item.image }}" style="width:100%;aspect-ratio:1;object-fit:cover;display:block;">
+                    <div style="position:absolute;top:6px;left:6px;background:var(--gold);color:#fff;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:0.5px;">Cover</div>
+                    <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.5);color:#fff;font-size:0.7rem;padding:4px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ item.image }}</div>
+                </div>
+                <!-- Gallery images -->
                 {% if item.gallery %}
                 {% for img in item.gallery %}
-                <div class="gallery-thumb-wrap" style="position:relative;">
-                    <img src="/static/products/{{ img }}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:2px solid var(--border);">
-                    <button type="button" onclick="removeGalleryImage(this, '{{ img }}')" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:var(--danger);color:#fff;border:none;cursor:pointer;font-size:12px;line-height:20px;text-align:center;">x</button>
+                <div class="gallery-item" style="position:relative;border-radius:10px;overflow:hidden;border:2px solid var(--border);">
+                    <img src="/static/products/{{ img }}" style="width:100%;aspect-ratio:1;object-fit:cover;display:block;">
+                    <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;opacity:0;transition:all 0.2s;" onmouseover="this.style.opacity='1';this.style.background='rgba(0,0,0,0.5)';" onmouseout="this.style.opacity='0';this.style.background='rgba(0,0,0,0)';">
+                        <button type="button" onclick="setCoverImage('{{ img }}')" style="background:var(--gold);color:#fff;border:none;padding:4px 10px;border-radius:12px;font-size:0.7rem;font-weight:600;cursor:pointer;">Set as Cover</button>
+                        <button type="button" onclick="removeGalleryImage(this.closest('.gallery-item'), '{{ img }}')" style="background:var(--danger);color:#fff;border:none;padding:4px 10px;border-radius:12px;font-size:0.7rem;font-weight:600;cursor:pointer;">Remove</button>
+                    </div>
+                    <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.5);color:#fff;font-size:0.7rem;padding:4px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ img }}</div>
                 </div>
                 {% endfor %}
                 {% endif %}
             </div>
-            <label class="btn-upload" style="background:var(--warm-cream);color:var(--navy);border:1px dashed var(--border);">
-                <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:16px;height:16px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-                Add Gallery Image
-                <input type="file" id="f-gallery" accept=".jpg,.jpeg,.png,.webp" style="display:none;" onchange="uploadGalleryImage(this)">
-            </label>
+
+            <!-- Drop zone -->
+            <div id="drop-zone" style="border:2px dashed var(--border);border-radius:12px;padding:28px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--warm-bg);" ondragover="event.preventDefault();this.style.borderColor='var(--gold)';this.style.background='var(--gold-pale)';" ondragleave="this.style.borderColor='var(--border)';this.style.background='var(--warm-bg)';" ondrop="handleDrop(event)" onclick="document.getElementById('f-gallery').click();">
+                <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--text-muted)" style="width:32px;height:32px;margin-bottom:6px;"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"/></svg>
+                <div style="font-weight:600;color:var(--navy);font-size:0.9rem;">Drop images here or click to browse</div>
+                <div style="font-size:0.8rem;color:var(--text-muted);margin-top:4px;">JPG, PNG, or WEBP — select multiple files at once</div>
+                <input type="file" id="f-gallery" accept=".jpg,.jpeg,.png,.webp" style="display:none;" multiple onchange="uploadMultipleGallery(this.files)">
+            </div>
+            <div id="upload-progress" style="display:none;margin-top:10px;font-size:0.85rem;color:var(--text-secondary);"></div>
         </div>
     </div>
 
@@ -464,30 +480,63 @@ function previewImage(input) {
 
 var galleryImages = {{ item.gallery|tojson if item.gallery else '[]' }};
 
-function uploadGalleryImage(input) {
-    if (!input.files || !input.files[0]) return;
-    var fd = new FormData();
-    fd.append('gallery_image', input.files[0]);
-    fd.append('product_key', '{{ product_key }}');
-    fetch('/api/admin/product/gallery/add', {method: 'POST', body: fd})
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-        if (data.success) {
-            galleryImages.push(data.filename);
-            var wrap = document.createElement('div');
-            wrap.className = 'gallery-thumb-wrap';
-            wrap.style.cssText = 'position:relative;';
-            wrap.innerHTML = '<img src="/static/products/' + data.filename + '" style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:2px solid var(--border);">' +
-                '<button type="button" onclick="removeGalleryImage(this, \'' + data.filename + '\')" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:var(--danger);color:#fff;border:none;cursor:pointer;font-size:12px;line-height:20px;text-align:center;">x</button>';
-            document.getElementById('gallery-list').appendChild(wrap);
-            input.value = '';
-        } else {
-            alert('Error: ' + (data.error || 'Upload failed'));
-        }
-    });
+function uploadMultipleGallery(files) {
+    if (!files || files.length === 0) return;
+    var progress = document.getElementById('upload-progress');
+    progress.style.display = 'block';
+    var total = files.length;
+    var done = 0;
+    progress.textContent = 'Uploading 0/' + total + '...';
+
+    for (var i = 0; i < files.length; i++) {
+        (function(file) {
+            var fd = new FormData();
+            fd.append('gallery_image', file);
+            fd.append('product_key', '{{ product_key }}');
+            fetch('/api/admin/product/gallery/add', {method: 'POST', body: fd})
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                done++;
+                progress.textContent = 'Uploading ' + done + '/' + total + '...';
+                if (data.success) {
+                    galleryImages.push(data.filename);
+                    addGalleryTile(data.filename);
+                }
+                if (done === total) {
+                    progress.textContent = total + ' image(s) uploaded!';
+                    setTimeout(function() { progress.style.display = 'none'; }, 2000);
+                }
+            });
+        })(files[i]);
+    }
+    document.getElementById('f-gallery').value = '';
 }
 
-function removeGalleryImage(btn, filename) {
+function handleDrop(e) {
+    e.preventDefault();
+    var zone = document.getElementById('drop-zone');
+    zone.style.borderColor = 'var(--border)';
+    zone.style.background = 'var(--warm-bg)';
+    if (e.dataTransfer.files.length > 0) {
+        uploadMultipleGallery(e.dataTransfer.files);
+    }
+}
+
+function addGalleryTile(filename) {
+    var grid = document.getElementById('gallery-grid');
+    var div = document.createElement('div');
+    div.className = 'gallery-item';
+    div.style.cssText = 'position:relative;border-radius:10px;overflow:hidden;border:2px solid var(--border);';
+    div.innerHTML = '<img src="/static/products/' + filename + '" style="width:100%;aspect-ratio:1;object-fit:cover;display:block;">' +
+        '<div style="position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;opacity:0;transition:all 0.2s;" onmouseover="this.style.opacity=\'1\';this.style.background=\'rgba(0,0,0,0.5)\';" onmouseout="this.style.opacity=\'0\';this.style.background=\'rgba(0,0,0,0)\';">' +
+        '<button type="button" onclick="setCoverImage(\'' + filename + '\')" style="background:var(--gold);color:#fff;border:none;padding:4px 10px;border-radius:12px;font-size:0.7rem;font-weight:600;cursor:pointer;">Set as Cover</button>' +
+        '<button type="button" onclick="removeGalleryImage(this.closest(\'.gallery-item\'), \'' + filename + '\')" style="background:var(--danger);color:#fff;border:none;padding:4px 10px;border-radius:12px;font-size:0.7rem;font-weight:600;cursor:pointer;">Remove</button>' +
+        '</div>' +
+        '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.5);color:#fff;font-size:0.7rem;padding:4px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + filename + '</div>';
+    grid.appendChild(div);
+}
+
+function removeGalleryImage(el, filename) {
     fetch('/api/admin/product/gallery/remove', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -496,9 +545,25 @@ function removeGalleryImage(btn, filename) {
     .then(function(r) { return r.json(); })
     .then(function(data) {
         if (data.success) {
-            btn.parentNode.remove();
+            el.remove();
             var idx = galleryImages.indexOf(filename);
             if (idx > -1) galleryImages.splice(idx, 1);
+        }
+    });
+}
+
+function setCoverImage(filename) {
+    fetch('/api/admin/product/{{ product_key }}/set-cover', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({filename: filename})
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Error: ' + (data.error || 'Failed'));
         }
     });
 }

@@ -2033,19 +2033,7 @@ function removeFromCheckout(key) {
     updateCartBar();
     renderCheckoutSummary();
 
-    setTimeout(() => {
-        if (!checkoutMap) {
-            checkoutMap = L.map('checkout-map').setView([35.5785, -5.3684], 14);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(checkoutMap);
-            checkoutMap.on('click', function(e) {
-                selectedLat = e.latlng.lat; selectedLng = e.latlng.lng;
-                if (marker) checkoutMap.removeLayer(marker);
-                marker = L.marker([selectedLat, selectedLng]).addTo(checkoutMap);
-                document.getElementById('map-hint').textContent = 'Location pinned!';
-            });
-        }
-        if (checkoutMap) checkoutMap.invalidateSize();
-    }, 300);
+    setTimeout(function() { if (checkoutMap) checkoutMap.invalidateSize(); }, 300);
 }
 
 function closeCheckout() { document.getElementById('checkout-modal').classList.remove('open'); }
@@ -2058,7 +2046,19 @@ function setDelivery(type) {
     const mapEl = document.getElementById('checkout-map');
     if (type === 'delivery') {
         fields.style.display = 'block'; mapEl.classList.add('visible');
-        setTimeout(() => { if (checkoutMap) checkoutMap.invalidateSize(); }, 150);
+        setTimeout(function() {
+            if (!checkoutMap) {
+                checkoutMap = L.map('checkout-map').setView([35.5785, -5.3684], 14);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(checkoutMap);
+                checkoutMap.on('click', function(e) {
+                    selectedLat = e.latlng.lat; selectedLng = e.latlng.lng;
+                    if (marker) checkoutMap.removeLayer(marker);
+                    marker = L.marker([selectedLat, selectedLng]).addTo(checkoutMap);
+                    document.getElementById('map-hint').textContent = 'Location pinned!';
+                });
+            }
+            checkoutMap.invalidateSize();
+        }, 200);
     } else {
         fields.style.display = 'none'; mapEl.classList.remove('visible');
     }

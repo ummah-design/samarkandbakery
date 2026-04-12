@@ -189,7 +189,7 @@ def product_page(product_key):
     # Get translated allergen notice
     suffix = "_" + lang if lang != "en" else ""
     allergen_notice = menu.get("allergen_notice" + suffix, menu.get("allergen_notice", ""))
-    return render_template("product.html", item=item, product_key=product_key, allergen_notice=allergen_notice, t=t, lang=lang)
+    return render_template("product.html", item=item, product_key=product_key, allergen_notice=allergen_notice, t=t, lang=lang, menu=menu)
 
 
 # ── Public API ──

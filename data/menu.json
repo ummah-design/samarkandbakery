@@ -73,7 +73,7 @@
             "description_long": "Our signature Meat Samsa is a traditional Uzbek pastry made with layers of flaky, buttery puff pastry wrapped around a savoury filling of seasoned minced beef and onions. Each samsa is hand-shaped and oven-baked until golden and crispy. The filling is seasoned with cumin, coriander, and black pepper for an authentic Central Asian flavour.",
             "description_long_fr": "Notre Samsa signature est une pâtisserie ouzbèke traditionnelle faite de couches de pâte feuilletée beurrée enveloppant une garniture savoureuse de bœuf haché assaisonné et d'oignons. Chaque samsa est façonnée à la main et cuite au four jusqu'à obtenir une couleur dorée et croustillante. La garniture est assaisonnée au cumin, coriandre et poivre noir pour un goût authentique d'Asie Centrale.",
             "description_long_ar": "السمسا المميزة لدينا هي معجنات أوزبكية تقليدية مصنوعة من طبقات من عجينة البف باستري المقرمشة ملفوفة حول حشوة لذيذة من اللحم البقري المفروم المتبل والبصل. كل سمسا مشكلة يدوياً ومخبوزة حتى تصبح ذهبية ومقرمشة. الحشوة متبلة بالكمون والكزبرة والفلفل الأسود لنكهة آسيوية وسطى أصيلة.",
-            "price": 4.0,
+            "price": 18.0,
             "image": "meat_samsa.jpeg",
             "ingredients": [
                 "Wheat flour",
@@ -391,6 +391,9 @@
             "cooking_method_ar": "مقلي",
             "dietary": [
                 "Vegetarian"
+            ],
+            "recommended": [
+                "turkish_ezme"
             ]
         },
         "cheburek_meat": {
@@ -460,7 +463,10 @@
             },
             "cooking_method": "Deep fried",
             "cooking_method_fr": "Frit",
-            "cooking_method_ar": "مقلي"
+            "cooking_method_ar": "مقلي",
+            "recommended": [
+                "turkish_ezme"
+            ]
         },
         "pide_minced_beef": {
             "name": "Pide (Minced Beef)",
@@ -473,7 +479,7 @@
             "description_long_fr": "Le Pide turc est souvent appelé 'pizza turque' — un pain plat en forme de bateau avec une base levée douce et moelleuse et une garniture généreuse. Notre Pide au Bœuf Haché est garni de bœuf assaisonné cuit avec des oignons, de l'ail, de la pâte de tomates, du cumin, du paprika, de la coriandre, de l'origan et un filet d'huile d'olive. Cuit jusqu'à ce que les bords soient dorés.",
             "description_long_ar": "البيدا التركية غالباً ما تسمى 'البيتزا التركية' — خبز مسطح على شكل قارب مع قاعدة خميرة طرية وحشوة سخية. بيدا اللحم المفروم لدينا تتميز بلحم بقري متبل مطبوخ مع البصل والثوم ومعجون الطماطم والكمون والبابريكا والكزبرة والأوريغانو وزيت الزيتون. مخبوزة حتى تصبح الحواف ذهبية.",
             "price": 20.0,
-            "image": "pide.png",
+            "image": "pide_minced_beef.jpg",
             "ingredients": [
                 "Wheat flour",
                 "Dry yeast",
@@ -568,7 +574,7 @@
             "description_long_fr": "Un favori des végétariens — notre Pide Fromage & Épinards combine une base levée moelleuse avec une riche garniture d'épinards, de fromage blanc émietté (similaire à la feta), de mozzarella fondue, d'œuf, de beurre et d'ail. Les fromages fondent ensemble magnifiquement pendant la cuisson.",
             "description_long_ar": "المفضل لدى النباتيين — بيدا الجبن والسبانخ لدينا تجمع بين قاعدة خميرة طرية وحشوة غنية من السبانخ والجبن الأبيض المفتت والموزاريلا الذائبة والبيض والزبدة والثوم. الأجبان تذوب معاً بشكل جميل أثناء الخبز.",
             "price": 15.0,
-            "image": "pide.png",
+            "image": "pide_cheese_spinach.jpg",
             "ingredients": [
                 "Wheat flour",
                 "Dry yeast",
@@ -660,7 +666,7 @@
             "description_long_fr": "Notre Pide Fromage & Saucisse associe des tranches de saucisse avec de la mozzarella fondue sur une base levée douce et moelleuse. Simple mais incroyablement satisfaisant — la saucisse ajoute une saveur légèrement fumée tandis que la mozzarella fond en une perfection dorée et filante.",
             "description_long_ar": "بيدا الجبن والنقانق لدينا تجمع بين شرائح النقانق والموزاريلا الذائبة على قاعدة خميرة طرية وهشة. بسيطة ولكن مُرضية بشكل لا يصدق — النقانق تضيف نكهة مدخنة خفيفة بينما تذوب الموزاريلا بشكل مثالي.",
             "price": 18.0,
-            "image": "pide.png",
+            "image": "pide_cheese_sausage.jpg",
             "ingredients": [
                 "Wheat flour",
                 "Dry yeast",

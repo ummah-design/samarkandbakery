@@ -382,6 +382,27 @@
             <input type="file" id="f-image" accept=".jpg,.jpeg,.png,.webp" style="display:none;" onchange="previewImage(this)">
         </label>
         <span class="field-hint" style="margin-left:12px;">JPG, PNG, or WEBP</span>
+
+        <!-- Gallery -->
+        <div style="margin-top:24px; border-top:1px solid var(--border-light); padding-top:20px;">
+            <h3 style="font-family:var(--font-display);font-size:1.1rem;color:var(--navy);margin-bottom:8px;">Gallery Images</h3>
+            <p class="field-hint" style="margin-bottom:12px;">Add extra images that customers can browse on the product page. Thumbnails appear below the main image.</p>
+            <div id="gallery-list" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+                {% if item.gallery %}
+                {% for img in item.gallery %}
+                <div class="gallery-thumb-wrap" style="position:relative;">
+                    <img src="/static/products/{{ img }}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:2px solid var(--border);">
+                    <button type="button" onclick="removeGalleryImage(this, '{{ img }}')" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:var(--danger);color:#fff;border:none;cursor:pointer;font-size:12px;line-height:20px;text-align:center;">x</button>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+            <label class="btn-upload" style="background:var(--warm-cream);color:var(--navy);border:1px dashed var(--border);">
+                <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:16px;height:16px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                Add Gallery Image
+                <input type="file" id="f-gallery" accept=".jpg,.jpeg,.png,.webp" style="display:none;" onchange="uploadGalleryImage(this)">
+            </label>
+        </div>
     </div>
 
     <!-- SEO -->
@@ -439,6 +460,47 @@ function previewImage(input) {
         };
         reader.readAsDataURL(input.files[0]);
     }
+}
+
+var galleryImages = {{ item.gallery|tojson if item.gallery else '[]' }};
+
+function uploadGalleryImage(input) {
+    if (!input.files || !input.files[0]) return;
+    var fd = new FormData();
+    fd.append('gallery_image', input.files[0]);
+    fd.append('product_key', '{{ product_key }}');
+    fetch('/api/admin/product/gallery/add', {method: 'POST', body: fd})
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.success) {
+            galleryImages.push(data.filename);
+            var wrap = document.createElement('div');
+            wrap.className = 'gallery-thumb-wrap';
+            wrap.style.cssText = 'position:relative;';
+            wrap.innerHTML = '<img src="/static/products/' + data.filename + '" style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:2px solid var(--border);">' +
+                '<button type="button" onclick="removeGalleryImage(this, \'' + data.filename + '\')" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:var(--danger);color:#fff;border:none;cursor:pointer;font-size:12px;line-height:20px;text-align:center;">x</button>';
+            document.getElementById('gallery-list').appendChild(wrap);
+            input.value = '';
+        } else {
+            alert('Error: ' + (data.error || 'Upload failed'));
+        }
+    });
+}
+
+function removeGalleryImage(btn, filename) {
+    fetch('/api/admin/product/gallery/remove', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({product_key: '{{ product_key }}', filename: filename})
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.success) {
+            btn.parentNode.remove();
+            var idx = galleryImages.indexOf(filename);
+            if (idx > -1) galleryImages.splice(idx, 1);
+        }
+    });
 }
 
 function updateCharCount(inputId, countId, limit) {

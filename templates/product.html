@@ -136,6 +136,34 @@
             object-fit: cover;
             object-position: center center;
             display: block;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .product-gallery-thumbs {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .product-gallery-thumbs img {
+            width: 64px;
+            height: 64px;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            border: 2px solid transparent;
+            opacity: 0.6;
+            transition: all 0.2s ease;
+        }
+
+        .product-gallery-thumbs img:hover {
+            opacity: 0.9;
+        }
+
+        .product-gallery-thumbs img.active {
+            border-color: var(--gold);
+            opacity: 1;
         }
 
         .product-header { display: flex; flex-direction: column; justify-content: center; }
@@ -637,8 +665,18 @@
 
     <!-- Hero -->
     <div class="product-hero">
-        <div class="product-image-wrap">
-            <img class="product-image" src="{{ url_for('static', filename='products/' + item.image) }}" alt="{{ item.name }}">
+        <div>
+            <div class="product-image-wrap">
+                <img class="product-image" id="mainProductImage" src="{{ url_for('static', filename='products/' + item.image) }}" alt="{{ item.name }}">
+            </div>
+            {% if item.gallery and item.gallery|length > 0 %}
+            <div class="product-gallery-thumbs">
+                <img src="{{ url_for('static', filename='products/' + item.image) }}" alt="{{ item.name }}" class="active" onclick="switchImage(this)">
+                {% for img in item.gallery %}
+                <img src="{{ url_for('static', filename='products/' + img) }}" alt="{{ item.name }}" onclick="switchImage(this)">
+                {% endfor %}
+            </div>
+            {% endif %}
         </div>
         <div class="product-header">
             {% if item.dietary %}
@@ -917,6 +955,14 @@ async function submitReview() {
         alert('Connection error.');
         btn.disabled = false; btn.textContent = T.review_submit;
     }
+}
+
+function switchImage(thumb) {
+    var main = document.getElementById('mainProductImage');
+    main.src = thumb.src;
+    var thumbs = thumb.parentNode.querySelectorAll('img');
+    for (var i = 0; i < thumbs.length; i++) { thumbs[i].classList.remove('active'); }
+    thumb.classList.add('active');
 }
 </script>
 </body>

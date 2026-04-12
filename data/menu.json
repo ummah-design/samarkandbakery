@@ -1156,7 +1156,7 @@
             "description_long_fr": "Notre Pogaca aux Légumes est un petit pain fourré turc apprécié, moelleux à l'intérieur avec une croûte dorée à l'extérieur. La pâte est enrichie de lait, yaourt et œuf pour une texture tendre de type brioche. La garniture est un mélange copieux de carotte, courgette, pomme de terre, poivrons verts et rouges, et oignon sautés, assaisonnés de paprika, poivre noir et persil frais.",
             "description_long_ar": "بوغاتشا الخضار لدينا هي خبز محشو تركي محبوب، طري ومنفوش من الداخل مع قشرة ذهبية من الخارج. العجينة غنية بالحليب والزبادي والبيض لقوام طري شبيه بالبريوش. الحشوة مزيج شهي من الجزر والكوسا والبطاطس والفلفل الأخضر والأحمر والبصل المقلي، متبل بالبابريكا والفلفل الأسود والبقدونس الطازج.",
             "price": 10.0,
-            "image": "veggie_pogaca.png",
+            "image": "veggie_pogaca.jpeg",
             "cooking_method": "oven",
             "cooking_method_fr": "four",
             "cooking_method_ar": "فرن",

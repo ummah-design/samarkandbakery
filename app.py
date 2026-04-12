@@ -502,6 +502,57 @@ def api_update_product(product_key):
     return jsonify({"success": True, "key": new_key, "image": menu["products"][new_key].get("image", "")})
 
 
+@app.route("/api/admin/product/gallery/add", methods=["POST"])
+@admin_required
+def api_gallery_add():
+    product_key = request.form.get("product_key")
+    menu = load_menu()
+    if product_key not in menu["products"]:
+        return jsonify({"error": "Product not found"}), 404
+    file = request.files.get("gallery_image")
+    if not file or not file.filename:
+        return jsonify({"error": "No file uploaded"}), 400
+    ext = os.path.splitext(file.filename)[1].lower()
+    if ext not in (".jpg", ".jpeg", ".png", ".webp"):
+        return jsonify({"error": "Only JPG, PNG, WEBP allowed"}), 400
+    # Generate unique filename
+    import time
+    filename = product_key + "_gallery_" + str(int(time.time())) + ext
+    filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "products", filename)
+    file.save(filepath)
+    # Add to gallery list
+    if "gallery" not in menu["products"][product_key]:
+        menu["products"][product_key]["gallery"] = []
+    menu["products"][product_key]["gallery"].append(filename)
+    menu_path = os.path.join(DATA_DIR, "menu.json")
+    with open(menu_path, "w", encoding="utf-8") as f:
+        json.dump(menu, f, indent=4, ensure_ascii=False)
+    return jsonify({"success": True, "filename": filename})
+
+
+@app.route("/api/admin/product/gallery/remove", methods=["POST"])
+@admin_required
+def api_gallery_remove():
+    req = request.get_json()
+    product_key = req.get("product_key")
+    filename = req.get("filename")
+    menu = load_menu()
+    if product_key not in menu["products"]:
+        return jsonify({"error": "Product not found"}), 404
+    gallery = menu["products"][product_key].get("gallery", [])
+    if filename in gallery:
+        gallery.remove(filename)
+        menu["products"][product_key]["gallery"] = gallery
+        menu_path = os.path.join(DATA_DIR, "menu.json")
+        with open(menu_path, "w", encoding="utf-8") as f:
+            json.dump(menu, f, indent=4, ensure_ascii=False)
+        # Delete file
+        filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "products", filename)
+        if os.path.exists(filepath):
+            os.remove(filepath)
+    return jsonify({"success": True})
+
+
 @app.route("/api/prices")
 @admin_required
 def api_prices():

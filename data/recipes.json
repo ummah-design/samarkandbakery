@@ -616,6 +616,48 @@
             }
         }
     },
+    "tres_leches_cake": {
+        "name": "Tres Leches Cake",
+        "selling_price": 28.0,
+        "packaging_type": "individual",
+        "packaging_cost": 1.0,
+        "cooking": {
+            "method": "oven",
+            "minutes_per_load": 40,
+            "items_per_oven_load": 6
+        },
+        "components": {
+            "cake": {
+                "yields": 6,
+                "ingredients": {
+                    "flour_per_kg": 0.12,
+                    "baking_powder_per_kg": 0.006,
+                    "salt_per_kg": 0.001,
+                    "egg_each": 5,
+                    "sugar_per_kg": 0.2,
+                    "milk_per_litre": 0.08,
+                    "vanilla_extract_per_kg": 0.005
+                }
+            },
+            "milk_mixture": {
+                "yields": 6,
+                "ingredients": {
+                    "evaporated_milk_per_tin": 1,
+                    "condensed_milk_per_tin": 1,
+                    "milk_per_litre": 0.06
+                }
+            },
+            "whipped_topping": {
+                "yields": 6,
+                "ingredients": {
+                    "whipping_cream_per_litre": 0.475,
+                    "icing_sugar_per_kg": 0.024,
+                    "vanilla_extract_per_kg": 0.0025,
+                    "ground_cinnamon_per_kg": 0.002
+                }
+            }
+        }
+    },
     "cheese_garlic_herb_dip": {
         "name": "Cheese, Garlic & Herb Dip",
         "selling_price": 8.0,

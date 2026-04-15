@@ -96,8 +96,16 @@ def calculate_frying_oil_cost(recipe, quantity, ingredients):
     }
 
 
-def optimise_packaging(quantity, packaging_type, packaging_data):
+def optimise_packaging(quantity, packaging_type, packaging_data, packaging_cost_override=None):
     """Find the most cost-efficient packaging combination for a quantity."""
+    # Per-unit packaging cost override (e.g. individual containers)
+    if packaging_cost_override is not None:
+        total = round(packaging_cost_override * quantity, 2)
+        return {
+            "items": [{"name": "Individual packaging", "count": quantity, "cost": total}],
+            "total_cost": total
+        }
+
     if packaging_type == "bread_bags":
         options = packaging_data["bread_bags"]
         bag = options[0]
@@ -105,6 +113,17 @@ def optimise_packaging(quantity, packaging_type, packaging_data):
         return {
             "items": [{"name": bag["name"], "count": num_bags, "cost": round(bag["price"] * num_bags, 2)}],
             "total_cost": round(bag["price"] * num_bags, 2)
+        }
+
+    # Simple per-unit packaging (dip_pots, etc.)
+    if packaging_type in packaging_data and packaging_type != "pastry_boxes":
+        options = packaging_data[packaging_type]
+        item = options[0]
+        count = math.ceil(quantity / item["capacity"])
+        cost = round(item["price"] * count, 2)
+        return {
+            "items": [{"name": item["name"], "count": count, "cost": cost}],
+            "total_cost": cost
         }
 
     # For pastry boxes, use greedy approach: largest first
@@ -203,7 +222,10 @@ def calculate_cost(recipe_key, quantity, data):
     result["frying_oil"] = calculate_frying_oil_cost(recipe, quantity, ingredients)
 
     # Packaging
-    result["packaging"] = optimise_packaging(quantity, recipe["packaging_type"], packaging)
+    result["packaging"] = optimise_packaging(
+        quantity, recipe["packaging_type"], packaging,
+        packaging_cost_override=recipe.get("packaging_cost")
+    )
 
     # Totals
     total_cost = (

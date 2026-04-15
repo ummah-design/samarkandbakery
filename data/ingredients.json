@@ -57,5 +57,9 @@
     "green_olives_per_kg": 40.0,
     "black_seed_per_kg": 250.0,
     "black_olives_per_kg": 40.0,
-    "soured_cream_per_kg": 95.0
+    "soured_cream_per_kg": 95.0,
+    "baking_powder_per_kg": 78.57,
+    "vanilla_extract_per_kg": 1726.67,
+    "icing_sugar_per_kg": 10.95,
+    "ground_cinnamon_per_kg": 350.0
 }

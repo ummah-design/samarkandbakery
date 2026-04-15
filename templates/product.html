@@ -128,6 +128,11 @@
             border-radius: var(--radius-lg);
             overflow: hidden;
             box-shadow: var(--shadow-lg);
+            display: none;
+        }
+
+        .product-image-wrap.active {
+            display: block;
         }
 
         .product-image {
@@ -138,6 +143,76 @@
             display: block;
             cursor: pointer;
             transition: transform 0.3s ease;
+        }
+
+        .product-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .product-media-wrap {
+            display: none;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            background: #000;
+        }
+
+        .product-media-wrap.active {
+            display: block;
+        }
+
+        .video-thumb-wrap {
+            position: relative;
+            width: 64px;
+            height: 64px;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            border: 2px solid transparent;
+            opacity: 0.6;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .video-thumb-wrap:hover { opacity: 0.9; }
+
+        .video-thumb-wrap.active {
+            border-color: var(--gold);
+            opacity: 1;
+        }
+
+        .video-thumb-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-thumb-play {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 24px;
+            height: 24px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-thumb-play::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 5px 0 5px 9px;
+            border-color: transparent transparent transparent #fff;
+            margin-left: 2px;
         }
 
         .product-gallery-thumbs {
@@ -666,15 +741,30 @@
     <!-- Hero -->
     <div class="product-hero">
         <div>
-            <div class="product-image-wrap">
+            <div class="product-image-wrap active" id="imageWrap">
                 <img class="product-image" id="mainProductImage" src="{{ url_for('static', filename='products/' + item.image) }}" alt="{{ item.name }}">
             </div>
-            {% if item.gallery and item.gallery|length > 0 %}
+            {% if item.video %}
+            <div class="product-media-wrap" id="videoWrap">
+                <video class="product-video" id="mainProductVideo" controls playsinline preload="metadata">
+                    <source src="{{ url_for('static', filename='products/' + item.video) }}" type="video/mp4">
+                </video>
+            </div>
+            {% endif %}
+            {% if (item.gallery and item.gallery|length > 0) or item.video %}
             <div class="product-gallery-thumbs">
-                <img src="{{ url_for('static', filename='products/' + item.image) }}" alt="{{ item.name }}" class="active" onclick="switchImage(this)">
+                <img src="{{ url_for('static', filename='products/' + item.image) }}" alt="{{ item.name }}" class="active" onclick="switchToImage(this)">
+                {% if item.gallery %}
                 {% for img in item.gallery %}
-                <img src="{{ url_for('static', filename='products/' + img) }}" alt="{{ item.name }}" onclick="switchImage(this)">
+                <img src="{{ url_for('static', filename='products/' + img) }}" alt="{{ item.name }}" onclick="switchToImage(this)">
                 {% endfor %}
+                {% endif %}
+                {% if item.video %}
+                <div class="video-thumb-wrap" onclick="switchToVideo(this)">
+                    <img src="{{ url_for('static', filename='products/' + item.image) }}" alt="Play video">
+                    <div class="video-thumb-play"></div>
+                </div>
+                {% endif %}
             </div>
             {% endif %}
         </div>
@@ -751,21 +841,8 @@
         </div>
 
         <div class="info-card">
-            <h2 class="info-card-title">{{ t.ingredients_title }}</h2>
-            <ul class="ingredients-list">
-                {% set ing_list = item['ingredients_' + lang] if lang != 'en' and item.get('ingredients_' + lang) else item.ingredients %}
-                {% for ing in ing_list %}
-                <li class="ingredient-tag">{{ ing }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
-
-    <!-- Allergens -->
-    <div class="allergen-section">
-        <div class="allergen-card">
-            <h2 class="allergen-card-title">
-                <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/></svg>
+            <h2 class="info-card-title" style="display:flex;align-items:center;gap:8px;">
+                <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:20px;height:20px;flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/></svg>
                 {{ t.allergen_title }}
             </h2>
 
@@ -1013,17 +1090,93 @@ function addCrossSell(key, name, price) {
     updateProductCartBar();
 }
 
-function switchImage(thumb) {
+function clearActiveThumbs() {
+    var thumbs = document.querySelectorAll('.product-gallery-thumbs img, .product-gallery-thumbs .video-thumb-wrap');
+    for (var i = 0; i < thumbs.length; i++) { thumbs[i].classList.remove('active'); }
+}
+
+function switchToImage(thumb) {
     var main = document.getElementById('mainProductImage');
     main.src = thumb.src;
-    var thumbs = thumb.parentNode.querySelectorAll('img');
-    for (var i = 0; i < thumbs.length; i++) { thumbs[i].classList.remove('active'); }
+    var imageWrap = document.getElementById('imageWrap');
+    var videoWrap = document.getElementById('videoWrap');
+    var video = document.getElementById('mainProductVideo');
+    imageWrap.classList.add('active');
+    if (videoWrap) { videoWrap.classList.remove('active'); }
+    if (video) { video.pause(); }
+    clearActiveThumbs();
     thumb.classList.add('active');
+}
+
+function switchToVideo(thumbWrap) {
+    var imageWrap = document.getElementById('imageWrap');
+    var videoWrap = document.getElementById('videoWrap');
+    var video = document.getElementById('mainProductVideo');
+    imageWrap.classList.remove('active');
+    videoWrap.classList.add('active');
+    clearActiveThumbs();
+    thumbWrap.classList.add('active');
+    video.play();
 }
 
 // Init cart bar on page load
 updateProductCartBar();
 </script>
+
+<!-- You might also like -->
+<div style="max-width:900px;margin:0 auto 40px;padding:0 20px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--gold)" style="width:22px;height:22px;flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 0 0-2.455 2.456Z"/></svg>
+        <h2 style="font-family:var(--font-display);font-size:1.2rem;color:var(--navy);margin:0;">{{ t.get('you_might_like', 'You might also like') }}</h2>
+    </div>
+    <div style="display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:8px;">
+        {% for cat in menu.categories %}
+        {% if product_key in cat.product_keys %}
+        {% for sib_key in cat.product_keys %}
+        {% if sib_key != product_key and sib_key in menu.products %}
+        {% set sib = menu.products[sib_key] %}
+        <div style="min-width:180px;max-width:200px;flex-shrink:0;scroll-snap-align:start;background:var(--warm-card);border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow-sm);border:1px solid var(--border-light);transition:transform 0.2s,box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='var(--shadow-md)';" onmouseout="this.style.transform='none';this.style.boxShadow='var(--shadow-sm)';">
+            <a href="/product/{{ sib_key }}" style="text-decoration:none;display:block;">
+                <img src="{{ url_for('static', filename='products/' + sib.image) }}" alt="{{ sib.name }}" style="width:100%;height:130px;object-fit:cover;">
+            </a>
+            <div style="padding:12px 14px 14px;">
+                <a href="/product/{{ sib_key }}" style="text-decoration:none;"><div style="font-family:var(--font-display);font-weight:600;color:var(--navy);font-size:0.95rem;">{{ sib.name }}</div></a>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;">
+                    <span style="font-weight:700;color:var(--gold);font-size:1.05rem;">{{ '%.0f'|format(sib.price) }} <span style="font-size:0.75rem;font-weight:400;">MAD</span></span>
+                    <button onclick="addCrossSell('{{ sib_key }}','{{ sib.name }}',{{ sib.price }})" style="background:var(--navy);color:#fff;border:none;padding:6px 14px;border-radius:20px;font-size:0.8rem;font-weight:600;cursor:pointer;transition:background 0.2s;">+ Add</button>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Footer -->
+<footer style="text-align:center;padding:48px 20px 32px;border-top:1px solid var(--border);background:var(--warm-bg);">
+    <img src="{{ url_for('static', filename='profile-pic.png') }}" alt="" style="width:72px;height:72px;border-radius:50%;margin:0 auto 12px;display:block;">
+    <div style="font-family:var(--font-display);font-size:1.1rem;color:var(--navy);margin-bottom:8px;">Samarkand Turkic Bakery</div>
+    <div style="font-size:0.85rem;color:var(--text-muted);line-height:1.8;">
+        {{ t.footer_location }}<br>
+        <a href="tel:+212680342679" style="color:var(--navy);text-decoration:none;font-weight:500;">+212 680 342 679</a>
+    </div>
+    <div style="display:flex;justify-content:center;gap:16px;margin-top:16px;">
+        <a href="https://www.instagram.com/SamarkandBakery" target="_blank" rel="noopener" style="width:40px;height:40px;border-radius:50%;background:var(--warm-cream);display:flex;align-items:center;justify-content:center;transition:background 200ms ease,transform 200ms ease;text-decoration:none;" aria-label="Instagram" onmouseover="this.style.background='var(--navy)';this.style.transform='translateY(-2px)';this.querySelector('svg').style.fill='#fff';" onmouseout="this.style.background='var(--warm-cream)';this.style.transform='none';this.querySelector('svg').style.fill='var(--navy)';">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:20px;height:20px;fill:var(--navy);transition:fill 200ms ease;"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </a>
+        <a href="https://www.tiktok.com/@SamarkandBakery" target="_blank" rel="noopener" style="width:40px;height:40px;border-radius:50%;background:var(--warm-cream);display:flex;align-items:center;justify-content:center;transition:background 200ms ease,transform 200ms ease;text-decoration:none;" aria-label="TikTok" onmouseover="this.style.background='var(--navy)';this.style.transform='translateY(-2px)';this.querySelector('svg').style.fill='#fff';" onmouseout="this.style.background='var(--warm-cream)';this.style.transform='none';this.querySelector('svg').style.fill='var(--navy)';">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:20px;height:20px;fill:var(--navy);transition:fill 200ms ease;"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.48V13.2a8.16 8.16 0 005.58 2.17V12a4.85 4.85 0 01-3.77-1.54V6.69h3.77z"/></svg>
+        </a>
+        <a href="https://www.youtube.com/@SamarkandBakery" target="_blank" rel="noopener" style="width:40px;height:40px;border-radius:50%;background:var(--warm-cream);display:flex;align-items:center;justify-content:center;transition:background 200ms ease,transform 200ms ease;text-decoration:none;" aria-label="YouTube" onmouseover="this.style.background='var(--navy)';this.style.transform='translateY(-2px)';this.querySelector('svg').style.fill='#fff';" onmouseout="this.style.background='var(--warm-cream)';this.style.transform='none';this.querySelector('svg').style.fill='var(--navy)';">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:20px;height:20px;fill:var(--navy);transition:fill 200ms ease;"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        </a>
+    </div>
+    <div style="margin-top:24px;font-size:0.78rem;color:var(--text-muted);">
+        {{ t.footer_credit }} <a href="https://ummahdesign.com/" target="_blank" rel="noopener" style="color:var(--navy);font-weight:600;text-decoration:none;">Ummah Design</a>
+    </div>
+</footer>
 
 <!-- Floating cart bar -->
 <div id="product-cart-bar" style="position:fixed;bottom:0;left:0;right:0;background:var(--navy);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;z-index:1000;transform:translateY(100%);transition:transform 0.3s ease;box-shadow:0 -4px 20px rgba(0,0,0,0.15);">

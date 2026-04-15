@@ -521,7 +521,8 @@
                 "serving_ar": "قطعة واحدة (~90 غ)",
                 "serving_fr": "1 pièce (~90g)"
             },
-            "price": 15.0
+            "price": 15.0,
+            "video": "shared_samsa_olives.mp4"
         },
         "chicken_spinach_borek": {
             "allergens": [
@@ -597,7 +598,8 @@
                 "fibre": "2g",
                 "protein": "18g"
             },
-            "price": 85.0
+            "price": 85.0,
+            "video": "chicken_spinach_borek.mp4"
         },
         "meat_samsa": {
             "allergens": [
@@ -676,7 +678,8 @@
                 "serving_ar": "قطعة واحدة (~90 غ)",
                 "serving_fr": "1 pièce (~90g)"
             },
-            "price": 18.0
+            "price": 18.0,
+            "video": "shared_samsa_olives.mp4"
         },
         "ochiq_samsa": {
             "allergens": [
@@ -772,7 +775,8 @@
                 "serving_ar": "قطعة واحدة (~95 غ)",
                 "serving_fr": "1 pièce (~95g)"
             },
-            "price": 15.0
+            "price": 15.0,
+            "video": "shared_samsa_olives.mp4"
         },
         "olive_buns": {
             "allergens": [
@@ -848,7 +852,8 @@
                 "fibre": "2g",
                 "protein": "5g"
             },
-            "price": 5.0
+            "price": 5.0,
+            "video": "shared_samsa_olives.mp4"
         },
         "pide_cheese_sausage": {
             "allergens": [
@@ -1113,6 +1118,89 @@
                 "serving_fr": "1 pide (~180g)"
             },
             "price": 20.0
+        },
+        "tres_leches_cake": {
+            "allergens": [
+                "gluten",
+                "eggs",
+                "dairy"
+            ],
+            "allergens_ar": [
+                "جلوتين",
+                "بيض",
+                "منتجات الألبان"
+            ],
+            "allergens_fr": [
+                "gluten",
+                "œufs",
+                "produits laitiers"
+            ],
+            "cooking_method": "oven",
+            "cooking_method_ar": "فرن",
+            "cooking_method_fr": "four",
+            "description": "A light, moist sponge cake soaked in a sweet three-milk mixture and topped with fresh whipped cream and cinnamon. Sold by the slice.",
+            "description_ar": "كيكة إسفنجية خفيفة ورطبة منقوعة في خليط حلو من ثلاثة أنواع حليب، مغطاة بالكريمة المخفوقة الطازجة والقرفة. تباع بالشريحة.",
+            "description_fr": "Un gâteau éponge léger et moelleux imbibé d'un mélange sucré de trois laits, garni de crème fouettée fraîche et de cannelle. Vendu à la tranche.",
+            "description_long": "Tres Leches Cake is a beloved Latin American dessert that has won hearts worldwide. Our version starts with a light, airy sponge made from separated eggs for extra lift, soaked generously in a luscious mixture of evaporated milk, sweetened condensed milk, and whole milk. The result is an ultra-moist cake that melts in your mouth. Topped with billowy fresh whipped cream and a dusting of ground cinnamon, each slice is a perfect balance of sweetness and lightness. Our generous double-size portions ensure a truly satisfying treat.",
+            "description_long_ar": "كيكة تريس ليتشيس هي حلوى لاتينية أمريكية محبوبة اكتسبت شهرة عالمية. نسختنا تبدأ بإسفنجة خفيفة وهوائية منقوعة بسخاء في خليط فاخر من الحليب المبخر والحليب المكثف المحلى والحليب الكامل. النتيجة كيكة رطبة للغاية تذوب في الفم. مغطاة بكريمة مخفوقة طازجة ورشة من القرفة المطحونة، كل شريحة توازن مثالي بين الحلاوة والخفة.",
+            "description_long_fr": "Le gâteau Tres Leches est un dessert latino-américain bien-aimé qui a conquis les cœurs du monde entier. Notre version commence par une génoise légère et aérée, imbibée généreusement d'un mélange luxueux de lait évaporé, de lait concentré sucré et de lait entier. Le résultat est un gâteau ultra-moelleux qui fond en bouche. Garni de crème fouettée onctueuse et d'une pincée de cannelle moulue, chaque tranche offre un équilibre parfait entre douceur et légèreté.",
+            "gallery": [
+                "tres_leches_cake_almond.png",
+                "tres_leches_cake_caramel.png"
+            ],
+            "image": "tres_leches_cake_main.png",
+            "ingredients": [
+                "Flour",
+                "Eggs",
+                "Sugar",
+                "Whole Milk",
+                "Baking Powder",
+                "Vanilla Extract",
+                "Evaporated Milk",
+                "Condensed Milk",
+                "Whipping Cream",
+                "Icing Sugar",
+                "Cinnamon"
+            ],
+            "ingredients_ar": [
+                "دقيق",
+                "بيض",
+                "سكر",
+                "حليب كامل",
+                "بيكنج بودر",
+                "خلاصة الفانيليا",
+                "حليب مبخر",
+                "حليب مكثف",
+                "كريمة خفق",
+                "سكر بودرة",
+                "قرفة"
+            ],
+            "ingredients_fr": [
+                "Farine",
+                "Œufs",
+                "Sucre",
+                "Lait entier",
+                "Levure chimique",
+                "Extrait de vanille",
+                "Lait évaporé",
+                "Lait concentré",
+                "Crème fouettée",
+                "Sucre glace",
+                "Cannelle"
+            ],
+            "meta_description": "Order fresh Tres Leches Cake in Tetouan. Light sponge soaked in three milks, topped with whipped cream and cinnamon. 28 MAD per slice. Delivery & pickup available.",
+            "meta_title": "Tres Leches Cake — Three-Milk Soaked Cake | Samarkand Bakery",
+            "name": "Tres Leches Cake",
+            "name_ar": "كيكة تريس ليتشيس",
+            "name_fr": "Gâteau Tres Leches",
+            "nutrition": {
+                "calories": "420 kcal",
+                "carbs": "52g",
+                "fat": "20g",
+                "fibre": "0.3g",
+                "protein": "8g"
+            },
+            "price": 28.0
         },
         "turkish_bread": {
             "allergens": [
@@ -1629,85 +1717,6 @@
                 "protein": "1.5g"
             },
             "price": 10.0
-        },
-        "tres_leches_cake": {
-            "name": "Tres Leches Cake",
-            "name_fr": "Gâteau Tres Leches",
-            "name_ar": "كيكة تريس ليتشيس",
-            "description": "A light, moist sponge cake soaked in a sweet three-milk mixture and topped with fresh whipped cream and cinnamon. Sold by the slice.",
-            "description_fr": "Un gâteau éponge léger et moelleux imbibé d'un mélange sucré de trois laits, garni de crème fouettée fraîche et de cannelle. Vendu à la tranche.",
-            "description_ar": "كيكة إسفنجية خفيفة ورطبة منقوعة في خليط حلو من ثلاثة أنواع حليب، مغطاة بالكريمة المخفوقة الطازجة والقرفة. تباع بالشريحة.",
-            "description_long": "Tres Leches Cake is a beloved Latin American dessert that has won hearts worldwide. Our version starts with a light, airy sponge made from separated eggs for extra lift, soaked generously in a luscious mixture of evaporated milk, sweetened condensed milk, and whole milk. The result is an ultra-moist cake that melts in your mouth. Topped with billowy fresh whipped cream and a dusting of ground cinnamon, each slice is a perfect balance of sweetness and lightness. Our generous double-size portions ensure a truly satisfying treat.",
-            "description_long_fr": "Le gâteau Tres Leches est un dessert latino-américain bien-aimé qui a conquis les cœurs du monde entier. Notre version commence par une génoise légère et aérée, imbibée généreusement d'un mélange luxueux de lait évaporé, de lait concentré sucré et de lait entier. Le résultat est un gâteau ultra-moelleux qui fond en bouche. Garni de crème fouettée onctueuse et d'une pincée de cannelle moulue, chaque tranche offre un équilibre parfait entre douceur et légèreté.",
-            "description_long_ar": "كيكة تريس ليتشيس هي حلوى لاتينية أمريكية محبوبة اكتسبت شهرة عالمية. نسختنا تبدأ بإسفنجة خفيفة وهوائية منقوعة بسخاء في خليط فاخر من الحليب المبخر والحليب المكثف المحلى والحليب الكامل. النتيجة كيكة رطبة للغاية تذوب في الفم. مغطاة بكريمة مخفوقة طازجة ورشة من القرفة المطحونة، كل شريحة توازن مثالي بين الحلاوة والخفة.",
-            "price": 28.0,
-            "image": "trilece.png",
-            "cooking_method": "oven",
-            "cooking_method_fr": "four",
-            "cooking_method_ar": "فرن",
-            "allergens": [
-                "gluten",
-                "eggs",
-                "dairy"
-            ],
-            "allergens_fr": [
-                "gluten",
-                "œufs",
-                "produits laitiers"
-            ],
-            "allergens_ar": [
-                "جلوتين",
-                "بيض",
-                "منتجات الألبان"
-            ],
-            "ingredients": [
-                "Flour",
-                "Eggs",
-                "Sugar",
-                "Whole Milk",
-                "Baking Powder",
-                "Vanilla Extract",
-                "Evaporated Milk",
-                "Condensed Milk",
-                "Whipping Cream",
-                "Icing Sugar",
-                "Cinnamon"
-            ],
-            "ingredients_fr": [
-                "Farine",
-                "Œufs",
-                "Sucre",
-                "Lait entier",
-                "Levure chimique",
-                "Extrait de vanille",
-                "Lait évaporé",
-                "Lait concentré",
-                "Crème fouettée",
-                "Sucre glace",
-                "Cannelle"
-            ],
-            "ingredients_ar": [
-                "دقيق",
-                "بيض",
-                "سكر",
-                "حليب كامل",
-                "بيكنج بودر",
-                "خلاصة الفانيليا",
-                "حليب مبخر",
-                "حليب مكثف",
-                "كريمة خفق",
-                "سكر بودرة",
-                "قرفة"
-            ],
-            "nutrition": {
-                "calories": "420 kcal",
-                "protein": "8g",
-                "carbs": "52g",
-                "fat": "20g",
-                "fibre": "0.3g"
-            },
-            "meta_title": "Tres Leches Cake — Three-Milk Soaked Cake | Samarkand Bakery",
-            "meta_description": "Order fresh Tres Leches Cake in Tetouan. Light sponge soaked in three milks, topped with whipped cream and cinnamon. 28 MAD per slice. Delivery & pickup available."
         }
     }
 }

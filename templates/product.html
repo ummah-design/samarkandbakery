@@ -744,14 +744,15 @@
             <div class="product-image-wrap active" id="imageWrap">
                 <img class="product-image" id="mainProductImage" src="{{ url_for('static', filename='products/' + item.image) }}" alt="{{ item.name }}">
             </div>
-            {% if item.video %}
+            {% set videos = item.videos if item.videos else ([item.video] if item.video else []) %}
+            {% if videos|length > 0 %}
             <div class="product-media-wrap" id="videoWrap">
                 <video class="product-video" id="mainProductVideo" controls playsinline preload="metadata">
-                    <source src="{{ url_for('static', filename='products/' + item.video) }}" type="video/mp4">
+                    <source src="{{ url_for('static', filename='products/' + videos[0]) }}" type="video/mp4">
                 </video>
             </div>
             {% endif %}
-            {% if (item.gallery and item.gallery|length > 0) or item.video %}
+            {% if (item.gallery and item.gallery|length > 0) or videos|length > 0 %}
             <div class="product-gallery-thumbs">
                 <img src="{{ url_for('static', filename='products/' + item.image) }}" alt="{{ item.name }}" class="active" onclick="switchToImage(this)">
                 {% if item.gallery %}
@@ -759,12 +760,12 @@
                 <img src="{{ url_for('static', filename='products/' + img) }}" alt="{{ item.name }}" onclick="switchToImage(this)">
                 {% endfor %}
                 {% endif %}
-                {% if item.video %}
-                <div class="video-thumb-wrap" onclick="switchToVideo(this)">
+                {% for vid in videos %}
+                <div class="video-thumb-wrap" onclick="switchToVideo(this, '{{ url_for('static', filename='products/' + vid) }}')">
                     <img src="{{ url_for('static', filename='products/' + item.image) }}" alt="Play video">
                     <div class="video-thumb-play"></div>
                 </div>
-                {% endif %}
+                {% endfor %}
             </div>
             {% endif %}
         </div>
@@ -1108,10 +1109,16 @@ function switchToImage(thumb) {
     thumb.classList.add('active');
 }
 
-function switchToVideo(thumbWrap) {
+function switchToVideo(thumbWrap, videoSrc) {
     var imageWrap = document.getElementById('imageWrap');
     var videoWrap = document.getElementById('videoWrap');
     var video = document.getElementById('mainProductVideo');
+    var source = video.querySelector('source');
+    if (source.src !== videoSrc) {
+        video.pause();
+        source.src = videoSrc;
+        video.load();
+    }
     imageWrap.classList.remove('active');
     videoWrap.classList.add('active');
     clearActiveThumbs();

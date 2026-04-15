@@ -299,7 +299,9 @@
                 "turkish_ezme",
                 "cheese_garlic_herb_dip"
             ],
-            "video": "cheburek_potato.mp4"
+            "videos": [
+                "cheburek_potato.mp4"
+            ]
         },
         "cheese_garlic_herb_dip": {
             "allergens": [
@@ -523,7 +525,10 @@
                 "serving_fr": "1 pièce (~90g)"
             },
             "price": 15.0,
-            "video": "chicken_samsa.mp4"
+            "videos": [
+                "shared_samsa_olives.mp4",
+                "chicken_samsa.mp4"
+            ]
         },
         "chicken_spinach_borek": {
             "allergens": [
@@ -600,7 +605,9 @@
                 "protein": "18g"
             },
             "price": 85.0,
-            "video": "chicken_spinach_borek.mp4"
+            "videos": [
+                "chicken_spinach_borek.mp4"
+            ]
         },
         "meat_samsa": {
             "allergens": [
@@ -680,7 +687,10 @@
                 "serving_fr": "1 pièce (~90g)"
             },
             "price": 18.0,
-            "video": "meat_samsa_video.mp4"
+            "videos": [
+                "shared_samsa_olives.mp4",
+                "meat_samsa_video.mp4"
+            ]
         },
         "ochiq_samsa": {
             "allergens": [
@@ -777,7 +787,9 @@
                 "serving_fr": "1 pièce (~95g)"
             },
             "price": 15.0,
-            "video": "shared_samsa_olives.mp4"
+            "videos": [
+                "shared_samsa_olives.mp4"
+            ]
         },
         "olive_buns": {
             "allergens": [
@@ -854,7 +866,9 @@
                 "protein": "5g"
             },
             "price": 5.0,
-            "video": "shared_samsa_olives.mp4"
+            "videos": [
+                "shared_samsa_olives.mp4"
+            ]
         },
         "pide_cheese_sausage": {
             "allergens": [

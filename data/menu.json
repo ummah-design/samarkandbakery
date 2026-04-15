@@ -298,7 +298,8 @@
             "recommended": [
                 "turkish_ezme",
                 "cheese_garlic_herb_dip"
-            ]
+            ],
+            "video": "cheburek_potato.mp4"
         },
         "cheese_garlic_herb_dip": {
             "allergens": [
@@ -522,7 +523,7 @@
                 "serving_fr": "1 pièce (~90g)"
             },
             "price": 15.0,
-            "video": "shared_samsa_olives.mp4"
+            "video": "chicken_samsa.mp4"
         },
         "chicken_spinach_borek": {
             "allergens": [
@@ -679,7 +680,7 @@
                 "serving_fr": "1 pièce (~90g)"
             },
             "price": 18.0,
-            "video": "shared_samsa_olives.mp4"
+            "video": "meat_samsa_video.mp4"
         },
         "ochiq_samsa": {
             "allergens": [

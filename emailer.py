@@ -82,6 +82,33 @@ def _email_wrapper(content_html, title=""):
 </html>"""
 
 
+def send_contact_inquiry(name, email, message):
+    """Send contact form inquiry to admin."""
+    content = f"""
+    <p style="color:#666;margin:0 0 16px;">New inquiry from the website contact form:</p>
+    <table style="width:100%;border-collapse:collapse;">
+        <tr style="border-bottom:1px solid #f0ebe3;">
+            <td style="padding:10px 0;color:#888;width:80px;">Name</td>
+            <td style="padding:10px 0;color:#1e2a4a;font-weight:600;">{name}</td>
+        </tr>
+        <tr style="border-bottom:1px solid #f0ebe3;">
+            <td style="padding:10px 0;color:#888;">Email</td>
+            <td style="padding:10px 0;"><a href="mailto:{email}" style="color:#1e2a4a;">{email}</a></td>
+        </tr>
+        <tr>
+            <td style="padding:10px 0;color:#888;vertical-align:top;">Message</td>
+            <td style="padding:10px 0;color:#444;line-height:1.6;">{message}</td>
+        </tr>
+    </table>
+    <div style="margin-top:20px;padding:12px 16px;background:#f5f0eb;border-radius:8px;font-size:0.85em;color:#888;">
+        Reply directly to this email or contact the customer at {email}
+    </div>
+    """
+    subject = "New Inquiry from " + name + " — Samarkand Bakery"
+    html = _email_wrapper(content, title="New Contact Inquiry")
+    return _send_admin_notification(subject, html)
+
+
 def _order_items_html(items):
     """Render order items as HTML table rows."""
     rows = ""

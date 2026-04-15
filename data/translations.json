@@ -67,9 +67,10 @@
         "contact_send": "Send Message",
         "contact_fill_all": "Please fill in all fields.",
         "contact_redirect": "Redirecting to WhatsApp...",
+        "contact_sent": "Message sent! We will get back to you soon.",
 
         "footer_location": "Tetouan, Morocco",
-        "footer_credit": "Website and comprehensive order handling system by",
+        "footer_credit": "Website and food order system by",
         "you_might_like": "You might also like",
 
         "cart_items": "items",
@@ -222,9 +223,10 @@
         "contact_send": "Envoyer",
         "contact_fill_all": "Veuillez remplir tous les champs.",
         "contact_redirect": "Redirection vers WhatsApp...",
+        "contact_sent": "Message envoyé ! Nous vous répondrons bientôt.",
 
         "footer_location": "Tétouan, Maroc",
-        "footer_credit": "Site web et système de gestion de commandes par",
+        "footer_credit": "Site web et système de commande alimentaire par",
         "you_might_like": "Vous aimerez aussi",
 
         "cart_items": "articles",
@@ -377,9 +379,10 @@
         "contact_send": "إرسال",
         "contact_fill_all": "يرجى ملء جميع الحقول.",
         "contact_redirect": "جاري التحويل إلى واتساب...",
+        "contact_sent": "تم إرسال الرسالة! سنرد عليك قريباً.",
 
         "footer_location": "تطوان، المغرب",
-        "footer_credit": "تصميم الموقع ونظام إدارة الطلبات بواسطة",
+        "footer_credit": "الموقع ونظام طلب الطعام بواسطة",
         "you_might_like": "قد يعجبك أيضاً",
 
         "cart_items": "عناصر",

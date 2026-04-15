@@ -17,11 +17,12 @@ from flask import Flask, render_template, request, jsonify, session, redirect, u
 
 from engine import load_data, calculate_cost, calculate_order
 try:
-    from emailer import send_order_placed, send_order_confirmed, send_order_completed
+    from emailer import send_order_placed, send_order_confirmed, send_order_completed, send_contact_inquiry
 except Exception:
     send_order_placed = None
     send_order_confirmed = None
     send_order_completed = None
+    send_contact_inquiry = None
 from database import (create_order, get_orders, get_order, get_orders_by_date,
                       update_order_status,
                       get_customers, get_customer_orders,
@@ -790,6 +791,23 @@ def api_production_plan(date):
 
 
 # ── Public Reviews API ──
+
+@app.route("/api/contact", methods=["POST"])
+def api_contact():
+    """Send contact form inquiry via email."""
+    data = request.get_json()
+    name = data.get("name", "").strip()
+    email = data.get("email", "").strip()
+    message = data.get("message", "").strip()
+    if not name or not email or not message:
+        return jsonify({"error": "All fields are required"}), 400
+    if send_contact_inquiry:
+        ok = send_contact_inquiry(name, email, message)
+        if ok:
+            return jsonify({"success": True})
+        return jsonify({"error": "Failed to send email"}), 500
+    return jsonify({"error": "Email not configured"}), 500
+
 
 @app.route("/api/reviews/all")
 def api_all_reviews():

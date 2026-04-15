@@ -75,8 +75,9 @@
             z-index: 100;
             background: rgba(30,42,74,0.97);
             backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             padding: 0 24px;
-            height: 72px;
+            height: 64px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -86,31 +87,119 @@
         .header-inner {
             display: flex;
             align-items: center;
-            gap: 16px;
+            justify-content: space-between;
             max-width: 1200px;
             width: 100%;
         }
 
-        .back-link {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: rgba(255,255,255,0.7);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: color 200ms ease;
-            cursor: pointer;
+        .header-logo {
+            height: 52px;
+            width: auto;
+            flex-shrink: 0;
+            display: block;
         }
 
-        .back-link:hover { color: #fff; }
-        .back-link:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; border-radius: 4px; }
-        .back-link svg { width: 18px; height: 18px; }
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
 
-        .header-logo {
-            height: 42px;
-            width: auto;
-            margin-left: auto;
+        .header-nav a {
+            color: rgba(255,255,255,0.75);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 200ms ease;
+            white-space: nowrap;
+        }
+
+        .header-nav a:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.08);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .mobile-menu-btn svg { width: 24px; height: 24px; }
+
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 64px;
+            left: 0;
+            right: 0;
+            background: var(--navy);
+            padding: 16px 24px;
+            z-index: 99;
+            border-bottom: 1px solid rgba(184,134,11,0.2);
+            animation: slideDown 200ms ease;
+        }
+
+        .mobile-nav.open { display: block; }
+
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .mobile-nav a {
+            display: block;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            transition: color 200ms;
+        }
+
+        .mobile-nav a:last-child { border-bottom: none; }
+        .mobile-nav a:hover { color: var(--gold-pale); }
+
+        .lang-switcher {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 12px;
+        }
+
+        [dir="rtl"] .lang-switcher { margin-left: 0; margin-right: 12px; }
+
+        .lang-btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border: 1.5px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.04);
+            color: rgba(255,255,255,0.55);
+            font-size: 0.76rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 200ms ease;
+            font-family: var(--font-body);
+            letter-spacing: 0.3px;
+        }
+
+        .lang-btn .flag-emoji {
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+
+        .lang-btn:hover { color: #fff; background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.25); }
+
+        .lang-btn.active {
+            color: var(--gold-pale);
+            background: rgba(184,134,11,0.15);
+            border-color: rgba(184,134,11,0.4);
         }
 
         /* Main */
@@ -696,6 +785,8 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+            .header-nav { display: none; }
+            .mobile-menu-btn { display: flex; }
             .product-hero {
                 grid-template-columns: 1fr;
                 gap: 24px;
@@ -728,13 +819,37 @@
 
 <header class="site-header">
     <div class="header-inner">
-        <a class="back-link" href="/">
-            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/></svg>
-            {{ t.product_back }}
-        </a>
-        <img class="header-logo" src="{{ url_for('static', filename='logo.svg') }}" alt="Samarkand Bakery">
+        <a href="/"><img class="header-logo" src="{{ url_for('static', filename='logo.svg') }}" alt="Samarkand Turkic Bakery"></a>
+        <nav class="header-nav">
+            <a href="/#home">{{ t.nav_home }}</a>
+            <a href="/#about">{{ t.nav_about }}</a>
+            <a href="/#menu">{{ t.nav_menu }}</a>
+            <a href="/#reviews">{{ t.nav_reviews }}</a>
+            <a href="/#contact">{{ t.nav_contact }}</a>
+            <div class="lang-switcher">
+                <button class="lang-btn {{ 'active' if lang == 'en' }}" onclick="switchLang('en')"><span class="flag-emoji">&#127468;&#127463;</span>EN</button>
+                <button class="lang-btn {{ 'active' if lang == 'fr' }}" onclick="switchLang('fr')"><span class="flag-emoji">&#127467;&#127479;</span>FR</button>
+                <button class="lang-btn {{ 'active' if lang == 'ar' }}" onclick="switchLang('ar')"><span class="flag-emoji">&#127474;&#127462;</span>عر</button>
+            </div>
+        </nav>
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" id="menu-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+        </button>
     </div>
 </header>
+
+<nav class="mobile-nav" id="mobile-nav">
+    <a href="/#home" onclick="closeMobileMenu()">{{ t.nav_home }}</a>
+    <a href="/#about" onclick="closeMobileMenu()">{{ t.nav_about }}</a>
+    <a href="/#menu" onclick="closeMobileMenu()">{{ t.nav_menu }}</a>
+    <a href="/#reviews" onclick="closeMobileMenu()">{{ t.nav_reviews }}</a>
+    <a href="/#contact" onclick="closeMobileMenu()">{{ t.nav_contact }}</a>
+    <div style="display:flex;gap:8px;padding:12px 0;">
+        <button class="lang-btn {{ 'active' if lang == 'en' }}" onclick="switchLang('en')"><span class="flag-emoji">&#127468;&#127463;</span>English</button>
+        <button class="lang-btn {{ 'active' if lang == 'fr' }}" onclick="switchLang('fr')"><span class="flag-emoji">&#127467;&#127479;</span>Français</button>
+        <button class="lang-btn {{ 'active' if lang == 'ar' }}" onclick="switchLang('ar')"><span class="flag-emoji">&#127474;&#127462;</span>العربية</button>
+    </div>
+</nav>
 
 <main class="main">
 
@@ -1128,6 +1243,18 @@ function switchToVideo(thumbWrap, videoSrc) {
 
 // Init cart bar on page load
 updateProductCartBar();
+
+// Navigation
+function switchLang(lang) {
+    var url = window.location.pathname + '?lang=' + lang;
+    window.location.href = url;
+}
+function toggleMobileMenu() {
+    document.getElementById('mobile-nav').classList.toggle('open');
+}
+function closeMobileMenu() {
+    document.getElementById('mobile-nav').classList.remove('open');
+}
 </script>
 
 <!-- You might also like -->
@@ -1162,26 +1289,30 @@ updateProductCartBar();
 </div>
 
 <!-- Footer -->
-<footer style="text-align:center;padding:48px 20px 32px;border-top:1px solid var(--border);background:var(--warm-bg);">
-    <img src="{{ url_for('static', filename='profile-pic.png') }}" alt="" style="width:72px;height:72px;border-radius:50%;margin:0 auto 12px;display:block;">
-    <div style="font-family:var(--font-display);font-size:1.1rem;color:var(--navy);margin-bottom:8px;">Samarkand Turkic Bakery</div>
-    <div style="font-size:0.85rem;color:var(--text-muted);line-height:1.8;">
-        {{ t.footer_location }}<br>
-        <a href="tel:+212680342679" style="color:var(--navy);text-decoration:none;font-weight:500;">+212 680 342 679</a>
-    </div>
-    <div style="display:flex;justify-content:center;gap:16px;margin-top:16px;">
-        <a href="https://www.instagram.com/SamarkandBakery" target="_blank" rel="noopener" style="width:40px;height:40px;border-radius:50%;background:var(--warm-cream);display:flex;align-items:center;justify-content:center;transition:background 200ms ease,transform 200ms ease;text-decoration:none;" aria-label="Instagram" onmouseover="this.style.background='var(--navy)';this.style.transform='translateY(-2px)';this.querySelector('svg').style.fill='#fff';" onmouseout="this.style.background='var(--warm-cream)';this.style.transform='none';this.querySelector('svg').style.fill='var(--navy)';">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:20px;height:20px;fill:var(--navy);transition:fill 200ms ease;"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-        </a>
-        <a href="https://www.tiktok.com/@SamarkandBakery" target="_blank" rel="noopener" style="width:40px;height:40px;border-radius:50%;background:var(--warm-cream);display:flex;align-items:center;justify-content:center;transition:background 200ms ease,transform 200ms ease;text-decoration:none;" aria-label="TikTok" onmouseover="this.style.background='var(--navy)';this.style.transform='translateY(-2px)';this.querySelector('svg').style.fill='#fff';" onmouseout="this.style.background='var(--warm-cream)';this.style.transform='none';this.querySelector('svg').style.fill='var(--navy)';">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:20px;height:20px;fill:var(--navy);transition:fill 200ms ease;"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.48V13.2a8.16 8.16 0 005.58 2.17V12a4.85 4.85 0 01-3.77-1.54V6.69h3.77z"/></svg>
-        </a>
-        <a href="https://www.youtube.com/@SamarkandBakery" target="_blank" rel="noopener" style="width:40px;height:40px;border-radius:50%;background:var(--warm-cream);display:flex;align-items:center;justify-content:center;transition:background 200ms ease,transform 200ms ease;text-decoration:none;" aria-label="YouTube" onmouseover="this.style.background='var(--navy)';this.style.transform='translateY(-2px)';this.querySelector('svg').style.fill='#fff';" onmouseout="this.style.background='var(--warm-cream)';this.style.transform='none';this.querySelector('svg').style.fill='var(--navy)';">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:20px;height:20px;fill:var(--navy);transition:fill 200ms ease;"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-        </a>
-    </div>
-    <div style="margin-top:24px;font-size:0.78rem;color:var(--text-muted);">
-        {{ t.footer_credit }} <a href="https://ummahdesign.com/" target="_blank" rel="noopener" style="color:var(--navy);font-weight:600;text-decoration:none;">Ummah Design</a>
+<footer style="position:relative;text-align:center;padding:56px 20px 36px;overflow:hidden;background:var(--navy);">
+    <div style="position:absolute;inset:0;background:url('/static/registan-square-samarkand.webp') center/cover no-repeat;opacity:0.15;"></div>
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 80%, rgba(184,134,11,0.08) 0%, transparent 60%);"></div>
+    <div style="position:relative;z-index:1;">
+        <img src="{{ url_for('static', filename='profile-pic.png') }}" alt="" style="width:72px;height:72px;border-radius:50%;margin:0 auto 12px;display:block;border:2px solid rgba(184,134,11,0.3);">
+        <div style="font-family:var(--font-display);font-size:1.2rem;color:#fff;margin-bottom:8px;">Samarkand Turkic Bakery</div>
+        <div style="font-size:0.85rem;color:rgba(255,255,255,0.85);line-height:1.8;">
+            {{ t.footer_location }}<br>
+            <a href="tel:+212680342679" style="color:#fff;text-decoration:none;font-weight:500;">+212 680 342 679</a>
+        </div>
+        <div style="display:flex;justify-content:center;gap:16px;margin-top:16px;">
+            <a href="https://www.instagram.com/SamarkandBakery" target="_blank" rel="noopener" style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;transition:background 200ms ease,transform 200ms ease;text-decoration:none;" aria-label="Instagram" onmouseover="this.style.background='rgba(184,134,11,0.3)';this.style.transform='translateY(-2px)';" onmouseout="this.style.background='rgba(255,255,255,0.08)';this.style.transform='none';">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:20px;height:20px;fill:rgba(255,255,255,0.7);"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            </a>
+            <a href="https://www.tiktok.com/@SamarkandBakery" target="_blank" rel="noopener" style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;transition:background 200ms ease,transform 200ms ease;text-decoration:none;" aria-label="TikTok" onmouseover="this.style.background='rgba(184,134,11,0.3)';this.style.transform='translateY(-2px)';" onmouseout="this.style.background='rgba(255,255,255,0.08)';this.style.transform='none';">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:20px;height:20px;fill:rgba(255,255,255,0.7);"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.48V13.2a8.16 8.16 0 005.58 2.17V12a4.85 4.85 0 01-3.77-1.54V6.69h3.77z"/></svg>
+            </a>
+            <a href="https://www.youtube.com/@SamarkandBakery" target="_blank" rel="noopener" style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;transition:background 200ms ease,transform 200ms ease;text-decoration:none;" aria-label="YouTube" onmouseover="this.style.background='rgba(184,134,11,0.3)';this.style.transform='translateY(-2px)';" onmouseout="this.style.background='rgba(255,255,255,0.08)';this.style.transform='none';">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:20px;height:20px;fill:rgba(255,255,255,0.7);"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            </a>
+        </div>
+        <div style="margin-top:24px;font-size:0.78rem;color:rgba(255,255,255,0.35);">
+            {{ t.footer_credit }} <a href="https://ummahdesign.com/" target="_blank" rel="noopener" style="color:var(--gold-pale);font-weight:600;text-decoration:none;">Ummah Design</a>
+        </div>
     </div>
 </footer>
 

@@ -784,6 +784,17 @@ def api_update_order_status(order_id):
     return jsonify({"success": True})
 
 
+@app.route("/api/admin/orders/<int:order_id>/delete", methods=["POST"])
+@admin_required
+def api_delete_order(order_id):
+    db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "orders.db")
+    conn = sqlite3.connect(db_path)
+    conn.execute("DELETE FROM orders WHERE id = ?", (order_id,))
+    conn.commit()
+    conn.close()
+    return jsonify({"success": True})
+
+
 @app.route("/api/admin/orders/<int:order_id>/payment", methods=["POST"])
 @admin_required
 def api_update_payment_status(order_id):

@@ -1,0 +1,101 @@
+{% extends "admin_base.html" %}
+{% block title %}Customers{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Top Customers</h2>
+    <table class="recipes-table" id="customers-table">
+        <thead><tr><th>Customer</th><th>Email</th><th>Phone</th><th>Orders</th><th>Revenue</th><th>Profit</th><th>Last Order</th></tr></thead>
+        <tbody></tbody>
+    </table>
+</div>
+<div id="customer-detail" class="card" style="display:none;">
+    <h2 id="customer-detail-name">Order History</h2>
+    <div id="customer-orders-detail"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    async function loadCustomers() {
+        var res = await fetch('/api/admin/customers');
+        var data = await res.json();
+        var tbody = document.querySelector('#customers-table tbody');
+        tbody.innerHTML = '';
+        if (data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#999;padding:40px;">No customers yet</td></tr>';
+            return;
+        }
+        for (var ci = 0; ci < data.length; ci++) {
+            var c = data[ci];
+            var lastOrder = c.last_order ? new Date(c.last_order).toLocaleDateString() : '-';
+            var profitClass = (c.total_profit || 0) >= 0 ? 'profit' : 'loss';
+            tbody.innerHTML += '<tr style="cursor:pointer;" onclick="loadCustomerOrders(\'' + encodeURIComponent(c.customer_email) + '\', \'' + c.customer_name.replace(/'/g, "\\'") + '\')">'
+                + '<td dir="auto"><strong>' + c.customer_name + '</strong></td>'
+                + '<td>' + (c.customer_email || '-') + '</td>'
+                + '<td>' + c.customer_phone + '</td>'
+                + '<td>' + c.total_orders + '</td>'
+                + '<td class="price">' + mad(c.total_revenue || 0) + '</td>'
+                + '<td class="' + profitClass + '">' + mad(c.total_profit || 0) + '</td>'
+                + '<td>' + lastOrder + '</td></tr>';
+        }
+    }
+
+    async function loadCustomerOrders(email, name) {
+        email = decodeURIComponent(email);
+        var res = await fetch('/api/admin/customer-orders?email=' + encodeURIComponent(email));
+        var orders = await res.json();
+        var detail = document.getElementById('customer-detail');
+        var title = document.getElementById('customer-detail-name');
+
+        title.textContent = name + ' — Order History';
+        var container = document.getElementById('customer-orders-detail');
+        var html = '';
+
+        for (var oi = 0; oi < orders.length; oi++) {
+            var o = orders[oi];
+            var date = new Date(o.created_at).toLocaleString();
+            var itemsSummary = o.items.map(function(i) { return i.quantity + 'x ' + i.name; }).join(', ');
+            var sc = 'status-' + o.status;
+            var pc = (o.total_profit || 0) >= 0 ? 'profit' : 'loss';
+
+            html += '<div class="order-card" style="margin-bottom:10px;">'
+                + '<div class="order-header" onclick="this.nextElementSibling.classList.toggle(\'visible\')" style="cursor:pointer;">'
+                + '<span class="order-id">#' + o.id + '</span>'
+                + '<span style="color:#555;font-size:0.88em;">' + date + '</span>'
+                + '<span style="color:#555;font-size:0.88em;">' + itemsSummary + '</span>'
+                + '<span class="order-amount">' + mad(o.total_price || 0) + '</span>'
+                + '<span class="status-badge ' + sc + '">' + o.status + '</span></div>'
+                + '<div class="order-details">'
+                + '<div class="detail-section"><h4>Order Details</h4>'
+                + '<div class="detail-row"><span class="label">Type:</span><span class="value">' + (o.delivery_type==='delivery'?'Delivery':'Pickup (Wilaya Centre)') + '</span></div>'
+                + (o.preferred_date?'<div class="detail-row"><span class="label">Delivery Date:</span><span class="value" style="font-weight:700;color:#b8860b;">' + o.preferred_date + '</span></div>':'')
+                + (o.delivery_address?'<div class="detail-row"><span class="label">Address:</span><span class="value" dir="auto">' + o.delivery_address + '</span></div>':'')
+                + (o.promo_code?'<div class="detail-row"><span class="label">Promo Code:</span><span class="value" style="font-weight:600;color:#2d7a4f;">' + o.promo_code + ' (-' + (o.discount_amount||0).toFixed(2) + ' MAD)</span></div>':'')
+                + (o.notes?'<div class="detail-row"><span class="label">Notes:</span><span class="value" dir="auto">' + o.notes + '</span></div>':'')
+                + '</div>'
+                + '<div class="detail-section"><h4>Items Ordered</h4>'
+                + '<table style="width:100%;border-collapse:collapse;font-size:0.9em;">';
+            for (var ii = 0; ii < o.items.length; ii++) {
+                var it = o.items[ii];
+                html += '<tr style="border-bottom:1px solid #f0ebe3;">'
+                    + '<td style="padding:8px 0;color:#444;">' + it.name + '</td>'
+                    + '<td style="padding:8px 12px;text-align:center;color:#888;">x' + it.quantity + '</td>'
+                    + '<td style="padding:8px 0;text-align:right;font-weight:600;color:#1e2a4a;">' + (it.subtotal||0).toFixed(2) + ' MAD</td></tr>';
+            }
+            html += '</table></div>'
+                + '<div class="detail-section"><h4>Financials</h4>'
+                + '<div class="detail-row"><span class="label">Received:</span><span class="value">' + (o.total_price||0).toFixed(2) + ' MAD</span></div>'
+                + '<div class="detail-row"><span class="label">Cost:</span><span class="value">' + (o.total_cost||0).toFixed(2) + ' MAD</span></div>'
+                + '<div class="detail-row"><span class="label">Profit:</span><span class="value ' + pc + '">' + (o.total_profit||0).toFixed(2) + ' MAD</span></div>'
+                + '</div></div></div>';
+        }
+
+        container.innerHTML = html;
+        detail.style.display = 'block';
+        detail.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    loadCustomers();
+</script>
+{% endblock %}

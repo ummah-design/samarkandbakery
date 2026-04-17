@@ -388,10 +388,10 @@
             <h3 style="font-family:var(--font-display);font-size:1.1rem;color:var(--navy);margin-bottom:4px;">All Images</h3>
             <p class="field-hint" style="margin-bottom:14px;">The cover image is highlighted with a gold border. Click "Set as Cover" on any image to change it. Select multiple files or drag & drop to upload.</p>
 
-            <div id="gallery-grid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));gap:12px;margin-bottom:16px;">
+            <div id="gallery-grid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(100px, 1fr));gap:12px;margin-bottom:16px;">
                 <!-- Cover image -->
                 <div class="gallery-item" id="cover-item" style="position:relative;border-radius:10px;overflow:hidden;border:3px solid var(--gold);box-shadow:0 2px 8px rgba(184,134,11,0.2);">
-                    <img src="/static/products/{{ item.image }}" style="width:100%;aspect-ratio:1;object-fit:cover;display:block;">
+                    <img src="/static/products/{{ item.image }}" style="width:100%;aspect-ratio:3/4;object-fit:cover;display:block;">
                     <div style="position:absolute;top:6px;left:6px;background:var(--gold);color:#fff;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:0.5px;">Cover</div>
                     <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.5);color:#fff;font-size:0.7rem;padding:4px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ item.image }}</div>
                 </div>
@@ -399,7 +399,7 @@
                 {% if item.gallery %}
                 {% for img in item.gallery %}
                 <div class="gallery-item" style="position:relative;border-radius:10px;overflow:hidden;border:2px solid var(--border);">
-                    <img src="/static/products/{{ img }}" style="width:100%;aspect-ratio:1;object-fit:cover;display:block;">
+                    <img src="/static/products/{{ img }}" style="width:100%;aspect-ratio:3/4;object-fit:cover;display:block;">
                     <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;opacity:0;transition:all 0.2s;" onmouseover="this.style.opacity='1';this.style.background='rgba(0,0,0,0.5)';" onmouseout="this.style.opacity='0';this.style.background='rgba(0,0,0,0)';">
                         <button type="button" onclick="setCoverImage('{{ img }}')" style="background:var(--gold);color:#fff;border:none;padding:4px 10px;border-radius:12px;font-size:0.7rem;font-weight:600;cursor:pointer;">Set as Cover</button>
                         <button type="button" onclick="removeGalleryImage(this.closest('.gallery-item'), '{{ img }}')" style="background:var(--danger);color:#fff;border:none;padding:4px 10px;border-radius:12px;font-size:0.7rem;font-weight:600;cursor:pointer;">Remove</button>
@@ -418,6 +418,43 @@
                 <input type="file" id="f-gallery" accept=".jpg,.jpeg,.png,.webp" style="display:none;" multiple onchange="uploadMultipleGallery(this.files)">
             </div>
             <div id="upload-progress" style="display:none;margin-top:10px;font-size:0.85rem;color:var(--text-secondary);"></div>
+        </div>
+    </div>
+
+    <!-- Videos -->
+    <div class="section-card">
+        <h2 class="section-title">Videos <span id="video-count" style="font-family:var(--font-body);font-size:0.82rem;color:var(--text-muted);font-weight:400;margin-left:8px;">0 videos</span></h2>
+        <p class="section-desc">Upload MP4 videos for this product. Audio is automatically stripped on upload.</p>
+
+        <div id="video-grid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));gap:14px;margin-bottom:16px;">
+            {% if item.videos %}
+            {% for vid in item.videos %}
+            <div class="video-item" data-filename="{{ vid }}" style="position:relative;border-radius:10px;overflow:hidden;border:2px solid var(--border);background:#000;">
+                <video src="/static/products/{{ vid }}" style="width:100%;aspect-ratio:9/16;object-fit:cover;display:block;" preload="metadata" muted></video>
+                <div onclick="playVideoPreview(this.parentElement)" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;background:rgba(255,255,255,0.85);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform 0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.transform='translate(-50%,-50%) scale(1.1)';" onmouseout="this.style.transform='translate(-50%,-50%) scale(1)';">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--navy)"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <button type="button" onclick="removeVideo(this.closest('.video-item'), '{{ vid }}')" style="position:absolute;top:6px;right:6px;width:26px;height:26px;background:rgba(0,0,0,0.6);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;" onmouseover="this.style.background='#b53d2e';" onmouseout="this.style.background='rgba(0,0,0,0.6)';">
+                    <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="#fff"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+                </button>
+                <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.6);color:#fff;font-size:0.7rem;padding:4px 6px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ vid }}</div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+        <label class="btn-upload" id="video-upload-btn">
+            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"/></svg>
+            Upload Video
+            <input type="file" id="f-video" accept=".mp4" style="display:none;" onchange="uploadVideo(this)">
+        </label>
+        <span class="field-hint" style="margin-left:12px;">MP4 only — audio will be removed automatically</span>
+
+        <div id="video-upload-progress" style="display:none;margin-top:12px;">
+            <div style="background:var(--warm-cream);border-radius:8px;overflow:hidden;height:6px;">
+                <div id="video-progress-bar" style="height:100%;background:var(--gold);border-radius:8px;width:0%;transition:width 0.3s;"></div>
+            </div>
+            <div id="video-progress-text" style="font-size:0.82rem;color:var(--text-secondary);margin-top:6px;">Uploading...</div>
         </div>
     </div>
 
@@ -527,7 +564,7 @@ function addGalleryTile(filename) {
     var div = document.createElement('div');
     div.className = 'gallery-item';
     div.style.cssText = 'position:relative;border-radius:10px;overflow:hidden;border:2px solid var(--border);';
-    div.innerHTML = '<img src="/static/products/' + filename + '" style="width:100%;aspect-ratio:1;object-fit:cover;display:block;">' +
+    div.innerHTML = '<img src="/static/products/' + filename + '" style="width:100%;aspect-ratio:3/4;object-fit:cover;display:block;">' +
         '<div style="position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;opacity:0;transition:all 0.2s;" onmouseover="this.style.opacity=\'1\';this.style.background=\'rgba(0,0,0,0.5)\';" onmouseout="this.style.opacity=\'0\';this.style.background=\'rgba(0,0,0,0)\';">' +
         '<button type="button" onclick="setCoverImage(\'' + filename + '\')" style="background:var(--gold);color:#fff;border:none;padding:4px 10px;border-radius:12px;font-size:0.7rem;font-weight:600;cursor:pointer;">Set as Cover</button>' +
         '<button type="button" onclick="removeGalleryImage(this.closest(\'.gallery-item\'), \'' + filename + '\')" style="background:var(--danger);color:#fff;border:none;padding:4px 10px;border-radius:12px;font-size:0.7rem;font-weight:600;cursor:pointer;">Remove</button>' +
@@ -592,6 +629,121 @@ updateSeoPreview();
 
 // Auto-update slug when name changes
 document.getElementById('f-slug').addEventListener('input', updateSeoPreview);
+
+// ── Video Management ──
+
+var videoList = {{ item.videos|tojson if item.videos else '[]' }};
+
+function updateVideoCount() {
+    var count = document.querySelectorAll('#video-grid .video-item').length;
+    document.getElementById('video-count').textContent = count + ' video' + (count !== 1 ? 's' : '');
+}
+updateVideoCount();
+
+function playVideoPreview(container) {
+    var video = container.querySelector('video');
+    var playBtn = container.querySelector('[onclick*="playVideoPreview"]');
+    if (video.paused) {
+        video.play();
+        playBtn.style.opacity = '0';
+        video.onclick = function() {
+            video.pause();
+            video.currentTime = 0;
+            playBtn.style.opacity = '1';
+            video.onclick = null;
+        };
+        video.onended = function() {
+            playBtn.style.opacity = '1';
+            video.onclick = null;
+        };
+    }
+}
+
+function removeVideo(el, filename) {
+    if (!confirm('Remove this video from the product?')) return;
+    fetch('/api/admin/product/' + productKey + '/video/remove', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({filename: filename})
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.success) {
+            el.remove();
+            var idx = videoList.indexOf(filename);
+            if (idx > -1) videoList.splice(idx, 1);
+            updateVideoCount();
+        }
+    });
+}
+
+function uploadVideo(input) {
+    if (!input.files || !input.files[0]) return;
+    var file = input.files[0];
+    var progressWrap = document.getElementById('video-upload-progress');
+    var progressBar = document.getElementById('video-progress-bar');
+    var progressText = document.getElementById('video-progress-text');
+    var uploadBtn = document.getElementById('video-upload-btn');
+    progressWrap.style.display = 'block';
+    progressBar.style.width = '0%';
+    progressText.textContent = 'Uploading ' + file.name + '...';
+    uploadBtn.style.pointerEvents = 'none';
+    uploadBtn.style.opacity = '0.5';
+
+    var fd = new FormData();
+    fd.append('video', file);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/admin/product/' + productKey + '/video/upload');
+    xhr.upload.onprogress = function(e) {
+        if (e.lengthComputable) {
+            var pct = Math.round((e.loaded / e.total) * 100);
+            progressBar.style.width = pct + '%';
+            progressText.textContent = 'Uploading... ' + pct + '%';
+            if (pct >= 100) {
+                progressText.textContent = 'Processing (stripping audio)...';
+            }
+        }
+    };
+    xhr.onload = function() {
+        uploadBtn.style.pointerEvents = '';
+        uploadBtn.style.opacity = '';
+        if (xhr.status === 200) {
+            var data = JSON.parse(xhr.responseText);
+            if (data.success) {
+                videoList.push(data.filename);
+                addVideoTile(data.filename);
+                updateVideoCount();
+                progressText.textContent = 'Uploaded successfully!';
+                setTimeout(function() { progressWrap.style.display = 'none'; }, 2000);
+            } else {
+                progressText.textContent = 'Error: ' + (data.error || 'Upload failed');
+            }
+        } else {
+            progressText.textContent = 'Upload failed (server error)';
+        }
+    };
+    xhr.onerror = function() {
+        uploadBtn.style.pointerEvents = '';
+        uploadBtn.style.opacity = '';
+        progressText.textContent = 'Connection error';
+    };
+    xhr.send(fd);
+    input.value = '';
+}
+
+function addVideoTile(filename) {
+    var grid = document.getElementById('video-grid');
+    var div = document.createElement('div');
+    div.className = 'video-item';
+    div.setAttribute('data-filename', filename);
+    div.style.cssText = 'position:relative;border-radius:10px;overflow:hidden;border:2px solid var(--border);background:#000;';
+    div.innerHTML = '<video src="/static/products/' + filename + '" style="width:100%;aspect-ratio:9/16;object-fit:cover;display:block;" preload="metadata" muted></video>'
+        + '<div onclick="playVideoPreview(this.parentElement)" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;background:rgba(255,255,255,0.85);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform 0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.transform=\'translate(-50%,-50%) scale(1.1)\';" onmouseout="this.style.transform=\'translate(-50%,-50%) scale(1)\';"><svg width="20" height="20" viewBox="0 0 24 24" fill="var(--navy)"><path d="M8 5v14l11-7z"/></svg></div>'
+        + '<button type="button" onclick="removeVideo(this.closest(\'.video-item\'), \'' + filename + '\')" style="position:absolute;top:6px;right:6px;width:26px;height:26px;background:rgba(0,0,0,0.6);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;" onmouseover="this.style.background=\'#b53d2e\';" onmouseout="this.style.background=\'rgba(0,0,0,0.6)\';"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="#fff"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg></button>'
+        + '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.6);color:#fff;font-size:0.7rem;padding:4px 6px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + filename + '</div>';
+    grid.appendChild(div);
+}
 
 async function saveProduct() {
     const btn = document.getElementById('save-btn');

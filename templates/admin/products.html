@@ -1,0 +1,147 @@
+{% extends "admin_base.html" %}
+{% block title %}All Products{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>All Products</h2>
+    <p style="color:#888;font-size:0.85em;margin-bottom:16px;">Click Edit to update product image, description, or price. Images are auto-cropped to fit — any size works, but square or landscape (~600x400px) looks best.</p>
+    <table class="recipes-table" id="recipes-table">
+        <thead><tr><th style="width:60px;"></th><th>Product</th><th>Description</th><th>Price</th><th style="width:80px;"></th></tr></thead>
+        <tbody></tbody>
+    </table>
+</div>
+<!-- Edit modal -->
+<div id="product-edit-backdrop" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);backdrop-filter:blur(4px);z-index:300;overflow-y:auto;padding:32px 16px;justify-content:center;align-items:flex-start;" onclick="if(event.target===this)closeProductEdit()">
+    <div style="background:#fff;border-radius:16px;max-width:520px;width:100%;padding:32px;box-shadow:0 24px 48px rgba(30,42,74,0.12);animation:slideUp 300ms cubic-bezier(0.16,1,0.3,1);position:relative;margin:0 auto;">
+        <button onclick="closeProductEdit()" style="position:absolute;top:16px;right:16px;width:32px;height:32px;border:none;background:#f0ebe3;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#6b6b80"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg></button>
+        <h2 style="font-family:Georgia,serif;font-size:1.3rem;color:#1e2a4a;margin-bottom:20px;">Edit Product</h2>
+        <input type="hidden" id="edit-product-key">
+
+        <div style="margin-bottom:16px;">
+            <label style="display:block;font-size:0.82rem;font-weight:600;color:#6b6b80;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Product Name</label>
+            <input id="edit-name" type="text" style="width:100%;padding:12px 16px;border:1px solid #e8e0d8;border-radius:8px;font-family:inherit;font-size:0.95rem;background:#faf6f1;" placeholder="Product name">
+        </div>
+
+        <div style="margin-bottom:16px;">
+            <label style="display:block;font-size:0.82rem;font-weight:600;color:#6b6b80;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Product Image</label>
+            <div id="edit-image-preview" style="width:100%;height:200px;border-radius:12px;overflow:hidden;margin-bottom:10px;background:#f0ebe3;display:flex;align-items:center;justify-content:center;">
+                <img id="edit-image-img" style="width:100%;height:100%;object-fit:cover;" src="" alt="">
+            </div>
+            <label style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:#1e2a4a;color:#fff;border-radius:8px;cursor:pointer;font-size:0.88rem;font-weight:600;transition:background 200ms;" onmouseover="this.style.background='#2a3d6b'" onmouseout="this.style.background='#1e2a4a'">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"/></svg>
+                Replace Image
+                <input type="file" id="edit-image-file" accept=".jpg,.jpeg,.png,.webp" style="display:none;" onchange="previewEditImage(this)">
+            </label>
+            <span style="font-size:0.78rem;color:#9a9aad;margin-left:10px;">JPG, PNG, or WEBP. Any size — auto-cropped to fit.</span>
+        </div>
+
+        <div style="margin-bottom:16px;">
+            <label style="display:block;font-size:0.82rem;font-weight:600;color:#6b6b80;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Short Description <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:0.9em;">(shown on homepage menu cards)</span></label>
+            <textarea id="edit-description" style="width:100%;padding:12px 16px;border:1px solid #e8e0d8;border-radius:8px;font-family:inherit;font-size:0.95rem;min-height:70px;resize:vertical;background:#faf6f1;" placeholder="Short description for menu cards..."></textarea>
+        </div>
+
+        <div style="margin-bottom:16px;">
+            <label style="display:block;font-size:0.82rem;font-weight:600;color:#6b6b80;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Full Description <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:0.9em;">(shown on product detail page)</span></label>
+            <textarea id="edit-description-long" style="width:100%;padding:12px 16px;border:1px solid #e8e0d8;border-radius:8px;font-family:inherit;font-size:0.95rem;min-height:120px;resize:vertical;background:#faf6f1;" placeholder="Full product description..."></textarea>
+        </div>
+
+        <div style="margin-bottom:24px;">
+            <label style="display:block;font-size:0.82rem;font-weight:600;color:#6b6b80;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Selling Price (MAD)</label>
+            <input id="edit-price" type="number" step="0.5" min="0" style="width:100%;padding:12px 16px;border:1px solid #e8e0d8;border-radius:8px;font-family:inherit;font-size:0.95rem;background:#faf6f1;">
+        </div>
+
+        <div style="display:flex;gap:12px;">
+            <button onclick="closeProductEdit()" style="padding:14px 20px;background:#f0ebe3;color:#6b6b80;border:none;border-radius:8px;font-size:0.95rem;font-weight:500;cursor:pointer;">Cancel</button>
+            <button id="edit-save-btn" onclick="saveProductEdit()" style="flex:1;padding:14px;background:#b8860b;color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;transition:background 200ms;" onmouseover="this.style.background='#d4a017'" onmouseout="this.style.background='#b8860b'">Save Changes</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var _recipesData = [];
+
+    async function loadRecipes() {
+        var res = await fetch('/api/recipes'); _recipesData = await res.json();
+        var tbody = document.querySelector('#recipes-table tbody'); tbody.innerHTML = '';
+        for (var ri = 0; ri < _recipesData.length; ri++) {
+            var r = _recipesData[ri];
+            var imgSrc = r.image ? '/static/products/' + r.image : '';
+            var imgHtml = imgSrc ? '<img src="' + imgSrc + '" alt="' + r.name + '" style="width:48px;height:48px;object-fit:cover;border-radius:8px;">' : '';
+            var desc = r.description ? (r.description.length > 80 ? r.description.substring(0, 80) + '...' : r.description) : '-';
+            tbody.innerHTML += '<tr>'
+                + '<td style="width:60px;">' + imgHtml + '</td>'
+                + '<td><strong>' + r.name + '</strong></td>'
+                + '<td style="font-size:0.85em;color:#6b6b80;max-width:300px;" dir="auto">' + desc + '</td>'
+                + '<td class="price">' + mad(r.selling_price) + '</td>'
+                + '<td><a href="/admin/product/' + r.key + '/edit" class="status-btn complete" style="font-size:0.78em;padding:6px 14px;text-decoration:none;display:inline-block;">Edit</a></td>'
+                + '</tr>';
+        }
+    }
+
+    function openProductEdit(key) {
+        var r = _recipesData.find(function(x) { return x.key === key; });
+        if (!r) return;
+        document.getElementById('edit-product-key').value = r.key;
+        document.getElementById('edit-name').value = r.name || '';
+        document.getElementById('edit-description').value = r.description || '';
+        document.getElementById('edit-description-long').value = r.description_long || '';
+        document.getElementById('edit-price').value = r.selling_price;
+        var img = document.getElementById('edit-image-img');
+        img.src = r.image ? '/static/products/' + r.image + '?t=' + Date.now() : '';
+        document.getElementById('edit-image-file').value = '';
+        document.getElementById('product-edit-backdrop').style.display = 'flex';
+    }
+
+    function closeProductEdit() {
+        document.getElementById('product-edit-backdrop').style.display = 'none';
+    }
+
+    function previewEditImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('edit-image-img').src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    async function saveProductEdit() {
+        var key = document.getElementById('edit-product-key').value;
+        var btn = document.getElementById('edit-save-btn');
+        btn.textContent = 'Saving...'; btn.disabled = true;
+
+        var formData = new FormData();
+        formData.append('name', document.getElementById('edit-name').value);
+        formData.append('description', document.getElementById('edit-description').value);
+        formData.append('description_long', document.getElementById('edit-description-long').value);
+        formData.append('price', document.getElementById('edit-price').value);
+
+        var fileInput = document.getElementById('edit-image-file');
+        if (fileInput.files.length > 0) {
+            formData.append('image', fileInput.files[0]);
+        }
+
+        try {
+            var res = await fetch('/api/admin/product/' + key + '/update', {
+                method: 'POST',
+                body: formData
+            });
+            var data = await res.json();
+            if (data.success) {
+                closeProductEdit();
+                loadRecipes();
+            } else {
+                alert(data.error || 'Failed to save');
+            }
+        } catch(e) {
+            alert('Connection error');
+        }
+        btn.textContent = 'Save Changes'; btn.disabled = false;
+    }
+
+    loadRecipes();
+</script>
+{% endblock %}

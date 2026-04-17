@@ -378,6 +378,13 @@ def admin_logout():
 @app.route("/admin")
 @admin_required
 def admin_dashboard():
+    return redirect(url_for("admin_orders_page"))
+
+
+@app.route("/admin/old")
+@admin_required
+def admin_dashboard_old():
+    """Legacy single-page dashboard (kept as backup)."""
     data = load_data()
     recipes = {k: v["name"] for k, v in data["recipes"].items()}
     menu = load_menu()
@@ -387,7 +394,72 @@ def admin_dashboard():
 @app.route("/admin/orders")
 @admin_required
 def admin_orders_page():
-    return render_template("admin_orders.html")
+    return render_template("admin/orders.html", active_page="orders")
+
+
+@app.route("/admin/manual-order")
+@admin_required
+def admin_manual_order_page():
+    menu = load_menu()
+    return render_template("admin/manual_order.html", active_page="manual_order", menu=menu)
+
+
+@app.route("/admin/product-cost")
+@admin_required
+def admin_product_cost_page():
+    data = load_data()
+    recipes = {k: v["name"] for k, v in data["recipes"].items()}
+    return render_template("admin/product_cost.html", active_page="product_cost", recipes=recipes)
+
+
+@app.route("/admin/order-quote")
+@admin_required
+def admin_order_quote_page():
+    data = load_data()
+    recipes = {k: v["name"] for k, v in data["recipes"].items()}
+    return render_template("admin/order_quote.html", active_page="order_quote", recipes=recipes)
+
+
+@app.route("/admin/products")
+@admin_required
+def admin_products_page():
+    return render_template("admin/products.html", active_page="products")
+
+
+@app.route("/admin/reviews")
+@admin_required
+def admin_reviews_page():
+    return render_template("admin/reviews.html", active_page="reviews")
+
+
+@app.route("/admin/promo-codes")
+@admin_required
+def admin_promo_codes_page():
+    return render_template("admin/promo_codes.html", active_page="promo_codes")
+
+
+@app.route("/admin/customers")
+@admin_required
+def admin_customers_page():
+    return render_template("admin/customers.html", active_page="customers")
+
+
+@app.route("/admin/ingredients")
+@admin_required
+def admin_ingredients_page():
+    return render_template("admin/ingredients.html", active_page="ingredients")
+
+
+@app.route("/admin/production")
+@admin_required
+def admin_production_page():
+    return render_template("admin/production.html", active_page="production")
+
+
+@app.route("/admin/backups")
+@admin_required
+def admin_backups_page():
+    return render_template("admin/backups.html", active_page="backups")
 
 
 @app.route("/admin/product/<product_key>/edit")
@@ -560,6 +632,71 @@ def api_gallery_remove():
         filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "products", filename)
         if os.path.exists(filepath):
             os.remove(filepath)
+    return jsonify({"success": True})
+
+
+@app.route("/api/admin/product/<product_key>/video/upload", methods=["POST"])
+@admin_required
+def api_video_upload(product_key):
+    """Upload a video, strip audio with ffmpeg, save to static/products/."""
+    import time
+    import subprocess
+    menu = load_menu()
+    if product_key not in menu["products"]:
+        return jsonify({"error": "Product not found"}), 404
+    file = request.files.get("video")
+    if not file or not file.filename:
+        return jsonify({"error": "No file uploaded"}), 400
+    ext = os.path.splitext(file.filename)[1].lower()
+    if ext != ".mp4":
+        return jsonify({"error": "Only MP4 files allowed"}), 400
+    timestamp = str(int(time.time()))
+    filename = product_key + "_" + timestamp + ".mp4"
+    products_dir = os.path.join(BASE_DIR, "static", "products")
+    os.makedirs(products_dir, exist_ok=True)
+    temp_path = os.path.join(products_dir, "_temp_" + filename)
+    final_path = os.path.join(products_dir, filename)
+    file.save(temp_path)
+    # Try to strip audio with ffmpeg
+    try:
+        result = subprocess.run(
+            ["ffmpeg", "-i", temp_path, "-an", "-c:v", "copy", final_path],
+            capture_output=True, timeout=120
+        )
+        if result.returncode == 0:
+            os.remove(temp_path)
+        else:
+            # ffmpeg failed, use original with audio
+            os.rename(temp_path, final_path)
+    except Exception:
+        # ffmpeg not available, save with audio
+        os.rename(temp_path, final_path)
+    # Add to videos array in menu.json
+    if "videos" not in menu["products"][product_key]:
+        menu["products"][product_key]["videos"] = []
+    menu["products"][product_key]["videos"].append(filename)
+    menu_path = os.path.join(DATA_DIR, "menu.json")
+    with open(menu_path, "w", encoding="utf-8") as f:
+        json.dump(menu, f, indent=4, ensure_ascii=False)
+    return jsonify({"success": True, "filename": filename})
+
+
+@app.route("/api/admin/product/<product_key>/video/remove", methods=["POST"])
+@admin_required
+def api_video_remove(product_key):
+    """Remove a video filename from the product's videos array (keeps file on disk)."""
+    req = request.get_json()
+    filename = req.get("filename")
+    menu = load_menu()
+    if product_key not in menu["products"]:
+        return jsonify({"error": "Product not found"}), 404
+    videos = menu["products"][product_key].get("videos", [])
+    if filename in videos:
+        videos.remove(filename)
+        menu["products"][product_key]["videos"] = videos
+        menu_path = os.path.join(DATA_DIR, "menu.json")
+        with open(menu_path, "w", encoding="utf-8") as f:
+            json.dump(menu, f, indent=4, ensure_ascii=False)
     return jsonify({"success": True})
 
 

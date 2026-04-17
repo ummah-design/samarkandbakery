@@ -1,0 +1,25 @@
+{% extends "admin_base.html" %}
+{% block title %}Ingredient Prices{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Current Ingredient Prices (MAD)</h2>
+    <div class="prices-grid" id="prices-grid"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    async function loadPrices() {
+        var res = await fetch('/api/prices'); var data = await res.json();
+        var grid = document.getElementById('prices-grid'); grid.innerHTML = '';
+        for (var key in data) {
+            var price = data[key];
+            var label = key.replace(/_per_kg/g,' /kg').replace(/_per_litre/g,' /L').replace(/_each/g,' each').replace(/_per_pot/g,' /pot').replace(/_per_tub/g,' /tub').replace(/_/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();});
+            grid.innerHTML += '<div class="price-item"><span class="name">' + label + '</span><span class="amount">' + mad(price) + '</span></div>';
+        }
+    }
+
+    loadPrices();
+</script>
+{% endblock %}

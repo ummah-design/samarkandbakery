@@ -1,0 +1,71 @@
+{% extends "admin_base.html" %}
+{% block title %}Product Cost{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Calculate Product Cost</h2>
+    <div class="form-row">
+        <div>
+            <label for="recipe-select">Product</label>
+            <select id="recipe-select">
+                {% for key, name in recipes.items() %}
+                <option value="{{ key }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="quantity-input">Quantity</label>
+            <input type="number" id="quantity-input" value="1" min="1">
+        </div>
+    </div>
+    <button class="btn" onclick="calculateCost()">Calculate Cost</button>
+</div>
+<div id="cost-result" class="result-section">
+    <div class="result-header" id="cost-result-title"></div>
+    <div class="result-body" id="cost-result-body"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    async function calculateCost() {
+        var recipe = document.getElementById('recipe-select').value;
+        var quantity = document.getElementById('quantity-input').value;
+        var res = await fetch('/api/cost?recipe=' + recipe + '&quantity=' + quantity);
+        var data = await res.json();
+        if (data.error) { alert(data.error); return; }
+        document.getElementById('cost-result-title').textContent = data.name + ' — ' + data.quantity + ' unit' + (data.quantity > 1 ? 's' : '');
+        var html = '';
+        for (var compName in data.components) {
+            var comp = data.components[compName];
+            html += '<div class="result-group"><div class="result-group-title">' + compName + '</div>';
+            html += '<div class="result-row"><span class="label">Full batch yields</span><span class="value">' + comp.batch_yield + ' items (batch cost: ' + mad(comp.batch_cost) + ')</span></div>';
+            html += '<div class="result-row"><span class="label">Used for this order</span><span class="value">' + comp.fraction_used + ' of a batch</span></div>';
+            if (comp.leftover > 0) html += '<div class="result-row"><span class="label">Leftover</span><span class="value" style="color:#2e7d32">' + comp.leftover + ' (kept in fridge)</span></div>';
+            html += '<div class="result-row"><span class="label">Cost charged</span><span class="value">' + mad(comp.total_cost) + '</span></div></div>';
+        }
+        var energy = data.energy;
+        html += '<div class="result-group">';
+        if (energy.oven_loads !== undefined) { html += '<div class="result-group-title">Baking</div><div class="result-row"><span class="label">Oven loads</span><span class="value">' + energy.oven_loads + ' (' + energy.minutes_per_load + ' min each = ' + energy.total_minutes + ' min)</span></div>'; }
+        else if (energy.fry_batches !== undefined) { html += '<div class="result-group-title">Frying</div><div class="result-row"><span class="label">Fry batches</span><span class="value">' + energy.fry_batches + ' (' + energy.minutes_per_batch + ' min each = ' + energy.total_minutes + ' min)</span></div>'; }
+        html += '<div class="result-row"><span class="label">Energy cost</span><span class="value">' + mad(energy.cost) + '</span></div></div>';
+        if (data.frying_oil && data.frying_oil.cost > 0) html += '<div class="result-group"><div class="result-group-title">Frying Oil</div><div class="result-row"><span class="label">Oil used</span><span class="value">' + data.frying_oil.litres + ' litres</span></div><div class="result-row"><span class="label">Oil cost</span><span class="value">' + mad(data.frying_oil.cost) + '</span></div></div>';
+        html += '<div class="result-group"><div class="result-group-title">Packaging</div>';
+        for (var pi = 0; pi < data.packaging.items.length; pi++) {
+            var pkg = data.packaging.items[pi];
+            html += '<div class="result-row"><span class="label">' + pkg.name + ' x' + pkg.count + '</span><span class="value">' + mad(pkg.cost) + '</span></div>';
+        }
+        html += '<div class="result-row"><span class="label">Total packaging</span><span class="value">' + mad(data.packaging.total_cost) + '</span></div></div>';
+        var pc = data.profit >= 0 ? 'profit' : 'loss';
+        html += '<div class="result-group"><div class="summary-row total"><span class="label">TOTAL COST</span><span class="value">' + mad(data.total_cost) + '</span></div>';
+        html += '<div class="summary-row"><span class="label">Cost per unit</span><span class="value">' + mad(data.cost_per_unit) + '</span></div>';
+        html += '<div class="summary-row"><span class="label">Selling price</span><span class="value">' + mad(data.selling_price) + '</span></div>';
+        html += '<div class="summary-row"><span class="label">Profit per unit</span><span class="value ' + pc + '">' + mad(data.profit_per_unit) + '</span></div>';
+        html += '<div class="summary-row"><span class="label">Margin</span><span class="value ' + pc + '">' + data.margin_percent + '%</span></div>';
+        html += '<div class="summary-row"><span class="label">Revenue (' + data.quantity + ' pcs)</span><span class="value">' + mad(data.revenue) + '</span></div>';
+        html += '<div class="summary-row"><span class="label">Total profit</span><span class="value ' + pc + '">' + mad(data.profit) + '</span></div></div>';
+        document.getElementById('cost-result-body').innerHTML = html;
+        document.getElementById('cost-result').classList.add('visible');
+    }
+</script>
+{% endblock %}

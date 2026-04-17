@@ -1,0 +1,257 @@
+{% extends "admin_base.html" %}
+{% block title %}Reviews{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Review Moderation</h2>
+    <div class="filters" id="review-filters">
+        <button class="filter-btn active" onclick="filterReviews(null, this)">All</button>
+        <button class="filter-btn" onclick="filterReviews('pending', this)">Pending</button>
+        <button class="filter-btn" onclick="filterReviews('approved', this)">Approved</button>
+        <button class="filter-btn" onclick="filterReviews('rejected', this)">Rejected</button>
+    </div>
+    <div id="admin-reviews-list"></div>
+</div>
+
+<!-- Review Requests Tracking -->
+<div class="card" style="margin-top:20px;">
+    <h2>Review Requests</h2>
+    <p style="color:#888;font-size:0.88em;margin-bottom:16px;">Track review request emails sent to customers after order completion.</p>
+    <div class="filters" id="rr-filters">
+        <button class="filter-btn active" onclick="filterRR('all', this)">All Sent</button>
+        <button class="filter-btn" onclick="filterRR('waiting', this)">Awaiting Review</button>
+        <button class="filter-btn" onclick="filterRR('reviewed', this)">Reviewed</button>
+        <button class="filter-btn" onclick="filterRR('unrequested', this)">Not Yet Sent</button>
+    </div>
+    <div id="rr-stats" style="display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap;"></div>
+    <div id="rr-list"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // ===== REVIEWS MODERATION =====
+    async function loadAdminReviews(status) {
+        var url = '/api/admin/reviews';
+        if (status) url += '?status=' + status;
+        var res = await fetch(url);
+        var reviews = await res.json();
+        renderAdminReviews(reviews);
+    }
+
+    function renderAdminReviews(reviews) {
+        var container = document.getElementById('admin-reviews-list');
+        if (reviews.length === 0) {
+            container.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">No reviews found</div>';
+            return;
+        }
+        var html = '';
+        for (var ri = 0; ri < reviews.length; ri++) {
+            var r = reviews[ri];
+            var sc = r.status === 'approved' ? 'status-confirmed' : r.status === 'rejected' ? 'status-cancelled' : 'status-pending';
+            var stars = '';
+            for (var si = 0; si < r.rating; si++) stars += '&#9733;';
+            for (var sj = r.rating; sj < 5; sj++) stars += '&#9734;';
+            var date = new Date(r.created_at).toLocaleString();
+            var nameHtml = r.is_known_customer && r.customer_email
+                ? '<a href="/admin/customers" style="color:#1e2a4a;font-weight:700;text-decoration:underline;cursor:pointer;">' + r.customer_name + '</a>'
+                : '<strong>' + r.customer_name + '</strong>';
+            var customerBadge = r.is_known_customer
+                ? '<span style="background:#e8f5e9;color:#2d7a4f;padding:2px 8px;border-radius:10px;font-size:0.72em;font-weight:600;margin-left:6px;">Verified Customer</span>'
+                : '';
+            var reviewCount = r.total_reviews > 1 ? '<span style="color:#999;font-size:0.75em;margin-left:6px;">' + r.total_reviews + ' reviews</span>' : '';
+            html += '<div class="order-card" style="margin-bottom:12px;">'
+                + '<div style="padding:16px 18px;">'
+                + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">'
+                + '<div>' + nameHtml + customerBadge + reviewCount
+                + '<span style="color:#999;font-size:0.82em;margin-left:8px;">' + (r.customer_email || '') + '</span></div>'
+                + '<span class="status-badge ' + sc + '">' + r.status + '</span></div>'
+                + '<div style="color:#b8860b;font-size:1.1em;margin-bottom:4px;">' + stars + '</div>'
+                + '<div style="font-size:0.85em;color:#999;margin-bottom:6px;">Product: <strong>' + r.product_key + '</strong> — ' + date + '</div>'
+                + '<div style="font-size:0.95em;color:#444;margin-bottom:12px;" dir="auto">' + r.review_text + '</div>';
+            if (r.admin_reply) {
+                html += '<div style="padding:10px 14px;background:#faf6f1;border-left:3px solid #b8860b;border-radius:6px;margin-bottom:12px;">'
+                    + '<div style="font-size:0.78em;font-weight:600;color:#b8860b;margin-bottom:3px;">Your Reply</div>'
+                    + '<div style="font-size:0.9em;color:#555;" dir="auto">' + r.admin_reply + '</div></div>';
+            }
+            html += '<div style="display:flex;gap:8px;flex-wrap:wrap;">';
+            if (r.status === 'pending') {
+                html += '<button class="status-btn confirm" onclick="reviewAction(' + r.id + ', \'approve\')">Approve</button>'
+                    + '<button class="status-btn cancel" onclick="reviewAction(' + r.id + ', \'reject\')">Reject</button>';
+            }
+            if (!r.admin_reply) {
+                html += '<button class="status-btn complete" onclick="showReplyBox(' + r.id + ')">Reply</button>';
+            }
+            html += '</div>'
+                + '<div id="reply-box-' + r.id + '" style="display:none;margin-top:10px;">'
+                + '<textarea id="reply-text-' + r.id + '" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-family:inherit;font-size:0.9em;min-height:60px;" placeholder="Write your reply..."></textarea>'
+                + '<button class="btn" style="margin-top:6px;padding:8px 16px;font-size:0.85em;" onclick="sendReply(' + r.id + ')">Send Reply</button>'
+                + '</div></div></div>';
+        }
+        container.innerHTML = html;
+    }
+
+    function filterReviews(status, btn) {
+        document.querySelectorAll('#review-filters .filter-btn').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        loadAdminReviews(status);
+    }
+
+    async function reviewAction(id, action) {
+        var status = action === 'approve' ? 'approved' : 'rejected';
+        await fetch('/api/admin/reviews/' + id + '/status', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: status })
+        });
+        loadAdminReviews();
+    }
+
+    function showReplyBox(id) {
+        document.getElementById('reply-box-' + id).style.display = 'block';
+    }
+
+    async function sendReply(id) {
+        var text = document.getElementById('reply-text-' + id).value.trim();
+        if (!text) return;
+        await fetch('/api/admin/reviews/' + id + '/reply', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ reply: text })
+        });
+        loadAdminReviews();
+    }
+
+    // ===== REVIEW REQUESTS =====
+    var rrCurrentFilter = 'all';
+
+    async function loadReviewRequests(filter) {
+        filter = filter || rrCurrentFilter;
+        rrCurrentFilter = filter;
+        var container = document.getElementById('rr-list');
+        var statsDiv = document.getElementById('rr-stats');
+
+        if (filter === 'unrequested') {
+            var res = await fetch('/api/admin/review-requests/unrequested');
+            var orders = await res.json();
+            renderUnrequested(orders);
+            statsDiv.innerHTML = '';
+            return;
+        }
+
+        var res2 = await fetch('/api/admin/review-requests');
+        var requests = await res2.json();
+
+        var total = requests.length;
+        var reviewed = requests.filter(function(r) { return r.status === 'reviewed'; }).length;
+        var waiting = requests.filter(function(r) { return r.status !== 'reviewed'; }).length;
+        var rate = total > 0 ? Math.round(reviewed / total * 100) : 0;
+        statsDiv.innerHTML = '<div style="background:#f5f0eb;padding:12px 18px;border-radius:8px;text-align:center;flex:1;min-width:100px;">'
+            + '<div style="font-size:1.4em;font-weight:700;color:#1e2a4a;">' + total + '</div>'
+            + '<div style="font-size:0.78em;color:#888;">Requests Sent</div></div>'
+            + '<div style="background:#e8f5e9;padding:12px 18px;border-radius:8px;text-align:center;flex:1;min-width:100px;">'
+            + '<div style="font-size:1.4em;font-weight:700;color:#2d7a4f;">' + reviewed + '</div>'
+            + '<div style="font-size:0.78em;color:#888;">Reviews Received</div></div>'
+            + '<div style="background:#fff3e0;padding:12px 18px;border-radius:8px;text-align:center;flex:1;min-width:100px;">'
+            + '<div style="font-size:1.4em;font-weight:700;color:#e65100;">' + waiting + '</div>'
+            + '<div style="font-size:0.78em;color:#888;">Awaiting</div></div>'
+            + '<div style="background:#e3f2fd;padding:12px 18px;border-radius:8px;text-align:center;flex:1;min-width:100px;">'
+            + '<div style="font-size:1.4em;font-weight:700;color:#1565c0;">' + rate + '%</div>'
+            + '<div style="font-size:0.78em;color:#888;">Response Rate</div></div>';
+
+        var filtered = requests;
+        if (filter === 'waiting') filtered = requests.filter(function(r) { return r.status !== 'reviewed'; });
+        else if (filter === 'reviewed') filtered = requests.filter(function(r) { return r.status === 'reviewed'; });
+
+        renderReviewRequests(filtered);
+    }
+
+    function renderReviewRequests(requests) {
+        var container = document.getElementById('rr-list');
+        if (requests.length === 0) {
+            container.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">No review requests found</div>';
+            return;
+        }
+        var html = '';
+        for (var ri = 0; ri < requests.length; ri++) {
+            var r = requests[ri];
+            var date = new Date(r.sent_at).toLocaleString();
+            var items = r.items.map(function(i) { return i.name; }).join(', ');
+            var sc = r.status === 'reviewed' ? 'status-confirmed' : 'status-pending';
+            var statusLabel = r.status === 'reviewed' ? 'Reviewed' : r.status === 'reminded' ? 'Reminded' : 'Sent';
+            var reminderBtn = r.status !== 'reviewed'
+                ? '<button class="status-btn confirm" style="font-size:0.78em;padding:4px 12px;" onclick="sendReminder(' + r.order_id + ')">Send Reminder</button>'
+                : '';
+            html += '<div class="order-card" style="margin-bottom:10px;">'
+                + '<div style="padding:14px 18px;">'
+                + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'
+                + '<div><strong style="color:#1e2a4a;" dir="auto">' + r.customer_name + '</strong>'
+                + '<span style="color:#999;font-size:0.82em;margin-left:8px;">' + r.customer_email + '</span></div>'
+                + '<span class="status-badge ' + sc + '">' + statusLabel + '</span></div>'
+                + '<div style="font-size:0.85em;color:#888;margin-bottom:4px;">Order #' + r.order_id + ' — ' + items + '</div>'
+                + '<div style="font-size:0.82em;color:#999;display:flex;gap:16px;align-items:center;flex-wrap:wrap;">'
+                + '<span>Sent: ' + date + '</span>'
+                + (r.reminder_sent_at ? '<span>Reminder: ' + new Date(r.reminder_sent_at).toLocaleString() + '</span>' : '')
+                + (r.reviews_received > 0 ? '<span style="color:#2d7a4f;font-weight:600;">' + r.reviews_received + ' review(s) received</span>' : '')
+                + reminderBtn + '</div></div></div>';
+        }
+        container.innerHTML = html;
+    }
+
+    function renderUnrequested(orders) {
+        var container = document.getElementById('rr-list');
+        if (orders.length === 0) {
+            container.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">All completed orders have review requests sent</div>';
+            return;
+        }
+        var html = '<p style="color:#666;font-size:0.88em;margin-bottom:12px;">' + orders.length + ' completed order(s) without review request:</p>';
+        for (var oi = 0; oi < orders.length; oi++) {
+            var o = orders[oi];
+            var date = new Date(o.created_at).toLocaleString();
+            var items = o.items.map(function(i) { return i.name; }).join(', ');
+            html += '<div class="order-card" style="margin-bottom:10px;">'
+                + '<div style="padding:14px 18px;">'
+                + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'
+                + '<div><strong style="color:#1e2a4a;" dir="auto">' + o.customer_name + '</strong>'
+                + '<span style="color:#999;font-size:0.82em;margin-left:8px;">' + o.customer_email + '</span></div>'
+                + '<button class="status-btn confirm" onclick="sendReviewRequest(' + o.id + ')">Send Request</button></div>'
+                + '<div style="font-size:0.85em;color:#888;">Order #' + o.id + ' — ' + items + ' — ' + date + '</div>'
+                + '</div></div>';
+        }
+        container.innerHTML = html;
+    }
+
+    function filterRR(filter, btn) {
+        document.querySelectorAll('#rr-filters .filter-btn').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        loadReviewRequests(filter);
+    }
+
+    async function sendReviewRequest(orderId) {
+        var res = await fetch('/api/admin/review-requests/send', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ order_id: orderId })
+        });
+        var data = await res.json();
+        if (data.success) {
+            loadReviewRequests(rrCurrentFilter);
+        } else {
+            alert(data.error || 'Failed to send');
+        }
+    }
+
+    async function sendReminder(orderId) {
+        if (!confirm('Send a review reminder email for this order?')) return;
+        var res = await fetch('/api/admin/review-requests/' + orderId + '/remind', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }
+        });
+        var data = await res.json();
+        if (data.success) {
+            loadReviewRequests(rrCurrentFilter);
+        } else {
+            alert(data.error || 'Failed to send');
+        }
+    }
+
+    loadAdminReviews();
+    loadReviewRequests();
+</script>
+{% endblock %}

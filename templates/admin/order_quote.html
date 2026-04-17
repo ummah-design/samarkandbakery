@@ -1,0 +1,82 @@
+{% extends "admin_base.html" %}
+{% block title %}Order Quote{% endblock %}
+
+{% block extra_css %}
+.order-items { margin-bottom: 15px; }
+.order-item-row { display: grid; grid-template-columns: 2fr 1fr auto; gap: 10px; align-items: end; margin-bottom: 10px; }
+.order-item-row .remove-btn { padding: 10px 14px; background: #c62828; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 1em; margin-bottom: 12px; }
+
+@media (max-width: 600px) {
+    .order-item-row { grid-template-columns: 1fr; }
+}
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Order Quote</h2>
+    <div id="order-items" class="order-items">
+        <div class="order-item-row">
+            <div>
+                <label>Product</label>
+                <select class="order-recipe">
+                    {% for key, name in recipes.items() %}
+                    <option value="{{ key }}">{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label>Qty</label>
+                <input type="number" class="order-qty" value="1" min="1">
+            </div>
+            <button class="remove-btn" onclick="removeOrderItem(this)">X</button>
+        </div>
+    </div>
+    <div style="display: flex; gap: 10px;">
+        <button class="btn-secondary btn" onclick="addOrderItem()">+ Add Item</button>
+        <button class="btn" onclick="calculateOrder()">Get Quote</button>
+    </div>
+</div>
+<div id="order-result" class="result-section">
+    <div class="result-header">Order Summary</div>
+    <div class="result-body" id="order-result-body"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var recipes = {{ recipes | tojson }};
+
+    function addOrderItem() {
+        var container = document.getElementById('order-items');
+        var options = '';
+        for (var key in recipes) options += '<option value="' + key + '">' + recipes[key] + '</option>';
+        var row = document.createElement('div');
+        row.className = 'order-item-row';
+        row.innerHTML = '<div><label>Product</label><select class="order-recipe">' + options + '</select></div><div><label>Qty</label><input type="number" class="order-qty" value="1" min="1"></div><button class="remove-btn" onclick="removeOrderItem(this)">X</button>';
+        container.appendChild(row);
+    }
+
+    function removeOrderItem(btn) { var c = document.getElementById('order-items'); if (c.children.length > 1) btn.parentElement.remove(); }
+
+    async function calculateOrder() {
+        var rows = document.querySelectorAll('.order-item-row');
+        var items = [];
+        rows.forEach(function(row) { items.push({ recipe_key: row.querySelector('.order-recipe').value, quantity: parseInt(row.querySelector('.order-qty').value) || 1 }); });
+        var res = await fetch('/api/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: items }) });
+        var data = await res.json();
+        if (data.error) { alert(data.error); return; }
+        var html = '<table class="order-table"><thead><tr><th>Product</th><th>Qty</th><th>Cost</th><th>Revenue</th><th>Profit</th></tr></thead><tbody>';
+        for (var i = 0; i < data.items.length; i++) {
+            var item = data.items[i];
+            var pc = item.profit >= 0 ? 'profit' : 'loss';
+            html += '<tr><td>' + item.name + '</td><td>' + item.quantity + '</td><td>' + mad(item.total_cost) + '</td><td>' + mad(item.revenue) + '</td><td class="' + pc + '">' + mad(item.profit) + '</td></tr>';
+        }
+        var tpc = data.total_profit >= 0 ? 'profit' : 'loss';
+        html += '<tr class="total-row"><td>TOTAL</td><td></td><td>' + mad(data.total_cost) + '</td><td>' + mad(data.total_revenue) + '</td><td class="' + tpc + '">' + mad(data.total_profit) + '</td></tr></tbody></table>';
+        html += '<div class="summary-row"><span class="label">Packaging total</span><span class="value">' + mad(data.total_packaging) + '</span></div>';
+        html += '<div class="summary-row"><span class="label">Profit margin</span><span class="value ' + tpc + '">' + data.margin_percent + '%</span></div>';
+        document.getElementById('order-result-body').innerHTML = html;
+        document.getElementById('order-result').classList.add('visible');
+    }
+</script>
+{% endblock %}

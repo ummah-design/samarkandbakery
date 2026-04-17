@@ -1,0 +1,433 @@
+{% extends "admin_base.html" %}
+{% block title %}Manual Order{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+{% endblock %}
+
+{% block extra_css %}
+.category-title { font-size: 1.3em; font-weight: 700; color: #1e2a4a; margin: 25px 0 12px; padding-bottom: 8px; border-bottom: 2px solid #b8860b; }
+.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 15px; }
+.product-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: transform 0.2s; }
+.product-card:hover { transform: translateY(-2px); }
+.product-card img { width: 100%; height: 160px; object-fit: cover; }
+.product-info { padding: 12px 15px; }
+.product-name { font-weight: 700; font-size: 1.05em; color: #1e2a4a; margin-bottom: 4px; }
+.product-desc { font-size: 0.82em; color: #777; line-height: 1.4; margin-bottom: 10px; }
+.product-footer { display: flex; justify-content: space-between; align-items: center; }
+.product-price { font-size: 1.15em; font-weight: 700; color: #b8860b; }
+.add-btn { background: #1e2a4a; color: white; border: none; border-radius: 6px; padding: 8px 16px; cursor: pointer; font-size: 0.9em; font-weight: 500; }
+.add-btn:hover { background: #2a3d6b; }
+.qty-controls { display: flex; align-items: center; gap: 8px; }
+.qty-btn { width: 30px; height: 30px; border-radius: 50%; border: none; font-size: 1.1em; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+.qty-btn.minus { background: #e8e0d8; color: #555; }
+.qty-btn.plus { background: #1e2a4a; color: white; }
+
+/* Cart bar */
+.cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #1e2a4a; color: white; padding: 14px 20px; display: none; justify-content: space-between; align-items: center; z-index: 100; box-shadow: 0 -4px 15px rgba(0,0,0,0.2); }
+.cart-bar.visible { display: flex; }
+.cart-info { font-size: 0.95em; }
+.cart-total { font-weight: 700; font-size: 1.1em; color: #b8860b; }
+.checkout-btn { background: #b8860b; color: white; border: none; border-radius: 8px; padding: 12px 28px; font-size: 1em; cursor: pointer; font-weight: 600; }
+.checkout-btn:hover { background: #d4a017; }
+
+/* Checkout modal */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 200; overflow-y: auto; }
+.modal-overlay.visible { display: flex; justify-content: center; align-items: flex-start; padding: 30px 15px; }
+.modal { background: white; border-radius: 12px; width: 100%; max-width: 550px; padding: 25px; margin-top: 20px; }
+.modal h2 { color: #1e2a4a; margin-bottom: 20px; font-size: 1.3em; }
+.cart-summary { margin-bottom: 20px; }
+.cart-item-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 0.9em; border-bottom: 1px solid #f0f0f0; }
+.cart-total-row { display: flex; justify-content: space-between; padding: 12px 0 0; font-weight: 700; font-size: 1.1em; border-top: 2px solid #1e2a4a; margin-top: 8px; }
+.cart-total-row .amount { color: #b8860b; }
+.delivery-toggle { display: flex; gap: 10px; margin-bottom: 15px; }
+.delivery-option { flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 8px; text-align: center; cursor: pointer; font-weight: 500; transition: all 0.2s; }
+.delivery-option.active { border-color: #1e2a4a; background: #1e2a4a; color: white; }
+.delivery-option small { display: block; font-size: 0.75em; opacity: 0.7; margin-top: 3px; font-weight: 400; }
+#checkout-map { width: 100%; height: 250px; border-radius: 8px; margin-bottom: 12px; display: none; }
+#checkout-map.visible { display: block; }
+.map-hint { font-size: 0.8em; color: #888; margin-bottom: 12px; }
+.btn-row { display: flex; gap: 10px; margin-top: 15px; }
+.btn-submit { flex: 1; padding: 14px; background: #b8860b; color: white; border: none; border-radius: 8px; font-size: 1.05em; cursor: pointer; font-weight: 600; }
+.btn-submit:hover { background: #d4a017; }
+.btn-submit:disabled { background: #ccc; cursor: not-allowed; }
+.btn-cancel { padding: 14px 20px; background: #eee; color: #555; border: none; border-radius: 8px; font-size: 1em; cursor: pointer; }
+.success-screen { text-align: center; padding: 40px 20px; }
+.success-screen .checkmark { font-size: 4em; color: #2e7d32; margin-bottom: 15px; }
+.success-screen h2 { color: #2e7d32; margin-bottom: 10px; }
+.success-screen p { color: #666; margin-bottom: 5px; }
+
+@media (max-width: 600px) {
+    .product-grid { grid-template-columns: 1fr; }
+}
+{% endblock %}
+
+{% block content %}
+{% for category in menu.categories %}
+<div class="category-title">{{ category.name }}</div>
+<div class="product-grid">
+    {% for item_key in category.product_keys %}
+    {% set item = menu.products[item_key] %}
+    <div class="product-card" id="card-{{ item_key }}">
+        <img src="{{ url_for('static', filename='products/' + item.image) }}" alt="{{ item.name }}">
+        <div class="product-info">
+            <div class="product-name">{{ item.name }}</div>
+            <div class="product-desc">{{ item.description }}</div>
+            <div class="product-footer">
+                <div class="product-price">{{ "%.2f"|format(item.price) }} MAD</div>
+                <div id="controls-{{ item_key }}">
+                    <button class="add-btn" onclick="addToCart('{{ item_key }}')">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endfor %}
+<div class="page-bottom-spacer"></div>
+{% endblock %}
+
+{% block after_container %}
+<!-- Cart bar -->
+<div class="cart-bar" id="cart-bar">
+    <div>
+        <div class="cart-info" id="cart-info">0 items</div>
+        <div class="cart-total" id="cart-total-display">0.00 MAD</div>
+    </div>
+    <button class="checkout-btn" onclick="openCheckout()">Checkout</button>
+</div>
+
+<!-- Checkout modal -->
+<div class="modal-overlay" id="checkout-modal">
+    <div class="modal">
+        <div id="checkout-form-section">
+            <h2>Manual Order</h2>
+            <p style="color:#6b6b80;font-size:0.85em;margin-bottom:12px;">Add an order on behalf of a customer (phone/email/walk-in).</p>
+            <div class="cart-summary" id="checkout-cart-summary"></div>
+            <label for="customer-email">Customer Email</label>
+            <div style="position:relative;">
+                <input type="email" id="customer-email" placeholder="customer@email.com" required autocomplete="off">
+                <div id="email-suggestions" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #ccc;border-top:none;border-radius:0 0 6px 6px;max-height:180px;overflow-y:auto;z-index:100;margin-top:-12px;"></div>
+            </div>
+            <div id="customer-lookup-msg" style="display:none;margin:-8px 0 12px;padding:8px 12px;border-radius:6px;font-size:0.85em;"></div>
+            <label for="customer-name">Customer Name</label>
+            <div style="position:relative;">
+                <input type="text" id="customer-name" placeholder="Full name" autocomplete="off">
+                <div id="name-suggestions" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #ccc;border-top:none;border-radius:0 0 6px 6px;max-height:180px;overflow-y:auto;z-index:100;margin-top:-12px;"></div>
+            </div>
+            <label for="customer-phone">Phone / WhatsApp</label>
+            <input type="tel" id="customer-phone" placeholder="+212 6XX XXX XXX">
+            <label for="preferred-date">Delivery Date</label>
+            <input type="date" id="preferred-date" style="padding:10px;border:1px solid #e8e0d8;border-radius:8px;font-size:1em;width:100%;box-sizing:border-box;margin-bottom:12px;">
+            <label>How would you like to receive your order?</label>
+            <div class="delivery-toggle">
+                <div class="delivery-option active" onclick="setDelivery('pickup')" id="opt-pickup">Pickup<small>Wilaya Centre</small></div>
+                <div class="delivery-option" onclick="setDelivery('delivery')" id="opt-delivery">Delivery<small>We come to you</small></div>
+            </div>
+            <div id="delivery-fields" style="display:none;">
+                <div class="map-hint" id="map-hint">Tap the map to set your delivery location</div>
+                <div id="checkout-map"></div>
+                <label for="delivery-address">Address details (optional)</label>
+                <input type="text" id="delivery-address" placeholder="Building, floor, apartment...">
+            </div>
+            <label for="order-notes">Notes (optional)</label>
+            <textarea id="order-notes" placeholder="Any special requests..."></textarea>
+            <div class="btn-row">
+                <button class="btn-cancel" onclick="closeCheckout()">Back</button>
+                <button class="btn-submit" id="submit-btn" onclick="submitOrder()">Place Order</button>
+            </div>
+        </div>
+        <div id="success-section" class="success-screen" style="display:none;">
+            <div class="checkmark">&#10003;</div>
+            <h2>Order Received!</h2>
+            <p id="success-message"></p>
+            <p id="success-order-id"></p>
+            <br>
+            <button class="btn-submit" onclick="resetOrder()">New Order</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var menuData = {{ menu | tojson }};
+
+    // ===== CUSTOMER EMAIL LOOKUP WITH AUTOCOMPLETE =====
+    var allCustomers = [];
+    var lookupTimeout = null;
+
+    async function loadCustomerEmails() {
+        try {
+            var res = await fetch('/api/admin/customers');
+            allCustomers = await res.json();
+        } catch(e) { allCustomers = []; }
+    }
+    loadCustomerEmails();
+
+    function selectCustomerEmail(email) {
+        document.getElementById('customer-email').value = email;
+        document.getElementById('email-suggestions').style.display = 'none';
+        doCustomerLookup(email);
+    }
+
+    async function doCustomerLookup(email) {
+        var msg = document.getElementById('customer-lookup-msg');
+        if (!email || !email.includes('@')) { msg.style.display = 'none'; return; }
+        try {
+            var res = await fetch('/api/admin/customer-lookup?email=' + encodeURIComponent(email));
+            var data = await res.json();
+            if (data.found) {
+                document.getElementById('customer-name').value = data.customer_name;
+                document.getElementById('customer-phone').value = data.customer_phone;
+                msg.style.display = 'block';
+                msg.style.background = '#e8f5e9';
+                msg.style.color = '#2d7a4f';
+                msg.innerHTML = '<strong>Returning customer</strong> — ' + data.order_count + ' previous order' + (data.order_count > 1 ? 's' : '') + ' (' + data.total_spent.toFixed(0) + ' MAD total)';
+            } else {
+                msg.style.display = 'block';
+                msg.style.background = '#fff3e0';
+                msg.style.color = '#b8860b';
+                msg.innerHTML = 'New customer';
+            }
+        } catch(e) { msg.style.display = 'none'; }
+    }
+
+    document.getElementById('customer-email').addEventListener('input', function() {
+        clearTimeout(lookupTimeout);
+        var val = this.value.trim().toLowerCase();
+        var sugBox = document.getElementById('email-suggestions');
+        var msg = document.getElementById('customer-lookup-msg');
+        msg.style.display = 'none';
+
+        if (val.length < 3) { sugBox.style.display = 'none'; return; }
+
+        var matches = allCustomers.filter(function(c) { return c.customer_email && c.customer_email.toLowerCase().includes(val); }).slice(0, 8);
+        if (matches.length > 0) {
+            sugBox.innerHTML = matches.map(function(c) {
+                return '<div onclick="selectCustomerEmail(\'' + c.customer_email.replace(/'/g, "\\'") + '\')" style="padding:8px 14px;cursor:pointer;border-bottom:1px solid #f0ebe3;font-size:0.9em;display:flex;justify-content:space-between;align-items:center;" onmouseover="this.style.background=\'#f5f0eb\'" onmouseout="this.style.background=\'#fff\'">'
+                    + '<span><strong>' + c.customer_email + '</strong><br><span style="color:#6b6b80;font-size:0.85em;">' + (c.customer_name || '') + '</span></span>'
+                    + '<span style="color:#b8860b;font-size:0.85em;font-weight:600;">' + c.total_orders + ' orders</span></div>';
+            }).join('');
+            sugBox.style.display = 'block';
+        } else {
+            sugBox.style.display = 'none';
+        }
+
+        lookupTimeout = setTimeout(function() { doCustomerLookup(val); }, 600);
+    });
+
+    // Name autocomplete
+    document.getElementById('customer-name').addEventListener('input', function() {
+        var val = this.value.trim().toLowerCase();
+        var sugBox = document.getElementById('name-suggestions');
+        if (val.length < 3) { sugBox.style.display = 'none'; return; }
+        var matches = allCustomers.filter(function(c) { return c.customer_name && c.customer_name.toLowerCase().includes(val); }).slice(0, 8);
+        if (matches.length > 0) {
+            sugBox.innerHTML = matches.map(function(c) {
+                return '<div onclick="selectCustomerByName(\'' + (c.customer_email || '').replace(/'/g, "\\'") + '\')" style="padding:8px 14px;cursor:pointer;border-bottom:1px solid #f0ebe3;font-size:0.9em;display:flex;justify-content:space-between;align-items:center;" onmouseover="this.style.background=\'#f5f0eb\'" onmouseout="this.style.background=\'#fff\'">'
+                    + '<span><strong>' + c.customer_name + '</strong><br><span style="color:#6b6b80;font-size:0.85em;">' + (c.customer_email || '') + '</span></span>'
+                    + '<span style="color:#b8860b;font-size:0.85em;font-weight:600;">' + c.total_orders + ' orders</span></div>';
+            }).join('');
+            sugBox.style.display = 'block';
+        } else {
+            sugBox.style.display = 'none';
+        }
+    });
+
+    function selectCustomerByName(email) {
+        document.getElementById('name-suggestions').style.display = 'none';
+        if (email) {
+            document.getElementById('customer-email').value = email;
+            doCustomerLookup(email);
+        }
+    }
+
+    // Hide suggestions on click outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('#customer-email') && !e.target.closest('#email-suggestions')) {
+            document.getElementById('email-suggestions').style.display = 'none';
+        }
+        if (!e.target.closest('#customer-name') && !e.target.closest('#name-suggestions')) {
+            document.getElementById('name-suggestions').style.display = 'none';
+        }
+    });
+
+    // ===== ORDERING (SHOP) =====
+    var cart = {};
+    var deliveryType = 'pickup';
+    var checkoutMap = null;
+    var marker = null;
+    var selectedLat = null;
+    var selectedLng = null;
+
+    function addToCart(key) {
+        if (!cart[key]) cart[key] = 0;
+        cart[key]++;
+        updateCartUI();
+        updateCardControls(key);
+    }
+
+    function removeFromCart(key) {
+        if (cart[key]) { cart[key]--; if (cart[key] <= 0) delete cart[key]; }
+        updateCartUI();
+        updateCardControls(key);
+    }
+
+    function updateCardControls(key) {
+        var container = document.getElementById('controls-' + key);
+        if (!container) return;
+        if (cart[key] && cart[key] > 0) {
+            container.innerHTML = '<div class="qty-controls">'
+                + '<button class="qty-btn minus" onclick="removeFromCart(\'' + key + '\')">-</button>'
+                + '<span class="qty-value">' + cart[key] + '</span>'
+                + '<button class="qty-btn plus" onclick="addToCart(\'' + key + '\')">+</button>'
+                + '</div>';
+        } else {
+            container.innerHTML = '<button class="add-btn" onclick="addToCart(\'' + key + '\')">Add</button>';
+        }
+    }
+
+    function updateCartUI() {
+        var bar = document.getElementById('cart-bar');
+        var totalItems = 0, totalPrice = 0;
+        for (var key in cart) {
+            totalItems += cart[key];
+            totalPrice += menuData.products[key].price * cart[key];
+        }
+        if (totalItems > 0) {
+            bar.classList.add('visible');
+            document.getElementById('cart-info').textContent = totalItems + ' item' + (totalItems > 1 ? 's' : '');
+            document.getElementById('cart-total-display').textContent = totalPrice.toFixed(2) + ' MAD';
+        } else {
+            bar.classList.remove('visible');
+        }
+    }
+
+    function openCheckout() {
+        document.getElementById('checkout-modal').classList.add('visible');
+        document.getElementById('checkout-form-section').style.display = 'block';
+        document.getElementById('success-section').style.display = 'none';
+        renderCheckoutSummary();
+    }
+
+    function renderCheckoutSummary() {
+        var html = '', total = 0;
+        for (var key in cart) {
+            var qty = cart[key];
+            var item = menuData.products[key];
+            var subtotal = item.price * qty;
+            total += subtotal;
+            html += '<div class="cart-item-row" style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0f0f0;">'
+                + '<div style="display:flex;align-items:center;gap:8px;">'
+                + '<button onclick="changeCheckoutQty(\'' + key + '\', -1)" style="width:24px;height:24px;border-radius:50%;border:1px solid #ddd;background:#f5f0eb;cursor:pointer;font-size:0.9em;display:flex;align-items:center;justify-content:center;">-</button>'
+                + '<span>' + item.name + ' x' + qty + '</span>'
+                + '<button onclick="changeCheckoutQty(\'' + key + '\', 1)" style="width:24px;height:24px;border-radius:50%;border:1px solid #ddd;background:#f5f0eb;cursor:pointer;font-size:0.9em;display:flex;align-items:center;justify-content:center;">+</button>'
+                + '</div>'
+                + '<div style="display:flex;align-items:center;gap:10px;">'
+                + '<span>' + subtotal.toFixed(2) + ' MAD</span>'
+                + '<button onclick="changeCheckoutQty(\'' + key + '\', 0)" style="background:none;border:none;cursor:pointer;color:#c62828;font-size:1.1em;padding:2px;" title="Remove">'
+                + '<svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>'
+                + '</button>'
+                + '</div></div>';
+        }
+        if (total > 0) {
+            html += '<div class="cart-total-row"><span>Total</span><span class="amount">' + total.toFixed(2) + ' MAD</span></div>';
+        } else {
+            html = '<p style="text-align:center;color:#999;padding:20px 0;">No items in cart. Close and add products first.</p>';
+        }
+        document.getElementById('checkout-cart-summary').innerHTML = html;
+        setTimeout(function() {
+            if (!checkoutMap) {
+                checkoutMap = L.map('checkout-map').setView([35.5785, -5.3684], 14);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(checkoutMap);
+                checkoutMap.on('click', function(e) {
+                    selectedLat = e.latlng.lat; selectedLng = e.latlng.lng;
+                    if (marker) checkoutMap.removeLayer(marker);
+                    marker = L.marker([selectedLat, selectedLng]).addTo(checkoutMap);
+                    document.getElementById('map-hint').textContent = 'Location selected!';
+                });
+            }
+            if (checkoutMap) checkoutMap.invalidateSize();
+        }, 300);
+    }
+
+    function closeCheckout() { document.getElementById('checkout-modal').classList.remove('visible'); }
+
+    function setDelivery(type) {
+        deliveryType = type;
+        document.getElementById('opt-pickup').classList.toggle('active', type === 'pickup');
+        document.getElementById('opt-delivery').classList.toggle('active', type === 'delivery');
+        var fields = document.getElementById('delivery-fields');
+        var mapEl = document.getElementById('checkout-map');
+        if (type === 'delivery') {
+            fields.style.display = 'block'; mapEl.classList.add('visible');
+            setTimeout(function() { if (checkoutMap) checkoutMap.invalidateSize(); }, 100);
+        } else {
+            fields.style.display = 'none'; mapEl.classList.remove('visible');
+        }
+    }
+
+    async function submitOrder() {
+        var name = document.getElementById('customer-name').value.trim();
+        var email = (document.getElementById('customer-email').value || '').trim().toLowerCase();
+        var phone = document.getElementById('customer-phone').value.trim();
+        var preferredDate = document.getElementById('preferred-date').value;
+        if (!email) { alert('Please enter customer email.'); return; }
+        if (!name || !phone) { alert('Please enter customer name and phone number.'); return; }
+        if (deliveryType === 'delivery' && !selectedLat) { alert('Please tap on the map to set your delivery location.'); return; }
+        var btn = document.getElementById('submit-btn');
+        btn.disabled = true; btn.textContent = 'Sending...';
+        var items = [];
+        for (var key in cart) {
+            items.push({ key: key, quantity: cart[key] });
+        }
+        try {
+            var res = await fetch('/api/orders/submit', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ customer_name: name, customer_email: email, customer_phone: phone, preferred_date: preferredDate || null, delivery_type: deliveryType, delivery_address: document.getElementById('delivery-address') ? document.getElementById('delivery-address').value : '', delivery_lat: selectedLat, delivery_lng: selectedLng, items: items, notes: document.getElementById('order-notes').value, payment_method: 'cod' })
+            });
+            var data = await res.json();
+            if (data.success) {
+                document.getElementById('checkout-form-section').style.display = 'none';
+                document.getElementById('success-section').style.display = 'block';
+                document.getElementById('success-message').textContent = data.message;
+                document.getElementById('success-order-id').textContent = 'Total: ' + data.total_price.toFixed(2) + ' MAD';
+            } else { alert(data.error || 'Error'); btn.disabled = false; btn.textContent = 'Place Order'; }
+        } catch(e) { alert('Connection error.'); btn.disabled = false; btn.textContent = 'Place Order'; }
+    }
+
+    function changeCheckoutQty(key, delta) {
+        if (delta === 0) {
+            delete cart[key];
+        } else {
+            if (!cart[key]) cart[key] = 0;
+            cart[key] += delta;
+            if (cart[key] <= 0) delete cart[key];
+        }
+        updateCardControls(key);
+        updateCartUI();
+        renderCheckoutSummary();
+    }
+
+    function resetOrder() {
+        cart = {}; selectedLat = null; selectedLng = null;
+        if (marker && checkoutMap) checkoutMap.removeLayer(marker); marker = null;
+        var allKeys = Object.keys(menuData.products);
+        for (var ki = 0; ki < allKeys.length; ki++) updateCardControls(allKeys[ki]);
+        updateCartUI(); closeCheckout();
+        document.getElementById('customer-name').value = '';
+        document.getElementById('customer-email').value = '';
+        document.getElementById('customer-lookup-msg').style.display = 'none';
+        document.getElementById('customer-phone').value = '';
+        document.getElementById('preferred-date').value = '';
+        document.getElementById('delivery-address').value = '';
+        document.getElementById('order-notes').value = '';
+        document.getElementById('submit-btn').disabled = false;
+        document.getElementById('submit-btn').textContent = 'Place Order';
+        document.getElementById('map-hint').textContent = 'Tap the map to set your delivery location';
+        setDelivery('pickup');
+    }
+</script>
+{% endblock %}

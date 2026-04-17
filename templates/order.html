@@ -1310,8 +1310,41 @@
             .product-grid { grid-template-columns: repeat(3, 1fr); }
         }
 
+        /* Scroll-reveal animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 600ms cubic-bezier(0.16,1,0.3,1), transform 600ms cubic-bezier(0.16,1,0.3,1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .product-card.reveal { transition-delay: calc(var(--reveal-i, 0) * 80ms); }
+
+        /* Add-to-cart pulse */
+        @keyframes cartPulse {
+            0% { transform: scale(1); }
+            40% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        .btn-add.pulse { animation: cartPulse 300ms ease; }
+
+        /* Smooth image load */
+        .product-img {
+            opacity: 0;
+            transition: opacity 400ms ease, transform 400ms ease;
+        }
+
+        .product-img.loaded { opacity: 1; }
+
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+            .reveal { opacity: 1; transform: none; }
+            .product-img { opacity: 1; }
         }
 
         /* Scroll smooth */
@@ -1454,12 +1487,12 @@
 
 <!-- ABOUT -->
 <section id="about">
-    <div class="section-heading">
+    <div class="section-heading reveal">
         <div class="section-label">{{ t.about_label }}</div>
         <h2 class="section-title">{{ t.about_title }}</h2>
         <p class="section-subtitle">{{ t.about_subtitle }}</p>
     </div>
-    <div class="about-grid">
+    <div class="about-grid reveal">
         <div class="about-image">
             <img src="{{ url_for('static', filename='front-page-image.jpeg') }}" alt="Samarkand Bakery — freshly baked goods">
         </div>
@@ -1511,7 +1544,7 @@
 
 <!-- MENU -->
 <section id="menu" class="section" style="padding-bottom: 60px;">
-    <div class="section-heading">
+    <div class="section-heading reveal">
         <div class="section-label">{{ t.menu_label }}</div>
         <h2 class="section-title">{{ t.menu_title }}</h2>
         <p class="section-subtitle">{{ t.menu_subtitle }}</p>
@@ -1527,7 +1560,7 @@
             {% for item_key in category.product_keys %}
             {% set item = menu.products[item_key] %}
             {% if not item.draft %}
-            <article class="product-card">
+            <article class="product-card reveal">
                 <a href="/product/{{ item_key }}" class="product-img-wrap" style="display:block; text-decoration:none;">
                     <img class="product-img" src="{{ url_for('static', filename='products/' + item.image) }}" alt="{{ item.name }}" loading="lazy">
                     <div class="product-img-overlay"></div>
@@ -1557,7 +1590,7 @@
 
 <!-- CUSTOMER REVIEWS -->
 <section id="reviews">
-    <div class="section-heading">
+    <div class="section-heading reveal">
         <div class="section-label">{{ t.reviews_label }}</div>
         <h2 class="section-title">{{ t.reviews_title }}</h2>
         <p class="section-subtitle">{{ t.reviews_subtitle }}</p>
@@ -1573,7 +1606,7 @@
 
 <!-- CONTACT -->
 <section id="contact" class="contact-section">
-    <div class="section-heading" style="padding-top:0;">
+    <div class="section-heading reveal" style="padding-top:0;">
         <div class="section-label">{{ t.contact_label }}</div>
         <h2 class="section-title">{{ t.contact_title }}</h2>
         <p class="section-subtitle">{{ t.contact_subtitle }}</p>
@@ -1920,6 +1953,9 @@ function addToCart(key) {
     cart[key]++;
     saveCart();
     refreshUI(key);
+    // Pulse the card
+    var card = document.getElementById('ctrl-' + key);
+    if (card) { var p = card.closest('.product-card'); if (p) { p.style.transform = 'scale(1.03)'; setTimeout(function(){ p.style.transform = ''; }, 200); } }
 }
 
 function removeFromCart(key) {
@@ -2477,6 +2513,38 @@ observer.observe(cartBarEl, { attributes: true, attributeFilter: ['class'] });
             setInterval(showNext, 25000);
         }, 8000);
     } catch(e) {}
+})();
+</script>
+
+<script>
+// Scroll-reveal observer
+(function() {
+    var reveals = document.querySelectorAll('.reveal');
+    // Set stagger index for product cards within each grid
+    document.querySelectorAll('.product-grid').forEach(function(grid) {
+        grid.querySelectorAll('.product-card.reveal').forEach(function(card, i) {
+            card.style.setProperty('--reveal-i', i);
+        });
+    });
+    if ('IntersectionObserver' in window) {
+        var obs = new IntersectionObserver(function(entries) {
+            entries.forEach(function(e) {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    obs.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        reveals.forEach(function(el) { obs.observe(el); });
+    } else {
+        reveals.forEach(function(el) { el.classList.add('visible'); });
+    }
+
+    // Smooth image load
+    document.querySelectorAll('.product-img').forEach(function(img) {
+        if (img.complete) { img.classList.add('loaded'); }
+        else { img.addEventListener('load', function() { this.classList.add('loaded'); }); }
+    });
 })();
 </script>
 

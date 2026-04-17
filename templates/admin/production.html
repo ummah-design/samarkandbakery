@@ -1,0 +1,384 @@
+{% extends "admin_base.html" %}
+{% block title %}Production{% endblock %}
+
+{% block extra_css %}
+@media print {
+    body * { visibility: hidden !important; }
+    #prep-print-area, #prep-print-area * { visibility: visible !important; }
+    #prep-print-area {
+        position: fixed !important; left: 0; top: 0; width: 210mm;
+        display: grid !important; grid-template-columns: repeat(3, 1fr); gap: 3mm;
+        padding: 5mm; box-sizing: border-box; align-items: start; align-content: start;
+    }
+    .prep-card-print {
+        border: 1px solid #999 !important; border-radius: 4px !important;
+        padding: 3mm !important; font-size: 9pt !important; page-break-inside: avoid;
+        height: auto !important;
+    }
+    .prep-card-print h4 { font-size: 10pt !important; margin: 0 0 2mm !important; }
+    .prep-card-print .prep-item { font-size: 8.5pt !important; padding: 1mm 0 !important; }
+}
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2 style="margin-bottom:16px;">Production Planning</h2>
+    <p style="color:#6b6b80;margin-bottom:16px;">Select a delivery date to see all orders and the total ingredients needed.</p>
+    <div id="prod-date-buttons" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;"></div>
+    <details style="margin-bottom:8px;">
+        <summary style="cursor:pointer;font-weight:600;color:#1e2a4a;font-size:0.9em;">Manage Blocked Dates</summary>
+        <div style="margin-top:10px;padding:12px;background:#f5f0eb;border-radius:8px;">
+            <p style="font-size:0.85em;color:#6b6b80;margin-bottom:8px;">Block dates to prevent customers from ordering delivery on those days.</p>
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">
+                <input type="date" id="block-date-input" style="padding:8px;border:1px solid #e8e0d8;border-radius:6px;font-size:0.9em;">
+                <button onclick="blockDate()" style="padding:8px 16px;background:#c0392b;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:0.9em;">Block Date</button>
+            </div>
+            <div id="blocked-dates-list"></div>
+        </div>
+    </details>
+</div>
+<div id="prod-results" style="display:none;">
+    <div class="card" style="margin-top:12px;">
+        <h3 style="margin-bottom:12px;" id="prod-date-title"></h3>
+        <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:16px;">
+            <div style="background:#f5f0eb;padding:12px 20px;border-radius:8px;text-align:center;">
+                <div style="font-size:1.8em;font-weight:700;color:#1e2a4a;" id="prod-order-count">0</div>
+                <div style="font-size:0.85em;color:#6b6b80;">Orders</div>
+            </div>
+            <div style="background:#f5f0eb;padding:12px 20px;border-radius:8px;text-align:center;">
+                <div style="font-size:1.8em;font-weight:700;color:#b8860b;" id="prod-total-items">0</div>
+                <div style="font-size:0.85em;color:#6b6b80;">Items</div>
+            </div>
+            <div style="background:#f5f0eb;padding:12px 20px;border-radius:8px;text-align:center;">
+                <div style="font-size:1.8em;font-weight:700;color:#2d7a4f;" id="prod-total-revenue">0</div>
+                <div style="font-size:0.85em;color:#6b6b80;">Revenue (MAD)</div>
+            </div>
+        </div>
+        <h4 style="margin:16px 0 8px;">Orders</h4>
+        <div id="prod-orders-list"></div>
+    </div>
+    <div class="card" style="margin-top:12px;">
+        <h3 style="margin-bottom:4px;">Shopping List</h3>
+        <p style="color:#6b6b80;font-size:0.85em;margin-bottom:12px;">Total ingredients needed to fulfil all orders for this date.</p>
+        <table style="width:100%;border-collapse:collapse;" id="prod-ingredients-table">
+            <thead>
+                <tr style="border-bottom:2px solid #1e2a4a;">
+                    <th style="width:30px;padding:10px 0;"></th>
+                    <th style="text-align:left;padding:10px 0;color:#1e2a4a;cursor:pointer;" onclick="sortShoppingList('name')">Ingredient <span id="sort-ing-name"></span></th>
+                    <th style="text-align:right;padding:10px 0;color:#1e2a4a;cursor:pointer;" onclick="sortShoppingList('amount')">Amount <span id="sort-ing-amount"></span></th>
+                    <th style="text-align:right;padding:10px 0;color:#1e2a4a;cursor:pointer;" onclick="sortShoppingList('cost')">Est. Cost <span id="sort-ing-cost"></span></th>
+                </tr>
+            </thead>
+            <tbody id="prod-ingredients-body"></tbody>
+            <tfoot>
+                <tr style="border-top:2px solid #1e2a4a;">
+                    <td colspan="2" style="padding:12px 0;font-weight:700;color:#1e2a4a;">Total Ingredient Cost</td>
+                    <td></td>
+                    <td style="padding:12px 0;text-align:right;font-weight:700;color:#b8860b;" id="prod-total-cost">0.00 MAD</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="card" style="margin-top:12px;">
+        <h3 style="margin-bottom:4px;">Product Breakdown</h3>
+        <p style="color:#6b6b80;font-size:0.85em;margin-bottom:12px;">Quantity of each product to prepare.</p>
+        <table style="width:100%;border-collapse:collapse;" id="prod-products-table">
+            <thead>
+                <tr style="border-bottom:2px solid #1e2a4a;">
+                    <th style="text-align:left;padding:10px 0;color:#1e2a4a;">Product</th>
+                    <th style="text-align:right;padding:10px 0;color:#1e2a4a;">Quantity</th>
+                </tr>
+            </thead>
+            <tbody id="prod-products-body"></tbody>
+        </table>
+    </div>
+    <div class="card" style="margin-top:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <div>
+                <h3 style="margin-bottom:4px;">Kitchen Prep Cards</h3>
+                <p style="color:#6b6b80;font-size:0.85em;">Print-ready order cards for the kitchen.</p>
+            </div>
+            <button onclick="printPrepCards()" style="padding:10px 20px;background:#1e2a4a;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.9em;">Print Cards</button>
+        </div>
+        <div id="prep-cards-preview" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block after_container %}
+<div id="prep-print-area" style="display:none;"></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var prodDatesInit = false;
+    var currentShoppingList = [];
+    var shoppingSortCol = 'name';
+    var shoppingSortAsc = true;
+    var adminBlockedDates = [];
+    var checkedIngredients = {};
+    var currentProdOrders = [];
+    var currentProdDate = '';
+
+    async function loadBlockedDates() {
+        try {
+            var res = await fetch('/api/admin/blocked-dates');
+            adminBlockedDates = await res.json();
+            renderBlockedDates();
+        } catch(e) {}
+    }
+
+    function renderBlockedDates() {
+        var container = document.getElementById('blocked-dates-list');
+        if (!adminBlockedDates.length) {
+            container.innerHTML = '<p style="font-size:0.85em;color:#9a9aad;">No blocked dates.</p>';
+            return;
+        }
+        var html = '';
+        adminBlockedDates.forEach(function(d) {
+            var dt = new Date(d + 'T00:00:00');
+            var label = dt.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+            html += '<div style="display:inline-flex;align-items:center;gap:6px;background:#fff;padding:4px 10px;border-radius:16px;margin:2px 4px 2px 0;font-size:0.85em;border:1px solid #e8e0d8;">';
+            html += '<span style="color:#c0392b;font-weight:600;">' + label + '</span>';
+            html += '<button onclick="unblockDate(\'' + d + '\')" style="background:none;border:none;cursor:pointer;color:#999;font-size:1.1em;padding:0 2px;" title="Unblock">x</button>';
+            html += '</div>';
+        });
+        container.innerHTML = html;
+    }
+
+    async function blockDate() {
+        var input = document.getElementById('block-date-input');
+        var date = input.value;
+        if (!date) { alert('Please select a date.'); return; }
+        try {
+            var res = await fetch('/api/admin/blocked-dates', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ date: date, action: 'block' })
+            });
+            var data = await res.json();
+            if (data.success) {
+                input.value = '';
+                await loadBlockedDates();
+                prodDatesInit = false;
+                initProductionDates();
+            } else {
+                alert('Error: ' + (data.error || 'Failed to block date'));
+            }
+        } catch(e) {
+            alert('Error blocking date: ' + e.message);
+        }
+    }
+
+    async function unblockDate(date) {
+        await fetch('/api/admin/blocked-dates', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ date: date, action: 'unblock' })
+        });
+        await loadBlockedDates();
+        prodDatesInit = false;
+        initProductionDates();
+    }
+
+    function initProductionDates() {
+        if (prodDatesInit) return;
+        prodDatesInit = true;
+        loadBlockedDates();
+        var container = document.getElementById('prod-date-buttons');
+        var today = new Date();
+        var dates = [];
+        for (var i = 0; i < 30; i++) {
+            var d = new Date(today);
+            d.setDate(today.getDate() + i);
+            var day = d.getDay();
+            if (day === 0 || day === 6) {
+                dates.push(d);
+                if (dates.length >= 8) break;
+            }
+        }
+        var html = '';
+        dates.forEach(function(d) {
+            var dateStr = d.toISOString().split('T')[0];
+            var dayName = d.toLocaleDateString('en-GB', { weekday: 'short' });
+            var dateLabel = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+            html += '<button class="prod-date-btn" onclick="loadProduction(\'' + dateStr + '\', this)" style="padding:10px 16px;border-radius:8px;cursor:pointer;border:1px solid #e8e0d8;background:#fff;color:#1e2a4a;font-weight:600;font-size:1em;line-height:1.4;">' + dayName + '<br><span style="font-size:0.85em;font-weight:400;">' + dateLabel + '</span></button>';
+        });
+        container.innerHTML = html;
+    }
+
+    function toggleIngredient(key, cb) {
+        checkedIngredients[key] = cb.checked;
+        var row = cb.closest('tr');
+        if (cb.checked) {
+            row.style.background = '#f0f0f0';
+            row.querySelectorAll('td').forEach(function(td) { td.style.color = '#b0b0b0'; });
+            cb.parentElement.style.color = '';
+        } else {
+            row.style.background = '';
+            row.querySelectorAll('td').forEach(function(td) { td.style.color = ''; });
+        }
+    }
+
+    function renderShoppingList() {
+        var sorted = currentShoppingList.slice().sort(function(a, b) {
+            var va = a[shoppingSortCol], vb = b[shoppingSortCol];
+            if (typeof va === 'string') { va = va.toLowerCase(); vb = vb.toLowerCase(); }
+            if (va < vb) return shoppingSortAsc ? -1 : 1;
+            if (va > vb) return shoppingSortAsc ? 1 : -1;
+            return 0;
+        });
+        var html = '';
+        sorted.forEach(function(item) {
+            var checked = checkedIngredients[item.key] ? ' checked' : '';
+            var rowStyle = checked ? 'border-bottom:1px solid #f0ebe3;background:#f0f0f0;' : 'border-bottom:1px solid #f0ebe3;';
+            var textStyle = checked ? 'color:#b0b0b0;' : '';
+            html += '<tr style="' + rowStyle + '">';
+            html += '<td style="padding:8px 4px;"><input type="checkbox" onchange="toggleIngredient(\'' + item.key + '\', this)" style="width:18px;height:18px;cursor:pointer;accent-color:#2d7a4f;"' + checked + '></td>';
+            html += '<td style="padding:8px 0;' + textStyle + '">' + item.name + '</td>';
+            html += '<td style="padding:8px 0;text-align:right;font-weight:600;' + textStyle + '">' + item.amount.toFixed(3) + ' ' + item.unit + '</td>';
+            html += '<td style="padding:8px 0;text-align:right;font-weight:600;' + (checked ? 'color:#b0b0b0;' : 'color:#b8860b;') + '">' + item.cost.toFixed(2) + ' MAD</td>';
+            html += '</tr>';
+        });
+        document.getElementById('prod-ingredients-body').innerHTML = html || '<tr><td colspan="4" style="padding:8px 0;color:#9a9aad;">No ingredients needed.</td></tr>';
+        ['name', 'amount', 'cost'].forEach(function(c) {
+            var el = document.getElementById('sort-ing-' + c);
+            if (el) el.textContent = shoppingSortCol === c ? (shoppingSortAsc ? '\u25B2' : '\u25BC') : '';
+        });
+    }
+
+    function sortShoppingList(col) {
+        if (shoppingSortCol === col) { shoppingSortAsc = !shoppingSortAsc; }
+        else { shoppingSortCol = col; shoppingSortAsc = true; }
+        renderShoppingList();
+    }
+
+    async function loadProduction(date, btn) {
+        document.querySelectorAll('#prod-date-buttons .prod-date-btn').forEach(function(b) {
+            b.style.background = '#fff'; b.style.color = '#1e2a4a';
+        });
+        if (btn) { btn.style.background = '#1e2a4a'; btn.style.color = '#fff'; }
+
+        var res = await fetch('/api/admin/production/' + date);
+        var data = await res.json();
+        var results = document.getElementById('prod-results');
+        results.style.display = 'block';
+
+        var d = new Date(date + 'T00:00:00');
+        document.getElementById('prod-date-title').textContent = d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+        var orders = data.orders || [];
+        var totalItems = 0;
+        var totalRevenue = 0;
+        orders.forEach(function(o) {
+            o.items.forEach(function(i) { totalItems += i.quantity; });
+            totalRevenue += o.total_price || 0;
+        });
+        document.getElementById('prod-order-count').textContent = orders.length;
+        document.getElementById('prod-total-items').textContent = totalItems;
+        document.getElementById('prod-total-revenue').textContent = totalRevenue.toFixed(0);
+
+        var ordersHtml = '';
+        if (orders.length === 0) {
+            ordersHtml = '<p style="color:#9a9aad;font-style:italic;">No orders for this date.</p>';
+        } else {
+            ordersHtml = '<table style="width:100%;border-collapse:collapse;font-size:0.9em;">';
+            ordersHtml += '<tr style="border-bottom:2px solid #1e2a4a;"><th style="text-align:left;padding:8px 0;">Order</th><th style="text-align:left;padding:8px 0;">Customer</th><th style="text-align:left;padding:8px 0;">Items</th><th style="text-align:right;padding:8px 0;">Total</th><th style="text-align:center;padding:8px 0;">Status</th></tr>';
+            orders.forEach(function(o) {
+                var itemsSummary = o.items.map(function(i) { return i.name + ' x' + i.quantity; }).join(', ');
+                var sc = 'status-' + o.status;
+                ordersHtml += '<tr style="border-bottom:1px solid #f0ebe3;">';
+                ordersHtml += '<td style="padding:8px 0;font-weight:600;">#' + o.id + '</td>';
+                ordersHtml += '<td style="padding:8px 0;" dir="auto">' + o.customer_name + '</td>';
+                ordersHtml += '<td style="padding:8px 0;color:#666;font-size:0.9em;">' + itemsSummary + '</td>';
+                ordersHtml += '<td style="padding:8px 0;text-align:right;font-weight:600;color:#b8860b;">' + (o.total_price || 0).toFixed(2) + ' MAD</td>';
+                ordersHtml += '<td style="padding:8px 0;text-align:center;"><span class="status-badge ' + sc + '">' + o.status + '</span></td>';
+                ordersHtml += '</tr>';
+            });
+            ordersHtml += '</table>';
+        }
+        document.getElementById('prod-orders-list').innerHTML = ordersHtml;
+
+        var products = data.product_totals || {};
+        var prodHtml = '';
+        for (var key in products) {
+            var qty = products[key];
+            var name = key.replace(/_/g, ' ').replace(/\b\w/g, function(c) { return c.toUpperCase(); });
+            prodHtml += '<tr style="border-bottom:1px solid #f0ebe3;">';
+            prodHtml += '<td style="padding:8px 0;">' + name + '</td>';
+            prodHtml += '<td style="padding:8px 0;text-align:right;font-weight:600;">' + qty + '</td>';
+            prodHtml += '</tr>';
+        }
+        document.getElementById('prod-products-body').innerHTML = prodHtml || '<tr><td colspan="2" style="padding:8px 0;color:#9a9aad;">No products.</td></tr>';
+
+        currentShoppingList = data.shopping_list || [];
+        shoppingSortCol = 'name'; shoppingSortAsc = true;
+        renderShoppingList();
+        document.getElementById('prod-total-cost').textContent = (data.total_ingredient_cost || 0).toFixed(2) + ' MAD';
+
+        currentProdOrders = orders;
+        currentProdDate = date;
+        renderPrepCards(orders, date);
+    }
+
+    function renderPrepCards(orders, date) {
+        var d = new Date(date + 'T00:00:00');
+        var dateLabel = d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+        var container = document.getElementById('prep-cards-preview');
+        if (!orders.length) { container.innerHTML = '<p style="color:#9a9aad;grid-column:1/-1;">No orders for this date.</p>'; return; }
+        var html = '';
+        orders.forEach(function(o) {
+            html += '<div style="border:1.5px solid #e8e0d8;border-radius:8px;padding:12px;background:#fff;">';
+            html += '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;border-bottom:1.5px solid #1e2a4a;padding-bottom:6px;">';
+            html += '<div><strong style="font-size:1em;color:#1e2a4a;" dir="auto">' + o.customer_name + '</strong>';
+            html += '<div style="font-size:0.75em;color:#6b6b80;">' + dateLabel + '</div></div>';
+            html += '<span style="font-size:0.75em;background:#f5f0eb;padding:2px 8px;border-radius:10px;font-weight:600;color:#1e2a4a;">#' + o.id + '</span>';
+            html += '</div>';
+            o.items.forEach(function(item) {
+                html += '<div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px dashed #f0ebe3;">';
+                html += '<input type="checkbox" style="width:16px;height:16px;cursor:pointer;accent-color:#2d7a4f;flex-shrink:0;" onchange="this.closest(\'div\').style.opacity=this.checked?\'0.4\':\'1\'">';
+                html += '<span style="flex:1;font-size:0.88em;">' + item.name + '</span>';
+                html += '<span style="font-weight:700;font-size:0.88em;color:#1e2a4a;">x' + item.quantity + '</span>';
+                html += '</div>';
+            });
+            if (o.delivery_type === 'delivery') {
+                html += '<div style="margin-top:6px;font-size:0.75em;color:#b8860b;font-weight:600;">DELIVERY</div>';
+            }
+            if (o.notes) {
+                html += '<div style="margin-top:4px;font-size:0.75em;color:#6b6b80;font-style:italic;" dir="auto">' + o.notes + '</div>';
+            }
+            html += '</div>';
+        });
+        container.innerHTML = html;
+    }
+
+    function printPrepCards() {
+        if (!currentProdOrders.length) { alert('No orders to print.'); return; }
+        var d = new Date(currentProdDate + 'T00:00:00');
+        var dateLabel = d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+        var html = '';
+        currentProdOrders.forEach(function(o) {
+            html += '<div class="prep-card-print" style="border:1.5px solid #999;border-radius:4px;padding:8px;">';
+            html += '<h4 style="margin:0 0 4px;font-size:11pt;border-bottom:1.5px solid #333;padding-bottom:3px;">';
+            html += '<span dir="auto">' + o.customer_name + '</span> <span style="float:right;font-size:9pt;color:#666;">#' + o.id + '</span></h4>';
+            html += '<div style="font-size:8pt;color:#666;margin-bottom:4px;">' + dateLabel + (o.delivery_type === 'delivery' ? ' | DELIVERY' : ' | PICKUP') + '</div>';
+            o.items.forEach(function(item) {
+                html += '<div class="prep-item" style="display:flex;align-items:center;gap:4px;padding:2px 0;border-bottom:1px dashed #ccc;font-size:9pt;">';
+                html += '<span style="display:inline-block;width:12px;height:12px;border:1.5px solid #666;border-radius:2px;flex-shrink:0;"></span>';
+                html += '<span style="flex:1;">' + item.name + '</span>';
+                html += '<strong>x' + item.quantity + '</strong>';
+                html += '</div>';
+            });
+            if (o.notes) {
+                html += '<div style="margin-top:3px;font-size:8pt;color:#666;font-style:italic;" dir="auto">Note: ' + o.notes + '</div>';
+            }
+            html += '</div>';
+        });
+        var printArea = document.getElementById('prep-print-area');
+        printArea.innerHTML = html;
+        printArea.style.display = 'grid';
+        window.print();
+        setTimeout(function() { printArea.style.display = 'none'; }, 500);
+    }
+
+    initProductionDates();
+</script>
+{% endblock %}

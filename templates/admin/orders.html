@@ -1,0 +1,152 @@
+{% extends "admin_base.html" %}
+{% block title %}Orders Admin{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+{% endblock %}
+
+{% block extra_css %}
+.stats-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 25px; }
+.stat-card { background: white; border-radius: 10px; padding: 15px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+.stat-card .number { font-size: 1.5em; font-weight: 700; color: #1e2a4a; }
+.stat-card .label { font-size: 0.8em; color: #888; margin-top: 3px; }
+{% endblock %}
+
+{% block content %}
+<div class="stats-bar">
+    <div class="stat-card"><div class="number" id="stat-total">0</div><div class="label">Total Orders</div></div>
+    <div class="stat-card"><div class="number" id="stat-pending">0</div><div class="label">Pending</div></div>
+    <div class="stat-card"><div class="number" id="stat-revenue">0</div><div class="label">Revenue (MAD)</div></div>
+    <div class="stat-card"><div class="number" id="stat-profit">0</div><div class="label">Profit (MAD)</div></div>
+</div>
+<div class="filters">
+    <button class="filter-btn active" onclick="filterOrders(null, this)">All</button>
+    <button class="filter-btn" onclick="filterOrders('pending', this)">Pending</button>
+    <button class="filter-btn" onclick="filterOrders('confirmed', this)">Confirmed</button>
+    <button class="filter-btn" onclick="filterOrders('completed', this)">Completed</button>
+    <button class="filter-btn" onclick="filterOrders('cancelled', this)">Cancelled</button>
+</div>
+<div id="orders-list"></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var allOrders = [];
+    var detailMaps = {};
+
+    async function loadAdminOrders(status) {
+        var url = '/api/admin/orders';
+        if (status) url += '?status=' + status;
+        var res = await fetch(url);
+        allOrders = await res.json();
+        renderAdminOrders(allOrders);
+        updateAdminStats(allOrders);
+    }
+
+    function updateAdminStats(orders) {
+        document.getElementById('stat-total').textContent = orders.length;
+        document.getElementById('stat-pending').textContent = orders.filter(function(o) { return o.status === 'pending'; }).length;
+        document.getElementById('stat-revenue').textContent = orders.filter(function(o) { return o.status !== 'cancelled'; }).reduce(function(s, o) { return s + (o.total_price || 0); }, 0).toFixed(0);
+        document.getElementById('stat-profit').textContent = orders.filter(function(o) { return o.status !== 'cancelled'; }).reduce(function(s, o) { return s + (o.total_profit || 0); }, 0).toFixed(0);
+    }
+
+    function renderAdminOrders(orders) {
+        var container = document.getElementById('orders-list');
+        if (orders.length === 0) { container.innerHTML = '<div class="empty-state"><h3>No orders yet</h3><p>Orders will appear here when customers place them.</p></div>'; return; }
+        var html = '';
+        for (var idx = 0; idx < orders.length; idx++) {
+            var order = orders[idx];
+            var sc = 'status-' + order.status;
+            var pc = (order.total_profit || 0) >= 0 ? 'profit' : 'loss';
+            var time = new Date(order.created_at).toLocaleString();
+            html += '<div class="order-card">'
+                + '<div class="order-header" onclick="toggleOrder(' + order.id + ')">'
+                + '<span class="order-id">#' + order.id + '</span><span class="order-customer" dir="auto">' + order.customer_name + '</span>'
+                + '<span class="order-time">' + time + '</span><span class="order-amount">' + (order.total_price||0).toFixed(2) + ' MAD</span>'
+                + (order.payment_method==='paypal'?'<span style="font-size:0.7em;padding:2px 8px;border-radius:10px;background:#0070ba;color:#fff;font-weight:600;">PayPal</span>':'<span style="font-size:0.7em;padding:2px 8px;border-radius:10px;background:#e8e0d8;color:#666;font-weight:600;">COD</span>')
+                + (order.payment_status==='paid'?'<span style="font-size:0.7em;padding:2px 8px;border-radius:10px;background:#2d7a4f;color:#fff;font-weight:600;">Paid</span>':'<span style="font-size:0.7em;padding:2px 8px;border-radius:10px;background:#d4a017;color:#fff;font-weight:600;">Unpaid</span>')
+                + '<span class="status-badge ' + sc + '">' + order.status + '</span>'
+                + '</div>'
+                + '<div class="order-details" id="details-' + order.id + '">'
+                + '<div class="detail-section"><h4>Customer</h4>'
+                + '<div class="detail-row"><span class="label">Name:</span><span class="value" dir="auto">' + order.customer_name + '</span></div>'
+                + '<div class="detail-row"><span class="label">Email:</span><span class="value">' + (order.customer_email || '-') + '</span></div>'
+                + '<div class="detail-row"><span class="label">Phone:</span><span class="value">' + order.customer_phone + '</span></div>'
+                + '<div class="detail-row"><span class="label">Type:</span><span class="value">' + (order.delivery_type==='delivery'?'Delivery':'Pickup (Wilaya Centre)') + '</span></div>'
+                + (order.preferred_date?'<div class="detail-row"><span class="label">Delivery Date:</span><span class="value" style="font-weight:700;color:#b8860b;">' + order.preferred_date + '</span></div>':'')
+                + (order.promo_code?'<div class="detail-row"><span class="label">Promo Code:</span><span class="value" style="font-weight:600;color:#2d7a4f;">' + order.promo_code + ' (-' + (order.discount_amount||0).toFixed(2) + ' MAD)</span></div>':'')
+                + (order.delivery_address?'<div class="detail-row"><span class="label">Address:</span><span class="value" dir="auto">' + order.delivery_address + '</span></div>':'')
+                + (order.notes?'<div class="detail-row"><span class="label">Notes:</span><span class="value" dir="auto">' + order.notes + '</span></div>':'')
+                + '<div class="detail-row"><span class="label">Payment:</span><span class="value">' + (order.payment_method==='paypal'?'PayPal':'Cash on Delivery') + ' — <strong style="color:' + (order.payment_status==='paid'?'#2d7a4f':'#b8860b') + '">' + (order.payment_status||'unpaid').toUpperCase() + '</strong></span></div>'
+                + (order.paypal_order_id?'<div class="detail-row"><span class="label">PayPal ID:</span><span class="value" style="font-family:monospace;font-size:0.85em;">' + order.paypal_order_id + '</span></div>':'')
+                + '</div>';
+
+            if (order.delivery_lat) {
+                html += '<div class="detail-section"><h4>Delivery Location</h4><div id="map-' + order.id + '" style="width:100%;height:200px;border-radius:8px;"></div></div>';
+            }
+
+            html += '<div class="detail-section"><h4>Items Ordered</h4>'
+                + '<table style="width:100%;border-collapse:collapse;font-size:0.9em;">';
+            for (var ii = 0; ii < order.items.length; ii++) {
+                var i = order.items[ii];
+                html += '<tr style="border-bottom:1px solid #f0ebe3;">'
+                    + '<td style="padding:8px 0;color:#444;">' + i.name + '</td>'
+                    + '<td style="padding:8px 12px;text-align:center;color:#888;">x' + i.quantity + '</td>'
+                    + '<td style="padding:8px 0;text-align:right;font-weight:600;color:#1e2a4a;">' + (i.subtotal||0).toFixed(2) + ' MAD</td>'
+                    + '</tr>';
+            }
+            html += '</table></div>';
+
+            html += '<div class="detail-section"><h4>Financials</h4>'
+                + '<div class="detail-row"><span class="label">Received:</span><span class="value">' + (order.total_price||0).toFixed(2) + ' MAD</span></div>'
+                + '<div class="detail-row"><span class="label">Cost:</span><span class="value">' + (order.total_cost||0).toFixed(2) + ' MAD</span></div>'
+                + '<div class="detail-row"><span class="label">Profit:</span><span class="value ' + pc + '">' + (order.total_profit||0).toFixed(2) + ' MAD</span></div>'
+                + '</div>';
+
+            html += '<div class="status-actions">';
+            if (order.status==='pending') html += '<button class="status-btn confirm" onclick="changeStatus(' + order.id + ',\'confirmed\')">Confirm</button>';
+            if (order.status==='confirmed') html += '<button class="status-btn complete" onclick="changeStatus(' + order.id + ',\'completed\')">Complete</button>';
+            if (order.status!=='cancelled'&&order.status!=='completed') html += '<button class="status-btn cancel" onclick="changeStatus(' + order.id + ',\'cancelled\')">Cancel</button>';
+            if (order.payment_status!=='paid'&&order.status==='completed') html += '<button class="status-btn" style="background:#2d7a4f;color:#fff;" onclick="markPaid(' + order.id + ')">Mark Paid</button>';
+            html += '</div></div></div>';
+        }
+        container.innerHTML = html;
+    }
+
+    function toggleOrder(id) {
+        var details = document.getElementById('details-' + id);
+        details.classList.toggle('visible');
+        var order = allOrders.find(function(o) { return o.id === id; });
+        if (order && order.delivery_lat && details.classList.contains('visible') && !detailMaps[id]) {
+            setTimeout(function() {
+                var mapEl = document.getElementById('map-' + id);
+                if (mapEl) {
+                    var m = L.map(mapEl).setView([order.delivery_lat, order.delivery_lng], 16);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(m);
+                    L.marker([order.delivery_lat, order.delivery_lng]).addTo(m);
+                    detailMaps[id] = m;
+                }
+            }, 100);
+        }
+    }
+
+    async function changeStatus(id, status) {
+        await fetch('/api/admin/orders/' + id + '/status', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: status }) });
+        loadAdminOrders();
+    }
+
+    async function markPaid(id) {
+        await fetch('/api/admin/orders/' + id + '/payment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ payment_status: 'paid' }) });
+        loadAdminOrders();
+    }
+
+    function filterOrders(status, btn) {
+        document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        loadAdminOrders(status);
+    }
+
+    loadAdminOrders();
+</script>
+{% endblock %}

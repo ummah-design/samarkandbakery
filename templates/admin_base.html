@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Samarkand Bakery — {% block title %}Dashboard{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+    {% block head_extra %}{% endblock %}
+    <style>
+        :root {
+            --navy: #1e2a4a;
+            --navy-light: #2a3d6b;
+            --gold: #b8860b;
+            --gold-light: #d4a017;
+            --warm-bg: #f5f0eb;
+            --warm-bg-alt: #faf6f1;
+            --card-bg: #ffffff;
+            --text-primary: #2c2c2c;
+            --text-secondary: #6b6b80;
+            --text-muted: #9a9aad;
+            --border: #e8e0d8;
+            --border-light: #f0ebe3;
+            --success: #2d7a4f;
+            --success-bg: #e8f5e9;
+            --warning: #b8860b;
+            --warning-bg: #fff3e0;
+            --danger: #c62828;
+            --danger-bg: #fde8e8;
+            --info: #0c5460;
+            --info-bg: #d1ecf1;
+            --radius: 12px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+            --transition-fast: 150ms ease;
+            --transition-normal: 200ms ease;
+            --sidebar-width: 220px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+            background: var(--warm-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', Georgia, serif;
+            line-height: 1.3;
+        }
+
+        /* ---------- LAYOUT ---------- */
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ---------- SIDEBAR ---------- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--navy);
+            color: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 20px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            text-align: center;
+        }
+        .sidebar-header img {
+            height: 48px;
+            width: auto;
+            margin-bottom: 8px;
+        }
+        .sidebar-header h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 0.95em;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            color: white;
+            line-height: 1.3;
+        }
+        .sidebar-header span {
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 0.72em;
+            opacity: 0.45;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 12px 8px;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            color: rgba(255,255,255,0.55);
+            text-decoration: none;
+            font-size: 0.88em;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all var(--transition-normal);
+            margin-bottom: 2px;
+            font-family: 'Source Sans 3', sans-serif;
+        }
+        .sidebar-nav a svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            opacity: 0.6;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.9);
+        }
+        .sidebar-nav a:hover svg { opacity: 0.9; }
+        .sidebar-nav a.active {
+            background: rgba(184,134,11,0.15);
+            color: var(--gold-light);
+            font-weight: 600;
+        }
+        .sidebar-nav a.active svg { opacity: 1; color: var(--gold-light); }
+        .sidebar-nav a.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 8px;
+            width: 3px;
+            background: var(--gold);
+            border-radius: 0 3px 3px 0;
+        }
+        .sidebar-nav a { position: relative; }
+
+        .sidebar-section-label {
+            font-size: 0.68em;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: rgba(255,255,255,0.25);
+            padding: 16px 14px 6px;
+            font-family: 'Source Sans 3', sans-serif;
+            font-weight: 600;
+        }
+
+        .sidebar-footer {
+            padding: 12px 8px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        .sidebar-footer a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            color: rgba(255,255,255,0.45);
+            text-decoration: none;
+            font-size: 0.84em;
+            border-radius: 8px;
+            transition: all var(--transition-fast);
+            font-family: 'Source Sans 3', sans-serif;
+        }
+        .sidebar-footer a:hover {
+            background: rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.8);
+        }
+        .sidebar-footer a svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+        /* ---------- MAIN CONTENT ---------- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+        }
+
+        .top-bar {
+            background: var(--card-bg);
+            padding: 14px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .top-bar-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: var(--navy);
+        }
+        .top-bar-actions { display: flex; align-items: center; gap: 12px; }
+        .header-btn-customer {
+            color: var(--gold);
+            text-decoration: none;
+            font-size: 0.88em;
+            font-weight: 600;
+            border: 1.5px solid var(--gold);
+            padding: 8px 18px;
+            border-radius: 8px;
+            transition: all var(--transition-fast);
+            font-family: 'Source Sans 3', sans-serif;
+        }
+        .header-btn-customer:hover {
+            background: var(--gold);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(184,134,11,0.35);
+        }
+
+        /* Mobile hamburger */
+        .mobile-toggle {
+            display: none;
+            background: var(--navy);
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .mobile-toggle svg { width: 24px; height: 24px; }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 99;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 25px; animation: fadeInUp 0.3s ease-out; }
+
+        /* ---------- CARDS ---------- */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            border-left: 3px solid var(--gold);
+            transition: box-shadow var(--transition-normal), transform var(--transition-normal);
+        }
+        .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .card h2 {
+            color: var(--navy);
+            margin-bottom: 18px;
+            font-size: 1.25em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* ---------- FORMS ---------- */
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+            font-size: 0.82em;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+        select,
+        input[type="number"],
+        input[type="text"],
+        input[type="tel"],
+        input[type="email"],
+        input[type="date"],
+        textarea {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 1em;
+            margin-bottom: 14px;
+            background: var(--warm-bg-alt);
+            font-family: 'Source Sans 3', sans-serif;
+            box-sizing: border-box;
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+        select:focus, input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(184,134,11,0.15);
+            background: #fff;
+        }
+        textarea { resize: vertical; min-height: 60px; }
+
+        /* ---------- BUTTONS ---------- */
+        .btn {
+            padding: 12px 28px;
+            min-height: 44px;
+            background: var(--navy);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Source Sans 3', sans-serif;
+            transition: background var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn:hover { background: var(--navy-light); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .btn:active { transform: translateY(1px); box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .btn-secondary { background: var(--gold); }
+        .btn-secondary:hover { background: var(--gold-light); }
+        .btn-danger { background: var(--danger); }
+        .btn-danger:hover { background: #d32f2f; }
+        .btn-loading { color: transparent !important; pointer-events: none; position: relative; }
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 18px; height: 18px;
+            border: 2.5px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: btn-spin 0.6s linear infinite;
+        }
+        @keyframes btn-spin { to { transform: rotate(360deg); } }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .profit { color: var(--success); }
+        .loss { color: var(--danger); }
+
+        /* ---------- RESULTS ---------- */
+        .result-section { margin-top: 20px; display: none; }
+        .result-section.visible { display: block; }
+        .result-header {
+            background: linear-gradient(135deg, var(--navy), var(--navy-light));
+            color: white;
+            padding: 16px 22px;
+            border-radius: var(--radius) var(--radius) 0 0;
+            font-size: 1.1em;
+            font-weight: 600;
+            font-family: 'Playfair Display', Georgia, serif;
+        }
+        .result-body {
+            background: var(--card-bg);
+            border: 1.5px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 var(--radius) var(--radius);
+            padding: 22px;
+        }
+        .result-row { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--border-light); }
+        .result-row:last-child { border-bottom: none; }
+        .result-row .label { color: var(--text-secondary); }
+        .result-row .value { font-weight: 600; color: var(--text-primary); }
+        .result-group { margin-bottom: 15px; }
+        .result-group-title { font-weight: 600; color: var(--navy); padding: 10px 0 5px; border-bottom: 2px solid var(--border); margin-bottom: 5px; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px; font-family: 'Source Sans 3', sans-serif; }
+        .summary-row { display: flex; justify-content: space-between; padding: 10px 0; font-size: 1.05em; }
+        .summary-row.total { border-top: 2px solid var(--navy); margin-top: 10px; padding-top: 15px; font-size: 1.15em; }
+        .summary-row .label { color: #444; font-weight: 500; }
+        .summary-row .value { font-weight: 700; }
+
+        /* ---------- TABLES ---------- */
+        .table-wrap { border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); margin-bottom: 15px; }
+        .recipes-table, .order-table { width: 100%; border-collapse: collapse; }
+        .recipes-table th, .order-table th {
+            background: var(--navy);
+            color: white;
+            padding: 12px 14px;
+            text-align: left;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            font-family: 'Source Sans 3', sans-serif;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        .order-table th:not(:first-child) { text-align: right; }
+        .recipes-table td, .order-table td { padding: 11px 14px; border-bottom: 1px solid var(--border-light); font-size: 0.95em; }
+        .order-table td:not(:first-child) { text-align: right; font-weight: 500; }
+        .recipes-table tbody tr:nth-child(even), .order-table tbody tr:nth-child(even) { background: var(--warm-bg-alt); }
+        .recipes-table tbody tr:hover, .order-table tbody tr:hover { background: #ede6dd; }
+        .recipes-table .price { font-weight: 600; color: var(--gold); }
+        .order-table tr.total-row { background: var(--warm-bg); font-weight: 700; }
+        .order-table tr.total-row td { border-top: 2px solid var(--navy); }
+
+        .prices-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .price-item { display: flex; justify-content: space-between; padding: 9px 14px; background: var(--warm-bg-alt); border-radius: 8px; transition: background var(--transition-fast); }
+        .price-item:hover { background: var(--border-light); }
+        .price-item .name { color: var(--text-secondary); }
+        .price-item .amount { font-weight: 600; color: var(--navy); }
+
+        /* ---------- STATUS BADGES ---------- */
+        .status-badge { padding: 5px 14px; border-radius: 20px; font-size: 0.76em; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; display: inline-block; }
+        .status-pending { background: var(--warning-bg); color: #856404; border: 1px solid rgba(184,134,11,0.25); }
+        .status-confirmed { background: var(--success-bg); color: var(--success); border: 1px solid rgba(45,122,79,0.2); }
+        .status-completed { background: var(--info-bg); color: var(--info); border: 1px solid rgba(12,84,96,0.2); }
+        .status-cancelled { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(198,40,40,0.2); }
+
+        /* ---------- FILTERS ---------- */
+        .filters { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .filter-btn { padding: 9px 20px; border: 1.5px solid var(--border); background: var(--card-bg); border-radius: 20px; cursor: pointer; font-size: 0.88em; font-weight: 500; font-family: 'Source Sans 3', sans-serif; transition: all var(--transition-fast); min-height: 40px; }
+        .filter-btn:hover { border-color: var(--navy); color: var(--navy); }
+        .filter-btn.active { background: var(--navy); color: white; border-color: var(--navy); }
+
+        /* ---------- STATUS ACTION BUTTONS ---------- */
+        .status-btn { padding: 7px 16px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85em; font-weight: 500; font-family: 'Source Sans 3', sans-serif; transition: all var(--transition-fast); min-height: 36px; }
+        .status-btn:active { transform: translateY(1px); }
+        .status-btn.confirm { background: var(--success-bg); color: var(--success); border: 1px solid rgba(45,122,79,0.2); }
+        .status-btn.confirm:hover { background: #c8e6c9; }
+        .status-btn.complete { background: var(--info-bg); color: var(--info); border: 1px solid rgba(12,84,96,0.2); }
+        .status-btn.complete:hover { background: #b8daff; }
+        .status-btn.cancel { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(198,40,40,0.2); }
+        .status-btn.cancel:hover { background: #f5c6cb; }
+
+        /* ---------- ORDER CARDS ---------- */
+        .order-card { background: var(--card-bg); border-radius: var(--radius); margin-bottom: 12px; box-shadow: var(--shadow-sm); overflow: hidden; transition: box-shadow var(--transition-normal); }
+        .order-card:hover { box-shadow: var(--shadow-md); }
+        .order-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; cursor: pointer; gap: 12px; flex-wrap: wrap; transition: background var(--transition-fast); }
+        .order-header:hover { background: var(--warm-bg-alt); }
+        .order-id { font-weight: 700; color: var(--navy); font-size: 1.05em; }
+        .order-customer { color: var(--text-secondary); font-size: 0.9em; }
+        .order-time { color: var(--text-muted); font-size: 0.82em; }
+        .order-amount { font-weight: 700; color: var(--gold); font-size: 1.05em; }
+        .order-details { display: none; padding: 0 20px 20px; border-top: 1px solid var(--border-light); }
+        .order-details.visible { display: block; }
+        .detail-section { margin-top: 14px; }
+        .detail-section h4 { font-size: 0.78em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; letter-spacing: 0.5px; font-weight: 700; padding-bottom: 6px; border-bottom: 2px solid var(--border-light); font-family: 'Source Sans 3', sans-serif; }
+        .detail-row { display: flex; align-items: baseline; padding: 7px 0; font-size: 0.9em; border-bottom: 1px solid var(--warm-bg); }
+        .detail-row:last-child { border-bottom: none; }
+        .detail-row .label { color: var(--text-muted); min-width: 140px; flex-shrink: 0; font-size: 0.85em; }
+        .detail-row .value { font-weight: 500; color: var(--text-primary); }
+        .status-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+        .page-bottom-spacer { height: 80px; }
+
+        /* ---------- STATS BAR ---------- */
+        .stats-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 25px; }
+        .stat-card { background: var(--card-bg); border-radius: var(--radius); padding: 16px; text-align: center; box-shadow: var(--shadow-sm); transition: transform var(--transition-fast), box-shadow var(--transition-fast); }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .stat-card .number { font-size: 1.6em; font-weight: 700; color: var(--navy); font-family: 'Source Sans 3', sans-serif; }
+        .stat-card .label { font-size: 0.8em; color: var(--text-muted); margin-top: 4px; }
+
+        /* ---------- ACCESSIBILITY ---------- */
+        *:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+        [role="button"], button, a, select, .filter-btn, .status-btn { cursor: pointer; }
+
+        /* ---------- ANIMATIONS ---------- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* ---------- RESPONSIVE ---------- */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .sidebar-overlay.open {
+                display: block;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .mobile-toggle {
+                display: block;
+            }
+            .top-bar {
+                padding: 12px 16px;
+            }
+            .container { padding: 16px; }
+            .form-row, .prices-grid { grid-template-columns: 1fr; }
+            .card { padding: 18px; }
+        }
+
+        {% block extra_css %}{% endblock %}
+    </style>
+</head>
+<body>
+
+<div class="admin-layout">
+
+    <!-- Sidebar overlay for mobile -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
+        <div class="sidebar-header">
+            <img src="{{ url_for('static', filename='logo.svg') }}" alt="Samarkand Bakery Logo">
+            <h1>SAMARKAND TURKIC BAKERY</h1>
+            <span>Admin Dashboard</span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="sidebar-section-label">Orders</div>
+            <a href="/admin/orders" class="{% if active_page == 'orders' %}active{% endif %}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15a2.25 2.25 0 012.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/></svg>
+                Orders
+            </a>
+            <a href="/admin/manual-order" class="{% if active_page == 'manual_order' %}active{% endif %}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
+                Manual Order
+            </a>
+
+            <div class="sidebar-section-label">Products</div>
+            <a href="/admin/product-cost" class="{% if active_page == 'product_cost' %}active{% endif %}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V13.5zm0 2.25h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V18zm2.498-6.75h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V13.5zm0 2.25h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V18zm2.504-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zm0 2.25h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V18zm2.498-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zM8.25 6h7.5v2.25h-7.5V6zM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 002.25 2.25h10.5a2.25 2.25 0 002.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0012 2.25z"/></svg>
+                Product Cost
+            </a>
+            <a href="/admin/order-quote" class="{% if active_page == 'order_quote' %}active{% endif %}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                Order Quote
+            </a>
+            <a href="/admin/products" class="{% if active_page == 'products' %}active{% endif %}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
+                All Products
+            </a>
+            <a href="/admin/ingredients" class="{% if active_page == 'ingredients' %}active{% endif %}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/></svg>
+                Ingredients
+            </a>
+
+            <div class="sidebar-section-label">Engagement</div>
+            <a href="/admin/reviews" class="{% if active_page == 'reviews' %}active{% endif %}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
+                Reviews
+            </a>
+            <a href="/admin/promo-codes" class="{% if active_page == 'promo_codes' %}active{% endif %}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z"/><path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z"/></svg>
+                Promo Codes
+            </a>
+            <a href="/admin/customers" class="{% if active_page == 'customers' %}active{% endif %}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
+                Customers
+            </a>
+
+            <div class="sidebar-section-label">Operations</div>
+            <a href="/admin/production" class="{% if active_page == 'production' %}active{% endif %}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                Production
+            </a>
+            <a href="/admin/backups" class="{% if active_page == 'backups' %}active{% endif %}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/></svg>
+                Backups
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="/" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+                View Customer Page
+            </a>
+            <a href="/admin/logout">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3-3h-9m9 0l-3-3m3 3l-3 3"/></svg>
+                Logout
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="top-bar">
+            <div style="display:flex;align-items:center;gap:12px;">
+                <button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Toggle navigation">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+                </button>
+                <span class="top-bar-title">{% block page_title %}Dashboard{% endblock %}</span>
+            </div>
+            <div class="top-bar-actions">
+                <a href="/" target="_blank" class="header-btn-customer">View Customer Page</a>
+            </div>
+        </div>
+
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+</div>
+
+{% block after_container %}{% endblock %}
+
+<script>
+    function mad(val) { return parseFloat(val).toFixed(2) + ' MAD'; }
+
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('open');
+        document.getElementById('sidebar-overlay').classList.toggle('open');
+    }
+</script>
+
+{% block scripts %}{% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,145 @@
+{% extends "admin_base.html" %}
+{% block title %}Promo Codes{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Create Promo Code</h2>
+    <div class="form-row">
+        <div>
+            <label>Code</label>
+            <input type="text" id="promo-code" placeholder="e.g. RAMADAN10" style="text-transform:uppercase;">
+        </div>
+        <div>
+            <label>Discount Type</label>
+            <select id="promo-type">
+                <option value="percentage">Percentage (%)</option>
+                <option value="fixed">Fixed Amount (MAD)</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-row">
+        <div>
+            <label>Discount Value</label>
+            <input type="number" id="promo-value" placeholder="e.g. 10" min="1">
+        </div>
+        <div>
+            <label>Min Order (MAD, 0 = no min)</label>
+            <input type="number" id="promo-min" value="0" min="0">
+        </div>
+    </div>
+    <div style="margin-bottom:15px;">
+        <label>Max Uses (0 = unlimited)</label>
+        <input type="number" id="promo-max" value="0" min="0" style="max-width:200px;">
+    </div>
+    <button class="btn" onclick="createPromo()">Create Promo Code</button>
+</div>
+<div class="card">
+    <h2>All Promo Codes</h2>
+    <table class="recipes-table" id="promos-table">
+        <thead><tr><th>Code</th><th>Discount</th><th>Min Order</th><th>Used</th><th>Max</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody></tbody>
+    </table>
+</div>
+<div class="card" id="promo-usage-card" style="display:none;">
+    <h2 id="promo-usage-title">Usage Details</h2>
+    <table class="order-table" id="promo-usage-table">
+        <thead><tr><th>Customer</th><th>Email</th><th>Order Total</th><th>Discount</th><th>Date</th></tr></thead>
+        <tbody></tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    async function loadPromos() {
+        var res = await fetch('/api/admin/promos');
+        var promos = await res.json();
+        var tbody = document.querySelector('#promos-table tbody');
+        tbody.innerHTML = '';
+        if (promos.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#999;padding:30px;">No promo codes yet</td></tr>';
+            return;
+        }
+        for (var pi = 0; pi < promos.length; pi++) {
+            var p = promos[pi];
+            var discount = p.discount_type === 'percentage' ? p.discount_value + '%' : mad(p.discount_value);
+            var statusClass = p.active ? 'status-confirmed' : 'status-cancelled';
+            var statusText = p.active ? 'Active' : 'Disabled';
+            var maxText = p.max_uses === 0 ? 'Unlimited' : p.max_uses;
+            tbody.innerHTML += '<tr>'
+                + '<td><a href="#" onclick="event.preventDefault();loadPromoUsage(\'' + p.code + '\')" style="color:#1e2a4a;font-weight:700;text-decoration:underline;cursor:pointer;">' + p.code + '</a></td>'
+                + '<td class="price">' + discount + '</td>'
+                + '<td>' + (p.min_order > 0 ? mad(p.min_order) : '-') + '</td>'
+                + '<td>' + (p.times_used > 0 ? '<a href="#" onclick="event.preventDefault();loadPromoUsage(\'' + p.code + '\')" style="color:#1e2a4a;font-weight:700;text-decoration:underline;cursor:pointer;">' + p.times_used + '</a>' : '0') + '</td>'
+                + '<td>' + maxText + '</td>'
+                + '<td><span class="status-badge ' + statusClass + '">' + statusText + '</span></td>'
+                + '<td><button class="status-btn ' + (p.active ? 'cancel' : 'confirm') + '" onclick="togglePromo(' + p.id + ', ' + (!p.active) + ')">' + (p.active ? 'Disable' : 'Enable') + '</button></td>'
+                + '</tr>';
+        }
+    }
+
+    async function createPromo() {
+        var code = document.getElementById('promo-code').value.trim();
+        var type = document.getElementById('promo-type').value;
+        var value = parseFloat(document.getElementById('promo-value').value) || 0;
+        var min = parseFloat(document.getElementById('promo-min').value) || 0;
+        var max = parseInt(document.getElementById('promo-max').value) || 0;
+        if (!code || !value) { alert('Code and discount value are required.'); return; }
+        var res = await fetch('/api/admin/promos/create', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: code, discount_type: type, discount_value: value, min_order: min, max_uses: max })
+        });
+        var data = await res.json();
+        if (data.success) {
+            document.getElementById('promo-code').value = '';
+            document.getElementById('promo-value').value = '';
+            loadPromos();
+        } else { alert(data.error || 'Error creating promo.'); }
+    }
+
+    async function loadPromoUsage(code) {
+        var res = await fetch('/api/admin/promos/' + code + '/usage');
+        var usage = await res.json();
+        var card = document.getElementById('promo-usage-card');
+        var title = document.getElementById('promo-usage-title');
+        var tbody = document.querySelector('#promo-usage-table tbody');
+
+        title.textContent = code + ' — Used ' + usage.length + ' time' + (usage.length !== 1 ? 's' : '');
+        tbody.innerHTML = '';
+
+        if (usage.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#999;padding:20px;">No one has used this code yet</td></tr>';
+        } else {
+            var totalDiscount = 0;
+            for (var ui = 0; ui < usage.length; ui++) {
+                var u = usage[ui];
+                var date = new Date(u.created_at).toLocaleString();
+                totalDiscount += u.discount_amount || 0;
+                tbody.innerHTML += '<tr>'
+                    + '<td><strong>' + u.customer_name + '</strong></td>'
+                    + '<td>' + (u.customer_email || '-') + '</td>'
+                    + '<td>' + mad(u.total_price || 0) + '</td>'
+                    + '<td style="color:#2d7a4f;font-weight:600;">-' + mad(u.discount_amount || 0) + '</td>'
+                    + '<td>' + date + '</td></tr>';
+            }
+            tbody.innerHTML += '<tr style="background:#f5f0eb;font-weight:700;">'
+                + '<td colspan="3">Total discount given</td>'
+                + '<td style="color:#2d7a4f;">-' + mad(totalDiscount) + '</td>'
+                + '<td></td></tr>';
+        }
+
+        card.style.display = 'block';
+        card.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    async function togglePromo(id, active) {
+        await fetch('/api/admin/promos/' + id + '/toggle', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ active: active })
+        });
+        loadPromos();
+    }
+
+    loadPromos();
+</script>
+{% endblock %}

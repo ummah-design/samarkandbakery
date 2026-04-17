@@ -89,6 +89,7 @@ def init_db():
             promo_code TEXT,
             discount_amount REAL DEFAULT 0,
             preferred_date TEXT,
+            pickup_time TEXT,
             notes TEXT,
             payment_method TEXT DEFAULT 'cod',
             payment_status TEXT DEFAULT 'unpaid',
@@ -104,6 +105,11 @@ def init_db():
         conn.execute("ALTER TABLE orders ADD COLUMN payment_status TEXT DEFAULT 'unpaid'")
         conn.execute("ALTER TABLE orders ADD COLUMN paypal_order_id TEXT")
         conn.commit()
+    try:
+        conn.execute("SELECT pickup_time FROM orders LIMIT 1")
+    except Exception:
+        conn.execute("ALTER TABLE orders ADD COLUMN pickup_time TEXT")
+        conn.commit()
     conn.commit()
     conn.close()
 
@@ -112,7 +118,7 @@ def create_order(customer_name, customer_email, customer_phone, delivery_type,
                  delivery_address, delivery_lat, delivery_lng,
                  items, total_price, total_cost=None, total_profit=None,
                  promo_code=None, discount_amount=0,
-                 preferred_date=None, notes=None,
+                 preferred_date=None, pickup_time=None, notes=None,
                  payment_method='cod', payment_status='unpaid', paypal_order_id=None):
     """Save a new order. items should be a list of dicts."""
     customer_phone = normalise_phone(customer_phone)
@@ -123,14 +129,14 @@ def create_order(customer_name, customer_email, customer_phone, delivery_type,
         INSERT INTO orders (customer_name, customer_email, customer_phone, delivery_type,
                           delivery_address, delivery_lat, delivery_lng,
                           items, total_price, total_cost, total_profit,
-                          promo_code, discount_amount, preferred_date, notes,
+                          promo_code, discount_amount, preferred_date, pickup_time, notes,
                           payment_method, payment_status, paypal_order_id)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         customer_name, customer_email, customer_phone, delivery_type,
         delivery_address, delivery_lat, delivery_lng,
         json.dumps(items), total_price, total_cost, total_profit,
-        promo_code, discount_amount, preferred_date, notes,
+        promo_code, discount_amount, preferred_date, pickup_time, notes,
         payment_method, payment_status, paypal_order_id
     ))
     conn.commit()

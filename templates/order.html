@@ -1751,6 +1751,32 @@
                 </div>
             </div>
 
+            <div id="pickup-time-field">
+                <label class="field-label" for="c-pickup-time">{{ t.pickup_time }}</label>
+                <select class="field-input" id="c-pickup-time">
+                    <option value="">{{ t.pickup_time_ph }}</option>
+                    <option value="09:30">09:30</option>
+                    <option value="10:00">10:00</option>
+                    <option value="10:30">10:30</option>
+                    <option value="11:00">11:00</option>
+                    <option value="11:30">11:30</option>
+                    <option value="12:00">12:00</option>
+                    <option value="12:30">12:30</option>
+                    <option value="13:00">13:00</option>
+                    <option value="13:30">13:30</option>
+                    <option value="14:00">14:00</option>
+                    <option value="14:30">14:30</option>
+                    <option value="15:00">15:00</option>
+                    <option value="15:30">15:30</option>
+                    <option value="16:00">16:00</option>
+                    <option value="16:30">16:30</option>
+                    <option value="17:00">17:00</option>
+                    <option value="17:30">17:30</option>
+                    <option value="18:00">18:00</option>
+                    <option value="18:30">18:30</option>
+                </select>
+            </div>
+
             <div id="delivery-fields" style="display:none;">
                 <p class="map-hint" id="map-hint">{{ t.map_hint }}</p>
                 <div id="checkout-map"></div>
@@ -2107,6 +2133,7 @@ function setDelivery(type) {
     const mapEl = document.getElementById('checkout-map');
     if (type === 'delivery') {
         fields.style.display = 'block'; mapEl.classList.add('visible');
+        document.getElementById('pickup-time-field').style.display = 'none';
         setTimeout(function() {
             if (!checkoutMap) {
                 checkoutMap = L.map('checkout-map').setView([35.5785, -5.3684], 14);
@@ -2122,6 +2149,7 @@ function setDelivery(type) {
         }, 200);
     } else {
         fields.style.display = 'none'; mapEl.classList.remove('visible');
+        document.getElementById('pickup-time-field').style.display = 'block';
     }
 }
 
@@ -2166,7 +2194,12 @@ function validateCheckoutFields() {
     else if (phone.length > 10 && phone[0] !== '+') phone = '+' + phone;
     if (phone.replace(/\D/g, '').length < 9) { alert(T.alert_phone_invalid); return null; }
     if (deliveryType === 'delivery' && !selectedLat) { alert(T.alert_map); return null; }
-    return { name, email, phone, preferredDate };
+    var pickupTime = '';
+    if (deliveryType === 'pickup') {
+        pickupTime = document.getElementById('c-pickup-time').value;
+        if (!pickupTime) { alert(T.alert_pickup_time); return null; }
+    }
+    return { name, email, phone, preferredDate, pickupTime };
 }
 
 function buildOrderPayload(fields, extraFields) {
@@ -2177,6 +2210,7 @@ function buildOrderPayload(fields, extraFields) {
         promo_code: appliedPromo || '',
         preferred_date: fields.preferredDate,
         delivery_type: deliveryType,
+        pickup_time: fields.pickupTime || null,
         delivery_address: document.getElementById('c-address') ? document.getElementById('c-address').value : null,
         delivery_lat: selectedLat,
         delivery_lng: selectedLng,
@@ -2256,6 +2290,11 @@ async function submitOrder() {
     else if (phone.length > 10 && phone[0] !== '+') phone = '+' + phone;
     if (phone.replace(/\D/g, '').length < 9) { alert(T.alert_phone_invalid); return; }
     if (deliveryType === 'delivery' && !selectedLat) { alert(T.alert_map); return; }
+    var pickupTime = '';
+    if (deliveryType === 'pickup') {
+        pickupTime = document.getElementById('c-pickup-time').value;
+        if (!pickupTime) { alert(T.alert_pickup_time); return; }
+    }
 
     const btn = document.getElementById('submit-btn');
     btn.disabled = true; btn.textContent = T.btn_sending;
@@ -2271,6 +2310,7 @@ async function submitOrder() {
                 promo_code: appliedPromo || '',
                 preferred_date: preferredDate,
                 delivery_type: deliveryType,
+                pickup_time: pickupTime || null,
                 delivery_address: document.getElementById('c-address')?.value || null,
                 delivery_lat: selectedLat,
                 delivery_lng: selectedLng,

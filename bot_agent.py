@@ -465,10 +465,16 @@ def _match_ingredient_name(query):
 def _call_claude(messages):
     today = date.today()
     today_str = today.strftime("%A %d %B %Y") + " (" + today.isoformat() + ")"
+    upcoming = ", ".join(
+        (today + timedelta(days=i)).strftime("%A %d %b (%Y-%m-%d)")
+        for i in range(1, 8)
+    )
     ingredients = ", ".join(_get_ingredient_names())
     system_prompt = (
         "You are the smart business assistant for Samarkand Bakery, an Uzbek/Turkish bakery "
-        "in Tetouan, Morocco. Today is " + today_str + ".\n\n"
+        "in Tetouan, Morocco. Today is " + today_str + ".\n"
+        "Next 7 days: " + upcoming + ".\n"
+        "ALWAYS use this list to resolve day names like 'Saturday' or 'next Friday' — do NOT calculate dates yourself.\n\n"
         "You help the owner manage orders, expenses, and business stats via Telegram.\n"
         "Currency is MAD. Be concise — this is a chat, not a report.\n\n"
         "EXPENSE HANDLING — this is very important:\n"

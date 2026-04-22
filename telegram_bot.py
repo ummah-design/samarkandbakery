@@ -394,9 +394,17 @@ def run_agent(chat_id, user_message):
     history = chat_histories.setdefault(chat_id, [])
     history.append({"role": "user", "content": user_message})
 
+    today = date.today()
+    today_str = today.strftime("%A %d %B %Y") + " (" + today.isoformat() + ")"
+    upcoming = ", ".join(
+        (today + timedelta(days=i)).strftime("%A %d %b (%Y-%m-%d)")
+        for i in range(1, 8)
+    )
     system_prompt = (
         "You are the smart business assistant for Samarkand Bakery, an Uzbek/Turkish bakery "
-        "in Tetouan, Morocco. Today is {}.\n\n"
+        "in Tetouan, Morocco. Today is " + today_str + ".\n"
+        "Next 7 days: " + upcoming + ".\n"
+        "ALWAYS use this list to resolve day names like 'Saturday' or 'next Friday' — do NOT calculate dates yourself.\n\n"
         "You help the owner manage orders, expenses, and business stats via Telegram.\n"
         "Currency is MAD (Moroccan Dirham). Be concise — this is a chat, not a report.\n\n"
         "Rules:\n"
@@ -406,7 +414,7 @@ def run_agent(chat_id, user_message):
         "- Use *bold* for important numbers. Keep responses under ~300 words.\n"
         "- Understand English, Arabic, and French naturally.\n"
         "- If asked for a summary, give the key numbers first, then details.\n"
-    ).format(date.today().strftime("%A %d %B %Y") + " (" + date.today().isoformat() + ")")
+    )
 
     for _ in range(10):  # max 10 tool-call rounds
         messages = history[-MAX_HISTORY:]

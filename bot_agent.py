@@ -531,21 +531,24 @@ def handle_update(update):
         # Voice message
         if "voice" in message:
             if not OPENAI_API_KEY:
-                send_message(chat_id, "Voice not configured. Please type your message.")
+                _tg_post("sendMessage", {"chat_id": chat_id, "text": "Voice not configured. Please type your message."})
                 return
             try:
                 file_path = _get_tg_file(message["voice"]["file_id"])
+                if not file_path:
+                    _tg_post("sendMessage", {"chat_id": chat_id, "text": "Could not download voice file. Please type."})
+                    return
                 audio_bytes = _download_tg_file(file_path)
                 transcribed = _transcribe_whisper(audio_bytes)
                 if not transcribed:
-                    send_message(chat_id, "Could not understand voice message. Please type.")
+                    _tg_post("sendMessage", {"chat_id": chat_id, "text": "Could not understand voice message. Please type."})
                     return
-                send_message(chat_id, "_" + transcribed + "_")
+                _tg_post("sendMessage", {"chat_id": chat_id, "text": "Heard: " + transcribed})
                 send_typing(chat_id)
                 text = transcribed
             except Exception as e:
                 logger.error("Voice processing error: %s", e)
-                send_message(chat_id, "Voice processing failed. Please type your message.")
+                _tg_post("sendMessage", {"chat_id": chat_id, "text": "Voice processing failed. Please type your message."})
                 return
 
         if not text.strip():

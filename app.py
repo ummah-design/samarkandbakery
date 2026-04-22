@@ -1390,9 +1390,8 @@ def api_admin_expenses_delete(expense_id):
 def telegram_webhook():
     if not _bot_agent_ok:
         return "bot_agent not loaded", 500
-    import threading
     update = request.get_json(silent=True) or {}
-    threading.Thread(target=bot_agent.handle_update, args=(update,), daemon=True).start()
+    bot_agent.handle_update(update)
     return "OK", 200
 
 

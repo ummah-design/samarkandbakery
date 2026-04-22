@@ -294,6 +294,26 @@ def api_submit_order():
         paypal_order_id=paypal_oid
     )
 
+    # Telegram notification
+    if _bot_agent_ok:
+        try:
+            bot_agent.notify_new_order({
+                "id": order_id,
+                "customer_name": req["customer_name"],
+                "customer_phone": req["customer_phone"],
+                "items": order_items,
+                "total_price": round(total_price, 2),
+                "delivery_type": req.get("delivery_type", "pickup"),
+                "preferred_date": req.get("preferred_date"),
+                "pickup_time": req.get("pickup_time"),
+                "delivery_address": req.get("delivery_address"),
+                "notes": req.get("notes"),
+                "payment_method": payment_method,
+                "payment_status": payment_status,
+            })
+        except Exception:
+            pass
+
     # Send order confirmation email
     if send_order_placed:
         try:

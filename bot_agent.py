@@ -585,6 +585,43 @@ def send_typing(chat_id):
     _tg_post("sendChatAction", {"chat_id": chat_id, "action": "typing"})
 
 
+def notify_new_order(order):
+    """Send a new-order notification to all allowed Telegram users."""
+    if not TELEGRAM_BOT_TOKEN or not ALLOWED_USER_IDS:
+        return
+    items_text = ", ".join(
+        i.get("name", "?") + " x" + str(i.get("quantity", 1))
+        for i in (order.get("items") or [])
+    )
+    delivery_type = order.get("delivery_type", "pickup")
+    when_parts = []
+    if order.get("preferred_date"):
+        when_parts.append(order["preferred_date"])
+    if order.get("pickup_time"):
+        when_parts.append(order["pickup_time"])
+    when = " at ".join(when_parts) if when_parts else "-"
+    payment = order.get("payment_method", "cod").upper()
+    if order.get("payment_status") == "paid":
+        payment += " (PAID)"
+    lines = [
+        "*New Order #" + str(order.get("id", "?")) + "!*",
+        "Customer: " + order.get("customer_name", "?") + " — " + order.get("customer_phone", ""),
+        "Items: " + items_text,
+        "Total: " + str(round(order.get("total_price", 0), 2)) + " MAD | " + payment,
+        ("Delivery" if delivery_type == "delivery" else "Pickup") + ": " + when,
+    ]
+    if delivery_type == "delivery" and order.get("delivery_address"):
+        lines.append("Address: " + order["delivery_address"])
+    if order.get("notes"):
+        lines.append("Notes: " + order["notes"])
+    text = "\n".join(lines)
+    for uid in ALLOWED_USER_IDS:
+        try:
+            send_message(uid, text)
+        except Exception as e:
+            logger.error("notify_new_order to %s failed: %s", uid, e)
+
+
 def _split_message(text, max_len=4000):
     if len(text) <= max_len:
         return [text]

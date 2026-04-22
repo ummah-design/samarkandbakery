@@ -334,20 +334,48 @@ def _slim_order(order):
 
 
 # ── ANTHROPIC API (stdlib, no SDK) ────────────────────────────────────────────
+def _get_ingredient_names():
+    try:
+        with open(os.path.join(DATA_DIR, "ingredients.json"), encoding="utf-8") as f:
+            raw = json.load(f)
+        names = []
+        for key in raw:
+            if key.startswith("_"):
+                continue
+            name = key.replace("_per_kg", "").replace("_per_litre", "").replace("_per_pot", "").replace("_per_tub", "").replace("_each", "").replace("_", " ").title()
+            names.append(name)
+        return names
+    except Exception:
+        return []
+
+
 def _call_claude(messages):
     today = date.today()
     today_str = today.strftime("%A %d %B %Y") + " (" + today.isoformat() + ")"
+    ingredients = ", ".join(_get_ingredient_names())
     system_prompt = (
         "You are the smart business assistant for Samarkand Bakery, an Uzbek/Turkish bakery "
         "in Tetouan, Morocco. Today is " + today_str + ".\n\n"
         "You help the owner manage orders, expenses, and business stats via Telegram.\n"
         "Currency is MAD. Be concise — this is a chat, not a report.\n\n"
-        "Rules:\n"
-        "- For write actions (add_expense, change_order_status): ask for confirmation first "
-        "  unless the user already said yes/confirm/go ahead.\n"
-        "- Format order lists clearly: one order per line with ID, customer, items, total.\n"
-        "- Use *bold* for important numbers. Keep responses under 300 words.\n"
+        "EXPENSE HANDLING — this is very important:\n"
+        "This is a TEXT chat, not a website. There are no dropdowns, no buttons, no UI.\n"
+        "When the user wants to add an expense, collect these 4 things conversationally:\n"
+        "  1. Category: Ingredients / Packaging / Utilities / Equipment / Marketing / Rent / Staff / Other\n"
+        "  2. Description: what was bought or paid for (e.g. Flour, Sesame Seeds, Gas bill)\n"
+        "  3. Amount in MAD\n"
+        "  4. Date (default: today if not mentioned)\n"
+        "If the user says 'Ingredients' as category, the description is simply the ingredient name — "
+        "no need to mention dropdowns. Just ask: 'Which ingredient and how much did it cost?'\n"
+        "Known ingredients: " + ingredients + "\n"
+        "Once you have all 4 fields, confirm with the user before calling add_expense.\n"
+        "Example confirmation: 'Add Ingredients expense: Flour — 45 MAD on 22 Apr. Confirm?'\n\n"
+        "OTHER RULES:\n"
+        "- For change_order_status: confirm before acting.\n"
+        "- Format order lists: one per line with ID, customer, items, total.\n"
+        "- Use *bold* for key numbers. Keep replies under 300 words.\n"
         "- Understand English, Arabic, and French naturally.\n"
+        "- Never mention dropdowns, buttons, or web UI — this is a chat only.\n"
     )
 
     body = json.dumps({

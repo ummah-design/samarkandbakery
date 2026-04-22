@@ -34,10 +34,39 @@ ALLOWED_IDS_RAW = os.environ.get("TELEGRAM_ALLOWED_IDS", "")
 ALLOWED_USER_IDS = {int(x) for x in ALLOWED_IDS_RAW.split(",") if x.strip().isdigit()}
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
+CHAT_DIR = os.path.join(DATA_DIR, "chat_histories")
 MAX_HISTORY = 20
 
-# In-memory conversation history per chat
-chat_histories: dict = {}
+os.makedirs(CHAT_DIR, exist_ok=True)
+
+
+def _history_path(chat_id):
+    return os.path.join(CHAT_DIR, str(chat_id) + ".json")
+
+
+def _load_history(chat_id):
+    try:
+        with open(_history_path(chat_id), encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return []
+
+
+def _save_history(chat_id, history):
+    try:
+        with open(_history_path(chat_id), "w", encoding="utf-8") as f:
+            json.dump(history[-MAX_HISTORY:], f, ensure_ascii=False)
+    except Exception as e:
+        logger.error("Failed to save history for %s: %s", chat_id, e)
+
+
+def _clear_history(chat_id):
+    try:
+        path = _history_path(chat_id)
+        if os.path.exists(path):
+            os.remove(path)
+    except Exception:
+        pass
 
 
 # ── TOOLS SCHEMA ─────────────────────────────────────────────────────────────
@@ -521,7 +550,7 @@ def _call_claude(messages):
 
 
 def run_agent(chat_id, user_message):
-    history = chat_histories.setdefault(chat_id, [])
+    history = _load_history(chat_id)
     history.append({"role": "user", "content": user_message})
 
     for _ in range(10):
@@ -534,8 +563,7 @@ def run_agent(chat_id, user_message):
         if not tool_uses:
             text = next((b.get("text", "") for b in content if b.get("type") == "text"), "Done.")
             history.append({"role": "assistant", "content": content})
-            if len(history) > MAX_HISTORY:
-                chat_histories[chat_id] = history[-MAX_HISTORY:]
+            _save_history(chat_id, history)
             return text
 
 
@@ -710,7 +738,7 @@ def handle_update(update):
             )
             return
         if text.startswith("/clear"):
-            chat_histories.pop(chat_id, None)
+            _clear_history(chat_id)
             send_message(chat_id, "Conversation history cleared.")
             return
 

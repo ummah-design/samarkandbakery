@@ -44,12 +44,30 @@ chat_histories: dict = {}
 TOOLS = [
     {
         "name": "get_today_orders",
-        "description": "Get all active orders for today (by preferred delivery date and by creation date).",
+        "description": (
+            "Get orders due TODAY — only use when user specifically asks about today's orders or today's schedule. "
+            "Do NOT use for general 'show me orders' or 'how many orders' questions."
+        ),
         "input_schema": {"type": "object", "properties": {}, "required": []},
     },
     {
+        "name": "get_all_recent_orders",
+        "description": (
+            "Get all orders from the past 90 days. Use this for general questions like "
+            "'show me orders', 'how many orders do we have', 'list recent orders', 'what orders are pending'. "
+            "This is the default tool for any general order query."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "status": {"type": "string", "description": "Optional filter: pending/confirmed/completed/cancelled"},
+            },
+            "required": [],
+        },
+    },
+    {
         "name": "get_orders_for_date",
-        "description": "Get orders for a specific date (by preferred delivery/pickup date).",
+        "description": "Get orders for a specific date (by preferred delivery/pickup date). Use when user mentions a specific day.",
         "input_schema": {
             "type": "object",
             "properties": {
@@ -60,7 +78,7 @@ TOOLS = [
     },
     {
         "name": "get_orders_range",
-        "description": "Get orders placed within a date range. Useful for revenue stats.",
+        "description": "Get orders placed within a date range. Use for 'this week', 'last month', specific date ranges.",
         "input_schema": {
             "type": "object",
             "properties": {
@@ -165,6 +183,11 @@ TOOLS = [
             "required": [],
         },
     },
+    {
+        "name": "get_ingredient_prices",
+        "description": "Get the current price list for all ingredients (MAD per unit).",
+        "input_schema": {"type": "object", "properties": {}, "required": []},
+    },
 ]
 
 
@@ -182,6 +205,12 @@ def execute_tool(name, inputs):
                 seen.add(o["id"])
                 combined.append(_slim_order(o))
         return {"orders": combined, "count": len(combined), "date": today_str}
+
+    if name == "get_all_recent_orders":
+        start = (date.today() - timedelta(days=90)).isoformat()
+        status = inputs.get("status")
+        orders = get_orders(status=status, start_date=start, end_date=today_str, limit=500)
+        return {"orders": [_slim_order(o) for o in orders], "count": len(orders)}
 
     if name == "get_orders_for_date":
         d = inputs.get("date", today_str)
@@ -312,6 +341,28 @@ def execute_tool(name, inputs):
         limit = int(inputs.get("limit", 5))
         customers = get_customers()[:limit]
         return {"customers": customers, "count": len(customers)}
+
+    if name == "get_ingredient_prices":
+        try:
+            with open(os.path.join(DATA_DIR, "ingredients.json"), encoding="utf-8") as f:
+                raw = json.load(f)
+            items = []
+            for key, price in raw.items():
+                if key.startswith("_"):
+                    continue
+                name_part = key
+                unit = "unit"
+                for suffix, u in [("_per_kg", "per kg"), ("_per_litre", "per litre"),
+                                   ("_per_pot", "per pot"), ("_per_tub", "per tub"), ("_each", "each")]:
+                    if name_part.endswith(suffix):
+                        name_part = name_part[:-len(suffix)]
+                        unit = u
+                        break
+                display = name_part.replace("_", " ").title()
+                items.append({"name": display, "price_mad": price, "unit": unit})
+            return {"ingredients": items, "count": len(items)}
+        except Exception as e:
+            return {"error": str(e)}
 
     return {"error": "Unknown tool: " + name}
 

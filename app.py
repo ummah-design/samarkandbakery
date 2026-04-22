@@ -1405,5 +1405,27 @@ def telegram_setup():
     return jsonify(result)
 
 
+@app.route("/telegram/status")
+@admin_required
+def telegram_status():
+    import urllib.request as _ur
+    status = {
+        "bot_agent_loaded": _bot_agent_ok,
+        "TELEGRAM_BOT_TOKEN": bool(os.environ.get("TELEGRAM_BOT_TOKEN")),
+        "ANTHROPIC_API_KEY": bool(os.environ.get("ANTHROPIC_API_KEY")),
+        "OPENAI_API_KEY": bool(os.environ.get("OPENAI_API_KEY")),
+        "TELEGRAM_ALLOWED_IDS": os.environ.get("TELEGRAM_ALLOWED_IDS", "(not set)"),
+    }
+    if _bot_agent_ok and os.environ.get("TELEGRAM_BOT_TOKEN"):
+        try:
+            token = os.environ.get("TELEGRAM_BOT_TOKEN")
+            req = _ur.Request("https://api.telegram.org/bot" + token + "/getWebhookInfo")
+            resp = _ur.urlopen(req, timeout=10)
+            status["webhook_info"] = json.loads(resp.read().decode())
+        except Exception as e:
+            status["webhook_info"] = {"error": str(e)}
+    return jsonify(status)
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=5050)

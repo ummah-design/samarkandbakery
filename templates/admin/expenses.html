@@ -1,0 +1,401 @@
+{% extends "admin_base.html" %}
+{% block title %}Expenses{% endblock %}
+
+{% block extra_css %}
+.expense-form-card { background: var(--card-bg); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; box-shadow: var(--shadow-sm); border-left: 3px solid var(--gold); }
+.expense-form-card h2 { color: var(--navy); margin-bottom: 18px; font-size: 1.15em; display: flex; align-items: center; gap: 8px; }
+.form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.form-grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; }
+.filter-section { background: var(--card-bg); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 16px; box-shadow: var(--shadow-sm); }
+.filter-section .filter-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.filter-section label { margin-bottom: 0; text-transform: none; font-size: 0.88em; letter-spacing: 0; font-weight: 600; color: var(--text-secondary); white-space: nowrap; }
+.date-range-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.date-range-row input[type="date"] { width: auto; min-width: 150px; margin-bottom: 0; flex: 1; }
+.sort-select { width: auto; min-width: 180px; margin-bottom: 0; }
+.expense-table-wrap { background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow-sm); overflow: hidden; }
+.expense-table { width: 100%; border-collapse: collapse; }
+.expense-table th { background: var(--navy); color: white; padding: 13px 16px; text-align: left; font-size: 0.82em; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; font-family: 'Source Sans 3', sans-serif; }
+.expense-table th.right { text-align: right; }
+.expense-table td { padding: 13px 16px; border-bottom: 1px solid var(--border-light); font-size: 0.95em; vertical-align: middle; }
+.expense-table td.amount-cell { text-align: right; font-weight: 700; color: var(--navy); font-size: 1em; }
+.expense-table td.actions-cell { text-align: right; white-space: nowrap; }
+.expense-table tbody tr:nth-child(even) { background: var(--warm-bg-alt); }
+.expense-table tbody tr:hover { background: #ede6dd; }
+.category-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.78em; font-weight: 600; background: var(--info-bg); color: var(--info); }
+.cat-ingredients { background: #e8f5e9; color: #2d7a4f; }
+.cat-packaging { background: #fff3e0; color: #b8860b; }
+.cat-utilities { background: #e3f2fd; color: #0d5fa6; }
+.cat-equipment { background: #f3e5f5; color: #7b1fa2; }
+.cat-marketing { background: #fce4ec; color: #c62828; }
+.cat-rent { background: #e8eaf6; color: #3949ab; }
+.cat-staff { background: #f1f8e9; color: #558b2f; }
+.cat-other { background: #f5f5f5; color: #555; }
+.icon-btn { background: none; border: none; cursor: pointer; padding: 6px 8px; border-radius: 6px; transition: background var(--transition-fast); color: var(--text-muted); font-size: 1em; min-height: 36px; min-width: 36px; }
+.icon-btn:hover { background: var(--border-light); color: var(--navy); }
+.icon-btn.delete:hover { background: var(--danger-bg); color: var(--danger); }
+.expense-footer { display: flex; justify-content: flex-end; padding: 14px 16px; border-top: 2px solid var(--navy); background: var(--warm-bg); font-weight: 700; font-size: 1.05em; color: var(--navy); }
+.btn-update { background: var(--gold); }
+.btn-update:hover { background: var(--gold-light); }
+.edit-notice { background: #fff8e1; border: 1.5px solid var(--gold); border-radius: 8px; padding: 10px 16px; margin-bottom: 14px; font-size: 0.9em; color: #7a5c00; display: none; align-items: center; gap: 10px; }
+.edit-notice.visible { display: flex; }
+@media (max-width: 900px) {
+    .form-grid-3 { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+    .form-grid-3, .form-grid-2 { grid-template-columns: 1fr; }
+    .expense-table th.hide-mobile, .expense-table td.hide-mobile { display: none; }
+    .filter-row { flex-direction: column; align-items: flex-start; }
+}
+{% endblock %}
+
+{% block page_title %}Expenses{% endblock %}
+
+{% block content %}
+
+<!-- Stats -->
+<div class="stats-bar" style="margin-bottom:20px;">
+    <div class="stat-card"><div class="number" id="stat-total">0 MAD</div><div class="label">Total Spent</div></div>
+    <div class="stat-card"><div class="number" id="stat-count">0</div><div class="label">Entries</div></div>
+    <div class="stat-card"><div class="number" id="stat-avg">0 MAD</div><div class="label">Average</div></div>
+    <div class="stat-card"><div class="number" id="stat-top-cat">—</div><div class="label">Top Category</div></div>
+</div>
+
+<!-- Add / Edit Form -->
+<div class="expense-form-card">
+    <h2>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:20px;height:20px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+        <span id="form-title">Add Expense</span>
+    </h2>
+
+    <div class="edit-notice" id="edit-notice">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:18px;height:18px;flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
+        Editing expense #<span id="edit-id-label"></span> — make your changes and click Update.
+        <button onclick="cancelEdit()" style="margin-left:auto;padding:4px 12px;border:1px solid #b8860b;background:none;border-radius:6px;cursor:pointer;font-size:0.88em;color:#7a5c00;">Cancel</button>
+    </div>
+
+    <div class="form-grid-3">
+        <div>
+            <label for="exp-category">Category</label>
+            <select id="exp-category" onchange="onCategoryChange(this.value)">
+                <option value="">Select category…</option>
+                <option value="Ingredients">Ingredients</option>
+                <option value="Packaging">Packaging</option>
+                <option value="Utilities">Utilities</option>
+                <option value="Equipment">Equipment</option>
+                <option value="Marketing">Marketing</option>
+                <option value="Rent">Rent</option>
+                <option value="Staff">Staff</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        <div>
+            <label for="exp-amount">Amount (MAD)</label>
+            <input type="number" id="exp-amount" placeholder="0.00" min="0" step="0.01" inputmode="decimal">
+        </div>
+        <div>
+            <label for="exp-date">Date</label>
+            <input type="date" id="exp-date">
+        </div>
+    </div>
+
+    <div id="ingredient-picker-wrap" style="display:none;margin-bottom:4px;">
+        <label for="exp-ingredient">Ingredient</label>
+        <select id="exp-ingredient" onchange="onIngredientSelect(this.value)">
+            <option value="">Select ingredient…</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="exp-description">Description</label>
+        <input type="text" id="exp-description" placeholder="What was bought / paid for…" style="margin-bottom:16px;">
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-secondary" id="save-btn" onclick="saveExpense()" style="flex:1;min-width:180px;font-size:1.05em;">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:18px;height:18px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+            <span id="save-btn-label">Add Expense</span>
+        </button>
+        <button class="btn" id="cancel-btn" onclick="cancelEdit()" style="display:none;flex:1;min-width:120px;">Cancel</button>
+    </div>
+</div>
+
+<!-- Filter & Sort -->
+<div class="filter-section">
+    <div class="filter-row">
+        <div class="filters" style="margin-bottom:0;flex-wrap:wrap;">
+            <button class="filter-btn active" onclick="setQuickFilter('all', this)">All Time</button>
+            <button class="filter-btn" onclick="setQuickFilter('today', this)">Today</button>
+            <button class="filter-btn" onclick="setQuickFilter('7d', this)">Last 7 Days</button>
+            <button class="filter-btn" onclick="setQuickFilter('30d', this)">Last 30 Days</button>
+            <button class="filter-btn" onclick="setQuickFilter('month', this)">This Month</button>
+            <button class="filter-btn" onclick="setQuickFilter('custom', this)">Custom</button>
+        </div>
+        <div style="margin-left:auto;">
+            <select class="sort-select" onchange="currentSort = this.value; loadExpenses()" style="margin-bottom:0;">
+                <option value="date_desc">Newest First</option>
+                <option value="date_asc">Oldest First</option>
+                <option value="amount_desc">Amount: High → Low</option>
+                <option value="amount_asc">Amount: Low → High</option>
+            </select>
+        </div>
+    </div>
+    <div class="date-range-row" id="custom-range" style="display:none;">
+        <label>From:</label>
+        <input type="date" id="filter-from" oninput="loadExpenses()">
+        <label>To:</label>
+        <input type="date" id="filter-to" oninput="loadExpenses()">
+    </div>
+</div>
+
+<!-- Expense Table -->
+<div class="expense-table-wrap">
+    <table class="expense-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Category</th>
+                <th class="hide-mobile">Description</th>
+                <th class="right">Amount</th>
+                <th class="right">Actions</th>
+            </tr>
+        </thead>
+        <tbody id="expense-tbody">
+            <tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text-muted);">Loading…</td></tr>
+        </tbody>
+    </table>
+    <div class="expense-footer" id="expense-footer" style="display:none;">
+        Total: <span id="footer-total" style="margin-left:12px;">0.00 MAD</span>
+    </div>
+</div>
+
+<div class="page-bottom-spacer"></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var editingId = null;
+    var currentSort = 'date_desc';
+    var currentStart = '';
+    var currentEnd = '';
+
+    function localDateStr(d) {
+        return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
+
+    function setQuickFilter(period, btn) {
+        document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        var today = new Date();
+        document.getElementById('custom-range').style.display = 'none';
+        if (period === 'all') {
+            currentStart = '';
+            currentEnd = '';
+        } else if (period === 'today') {
+            currentStart = localDateStr(today);
+            currentEnd = localDateStr(today);
+        } else if (period === '7d') {
+            var d = new Date(today); d.setDate(today.getDate() - 6);
+            currentStart = localDateStr(d);
+            currentEnd = localDateStr(today);
+        } else if (period === '30d') {
+            var d = new Date(today); d.setDate(today.getDate() - 29);
+            currentStart = localDateStr(d);
+            currentEnd = localDateStr(today);
+        } else if (period === 'month') {
+            currentStart = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-01';
+            currentEnd = localDateStr(today);
+        } else if (period === 'custom') {
+            document.getElementById('custom-range').style.display = 'flex';
+            currentStart = document.getElementById('filter-from').value;
+            currentEnd = document.getElementById('filter-to').value;
+            loadExpenses();
+            return;
+        }
+        loadExpenses();
+    }
+
+    async function loadExpenses() {
+        var fromEl = document.getElementById('filter-from');
+        var toEl = document.getElementById('filter-to');
+        if (document.getElementById('custom-range').style.display !== 'none') {
+            currentStart = fromEl.value;
+            currentEnd = toEl.value;
+        }
+        var url = '/api/admin/expenses?sort=' + currentSort;
+        if (currentStart) url += '&start_date=' + currentStart;
+        if (currentEnd) url += '&end_date=' + currentEnd;
+        var res = await fetch(url);
+        var expenses = await res.json();
+        renderExpenses(expenses);
+        updateStats(expenses);
+    }
+
+    function catClass(cat) {
+        var map = { 'Ingredients': 'cat-ingredients', 'Packaging': 'cat-packaging', 'Utilities': 'cat-utilities', 'Equipment': 'cat-equipment', 'Marketing': 'cat-marketing', 'Rent': 'cat-rent', 'Staff': 'cat-staff', 'Other': 'cat-other' };
+        return map[cat] || 'cat-other';
+    }
+
+    function renderExpenses(expenses) {
+        var tbody = document.getElementById('expense-tbody');
+        var footer = document.getElementById('expense-footer');
+        if (expenses.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:50px;color:var(--text-muted);"><strong>No expenses found</strong><br>Add your first expense using the form above.</td></tr>';
+            footer.style.display = 'none';
+            return;
+        }
+        var html = '';
+        var total = 0;
+        for (var i = 0; i < expenses.length; i++) {
+            var e = expenses[i];
+            total += e.amount;
+            html += '<tr>'
+                + '<td style="white-space:nowrap;">' + e.expense_date + '</td>'
+                + '<td><span class="category-badge ' + catClass(e.category) + '">' + e.category + '</span></td>'
+                + '<td class="hide-mobile" style="color:var(--text-secondary);">' + (e.description || '—') + '</td>'
+                + '<td class="amount-cell">' + e.amount.toFixed(2) + ' MAD</td>'
+                + '<td class="actions-cell">'
+                + '<button class="icon-btn" onclick="editExpense(' + e.id + ')" title="Edit" aria-label="Edit">'
+                + '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:16px;height:16px;"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>'
+                + '</button>'
+                + '<button class="icon-btn delete" onclick="deleteExpense(' + e.id + ')" title="Delete" aria-label="Delete">'
+                + '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:16px;height:16px;"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>'
+                + '</button>'
+                + '</td></tr>';
+        }
+        tbody.innerHTML = html;
+        document.getElementById('footer-total').textContent = total.toFixed(2) + ' MAD';
+        footer.style.display = 'flex';
+    }
+
+    function updateStats(expenses) {
+        var total = expenses.reduce(function(s, e) { return s + e.amount; }, 0);
+        var count = expenses.length;
+        var avg = count > 0 ? total / count : 0;
+        document.getElementById('stat-total').textContent = total.toFixed(0) + ' MAD';
+        document.getElementById('stat-count').textContent = count;
+        document.getElementById('stat-avg').textContent = avg.toFixed(0) + ' MAD';
+        // Top category
+        var cats = {};
+        expenses.forEach(function(e) { cats[e.category] = (cats[e.category] || 0) + e.amount; });
+        var topCat = '—';
+        var topAmt = 0;
+        Object.keys(cats).forEach(function(k) { if (cats[k] > topAmt) { topAmt = cats[k]; topCat = k; } });
+        document.getElementById('stat-top-cat').textContent = topCat;
+    }
+
+    var expenseCache = [];
+
+    async function editExpense(id) {
+        var url = '/api/admin/expenses?sort=date_desc';
+        if (!expenseCache.length) {
+            var res = await fetch(url);
+            expenseCache = await res.json();
+        }
+        var e = expenseCache.find(function(x) { return x.id === id; });
+        if (!e) { await loadExpenses(); editExpense(id); return; }
+        editingId = id;
+        document.getElementById('exp-category').value = e.category;
+        document.getElementById('exp-amount').value = e.amount;
+        document.getElementById('exp-date').value = e.expense_date;
+        document.getElementById('exp-description').value = e.description || '';
+        document.getElementById('form-title').textContent = 'Edit Expense';
+        document.getElementById('edit-id-label').textContent = id;
+        document.getElementById('edit-notice').classList.add('visible');
+        document.getElementById('save-btn').className = 'btn btn-update';
+        document.getElementById('save-btn-label').textContent = 'Update Expense';
+        document.getElementById('cancel-btn').style.display = 'flex';
+        onCategoryChange(e.category);
+        document.getElementById('exp-category').focus();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function cancelEdit() {
+        editingId = null;
+        document.getElementById('exp-category').value = '';
+        document.getElementById('exp-amount').value = '';
+        document.getElementById('exp-description').value = '';
+        document.getElementById('exp-date').value = todayStr();
+        document.getElementById('ingredient-picker-wrap').style.display = 'none';
+        document.getElementById('exp-ingredient').value = '';
+        document.getElementById('form-title').textContent = 'Add Expense';
+        document.getElementById('edit-notice').classList.remove('visible');
+        document.getElementById('save-btn').className = 'btn btn-secondary';
+        document.getElementById('save-btn-label').textContent = 'Add Expense';
+        document.getElementById('cancel-btn').style.display = 'none';
+    }
+
+    async function saveExpense() {
+        var category = document.getElementById('exp-category').value;
+        var amount = parseFloat(document.getElementById('exp-amount').value);
+        var expense_date = document.getElementById('exp-date').value;
+        var description = document.getElementById('exp-description').value.trim();
+        if (!category) { alert('Please select a category.'); return; }
+        if (!amount || amount <= 0) { alert('Please enter a valid amount.'); return; }
+        if (!expense_date) { alert('Please select a date.'); return; }
+        var btn = document.getElementById('save-btn');
+        btn.classList.add('btn-loading');
+        var body = JSON.stringify({ category: category, amount: amount, expense_date: expense_date, description: description });
+        var url = editingId ? '/api/admin/expenses/' + editingId : '/api/admin/expenses';
+        var method = editingId ? 'PUT' : 'POST';
+        var res = await fetch(url, { method: method, headers: { 'Content-Type': 'application/json' }, body: body });
+        var data = await res.json();
+        btn.classList.remove('btn-loading');
+        if (data.error) { alert(data.error); return; }
+        expenseCache = [];
+        cancelEdit();
+        loadExpenses();
+    }
+
+    async function deleteExpense(id) {
+        if (!confirm('Delete this expense entry? This cannot be undone.')) return;
+        await fetch('/api/admin/expenses/' + id + '/delete', { method: 'POST' });
+        expenseCache = [];
+        loadExpenses();
+    }
+
+    function todayStr() {
+        var d = new Date();
+        return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
+
+    var ingredientsList = [];
+
+    async function loadIngredients() {
+        if (ingredientsList.length) return;
+        var res = await fetch('/api/admin/ingredients-list');
+        ingredientsList = await res.json();
+        var sel = document.getElementById('exp-ingredient');
+        sel.innerHTML = '<option value="">Select ingredient…</option>';
+        for (var i = 0; i < ingredientsList.length; i++) {
+            var ing = ingredientsList[i];
+            var opt = document.createElement('option');
+            opt.value = ing.key;
+            opt.textContent = ing.label;
+            sel.appendChild(opt);
+        }
+    }
+
+    function onCategoryChange(val) {
+        var wrap = document.getElementById('ingredient-picker-wrap');
+        if (val === 'Ingredients') {
+            wrap.style.display = 'block';
+            loadIngredients();
+        } else {
+            wrap.style.display = 'none';
+            document.getElementById('exp-ingredient').value = '';
+        }
+    }
+
+    function onIngredientSelect(key) {
+        if (!key) return;
+        var ing = ingredientsList.find(function(i) { return i.key === key; });
+        if (ing) {
+            document.getElementById('exp-description').value = ing.name;
+            document.getElementById('exp-amount').focus();
+        }
+    }
+
+    // Init
+    document.getElementById('exp-date').value = todayStr();
+    loadExpenses();
+</script>
+{% endblock %}

@@ -2,3 +2,9 @@ flask==2.3.3
 werkzeug==2.3.8
 jinja2==3.1.2
 markupsafe==2.1.5
+# Telegram bot
+python-telegram-bot>=20.7
+# Claude AI
+anthropic>=0.25.0
+# Voice transcription (optional but recommended)
+openai>=1.14.0

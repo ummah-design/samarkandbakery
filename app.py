@@ -23,6 +23,12 @@ except Exception:
     send_order_confirmed = None
     send_order_completed = None
     send_contact_inquiry = None
+
+try:
+    import bot_agent
+    _bot_agent_ok = True
+except Exception:
+    _bot_agent_ok = False
 from database import (create_order, get_orders, get_order, get_orders_by_date,
                       update_order_status,
                       get_customers, get_customer_orders,
@@ -33,7 +39,8 @@ from database import (create_order, get_orders, get_order, get_orders_by_date,
                       record_review_request, record_review_reminder,
                       get_review_requests, get_customer_review_stats,
                       get_unrequested_completed_orders,
-                      update_payment_status)
+                      update_payment_status,
+                      create_expense, get_expenses, update_expense, delete_expense)
 import urllib.request
 import urllib.parse
 import base64
@@ -757,7 +764,10 @@ def api_order():
 @admin_required
 def api_admin_orders():
     status = request.args.get("status")
-    orders = get_orders(status=status)
+    start_date = request.args.get("start_date")
+    end_date = request.args.get("end_date")
+    sort = request.args.get("sort", "date_desc")
+    orders = get_orders(status=status, start_date=start_date, end_date=end_date, sort=sort)
     return jsonify(orders)
 
 
@@ -1286,6 +1296,114 @@ def api_admin_backup_delete():
         return jsonify({"error": "Backup not found"}), 404
     os.remove(zip_path)
     return jsonify({"success": True})
+
+
+# ── Ingredients list (for expense form) ──
+
+@app.route("/api/admin/ingredients-list")
+@admin_required
+def api_admin_ingredients_list():
+    data = load_data()
+    ingredients = data.get("ingredients", {})
+    result = []
+    for key, price in ingredients.items():
+        if key.startswith("_"):
+            continue
+        if "_per_" in key:
+            parts = key.split("_per_")
+            name = parts[0].replace("_", " ").title()
+            unit = "per " + parts[1].replace("_", " ")
+        elif key.endswith("_each"):
+            name = key[:-5].replace("_", " ").title()
+            unit = "each"
+        else:
+            name = key.replace("_", " ").title()
+            unit = ""
+        label = name
+        result.append({"key": key, "name": name, "unit": unit, "label": label, "price": price})
+    result.sort(key=lambda x: x["name"])
+    return jsonify(result)
+
+
+# ── Expenses ──
+
+@app.route("/admin/expenses")
+@admin_required
+def admin_expenses_page():
+    return render_template("admin/expenses.html", active_page="expenses")
+
+
+@app.route("/api/admin/expenses")
+@admin_required
+def api_admin_expenses_list():
+    start_date = request.args.get("start_date")
+    end_date = request.args.get("end_date")
+    sort = request.args.get("sort", "date_desc")
+    expenses = get_expenses(start_date=start_date, end_date=end_date, sort=sort)
+    return jsonify(expenses)
+
+
+@app.route("/api/admin/expenses", methods=["POST"])
+@admin_required
+def api_admin_expenses_create():
+    data = request.json or {}
+    category = (data.get("category") or "").strip()
+    description = (data.get("description") or "").strip()
+    expense_date = (data.get("expense_date") or "").strip()
+    try:
+        amount = float(data.get("amount", 0))
+    except Exception:
+        amount = 0
+    if not category or not expense_date or amount <= 0:
+        return jsonify({"error": "Category, date and a positive amount are required"}), 400
+    expense_id = create_expense(category, description, amount, expense_date)
+    return jsonify({"success": True, "id": expense_id})
+
+
+@app.route("/api/admin/expenses/<int:expense_id>", methods=["PUT"])
+@admin_required
+def api_admin_expenses_update(expense_id):
+    data = request.json or {}
+    category = (data.get("category") or "").strip()
+    description = (data.get("description") or "").strip()
+    expense_date = (data.get("expense_date") or "").strip()
+    try:
+        amount = float(data.get("amount", 0))
+    except Exception:
+        amount = 0
+    if not category or not expense_date or amount <= 0:
+        return jsonify({"error": "Category, date and a positive amount are required"}), 400
+    update_expense(expense_id, category, description, amount, expense_date)
+    return jsonify({"success": True})
+
+
+@app.route("/api/admin/expenses/<int:expense_id>/delete", methods=["POST"])
+@admin_required
+def api_admin_expenses_delete(expense_id):
+    delete_expense(expense_id)
+    return jsonify({"success": True})
+
+
+# ── Telegram Webhook ──────────────────────────────────────────────────────────
+
+@app.route("/telegram/webhook", methods=["POST"])
+def telegram_webhook():
+    if not _bot_agent_ok:
+        return "bot_agent not loaded", 500
+    import threading
+    update = request.get_json(silent=True) or {}
+    threading.Thread(target=bot_agent.handle_update, args=(update,), daemon=True).start()
+    return "OK", 200
+
+
+@app.route("/telegram/setup")
+@admin_required
+def telegram_setup():
+    if not _bot_agent_ok:
+        return jsonify({"error": "bot_agent not loaded"}), 500
+    host_url = request.host_url
+    result = bot_agent.register_webhook(host_url)
+    return jsonify(result)
 
 
 if __name__ == "__main__":

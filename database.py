@@ -158,19 +158,31 @@ def update_payment_status(order_id, payment_status, paypal_order_id=None):
     conn.close()
 
 
-def get_orders(status=None, limit=50):
-    """Get orders, optionally filtered by status."""
+def get_orders(status=None, limit=50, start_date=None, end_date=None, sort="date_desc"):
+    """Get orders, optionally filtered by status and date range."""
     conn = get_db()
+    query = "SELECT * FROM orders WHERE 1=1"
+    params = []
     if status:
-        rows = conn.execute(
-            "SELECT * FROM orders WHERE status = ? ORDER BY created_at DESC LIMIT ?",
-            (status, limit)
-        ).fetchall()
-    else:
-        rows = conn.execute(
-            "SELECT * FROM orders ORDER BY created_at DESC LIMIT ?",
-            (limit,)
-        ).fetchall()
+        query += " AND status = ?"
+        params.append(status)
+    if start_date:
+        query += " AND DATE(created_at) >= ?"
+        params.append(start_date)
+    if end_date:
+        query += " AND DATE(created_at) <= ?"
+        params.append(end_date)
+    sort_map = {
+        "date_desc": "created_at DESC",
+        "date_asc": "created_at ASC",
+        "amount_desc": "total_price DESC",
+        "amount_asc": "total_price ASC",
+    }
+    query += " ORDER BY " + sort_map.get(sort, "created_at DESC")
+    effective_limit = 500 if (start_date or end_date) else limit
+    query += " LIMIT ?"
+    params.append(effective_limit)
+    rows = conn.execute(query, params).fetchall()
     conn.close()
 
     orders = []
@@ -602,8 +614,81 @@ def get_unrequested_completed_orders():
     return results
 
 
+def init_expenses_table():
+    """Create expenses table if it doesn't exist."""
+    conn = get_db()
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS expenses (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            category TEXT NOT NULL,
+            description TEXT,
+            amount REAL NOT NULL,
+            expense_date TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+
+def create_expense(category, description, amount, expense_date):
+    """Add a new business expense."""
+    conn = get_db()
+    cursor = conn.execute(
+        "INSERT INTO expenses (category, description, amount, expense_date) VALUES (?, ?, ?, ?)",
+        (category, description or "", amount, expense_date)
+    )
+    conn.commit()
+    expense_id = cursor.lastrowid
+    conn.close()
+    return expense_id
+
+
+def get_expenses(start_date=None, end_date=None, sort="date_desc"):
+    """Get expenses filtered by date range and sorted."""
+    conn = get_db()
+    query = "SELECT * FROM expenses WHERE 1=1"
+    params = []
+    if start_date:
+        query += " AND expense_date >= ?"
+        params.append(start_date)
+    if end_date:
+        query += " AND expense_date <= ?"
+        params.append(end_date)
+    sort_map = {
+        "date_desc": "expense_date DESC, created_at DESC",
+        "date_asc": "expense_date ASC, created_at ASC",
+        "amount_desc": "amount DESC",
+        "amount_asc": "amount ASC",
+    }
+    query += " ORDER BY " + sort_map.get(sort, "expense_date DESC, created_at DESC")
+    rows = conn.execute(query, params).fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
+
+
+def update_expense(expense_id, category, description, amount, expense_date):
+    """Update an existing expense entry."""
+    conn = get_db()
+    conn.execute(
+        "UPDATE expenses SET category=?, description=?, amount=?, expense_date=? WHERE id=?",
+        (category, description or "", amount, expense_date, expense_id)
+    )
+    conn.commit()
+    conn.close()
+
+
+def delete_expense(expense_id):
+    """Delete an expense entry."""
+    conn = get_db()
+    conn.execute("DELETE FROM expenses WHERE id=?", (expense_id,))
+    conn.commit()
+    conn.close()
+
+
 # Initialize database on import
 init_db()
 init_reviews_table()
 init_promo_table()
 init_review_requests_table()
+init_expenses_table()

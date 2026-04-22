@@ -11,6 +11,14 @@
 .stat-card { background: white; border-radius: 10px; padding: 15px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
 .stat-card .number { font-size: 1.5em; font-weight: 700; color: #1e2a4a; }
 .stat-card .label { font-size: 0.8em; color: #888; margin-top: 3px; }
+.date-filter-bar { background: var(--card-bg); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 14px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 10px; }
+.date-filter-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.date-filter-row .filter-btn { min-height: 38px; }
+.date-filter-row input[type="date"] { width: auto; min-width: 145px; margin-bottom: 0; padding: 8px 12px; flex: 0 1 auto; }
+.date-filter-row select { width: auto; min-width: 180px; margin-bottom: 0; padding: 8px 12px; }
+.date-filter-row label { margin-bottom: 0; text-transform: none; font-size: 0.88em; letter-spacing: 0; white-space: nowrap; }
+.custom-range-row { display: none; align-items: center; gap: 8px; flex-wrap: wrap; }
+.custom-range-row.visible { display: flex; }
 {% endblock %}
 
 {% block content %}
@@ -20,13 +28,42 @@
     <div class="stat-card"><div class="number" id="stat-revenue">0</div><div class="label">Revenue (MAD)</div></div>
     <div class="stat-card"><div class="number" id="stat-profit">0</div><div class="label">Profit (MAD)</div></div>
 </div>
+
+<!-- Status filters -->
 <div class="filters">
-    <button class="filter-btn active" onclick="filterOrders(null, this)">All</button>
-    <button class="filter-btn" onclick="filterOrders('pending', this)">Pending</button>
-    <button class="filter-btn" onclick="filterOrders('confirmed', this)">Confirmed</button>
-    <button class="filter-btn" onclick="filterOrders('completed', this)">Completed</button>
-    <button class="filter-btn" onclick="filterOrders('cancelled', this)">Cancelled</button>
+    <button class="filter-btn active" onclick="filterStatus(null, this)">All</button>
+    <button class="filter-btn" onclick="filterStatus('pending', this)">Pending</button>
+    <button class="filter-btn" onclick="filterStatus('confirmed', this)">Confirmed</button>
+    <button class="filter-btn" onclick="filterStatus('completed', this)">Completed</button>
+    <button class="filter-btn" onclick="filterStatus('cancelled', this)">Cancelled</button>
 </div>
+
+<!-- Date filter + sort -->
+<div class="date-filter-bar">
+    <div class="date-filter-row">
+        <button class="filter-btn active" onclick="setDateFilter('all', this)">All Time</button>
+        <button class="filter-btn" onclick="setDateFilter('today', this)">Today</button>
+        <button class="filter-btn" onclick="setDateFilter('7d', this)">Last 7 Days</button>
+        <button class="filter-btn" onclick="setDateFilter('30d', this)">Last 30 Days</button>
+        <button class="filter-btn" onclick="setDateFilter('month', this)">This Month</button>
+        <button class="filter-btn" onclick="setDateFilter('custom', this)">Custom</button>
+        <div style="margin-left:auto;">
+            <select onchange="currentSort = this.value; loadAdminOrders()" style="margin-bottom:0;padding:8px 12px;width:auto;min-width:180px;">
+                <option value="date_desc">Newest First</option>
+                <option value="date_asc">Oldest First</option>
+                <option value="amount_desc">Amount: High → Low</option>
+                <option value="amount_asc">Amount: Low → High</option>
+            </select>
+        </div>
+    </div>
+    <div class="custom-range-row" id="orders-custom-range">
+        <label>From:</label>
+        <input type="date" id="orders-from" oninput="loadAdminOrders()">
+        <label>To:</label>
+        <input type="date" id="orders-to" oninput="loadAdminOrders()">
+    </div>
+</div>
+
 <div id="orders-list"></div>
 {% endblock %}
 
@@ -34,10 +71,55 @@
 <script>
     var allOrders = [];
     var detailMaps = {};
+    var currentStatus = null;
+    var currentSort = 'date_desc';
+    var currentStartDate = '';
+    var currentEndDate = '';
 
-    async function loadAdminOrders(status) {
-        var url = '/api/admin/orders';
-        if (status) url += '?status=' + status;
+    function localDateStr(d) {
+        return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
+
+    function setDateFilter(period, btn) {
+        document.querySelectorAll('.date-filter-bar .filter-btn').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        var cr = document.getElementById('orders-custom-range');
+        cr.classList.remove('visible');
+        var today = new Date();
+        if (period === 'all') {
+            currentStartDate = '';
+            currentEndDate = '';
+        } else if (period === 'today') {
+            currentStartDate = localDateStr(today);
+            currentEndDate = localDateStr(today);
+        } else if (period === '7d') {
+            var d = new Date(today); d.setDate(today.getDate() - 6);
+            currentStartDate = localDateStr(d);
+            currentEndDate = localDateStr(today);
+        } else if (period === '30d') {
+            var d = new Date(today); d.setDate(today.getDate() - 29);
+            currentStartDate = localDateStr(d);
+            currentEndDate = localDateStr(today);
+        } else if (period === 'month') {
+            currentStartDate = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-01';
+            currentEndDate = localDateStr(today);
+        } else if (period === 'custom') {
+            cr.classList.add('visible');
+            currentStartDate = document.getElementById('orders-from').value;
+            currentEndDate = document.getElementById('orders-to').value;
+        }
+        loadAdminOrders();
+    }
+
+    async function loadAdminOrders() {
+        if (document.getElementById('orders-custom-range').classList.contains('visible')) {
+            currentStartDate = document.getElementById('orders-from').value;
+            currentEndDate = document.getElementById('orders-to').value;
+        }
+        var url = '/api/admin/orders?sort=' + currentSort;
+        if (currentStatus) url += '&status=' + currentStatus;
+        if (currentStartDate) url += '&start_date=' + currentStartDate;
+        if (currentEndDate) url += '&end_date=' + currentEndDate;
         var res = await fetch(url);
         allOrders = await res.json();
         renderAdminOrders(allOrders);
@@ -142,10 +224,11 @@
         loadAdminOrders();
     }
 
-    function filterOrders(status, btn) {
-        document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    function filterStatus(status, btn) {
+        document.querySelectorAll('.filters .filter-btn').forEach(function(b) { b.classList.remove('active'); });
         btn.classList.add('active');
-        loadAdminOrders(status);
+        currentStatus = status;
+        loadAdminOrders();
     }
 
     loadAdminOrders();

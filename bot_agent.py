@@ -335,7 +335,8 @@ def _slim_order(order):
 
 # ── ANTHROPIC API (stdlib, no SDK) ────────────────────────────────────────────
 def _call_claude(messages):
-    today_str = date.today().isoformat()
+    today = date.today()
+    today_str = today.strftime("%A %d %B %Y") + " (" + today.isoformat() + ")"
     system_prompt = (
         "You are the smart business assistant for Samarkand Bakery, an Uzbek/Turkish bakery "
         "in Tetouan, Morocco. Today is " + today_str + ".\n\n"
@@ -387,6 +388,7 @@ def run_agent(chat_id, user_message):
             if len(history) > MAX_HISTORY:
                 chat_histories[chat_id] = history[-MAX_HISTORY:]
             return text
+
 
         history.append({"role": "assistant", "content": content})
 

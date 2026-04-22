@@ -188,6 +188,21 @@ TOOLS = [
         "description": "Get the current price list for all ingredients (MAD per unit).",
         "input_schema": {"type": "object", "properties": {}, "required": []},
     },
+    {
+        "name": "get_order_details",
+        "description": (
+            "Get full details for a specific order including contact info (phone, email, address). "
+            "Use when user asks for contact details, phone number, or full info about a specific order or customer."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "order_id":     {"type": "integer", "description": "Order ID number"},
+                "customer_name": {"type": "string", "description": "Search by customer name if order ID not known"},
+            },
+            "required": [],
+        },
+    },
 ]
 
 
@@ -342,6 +357,23 @@ def execute_tool(name, inputs):
         customers = get_customers()[:limit]
         return {"customers": customers, "count": len(customers)}
 
+    if name == "get_order_details":
+        order_id = inputs.get("order_id")
+        customer_name = (inputs.get("customer_name") or "").lower()
+        if order_id:
+            order = get_order(int(order_id))
+            if not order:
+                return {"error": "Order #" + str(order_id) + " not found"}
+            return _slim_order(order)
+        elif customer_name:
+            start = (date.today() - timedelta(days=180)).isoformat()
+            all_orders = get_orders(start_date=start, end_date=today_str, limit=500)
+            matches = [o for o in all_orders if customer_name in o.get("customer_name", "").lower()]
+            if not matches:
+                return {"error": "No orders found for customer: " + inputs.get("customer_name", "")}
+            return {"orders": [_slim_order(o) for o in matches], "count": len(matches)}
+        return {"error": "Provide order_id or customer_name"}
+
     if name == "get_ingredient_prices":
         try:
             with open(os.path.join(DATA_DIR, "ingredients.json"), encoding="utf-8") as f:
@@ -369,18 +401,19 @@ def execute_tool(name, inputs):
 
 def _slim_order(order):
     return {
-        "id":             order.get("id"),
-        "customer":       order.get("customer_name"),
-        "phone":          order.get("customer_phone"),
-        "status":         order.get("status"),
-        "delivery_type":  order.get("delivery_type"),
-        "preferred_date": order.get("preferred_date"),
-        "pickup_time":    order.get("pickup_time"),
-        "total_price":    order.get("total_price"),
-        "total_profit":   order.get("total_profit"),
-        "payment_method": order.get("payment_method"),
-        "payment_status": order.get("payment_status"),
-        "notes":          order.get("notes"),
+        "id":               order.get("id"),
+        "customer":         order.get("customer_name"),
+        "phone":            order.get("customer_phone"),
+        "email":            order.get("customer_email"),
+        "delivery_type":    order.get("delivery_type"),
+        "delivery_address": order.get("delivery_address"),
+        "preferred_date":   order.get("preferred_date"),
+        "pickup_time":      order.get("pickup_time"),
+        "status":           order.get("status"),
+        "total_price":      order.get("total_price"),
+        "payment_method":   order.get("payment_method"),
+        "payment_status":   order.get("payment_status"),
+        "notes":            order.get("notes"),
         "items": [
             {"name": i.get("name"), "quantity": i.get("quantity"), "subtotal": i.get("subtotal")}
             for i in (order.get("items") or [])

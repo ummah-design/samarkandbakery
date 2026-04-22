@@ -267,6 +267,11 @@ def execute_tool(name, inputs):
         description = inputs.get("description", "")
         amount = float(inputs.get("amount", 0))
         expense_date = inputs.get("date", today_str)
+        # Normalize ingredient description to exact system name
+        if category == "Ingredients":
+            matched = _match_ingredient_name(description)
+            if matched:
+                description = matched
         expense_id = create_expense(category, description, amount, expense_date)
         return {
             "success": True,
@@ -342,11 +347,35 @@ def _get_ingredient_names():
         for key in raw:
             if key.startswith("_"):
                 continue
-            name = key.replace("_per_kg", "").replace("_per_litre", "").replace("_per_pot", "").replace("_per_tub", "").replace("_each", "").replace("_", " ").title()
+            name = key
+            for suffix in ["_per_kg", "_per_litre", "_per_pot", "_per_tub", "_each"]:
+                if name.endswith(suffix):
+                    name = name[:-len(suffix)]
+                    break
+            name = name.replace("_", " ").title()
             names.append(name)
         return names
     except Exception:
         return []
+
+
+def _match_ingredient_name(query):
+    """Normalize a user-supplied ingredient name to the exact system name."""
+    q = query.lower().strip()
+    names = _get_ingredient_names()
+    # Exact match
+    for n in names:
+        if n.lower() == q:
+            return n
+    # Query is contained in a name (e.g. "sesame" → "Sesame Seeds")
+    for n in names:
+        if q in n.lower():
+            return n
+    # Name is contained in query (e.g. "sesame seeds oil" → "Sesame Seeds")
+    for n in names:
+        if n.lower() in q:
+            return n
+    return None
 
 
 def _call_claude(messages):
@@ -365,11 +394,13 @@ def _call_claude(messages):
         "  2. Description: what was bought or paid for (e.g. Flour, Sesame Seeds, Gas bill)\n"
         "  3. Amount in MAD\n"
         "  4. Date (default: today if not mentioned)\n"
-        "If the user says 'Ingredients' as category, the description is simply the ingredient name — "
-        "no need to mention dropdowns. Just ask: 'Which ingredient and how much did it cost?'\n"
-        "Known ingredients: " + ingredients + "\n"
-        "Once you have all 4 fields, confirm with the user before calling add_expense.\n"
-        "Example confirmation: 'Add Ingredients expense: Flour — 45 MAD on 22 Apr. Confirm?'\n\n"
+        "If the user says 'Ingredients' as category, ask: 'Which ingredient and how much did it cost?'\n"
+        "Use the EXACT ingredient name from this list when it matches (even partially):\n"
+        "  " + ingredients + "\n"
+        "Examples: user says 'sesame' → use 'Sesame Seeds'. User says 'butter' → use 'Salted Butter'.\n"
+        "If the ingredient is NOT in the list at all, still save it — just use the name the user gave.\n"
+        "Once you have all 4 fields, confirm before calling add_expense.\n"
+        "Example: 'Add Ingredients — Sesame Seeds — 46 MAD on 23 Apr. Confirm?'\n\n"
         "OTHER RULES:\n"
         "- For change_order_status: confirm before acting.\n"
         "- Format order lists: one per line with ID, customer, items, total.\n"

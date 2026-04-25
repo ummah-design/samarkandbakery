@@ -337,8 +337,37 @@
 </div>
 
 <div class="container">
-    <h1 class="page-title">{{ item.name }}</h1>
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:8px;">
+        <h1 class="page-title" style="margin-bottom:0;">{{ item.name }}</h1>
+        <span id="status-pill"
+              style="display:inline-block;padding:4px 14px;border-radius:20px;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;
+                     {% if item.draft %}background:#fdf3d8;color:#a36b00;{% else %}background:#dff5e6;color:#1f6c3d;{% endif %}">
+            {% if item.draft %}Draft{% else %}Live{% endif %}
+        </span>
+    </div>
     <p class="page-subtitle">Edit product details, images, and SEO settings</p>
+
+    <!-- Visibility -->
+    <div class="section-card">
+        <h2 class="section-title">Visibility</h2>
+        <p class="section-desc">Drafts are hidden from the customer-facing menu. Published products are live on the site.</p>
+        <input type="hidden" id="f-draft" value="{{ '1' if item.draft else '0' }}">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button type="button" id="btn-publish" onclick="togglePublish(false)"
+                style="padding:10px 20px;border-radius:8px;border:none;font-size:0.9rem;font-weight:600;cursor:pointer;
+                       background:{% if item.draft %}var(--success){% else %}var(--warm-cream){% endif %};
+                       color:{% if item.draft %}#fff{% else %}var(--text-secondary){% endif %};">
+                Publish (make live)
+            </button>
+            <button type="button" id="btn-unpublish" onclick="togglePublish(true)"
+                style="padding:10px 20px;border-radius:8px;border:1px solid var(--border);font-size:0.9rem;font-weight:600;cursor:pointer;
+                       background:{% if item.draft %}var(--warm-cream){% else %}#fff{% endif %};
+                       color:var(--text-secondary);">
+                Unpublish (move to draft)
+            </button>
+        </div>
+        <p class="field-hint" style="margin-top:10px;">Status changes save when you click "Save Changes" below.</p>
+    </div>
 
     <!-- Basic Info -->
     <div class="section-card">
@@ -630,6 +659,32 @@ updateSeoPreview();
 // Auto-update slug when name changes
 document.getElementById('f-slug').addEventListener('input', updateSeoPreview);
 
+// ── Publish / Draft toggle ──
+function togglePublish(makeDraft) {
+    document.getElementById('f-draft').value = makeDraft ? '1' : '0';
+    var pill = document.getElementById('status-pill');
+    var pub = document.getElementById('btn-publish');
+    var unp = document.getElementById('btn-unpublish');
+    if (makeDraft) {
+        pill.textContent = 'Draft';
+        pill.style.background = '#fdf3d8';
+        pill.style.color = '#a36b00';
+        pub.style.background = 'var(--success)';
+        pub.style.color = '#fff';
+        unp.style.background = '#fff';
+    } else {
+        pill.textContent = 'Live';
+        pill.style.background = '#dff5e6';
+        pill.style.color = '#1f6c3d';
+        pub.style.background = 'var(--warm-cream)';
+        pub.style.color = 'var(--text-secondary)';
+        unp.style.background = 'var(--warm-cream)';
+    }
+    var status = document.getElementById('save-status');
+    status.style.color = '#a36b00';
+    status.textContent = 'Unsaved changes — click Save Changes';
+}
+
 // ── Video Management ──
 
 var videoList = {{ item.videos|tojson if item.videos else '[]' }};
@@ -759,6 +814,7 @@ async function saveProduct() {
     formData.append('meta_title', document.getElementById('f-meta-title').value);
     formData.append('meta_description', document.getElementById('f-meta-desc').value);
     formData.append('slug', document.getElementById('f-slug').value);
+    formData.append('draft', document.getElementById('f-draft').value === '1' ? 'true' : 'false');
 
     const fileInput = document.getElementById('f-image');
     if (fileInput.files.length > 0) {

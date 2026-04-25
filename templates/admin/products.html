@@ -3,10 +3,20 @@
 
 {% block content %}
 <div class="card">
-    <h2>All Products</h2>
-    <p style="color:#888;font-size:0.85em;margin-bottom:16px;">Click Edit to update product image, description, or price. Images are auto-cropped to fit — any size works, but square or landscape (~600x400px) looks best.</p>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:8px;">
+        <h2 style="margin:0;">All Products</h2>
+        <div style="display:flex;gap:6px;background:#f0ebe3;padding:4px;border-radius:10px;" id="status-filter-tabs">
+            <button type="button" data-filter="all" class="status-filter-btn active"
+                style="border:none;background:#1e2a4a;color:#fff;padding:7px 16px;border-radius:7px;font-size:0.85em;font-weight:600;cursor:pointer;">All <span class="count" id="count-all">0</span></button>
+            <button type="button" data-filter="active" class="status-filter-btn"
+                style="border:none;background:transparent;color:#6b6b80;padding:7px 16px;border-radius:7px;font-size:0.85em;font-weight:600;cursor:pointer;">Active <span class="count" id="count-active">0</span></button>
+            <button type="button" data-filter="draft" class="status-filter-btn"
+                style="border:none;background:transparent;color:#6b6b80;padding:7px 16px;border-radius:7px;font-size:0.85em;font-weight:600;cursor:pointer;">Drafts <span class="count" id="count-draft">0</span></button>
+        </div>
+    </div>
+    <p style="color:#888;font-size:0.85em;margin-bottom:16px;">Click Edit to update product image, description, or price. Drafts are hidden from the customer-facing menu.</p>
     <table class="recipes-table" id="recipes-table">
-        <thead><tr><th style="width:60px;"></th><th>Product</th><th>Description</th><th>Price</th><th style="width:80px;"></th></tr></thead>
+        <thead><tr><th style="width:60px;"></th><th>Product</th><th>Description</th><th style="width:90px;">Status</th><th>Price</th><th style="width:80px;"></th></tr></thead>
         <tbody></tbody>
     </table>
 </div>
@@ -61,24 +71,71 @@
 {% block scripts %}
 <script>
     var _recipesData = [];
+    var _currentFilter = 'all';
 
     async function loadRecipes() {
         var res = await fetch('/api/recipes'); _recipesData = await res.json();
+        renderRecipes();
+    }
+
+    function renderRecipes() {
         var tbody = document.querySelector('#recipes-table tbody'); tbody.innerHTML = '';
+        var totalAll = _recipesData.length;
+        var totalDraft = 0, totalActive = 0;
+        for (var i = 0; i < _recipesData.length; i++) {
+            if (_recipesData[i].draft) totalDraft++; else totalActive++;
+        }
+        document.getElementById('count-all').textContent = '(' + totalAll + ')';
+        document.getElementById('count-active').textContent = '(' + totalActive + ')';
+        document.getElementById('count-draft').textContent = '(' + totalDraft + ')';
+
+        var shown = 0;
         for (var ri = 0; ri < _recipesData.length; ri++) {
             var r = _recipesData[ri];
+            if (_currentFilter === 'active' && r.draft) continue;
+            if (_currentFilter === 'draft' && !r.draft) continue;
+            shown++;
             var imgSrc = r.image ? '/static/products/' + r.image : '';
             var imgHtml = imgSrc ? '<img src="' + imgSrc + '" alt="' + r.name + '" style="width:48px;height:48px;object-fit:cover;border-radius:8px;">' : '';
             var desc = r.description ? (r.description.length > 80 ? r.description.substring(0, 80) + '...' : r.description) : '-';
+            var statusBadge = r.draft
+                ? '<span style="background:#fdf3d8;color:#a36b00;padding:3px 10px;border-radius:12px;font-size:0.72em;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;">Draft</span>'
+                : '<span style="background:#dff5e6;color:#1f6c3d;padding:3px 10px;border-radius:12px;font-size:0.72em;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;">Live</span>';
             tbody.innerHTML += '<tr>'
                 + '<td style="width:60px;">' + imgHtml + '</td>'
                 + '<td><strong>' + r.name + '</strong></td>'
                 + '<td style="font-size:0.85em;color:#6b6b80;max-width:300px;" dir="auto">' + desc + '</td>'
+                + '<td>' + statusBadge + '</td>'
                 + '<td class="price">' + mad(r.selling_price) + '</td>'
                 + '<td><a href="/admin/product/' + r.key + '/edit" class="status-btn complete" style="font-size:0.78em;padding:6px 14px;text-decoration:none;display:inline-block;">Edit</a></td>'
                 + '</tr>';
         }
+        if (shown === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:#9a9aad;">No products in this view.</td></tr>';
+        }
     }
+
+    function setFilter(filter) {
+        _currentFilter = filter;
+        var btns = document.querySelectorAll('.status-filter-btn');
+        for (var i = 0; i < btns.length; i++) {
+            var b = btns[i];
+            if (b.dataset.filter === filter) {
+                b.classList.add('active');
+                b.style.background = '#1e2a4a';
+                b.style.color = '#fff';
+            } else {
+                b.classList.remove('active');
+                b.style.background = 'transparent';
+                b.style.color = '#6b6b80';
+            }
+        }
+        renderRecipes();
+    }
+
+    document.querySelectorAll('.status-filter-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() { setFilter(btn.dataset.filter); });
+    });
 
     function openProductEdit(key) {
         var r = _recipesData.find(function(x) { return x.key === key; });

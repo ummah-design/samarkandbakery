@@ -742,7 +742,8 @@ def api_recipes():
             "description": menu_item.get("description", ""),
             "description_long": menu_item.get("description_long", ""),
             "meta_title": menu_item.get("meta_title", ""),
-            "meta_description": menu_item.get("meta_description", "")
+            "meta_description": menu_item.get("meta_description", ""),
+            "draft": bool(menu_item.get("draft", False))
         })
     return jsonify(result)
 
@@ -788,6 +789,14 @@ def api_update_product(product_key):
         menu["products"][product_key]["meta_title"] = meta_title
     if meta_description is not None:
         menu["products"][product_key]["meta_description"] = meta_description
+
+    # Publish / draft toggle
+    draft_val = request.form.get("draft")
+    if draft_val is not None:
+        if draft_val in ("true", "1", "True"):
+            menu["products"][product_key]["draft"] = True
+        else:
+            menu["products"][product_key].pop("draft", None)
 
     # Handle slug change — rename the product key
     new_key = product_key

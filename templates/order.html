@@ -1014,6 +1014,48 @@
         .field-input::placeholder { color: var(--text-muted); }
         textarea.field-input { resize: vertical; min-height: 72px; }
 
+        .loyalty-card {
+            background: linear-gradient(135deg, rgba(184,134,11,0.08), rgba(184,134,11,0.02));
+            border: 1px solid rgba(184,134,11,0.25);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            margin-bottom: 16px;
+        }
+        .loyalty-header {
+            display: flex; align-items: center; gap: 8px;
+            font-weight: 600; color: var(--gold); font-size: 0.95rem; margin-bottom: 6px;
+        }
+        .loyalty-balance {
+            font-size: 0.92rem; color: var(--text-primary); margin-bottom: 10px; line-height: 1.5;
+        }
+        .loyalty-balance strong { color: var(--gold); }
+        .loyalty-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+        .loyalty-btn {
+            padding: 8px 14px; border-radius: var(--radius-sm); border: none;
+            font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 200ms;
+        }
+        .loyalty-btn.primary { background: var(--navy); color: #fff; }
+        .loyalty-btn.primary:hover { background: var(--navy-light); }
+        .loyalty-btn.primary:disabled { opacity: 0.6; cursor: wait; }
+        .loyalty-btn.ghost { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
+        .loyalty-btn.ghost:hover { background: var(--warm-card); }
+        .loyalty-row { display: flex; gap: 8px; align-items: center; }
+        .loyalty-row .field-input { margin-bottom: 0; }
+        .loyalty-info { font-size: 0.82rem; color: var(--text-secondary); margin: 8px 0; line-height: 1.45; }
+        .loyalty-message { font-size: 0.82rem; margin-top: 8px; min-height: 1em; }
+        .loyalty-message.success { color: var(--success); font-weight: 600; }
+        .loyalty-message.error { color: #c0392b; font-weight: 500; }
+        .loyalty-applied {
+            display: flex; align-items: center; justify-content: space-between; gap: 8px;
+            background: rgba(45,122,79,0.08); color: var(--success);
+            padding: 10px 12px; border-radius: var(--radius-sm); font-size: 0.88rem; font-weight: 600;
+        }
+        .loyalty-link {
+            background: none; border: none; color: var(--success); text-decoration: underline;
+            cursor: pointer; font-size: 0.82rem; padding: 0;
+        }
+        .loyalty-redeem-flow { margin-top: 10px; }
+
         .toggle-group {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1763,6 +1805,38 @@
                 <input class="field-input" type="tel" id="c-phone" placeholder="{{ t.phone_ph }}" required>
             </div>
 
+            <!-- Loyalty points panel — hidden until customer email matches a known balance -->
+            <div class="loyalty-card" id="loyalty-card" style="display:none;">
+                <div class="loyalty-header">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
+                    <span>{{ t.loyalty_title }}</span>
+                </div>
+                <div class="loyalty-balance" id="loyalty-balance-text"></div>
+                <div class="loyalty-actions" id="loyalty-actions">
+                    <button type="button" class="loyalty-btn primary" id="loyalty-apply-btn" onclick="loyaltyStartRedeem()">{{ t.loyalty_apply_now }}</button>
+                    <button type="button" class="loyalty-btn ghost" onclick="loyaltySaveLater()">{{ t.loyalty_save_later }}</button>
+                </div>
+                <div class="loyalty-redeem-flow" id="loyalty-redeem-flow" style="display:none;">
+                    <p class="loyalty-info" id="loyalty-redeem-info"></p>
+                    <div class="loyalty-row">
+                        <input type="number" id="loyalty-redeem-points" class="field-input" min="0" step="1" style="margin-bottom:0;" placeholder="0">
+                        <button type="button" class="loyalty-btn primary" id="loyalty-send-code-btn" onclick="loyaltySendCode()">{{ t.loyalty_send_code }}</button>
+                    </div>
+                    <div id="loyalty-code-section" style="display:none;margin-top:10px;">
+                        <p class="loyalty-info">{{ t.loyalty_code_sent }}</p>
+                        <div class="loyalty-row">
+                            <input type="text" id="loyalty-code-input" class="field-input" inputmode="numeric" maxlength="6" style="margin-bottom:0;letter-spacing:0.3em;text-align:center;" placeholder="••••••">
+                            <button type="button" class="loyalty-btn primary" id="loyalty-verify-btn" onclick="loyaltyVerifyCode()">{{ t.loyalty_verify }}</button>
+                        </div>
+                    </div>
+                    <div class="loyalty-message" id="loyalty-message"></div>
+                </div>
+                <div class="loyalty-applied" id="loyalty-applied" style="display:none;">
+                    <span id="loyalty-applied-text"></span>
+                    <button type="button" class="loyalty-link" onclick="loyaltyCancelRedeem()">{{ t.loyalty_remove }}</button>
+                </div>
+            </div>
+
             <div class="field">
                 <label class="field-label">{{ t.preferred_date }}</label>
                 <div class="mini-cal" id="mini-cal"></div>
@@ -1862,6 +1936,7 @@
             <h2 class="success-title">{{ t.order_received }}</h2>
             <p class="success-message" id="success-msg"></p>
             <p class="success-message" id="success-total"></p>
+            <p class="success-message" id="success-loyalty" style="color:var(--gold);font-weight:600;display:none;"></p>
             <button class="btn-new-order" onclick="resetOrder()">{{ t.btn_new_order }}</button>
         </div>
     </div>
@@ -1878,6 +1953,15 @@ let paypalRendered = false;
 let appliedPromo = null;
 let discountAmount = 0;
 let autoDiscount = { enabled: false, threshold: 0, percent: 0 };
+
+// Loyalty state
+var loyaltyData = { balance: 0, redeem_value_mad: 0, min_redeem: 100, redeem_value_per_point: 0.05, earn_rate: 1 };
+var loyaltyEmail = '';
+var loyaltyLookupTimer = null;
+var loyaltyApplied = false;
+var loyaltyAppliedPoints = 0;
+var loyaltyAppliedMad = 0;
+var loyaltyCodeVerified = false;
 
 async function loadAutoDiscount() {
     try {
@@ -2035,6 +2119,21 @@ function selectDate(dateStr, el) {
 
 loadAutoDiscount();
 
+// Trigger loyalty lookup when the customer finishes typing their email
+(function attachEmailLoyaltyListener() {
+    var emailInput = document.getElementById('c-email');
+    if (!emailInput) return;
+    var run = function() {
+        if (loyaltyLookupTimer) clearTimeout(loyaltyLookupTimer);
+        loyaltyLookupTimer = setTimeout(function() {
+            var v = emailInput.value.trim().toLowerCase();
+            loyaltyLookup(v);
+        }, 350);
+    };
+    emailInput.addEventListener('blur', run);
+    emailInput.addEventListener('change', run);
+})();
+
 function saveCart() { localStorage.setItem('samarkand_cart', JSON.stringify(cart)); }
 
 function addToCart(key) {
@@ -2155,7 +2254,24 @@ function renderCheckoutSummary() {
         const percentLabel = (autoDiscount.percent % 1 === 0) ? autoDiscount.percent.toString() : autoDiscount.percent.toFixed(1);
         html += `<div class="cart-line" style="color:var(--success);"><span>${T.auto_discount_label || 'Order discount'} (${percentLabel}%)</span><span style="font-weight:600;">-${autoAmt.toFixed(2)} ${T.currency}</span></div>`;
     }
-    const grand = Math.max(total - discountAmount - autoAmt, 0);
+    // Cap loyalty redemption if cart shrunk below the applied amount
+    if (loyaltyApplied) {
+        const remaining = Math.max(total - discountAmount - autoAmt, 0);
+        if (loyaltyAppliedMad > remaining) {
+            loyaltyAppliedMad = +remaining.toFixed(2);
+            loyaltyAppliedPoints = Math.floor(loyaltyAppliedMad / loyaltyData.redeem_value_per_point);
+            const appliedEl = document.getElementById('loyalty-applied-text');
+            if (appliedEl) {
+                const tpl = T.loyalty_applied_text || 'Redeeming {points} points (-{mad} MAD)';
+                appliedEl.textContent = tpl.replace('{points}', loyaltyAppliedPoints).replace('{mad}', loyaltyAppliedMad.toFixed(2));
+            }
+        }
+        if (loyaltyAppliedMad > 0) {
+            html += `<div class="cart-line" style="color:var(--success);"><span>${T.loyalty_line_label || 'Loyalty points'} (${loyaltyAppliedPoints})</span><span style="font-weight:600;">-${loyaltyAppliedMad.toFixed(2)} ${T.currency}</span></div>`;
+        }
+    }
+    const loyaltyDeduct = loyaltyApplied ? loyaltyAppliedMad : 0;
+    const grand = Math.max(total - discountAmount - autoAmt - loyaltyDeduct, 0);
     html += `<div class="cart-line-total"><span>${T.total}</span><span class="amount">${grand.toFixed(2)} ${T.currency}</span></div>`;
     if (!appliedPromo && autoDiscount.enabled && autoDiscount.threshold > 0 && autoDiscount.percent > 0) {
         const percentLabel = (autoDiscount.percent % 1 === 0) ? autoDiscount.percent.toString() : autoDiscount.percent.toFixed(1);
@@ -2170,6 +2286,216 @@ function renderCheckoutSummary() {
         }
     }
     document.getElementById('checkout-summary').innerHTML = html;
+}
+
+// ── Loyalty: lookup, redeem flow, verify ──
+
+function loyaltyResetUI() {
+    loyaltyApplied = false;
+    loyaltyAppliedPoints = 0;
+    loyaltyAppliedMad = 0;
+    loyaltyCodeVerified = false;
+    var card = document.getElementById('loyalty-card');
+    if (card) card.style.display = 'none';
+    var flow = document.getElementById('loyalty-redeem-flow');
+    if (flow) flow.style.display = 'none';
+    var section = document.getElementById('loyalty-code-section');
+    if (section) section.style.display = 'none';
+    var applied = document.getElementById('loyalty-applied');
+    if (applied) applied.style.display = 'none';
+    var actions = document.getElementById('loyalty-actions');
+    if (actions) actions.style.display = '';
+    var msg = document.getElementById('loyalty-message');
+    if (msg) { msg.textContent = ''; msg.className = 'loyalty-message'; }
+}
+
+async function loyaltyLookup(email) {
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        loyaltyResetUI();
+        loyaltyEmail = '';
+        return;
+    }
+    if (email === loyaltyEmail && loyaltyApplied) return;
+    loyaltyEmail = email;
+    try {
+        var res = await fetch('/api/loyalty/balance?email=' + encodeURIComponent(email));
+        var data = await res.json();
+        loyaltyData = Object.assign(loyaltyData, data);
+        if (data.balance > 0) {
+            var card = document.getElementById('loyalty-card');
+            var txt = document.getElementById('loyalty-balance-text');
+            var tpl = T.loyalty_have || 'You have <strong>{points} points</strong> (worth <strong>{mad} MAD</strong>).';
+            txt.innerHTML = tpl
+                .replace('{points}', data.balance)
+                .replace('{mad}', data.redeem_value_mad.toFixed(2));
+            // If below minimum, show but disable apply
+            var applyBtn = document.getElementById('loyalty-apply-btn');
+            if (data.balance < data.min_redeem) {
+                applyBtn.disabled = true;
+                applyBtn.textContent = (T.loyalty_min_required || 'Need {min} pts to redeem')
+                    .replace('{min}', data.min_redeem);
+                applyBtn.style.opacity = '0.6';
+                applyBtn.style.cursor = 'not-allowed';
+            } else {
+                applyBtn.disabled = false;
+                applyBtn.textContent = T.loyalty_apply_now || 'Apply now';
+                applyBtn.style.opacity = '';
+                applyBtn.style.cursor = '';
+            }
+            card.style.display = 'block';
+        } else {
+            loyaltyResetUI();
+        }
+    } catch (e) {
+        loyaltyResetUI();
+    }
+}
+
+function loyaltyStartRedeem() {
+    if (loyaltyData.balance < loyaltyData.min_redeem) return;
+    document.getElementById('loyalty-actions').style.display = 'none';
+    document.getElementById('loyalty-redeem-flow').style.display = 'block';
+    var max = Math.min(loyaltyData.balance, Math.floor(getCartSubtotal() / loyaltyData.redeem_value_per_point));
+    // Suggest the lower of: full balance, or amount needed to zero out cart
+    var input = document.getElementById('loyalty-redeem-points');
+    input.max = max;
+    input.value = max;
+    var info = document.getElementById('loyalty-redeem-info');
+    var tpl = T.loyalty_redeem_info || 'Redeem between {min} and {max} points ({rate} pts = 1 MAD).';
+    info.textContent = tpl
+        .replace('{min}', loyaltyData.min_redeem)
+        .replace('{max}', max)
+        .replace('{rate}', Math.round(1 / loyaltyData.redeem_value_per_point));
+}
+
+function loyaltySaveLater() {
+    loyaltyApplied = false;
+    loyaltyAppliedPoints = 0;
+    loyaltyAppliedMad = 0;
+    document.getElementById('loyalty-actions').style.display = 'none';
+    var msg = document.getElementById('loyalty-message');
+    msg.textContent = T.loyalty_saved_later || 'Saved for next time.';
+    msg.className = 'loyalty-message success';
+    renderCheckoutSummary();
+}
+
+async function loyaltySendCode() {
+    var pts = parseInt(document.getElementById('loyalty-redeem-points').value || '0', 10);
+    var msg = document.getElementById('loyalty-message');
+    if (pts < loyaltyData.min_redeem) {
+        msg.textContent = (T.loyalty_min_error || 'Minimum redemption is {min} points').replace('{min}', loyaltyData.min_redeem);
+        msg.className = 'loyalty-message error';
+        return;
+    }
+    if (pts > loyaltyData.balance) {
+        msg.textContent = T.loyalty_balance_error || 'Not enough points';
+        msg.className = 'loyalty-message error';
+        return;
+    }
+    var btn = document.getElementById('loyalty-send-code-btn');
+    btn.disabled = true; btn.textContent = T.loyalty_sending || 'Sending…';
+    var name = document.getElementById('c-name').value.trim();
+    try {
+        var res = await fetch('/api/loyalty/send-code', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: loyaltyEmail, customer_name: name })
+        });
+        var data = await res.json();
+        if (data.success) {
+            document.getElementById('loyalty-code-section').style.display = 'block';
+            msg.textContent = '';
+            msg.className = 'loyalty-message';
+            btn.textContent = T.loyalty_resend || 'Resend code';
+            btn.disabled = false;
+        } else {
+            msg.textContent = data.error || 'Could not send code';
+            msg.className = 'loyalty-message error';
+            btn.disabled = false; btn.textContent = T.loyalty_send_code || 'Send code';
+        }
+    } catch (e) {
+        msg.textContent = T.alert_connection || 'Connection error';
+        msg.className = 'loyalty-message error';
+        btn.disabled = false; btn.textContent = T.loyalty_send_code || 'Send code';
+    }
+}
+
+async function loyaltyVerifyCode() {
+    var code = document.getElementById('loyalty-code-input').value.trim();
+    var msg = document.getElementById('loyalty-message');
+    if (!/^\d{6}$/.test(code)) {
+        msg.textContent = T.loyalty_code_format || 'Enter the 6-digit code';
+        msg.className = 'loyalty-message error';
+        return;
+    }
+    var btn = document.getElementById('loyalty-verify-btn');
+    btn.disabled = true; btn.textContent = T.loyalty_verifying || 'Verifying…';
+    try {
+        var res = await fetch('/api/loyalty/verify-code', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: loyaltyEmail, code: code })
+        });
+        var data = await res.json();
+        if (data.valid) {
+            loyaltyCodeVerified = true;
+            var pts = parseInt(document.getElementById('loyalty-redeem-points').value || '0', 10);
+            // Cap to whichever is smaller: requested, balance, or cart-equivalent
+            var maxFromCart = Math.floor(getCartSubtotal() / loyaltyData.redeem_value_per_point);
+            pts = Math.min(pts, loyaltyData.balance, maxFromCart);
+            loyaltyAppliedPoints = pts;
+            loyaltyAppliedMad = +(pts * loyaltyData.redeem_value_per_point).toFixed(2);
+            loyaltyApplied = true;
+            // Hide flow, show applied summary
+            document.getElementById('loyalty-redeem-flow').style.display = 'none';
+            var applied = document.getElementById('loyalty-applied');
+            var tpl = T.loyalty_applied_text || 'Redeeming {points} points (-{mad} MAD)';
+            document.getElementById('loyalty-applied-text').textContent = tpl
+                .replace('{points}', pts).replace('{mad}', loyaltyAppliedMad.toFixed(2));
+            applied.style.display = 'flex';
+            renderCheckoutSummary();
+        } else {
+            msg.textContent = data.error || 'Invalid code';
+            msg.className = 'loyalty-message error';
+            btn.disabled = false; btn.textContent = T.loyalty_verify || 'Verify';
+        }
+    } catch (e) {
+        msg.textContent = T.alert_connection || 'Connection error';
+        msg.className = 'loyalty-message error';
+        btn.disabled = false; btn.textContent = T.loyalty_verify || 'Verify';
+    }
+}
+
+function showLoyaltyEarned(orderData) {
+    var el = document.getElementById('success-loyalty');
+    if (!el) return;
+    var lines = [];
+    if (orderData.loyalty_redeemed_points && orderData.loyalty_redeemed_points > 0) {
+        var tplR = T.loyalty_redeemed_msg || 'Redeemed {points} points (-{mad} MAD)';
+        lines.push(tplR.replace('{points}', orderData.loyalty_redeemed_points)
+                       .replace('{mad}', orderData.loyalty_redeemed_mad.toFixed(2)));
+    }
+    if (orderData.loyalty_earned_points && orderData.loyalty_earned_points > 0) {
+        var tplE = T.loyalty_earned_msg || 'You earned {points} loyalty points!';
+        lines.push(tplE.replace('{points}', orderData.loyalty_earned_points));
+    }
+    if (lines.length) {
+        el.innerHTML = lines.join('<br>');
+        el.style.display = 'block';
+    } else {
+        el.style.display = 'none';
+    }
+}
+
+function loyaltyCancelRedeem() {
+    loyaltyApplied = false;
+    loyaltyAppliedPoints = 0;
+    loyaltyAppliedMad = 0;
+    loyaltyCodeVerified = false;
+    document.getElementById('loyalty-applied').style.display = 'none';
+    document.getElementById('loyalty-actions').style.display = '';
+    document.getElementById('loyalty-code-section').style.display = 'none';
+    var msg = document.getElementById('loyalty-message');
+    if (msg) { msg.textContent = ''; msg.className = 'loyalty-message'; }
+    renderCheckoutSummary();
 }
 
 async function applyPromo() {
@@ -2276,6 +2602,7 @@ function getOrderTotal() {
     const autoAmt = getAutoDiscountAmount(total);
     if (discountAmount) total -= discountAmount;
     if (autoAmt) total -= autoAmt;
+    if (loyaltyApplied && loyaltyAppliedMad > 0) total -= loyaltyAppliedMad;
     return Math.max(total, 0);
 }
 
@@ -2316,7 +2643,8 @@ function buildOrderPayload(fields, extraFields) {
         delivery_lng: selectedLng,
         items: Object.entries(cart).map(([k, q]) => ({ key: k, quantity: q })),
         notes: document.getElementById('c-notes').value || null,
-        payment_method: paymentMethod
+        payment_method: paymentMethod,
+        loyalty_redeem_points: (loyaltyApplied && loyaltyCodeVerified) ? loyaltyAppliedPoints : 0
     };
     if (extraFields) Object.assign(payload, extraFields);
     return payload;
@@ -2365,6 +2693,7 @@ function renderPayPalButton() {
                 localStorage.removeItem('samarkand_cart');
                 document.getElementById('success-msg').textContent = orderData.message;
                 document.getElementById('success-total').textContent = T.total + ': ' + orderData.total_price.toFixed(2) + ' ' + T.currency;
+                showLoyaltyEarned(orderData);
             } else {
                 alert(orderData.error || T.alert_error);
             }
@@ -2416,7 +2745,8 @@ async function submitOrder() {
                 delivery_lng: selectedLng,
                 items: Object.entries(cart).map(([k, q]) => ({ key: k, quantity: q })),
                 notes: document.getElementById('c-notes').value || null,
-                payment_method: 'cod'
+                payment_method: 'cod',
+                loyalty_redeem_points: (loyaltyApplied && loyaltyCodeVerified) ? loyaltyAppliedPoints : 0
             })
         });
         const data = await res.json();
@@ -2426,6 +2756,7 @@ async function submitOrder() {
             localStorage.removeItem('samarkand_cart');
             document.getElementById('success-msg').textContent = data.message;
             document.getElementById('success-total').textContent = T.total + ': ' + data.total_price.toFixed(2) + ' ' + T.currency;
+            showLoyaltyEarned(data);
         } else {
             alert(data.error || T.alert_error);
             btn.disabled = false; btn.textContent = T.btn_place_order;
@@ -2451,6 +2782,10 @@ function resetOrder() {
     document.getElementById('map-hint').textContent = T.map_hint;
     setDelivery('pickup');
     setPayment('cod');
+    loyaltyEmail = '';
+    loyaltyResetUI();
+    var sl = document.getElementById('success-loyalty');
+    if (sl) { sl.style.display = 'none'; sl.textContent = ''; }
 }
 
 // Load reviews for scrolling section

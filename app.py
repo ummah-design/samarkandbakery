@@ -17,12 +17,13 @@ from flask import Flask, render_template, request, jsonify, session, redirect, u
 
 from engine import load_data, calculate_cost, calculate_order
 try:
-    from emailer import send_order_placed, send_order_confirmed, send_order_completed, send_contact_inquiry
+    from emailer import send_order_placed, send_order_confirmed, send_order_completed, send_contact_inquiry, send_loyalty_code
 except Exception:
     send_order_placed = None
     send_order_confirmed = None
     send_order_completed = None
     send_contact_inquiry = None
+    send_loyalty_code = None
 
 try:
     import bot_agent
@@ -41,7 +42,11 @@ from database import (create_order, get_orders, get_order, get_orders_by_date,
                       get_review_requests, get_customer_review_stats,
                       get_unrequested_completed_orders,
                       update_payment_status,
-                      create_expense, get_expenses, update_expense, delete_expense)
+                      create_expense, get_expenses, update_expense, delete_expense,
+                      get_loyalty_balance, award_loyalty_points, redeem_loyalty_points,
+                      adjust_loyalty, get_loyalty_transactions, get_all_loyalty_balances,
+                      create_loyalty_code, verify_loyalty_code, consume_loyalty_code,
+                      LOYALTY_REDEEM_VALUE, LOYALTY_MIN_REDEEM, LOYALTY_EARN_RATE)
 import urllib.request
 import urllib.parse
 import base64
@@ -322,6 +327,26 @@ def api_submit_order():
         discount_amt += auto_amt
         total_price -= auto_amt
 
+    # Loyalty redemption — must be a verified email + a verified code that we now consume.
+    # Customer sends loyalty_redeem_points in the payload; we re-validate against live balance.
+    loyalty_redeem_pts = 0
+    loyalty_redeem_mad = 0
+    requested_redeem = int(req.get("loyalty_redeem_points") or 0)
+    customer_email_for_loyalty = (req.get("customer_email") or "").strip().lower()
+    if requested_redeem > 0 and customer_email_for_loyalty:
+        balance = get_loyalty_balance(customer_email_for_loyalty)
+        if requested_redeem >= LOYALTY_MIN_REDEEM and requested_redeem <= balance["balance"]:
+            # Consume the verified code; if no verified code exists, reject.
+            if consume_loyalty_code(customer_email_for_loyalty):
+                # Cap so we never push the order below 0
+                max_redeem_mad = max(total_price, 0)
+                desired_mad = round(requested_redeem * LOYALTY_REDEEM_VALUE, 2)
+                loyalty_redeem_mad = min(desired_mad, max_redeem_mad)
+                # Recalculate points actually consumed (in case we capped to remaining total)
+                loyalty_redeem_pts = int(round(loyalty_redeem_mad / LOYALTY_REDEEM_VALUE))
+                total_price -= loyalty_redeem_mad
+                discount_amt += loyalty_redeem_mad
+
     data = load_data()
     cost_items = [{"recipe_key": i["key"], "quantity": i["quantity"]} for i in items]
     cost_result = calculate_order(cost_items, data)
@@ -358,6 +383,15 @@ def api_submit_order():
         paypal_order_id=paypal_oid
     )
 
+    # Loyalty: write the redemption ledger entry now that we have the order id,
+    # then award points on the post-discount total. Skip awarding if no email.
+    loyalty_earned_pts = 0
+    if customer_email_for_loyalty:
+        if loyalty_redeem_pts > 0:
+            redeem_loyalty_points(customer_email_for_loyalty, loyalty_redeem_pts, order_id)
+        loyalty_earned_pts = award_loyalty_points(customer_email_for_loyalty,
+                                                  round(total_price, 2), order_id)
+
     # Telegram notification
     if _bot_agent_ok:
         try:
@@ -383,19 +417,24 @@ def api_submit_order():
     # Send order confirmation email
     if send_order_placed:
         try:
-            send_order_placed({
-                "id": order_id,
-                "customer_name": req["customer_name"],
-                "customer_email": req.get("customer_email", ""),
-                "items": order_items,
-                "total_price": round(total_price, 2),
-                "delivery_type": req.get("delivery_type", "pickup"),
-                "pickup_time": req.get("pickup_time"),
-                "delivery_address": req.get("delivery_address"),
-                "preferred_date": req.get("preferred_date"),
-                "promo_code": promo_code,
-                "discount_amount": round(discount_amt, 2)
-            })
+            send_order_placed(
+                {
+                    "id": order_id,
+                    "customer_name": req["customer_name"],
+                    "customer_email": req.get("customer_email", ""),
+                    "items": order_items,
+                    "total_price": round(total_price, 2),
+                    "delivery_type": req.get("delivery_type", "pickup"),
+                    "pickup_time": req.get("pickup_time"),
+                    "delivery_address": req.get("delivery_address"),
+                    "preferred_date": req.get("preferred_date"),
+                    "promo_code": promo_code,
+                    "discount_amount": round(discount_amt, 2)
+                },
+                loyalty_earned=loyalty_earned_pts,
+                loyalty_redeemed_pts=loyalty_redeem_pts,
+                loyalty_redeemed_mad=round(loyalty_redeem_mad, 2)
+            )
         except Exception:
             pass
 
@@ -404,6 +443,9 @@ def api_submit_order():
         "order_id": order_id,
         "total_price": round(total_price, 2),
         "payment_method": payment_method,
+        "loyalty_redeemed_points": loyalty_redeem_pts,
+        "loyalty_redeemed_mad": round(loyalty_redeem_mad, 2),
+        "loyalty_earned_points": loyalty_earned_pts,
         "message": f"Order #{order_id} received! We will contact you shortly."
     })
 
@@ -537,6 +579,74 @@ def admin_promo_codes_page():
 @admin_required
 def admin_auto_discount_page():
     return render_template("admin/auto_discount.html", active_page="auto_discount")
+
+
+@app.route("/admin/loyalty")
+@admin_required
+def admin_loyalty_page():
+    return render_template("admin/loyalty.html", active_page="loyalty",
+                           earn_rate=LOYALTY_EARN_RATE,
+                           redeem_value=LOYALTY_REDEEM_VALUE,
+                           min_redeem=LOYALTY_MIN_REDEEM)
+
+
+@app.route("/api/admin/loyalty/balances")
+@admin_required
+def api_admin_loyalty_balances():
+    return jsonify(get_all_loyalty_balances())
+
+
+@app.route("/api/admin/loyalty/transactions")
+@admin_required
+def api_admin_loyalty_transactions():
+    email = (request.args.get("email") or "").strip().lower()
+    return jsonify(get_loyalty_transactions(email, limit=200))
+
+
+@app.route("/api/admin/loyalty/adjust", methods=["POST"])
+@admin_required
+def api_admin_loyalty_adjust():
+    req = request.json or {}
+    email = (req.get("email") or "").strip().lower()
+    points = int(req.get("points") or 0)
+    note = (req.get("note") or "").strip()
+    if not email or points == 0:
+        return jsonify({"success": False, "error": "Email and non-zero points required"}), 400
+    adjust_loyalty(email, points, note)
+    return jsonify({"success": True, "balance": get_loyalty_balance(email)["balance"]})
+
+
+@app.route("/api/admin/loyalty/backfill", methods=["POST"])
+@admin_required
+def api_admin_loyalty_backfill():
+    """Award loyalty points for all historical orders not yet credited."""
+    import sqlite3
+    db_path = os.path.join(BASE_DIR, "data", "orders.db")
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    rows = conn.execute(
+        "SELECT id, customer_email, total_price FROM orders "
+        "WHERE customer_email != '' AND customer_email IS NOT NULL AND status != 'cancelled'"
+    ).fetchall()
+    credited_ids = set(
+        r[0] for r in conn.execute(
+            "SELECT DISTINCT order_id FROM loyalty_transactions "
+            "WHERE type='earn' AND order_id IS NOT NULL"
+        ).fetchall()
+    )
+    conn.close()
+    awarded = 0
+    skipped = 0
+    for row in rows:
+        if row["id"] in credited_ids:
+            skipped += 1
+            continue
+        email = (row["customer_email"] or "").strip().lower()
+        total = float(row["total_price"] or 0)
+        if email and total > 0:
+            award_loyalty_points(email, total, row["id"])
+            awarded += 1
+    return jsonify({"success": True, "awarded": awarded, "skipped": skipped})
 
 
 @app.route("/api/admin/auto-discount", methods=["GET", "POST"])
@@ -1265,6 +1375,59 @@ def api_validate_promo():
     code = request.json.get("code", "")
     order_total = request.json.get("order_total", 0)
     result = validate_promo(code, order_total)
+    return jsonify(result)
+
+
+# ── Public Loyalty API ──
+
+@app.route("/api/loyalty/balance")
+def api_loyalty_balance():
+    """Look up a customer's loyalty balance by email."""
+    email = (request.args.get("email") or "").strip().lower()
+    if not email or "@" not in email:
+        return jsonify({"balance": 0, "lifetime_earned": 0, "redeem_value_mad": 0,
+                        "min_redeem": LOYALTY_MIN_REDEEM,
+                        "redeem_value_per_point": LOYALTY_REDEEM_VALUE,
+                        "earn_rate": LOYALTY_EARN_RATE})
+    bal = get_loyalty_balance(email)
+    bal["earn_rate"] = LOYALTY_EARN_RATE
+    return jsonify(bal)
+
+
+@app.route("/api/loyalty/send-code", methods=["POST"])
+def api_loyalty_send_code():
+    """Generate and email a 6-digit verification code so the customer can redeem points."""
+    req = request.json or {}
+    email = (req.get("email") or "").strip().lower()
+    name = (req.get("customer_name") or "").strip() or None
+    if not email or "@" not in email:
+        return jsonify({"success": False, "error": "Valid email required"}), 400
+    bal = get_loyalty_balance(email)
+    if bal["balance"] < LOYALTY_MIN_REDEEM:
+        return jsonify({"success": False,
+                        "error": f"You need at least {LOYALTY_MIN_REDEEM} points to redeem"}), 400
+    code = create_loyalty_code(email)
+    if not code:
+        return jsonify({"success": False, "error": "Could not generate code"}), 500
+    if send_loyalty_code:
+        try:
+            send_loyalty_code(email, code, customer_name=name)
+        except Exception as e:
+            print("Loyalty code email error: " + str(e))
+    return jsonify({"success": True})
+
+
+@app.route("/api/loyalty/verify-code", methods=["POST"])
+def api_loyalty_verify_code():
+    """Verify a 6-digit code. Does not consume it — that happens on order submit."""
+    req = request.json or {}
+    email = (req.get("email") or "").strip().lower()
+    code = (req.get("code") or "").strip()
+    result = verify_loyalty_code(email, code)
+    if result["valid"]:
+        bal = get_loyalty_balance(email)
+        result["balance"] = bal["balance"]
+        result["redeem_value_mad"] = bal["redeem_value_mad"]
     return jsonify(result)
 
 

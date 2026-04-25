@@ -1,0 +1,171 @@
+{% extends "admin_base.html" %}
+{% block title %}Loyalty Points{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Loyalty Programme</h2>
+    <p style="color:#6b6b80;line-height:1.6;margin:8px 0 0;">
+        Customers earn <strong>{{ earn_rate }} point per 1 MAD</strong> spent (post-discount).
+        Each point is worth <strong>{{ "%.2f"|format(redeem_value) }} MAD</strong> when redeemed
+        ({{ (1/redeem_value)|round|int }} points = 1 MAD). Minimum redemption: <strong>{{ min_redeem }} points</strong>.
+        Points expire 12 months after they are earned.
+    </p>
+</div>
+
+<div class="card">
+    <h2>Backfill Historical Orders</h2>
+    <p style="color:#6b6b80;line-height:1.6;margin:8px 0 16px;">
+        Award loyalty points for all past orders that haven't been credited yet. Safe to run multiple times — already-credited orders are skipped automatically.
+    </p>
+    <button onclick="runBackfill()" id="backfill-btn" style="padding:9px 20px;background:#1e2a4a;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;">Run Backfill</button>
+    <span id="backfill-result" style="margin-left:14px;font-size:0.9em;color:#6b6b80;"></span>
+</div>
+
+<div class="card">
+    <h2>Customer Balances</h2>
+    <table class="recipes-table" id="loyalty-table">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Balance</th>
+                <th>Worth</th>
+                <th>Lifetime Earned</th>
+                <th>Lifetime Redeemed</th>
+                <th>Last Activity</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div id="loyalty-detail" class="card" style="display:none;">
+    <h2 id="loyalty-detail-title">Activity</h2>
+    <div style="margin-bottom:16px;padding:12px 14px;background:#faf6f1;border-radius:8px;">
+        <strong>Manual adjustment</strong>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;align-items:center;">
+            <input type="number" id="adjust-points" placeholder="Points (+ or -)" style="padding:8px 12px;border:1px solid #ddd;border-radius:6px;width:160px;">
+            <input type="text" id="adjust-note" placeholder="Reason (optional)" style="padding:8px 12px;border:1px solid #ddd;border-radius:6px;flex:1;min-width:200px;">
+            <button onclick="adjustBalance()" style="padding:8px 16px;background:#1e2a4a;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;">Apply</button>
+        </div>
+    </div>
+    <table class="recipes-table">
+        <thead>
+            <tr><th>Date</th><th>Type</th><th>Points</th><th>Order</th><th>Note</th><th>Expires</th></tr>
+        </thead>
+        <tbody id="loyalty-tx-tbody"></tbody>
+    </table>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+var currentEmail = '';
+
+async function loadBalances() {
+    var res = await fetch('/api/admin/loyalty/balances');
+    var rows = await res.json();
+    var tbody = document.querySelector('#loyalty-table tbody');
+    tbody.innerHTML = '';
+    if (!rows.length) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#999;padding:40px;">No loyalty activity yet</td></tr>';
+        return;
+    }
+    for (var i = 0; i < rows.length; i++) {
+        var r = rows[i];
+        var last = r.last_activity ? new Date(r.last_activity).toLocaleDateString() : '-';
+        var safeEmail = r.email.replace(/'/g, "\\'");
+        tbody.innerHTML += '<tr>'
+            + '<td><strong>' + r.email + '</strong></td>'
+            + '<td>' + r.balance + '</td>'
+            + '<td>' + r.redeem_value_mad.toFixed(2) + ' MAD</td>'
+            + '<td>' + r.lifetime_earned + '</td>'
+            + '<td>' + r.lifetime_redeemed + '</td>'
+            + '<td>' + last + '</td>'
+            + '<td><button onclick="viewCustomer(\'' + safeEmail + '\')" style="padding:6px 12px;background:#1e2a4a;color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:0.85em;">View</button></td>'
+            + '</tr>';
+    }
+}
+
+async function viewCustomer(email) {
+    currentEmail = email;
+    var res = await fetch('/api/admin/loyalty/transactions?email=' + encodeURIComponent(email));
+    var txs = await res.json();
+    document.getElementById('loyalty-detail-title').textContent = 'Activity — ' + email;
+    var tbody = document.getElementById('loyalty-tx-tbody');
+    tbody.innerHTML = '';
+    if (!txs.length) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;padding:24px;">No transactions</td></tr>';
+    } else {
+        for (var i = 0; i < txs.length; i++) {
+            var t = txs[i];
+            var date = new Date(t.created_at).toLocaleString();
+            var expires = t.expires_at ? new Date(t.expires_at).toLocaleDateString() : '-';
+            var sign = t.points >= 0 ? '+' : '';
+            var color = t.points >= 0 ? '#2d7a4f' : '#c62828';
+            tbody.innerHTML += '<tr>'
+                + '<td>' + date + '</td>'
+                + '<td><span style="text-transform:capitalize;">' + t.type + '</span></td>'
+                + '<td style="color:' + color + ';font-weight:600;">' + sign + t.points + '</td>'
+                + '<td>' + (t.order_id ? '#' + t.order_id : '-') + '</td>'
+                + '<td>' + (t.note || '') + '</td>'
+                + '<td>' + expires + '</td>'
+                + '</tr>';
+        }
+    }
+    document.getElementById('adjust-points').value = '';
+    document.getElementById('adjust-note').value = '';
+    var detail = document.getElementById('loyalty-detail');
+    detail.style.display = 'block';
+    detail.scrollIntoView({ behavior: 'smooth' });
+}
+
+async function adjustBalance() {
+    var pts = parseInt(document.getElementById('adjust-points').value || '0', 10);
+    var note = document.getElementById('adjust-note').value.trim();
+    if (!currentEmail || !pts) {
+        alert('Enter a non-zero point amount.');
+        return;
+    }
+    var res = await fetch('/api/admin/loyalty/adjust', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: currentEmail, points: pts, note: note })
+    });
+    var data = await res.json();
+    if (data.success) {
+        await loadBalances();
+        await viewCustomer(currentEmail);
+    } else {
+        alert(data.error || 'Adjustment failed');
+    }
+}
+
+async function runBackfill() {
+    var btn = document.getElementById('backfill-btn');
+    var result = document.getElementById('backfill-result');
+    btn.disabled = true;
+    btn.textContent = 'Running…';
+    result.textContent = '';
+    try {
+        var res = await fetch('/api/admin/loyalty/backfill', { method: 'POST' });
+        var data = await res.json();
+        if (data.success) {
+            result.style.color = '#2d7a4f';
+            result.textContent = 'Done — ' + data.awarded + ' orders credited, ' + data.skipped + ' already credited.';
+            await loadBalances();
+        } else {
+            result.style.color = '#c62828';
+            result.textContent = data.error || 'Backfill failed.';
+        }
+    } catch (e) {
+        result.style.color = '#c62828';
+        result.textContent = 'Network error.';
+    }
+    btn.disabled = false;
+    btn.textContent = 'Run Backfill';
+}
+
+loadBalances();
+</script>
+{% endblock %}

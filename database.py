@@ -708,9 +708,296 @@ def delete_expense(expense_id):
     conn.close()
 
 
+# ── Loyalty Points ──
+#
+# Earning rate: 1 point per 1 MAD spent (on the post-discount order total).
+# Redemption value: 20 points = 1 MAD off (= 5% effective reward).
+# Minimum redemption: 100 points (5 MAD).
+# Expiry: 12 months from earning date.
+# Identity: customer email (verified via 6-digit code before redemption).
+
+LOYALTY_EARN_RATE = 1.0           # points awarded per 1 MAD spent
+LOYALTY_REDEEM_VALUE = 0.05       # MAD value of 1 point (so 20 pts = 1 MAD)
+LOYALTY_MIN_REDEEM = 100          # minimum points required to redeem
+LOYALTY_EXPIRY_MONTHS = 12        # earned points expire 12 months later
+LOYALTY_CODE_TTL_MINUTES = 15     # verification code lifetime
+LOYALTY_CODE_MAX_ATTEMPTS = 5     # max verify attempts before code is locked
+
+
+def _normalise_email(email):
+    return (email or "").strip().lower()
+
+
+def init_loyalty_tables():
+    """Create loyalty tables if they don't exist."""
+    conn = get_db()
+    # Ledger of every points movement (earn / redeem / expire / adjust).
+    # Balance is always derived from this ledger — no separate balance column to drift.
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS loyalty_transactions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT NOT NULL,
+            type TEXT NOT NULL,
+            points REAL NOT NULL,
+            order_id INTEGER,
+            expires_at TIMESTAMP,
+            note TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_loyalty_tx_email ON loyalty_transactions(email)")
+    # One-time verification codes for redemption.
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS loyalty_codes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT NOT NULL,
+            code TEXT NOT NULL,
+            attempts INTEGER DEFAULT 0,
+            verified INTEGER DEFAULT 0,
+            consumed INTEGER DEFAULT 0,
+            expires_at TIMESTAMP NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_loyalty_codes_email ON loyalty_codes(email)")
+    conn.commit()
+    conn.close()
+
+
+def get_loyalty_balance(email):
+    """
+    Return current balance and lifetime stats for an email address.
+    Balance = sum of all non-expired ledger entries.
+    """
+    email = _normalise_email(email)
+    if not email:
+        return {"email": "", "balance": 0, "lifetime_earned": 0, "redeem_value_mad": 0}
+    conn = get_db()
+    # Live balance: earned entries that haven't expired, plus any redemptions/adjustments
+    row = conn.execute("""
+        SELECT
+            COALESCE(SUM(CASE
+                WHEN type = 'earn' AND (expires_at IS NULL OR expires_at > CURRENT_TIMESTAMP) THEN points
+                WHEN type IN ('redeem', 'expire', 'adjust') THEN points
+                ELSE 0
+            END), 0) AS balance,
+            COALESCE(SUM(CASE WHEN type = 'earn' THEN points ELSE 0 END), 0) AS lifetime_earned
+        FROM loyalty_transactions
+        WHERE email = ?
+    """, (email,)).fetchone()
+    conn.close()
+    balance = max(0, int(round(row["balance"])))
+    lifetime = int(round(row["lifetime_earned"]))
+    return {
+        "email": email,
+        "balance": balance,
+        "lifetime_earned": lifetime,
+        "redeem_value_mad": round(balance * LOYALTY_REDEEM_VALUE, 2),
+        "min_redeem": LOYALTY_MIN_REDEEM,
+        "redeem_value_per_point": LOYALTY_REDEEM_VALUE,
+    }
+
+
+def award_loyalty_points(email, order_total_mad, order_id):
+    """
+    Award points for a completed/placed order. Skips silently if no email.
+    Returns the integer points awarded (0 if none).
+    """
+    email = _normalise_email(email)
+    if not email or not order_total_mad or order_total_mad <= 0:
+        return 0
+    points = int(round(order_total_mad * LOYALTY_EARN_RATE))
+    if points <= 0:
+        return 0
+    conn = get_db()
+    conn.execute("""
+        INSERT INTO loyalty_transactions (email, type, points, order_id, expires_at, note)
+        VALUES (?, 'earn', ?, ?, datetime(CURRENT_TIMESTAMP, ?), ?)
+    """, (email, points, order_id, "+" + str(LOYALTY_EXPIRY_MONTHS) + " months",
+          "Earned on order #" + str(order_id)))
+    conn.commit()
+    conn.close()
+    return points
+
+
+def redeem_loyalty_points(email, points, order_id):
+    """Record a redemption (negative ledger entry). Caller must validate balance first."""
+    email = _normalise_email(email)
+    if not email or points <= 0:
+        return False
+    conn = get_db()
+    conn.execute("""
+        INSERT INTO loyalty_transactions (email, type, points, order_id, note)
+        VALUES (?, 'redeem', ?, ?, ?)
+    """, (email, -abs(int(points)), order_id, "Redeemed on order #" + str(order_id)))
+    conn.commit()
+    conn.close()
+    return True
+
+
+def adjust_loyalty(email, points, note=""):
+    """Admin adjustment — positive or negative integer points."""
+    email = _normalise_email(email)
+    if not email or not points:
+        return False
+    conn = get_db()
+    expires_clause = ""
+    params = [email, int(points), note or "Admin adjustment"]
+    if int(points) > 0:
+        # Positive admin grants also expire after the same window
+        conn.execute("""
+            INSERT INTO loyalty_transactions (email, type, points, expires_at, note)
+            VALUES (?, 'adjust', ?, datetime(CURRENT_TIMESTAMP, '+%d months'), ?)
+        """ % LOYALTY_EXPIRY_MONTHS, params)
+    else:
+        conn.execute("""
+            INSERT INTO loyalty_transactions (email, type, points, note)
+            VALUES (?, 'adjust', ?, ?)
+        """, params)
+    conn.commit()
+    conn.close()
+    return True
+
+
+def get_loyalty_transactions(email, limit=50):
+    """Get the ledger for an email."""
+    email = _normalise_email(email)
+    if not email:
+        return []
+    conn = get_db()
+    rows = conn.execute("""
+        SELECT * FROM loyalty_transactions
+        WHERE email = ?
+        ORDER BY created_at DESC LIMIT ?
+    """, (email, limit)).fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
+
+
+def get_all_loyalty_balances():
+    """Aggregate balances per email for the admin dashboard."""
+    conn = get_db()
+    rows = conn.execute("""
+        SELECT
+            email,
+            COALESCE(SUM(CASE
+                WHEN type = 'earn' AND (expires_at IS NULL OR expires_at > CURRENT_TIMESTAMP) THEN points
+                WHEN type IN ('redeem', 'expire', 'adjust') THEN points
+                ELSE 0
+            END), 0) AS balance,
+            COALESCE(SUM(CASE WHEN type = 'earn' THEN points ELSE 0 END), 0) AS lifetime_earned,
+            COALESCE(SUM(CASE WHEN type = 'redeem' THEN -points ELSE 0 END), 0) AS lifetime_redeemed,
+            MAX(created_at) AS last_activity
+        FROM loyalty_transactions
+        GROUP BY email
+        ORDER BY balance DESC, last_activity DESC
+    """).fetchall()
+    conn.close()
+    out = []
+    for r in rows:
+        d = dict(r)
+        d["balance"] = max(0, int(round(d["balance"])))
+        d["lifetime_earned"] = int(round(d["lifetime_earned"]))
+        d["lifetime_redeemed"] = int(round(d["lifetime_redeemed"]))
+        d["redeem_value_mad"] = round(d["balance"] * LOYALTY_REDEEM_VALUE, 2)
+        out.append(d)
+    return out
+
+
+def create_loyalty_code(email):
+    """
+    Generate a 6-digit verification code, store it, and return it.
+    Invalidates any prior unconsumed code for this email.
+    """
+    import random
+    email = _normalise_email(email)
+    if not email:
+        return None
+    code = "{:06d}".format(random.randint(0, 999999))
+    conn = get_db()
+    # Invalidate older outstanding codes for this email
+    conn.execute("UPDATE loyalty_codes SET consumed = 1 WHERE email = ? AND consumed = 0", (email,))
+    conn.execute("""
+        INSERT INTO loyalty_codes (email, code, expires_at)
+        VALUES (?, ?, datetime(CURRENT_TIMESTAMP, ?))
+    """, (email, code, "+" + str(LOYALTY_CODE_TTL_MINUTES) + " minutes"))
+    conn.commit()
+    conn.close()
+    return code
+
+
+def verify_loyalty_code(email, code):
+    """
+    Verify a code. Marks the code as verified (but not consumed) on success.
+    Returns {"valid": bool, "error": str or None}.
+    The code is consumed only when actually used in a redemption (consume_loyalty_code).
+    """
+    email = _normalise_email(email)
+    code = (code or "").strip()
+    if not email or not code:
+        return {"valid": False, "error": "Email and code required"}
+    conn = get_db()
+    row = conn.execute("""
+        SELECT * FROM loyalty_codes
+        WHERE email = ? AND consumed = 0
+        ORDER BY id DESC LIMIT 1
+    """, (email,)).fetchone()
+    if not row:
+        conn.close()
+        return {"valid": False, "error": "No active code — please request a new one"}
+    rec = dict(row)
+    # Bump attempts
+    conn.execute("UPDATE loyalty_codes SET attempts = attempts + 1 WHERE id = ?", (rec["id"],))
+    conn.commit()
+    if rec["attempts"] + 1 > LOYALTY_CODE_MAX_ATTEMPTS:
+        conn.execute("UPDATE loyalty_codes SET consumed = 1 WHERE id = ?", (rec["id"],))
+        conn.commit()
+        conn.close()
+        return {"valid": False, "error": "Too many attempts — please request a new code"}
+    # Check expiry
+    expires = conn.execute("SELECT expires_at < CURRENT_TIMESTAMP AS expired FROM loyalty_codes WHERE id = ?",
+                           (rec["id"],)).fetchone()
+    if expires and expires["expired"]:
+        conn.close()
+        return {"valid": False, "error": "Code expired — please request a new one"}
+    if rec["code"] != code:
+        conn.close()
+        return {"valid": False, "error": "Incorrect code"}
+    conn.execute("UPDATE loyalty_codes SET verified = 1 WHERE id = ?", (rec["id"],))
+    conn.commit()
+    conn.close()
+    return {"valid": True, "error": None}
+
+
+def consume_loyalty_code(email):
+    """
+    Mark the most recent verified+unconsumed code for this email as consumed.
+    Returns True if a verified code was found and consumed.
+    Used at order submission to ensure a verification was completed.
+    """
+    email = _normalise_email(email)
+    if not email:
+        return False
+    conn = get_db()
+    row = conn.execute("""
+        SELECT id FROM loyalty_codes
+        WHERE email = ? AND consumed = 0 AND verified = 1
+          AND expires_at > CURRENT_TIMESTAMP
+        ORDER BY id DESC LIMIT 1
+    """, (email,)).fetchone()
+    if not row:
+        conn.close()
+        return False
+    conn.execute("UPDATE loyalty_codes SET consumed = 1 WHERE id = ?", (row["id"],))
+    conn.commit()
+    conn.close()
+    return True
+
+
 # Initialize database on import
 init_db()
 init_reviews_table()
 init_promo_table()
 init_review_requests_table()
 init_expenses_table()
+init_loyalty_tables()

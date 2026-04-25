@@ -121,7 +121,7 @@ def _order_items_html(items):
     return rows
 
 
-def send_order_placed(order):
+def send_order_placed(order, loyalty_earned=0, loyalty_redeemed_pts=0, loyalty_redeemed_mad=0.0):
     """Email sent when customer places an order."""
     if not order.get("customer_email"):
         return False
@@ -146,6 +146,16 @@ def send_order_placed(order):
         if order.get("delivery_address"):
             delivery_info += f" ({order['delivery_address']})"
 
+    loyalty_html = ""
+    if loyalty_redeemed_pts > 0 or loyalty_earned > 0:
+        loyalty_html = '<div style="margin-top:16px;padding:14px 16px;background:#faf6f1;border-radius:8px;border-left:3px solid #b8860b;">'
+        loyalty_html += '<p style="margin:0 0 4px;font-size:0.82em;color:#9a9aad;text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">Loyalty Points</p>'
+        if loyalty_redeemed_pts > 0:
+            loyalty_html += f'<p style="margin:4px 0;font-size:0.9em;color:#c0392b;">&#9733; <strong>{loyalty_redeemed_pts} points redeemed</strong> &mdash; {loyalty_redeemed_mad:.2f} MAD off this order</p>'
+        if loyalty_earned > 0:
+            loyalty_html += f'<p style="margin:4px 0;font-size:0.9em;color:#2d7a4f;">&#9733; <strong>+{loyalty_earned} points earned</strong> on this order</p>'
+        loyalty_html += '</div>'
+
     content = f"""
     <p style="color:#6b6b80;line-height:1.6;margin:0 0 20px;">
         Thank you, <strong style="color:#1e2a4a;">{order['customer_name']}</strong>! Your order has been received and is being reviewed.
@@ -168,7 +178,9 @@ def send_order_placed(order):
         </tr>
     </table>
 
-    <p style="color:#9a9aad;font-size:0.82em;line-height:1.5;margin:0;">
+    {loyalty_html}
+
+    <p style="color:#9a9aad;font-size:0.82em;line-height:1.5;margin:{'16px' if loyalty_html else '0'} 0 0;">
         We will confirm your order shortly. If you have any questions, contact us on WhatsApp at +212 680 342 679.
     </p>
     """
@@ -255,3 +267,28 @@ def send_order_completed(order):
 
     html = _email_wrapper(content, "Your Opinion Matters")
     return _send_email(order["customer_email"], f"Your Opinion Matters — Samarkand Bakery", html)
+
+
+def send_loyalty_code(to_email, code, customer_name=None, ttl_minutes=15):
+    """Send a 6-digit verification code so the customer can redeem loyalty points."""
+    if not to_email:
+        return False
+    greeting = "Hi " + customer_name + "," if customer_name else "Hi,"
+    content = f"""
+    <p style="color:#6b6b80;line-height:1.6;margin:0 0 18px;">
+        {greeting} use the code below to confirm your loyalty points redemption at checkout.
+    </p>
+
+    <div style="text-align:center;margin:24px 0;padding:24px 0;background:#faf6f1;border-radius:10px;">
+        <p style="margin:0 0 8px;color:#9a9aad;font-size:0.78em;letter-spacing:0.08em;text-transform:uppercase;">Your verification code</p>
+        <div style="font-family:'Courier New',monospace;font-size:2.2em;font-weight:700;color:#1e2a4a;letter-spacing:0.4em;padding-left:0.4em;">{code}</div>
+        <p style="margin:10px 0 0;color:#9a9aad;font-size:0.78em;">Valid for {ttl_minutes} minutes</p>
+    </div>
+
+    <p style="color:#9a9aad;font-size:0.82em;line-height:1.5;margin:0;">
+        If you did not request this code, you can safely ignore this email — your points are still safe.
+    </p>
+    """
+    html = _email_wrapper(content, "Loyalty Points Verification")
+    subject = "Your Samarkand Bakery loyalty code: " + code
+    return _send_email(to_email, subject, html)

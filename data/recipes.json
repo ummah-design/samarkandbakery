@@ -556,9 +556,54 @@
             }
         }
     },
+    "mini_chicken_spinach_borek": {
+        "name": "Mini Chicken & Spinach Borek",
+        "selling_price": 25.0,
+        "packaging_type": "medium_box",
+        "packaging_cost": 2.5,
+        "cooking": {
+            "method": "oven",
+            "minutes_per_load": 30,
+            "items_per_oven_load": 4
+        },
+        "components": {
+            "dough": {
+                "yields": 13,
+                "ingredients": {
+                    "flour_per_kg": 1.0,
+                    "salt_per_kg": 0.015,
+                    "water_ml": 500
+                }
+            },
+            "filling": {
+                "yields": 6,
+                "ingredients": {
+                    "onion_per_kg": 0.15,
+                    "chicken_fillet_per_kg": 0.25,
+                    "garlic_per_kg": 0.01,
+                    "lemon_each": 0.5,
+                    "tinned_spinach_per_tin": 1,
+                    "salt_per_kg": 0.005,
+                    "black_pepper_per_kg": 0.0015,
+                    "paprika_per_kg": 0.003,
+                    "salted_butter_per_kg": 0.045,
+                    "vegetable_oil_per_litre": 0.045,
+                    "milk_per_litre": 0.12,
+                    "egg_each": 1,
+                    "yoghurt_per_pot": 0.27
+                }
+            },
+            "cheese": {
+                "yields": 4,
+                "ingredients": {
+                    "mozzarella_per_kg": 0.144
+                }
+            }
+        }
+    },
     "olive_buns": {
         "name": "Olive Buns",
-        "selling_price": 5.0,
+        "selling_price": 7.0,
         "packaging_type": "pastry_boxes",
         "cooking": {
             "method": "oven",

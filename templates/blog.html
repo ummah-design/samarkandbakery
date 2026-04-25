@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog — Samarkand Bakery</title>
+    <meta name="description" content="Recipes, stories and tips from Samarkand Bakery in Tetouan, Morocco.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #1e2a4a;
+            --navy-light: #2a3d6b;
+            --gold: #b8860b;
+            --gold-light: #d4a017;
+            --warm-bg: #f5f0eb;
+            --card-bg: #ffffff;
+            --text-primary: #2c2c2c;
+            --text-secondary: #6b6b80;
+            --border: #e8e0d8;
+            --radius: 12px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Source Sans 3', 'Segoe UI', sans-serif; background: var(--warm-bg); color: var(--text-primary); }
+        h1,h2,h3,h4 { font-family: 'Playfair Display', Georgia, serif; }
+
+        /* Header */
+        header { background: var(--navy); color: white; padding: 14px 30px; display: flex; align-items: center; gap: 20px; }
+        header img { height: 44px; width: auto; }
+        .header-title { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3em; font-weight: 600; }
+        .header-title span { font-family: 'Source Sans 3', sans-serif; font-size: 0.55em; font-weight: 400; opacity: 0.6; display: block; }
+        .header-nav { margin-left: auto; display: flex; align-items: center; gap: 18px; }
+        .header-nav a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.9em; font-weight: 500; transition: color 0.2s; }
+        .header-nav a:hover, .header-nav a.active { color: var(--gold-light); }
+        .lang-switcher { display: flex; gap: 4px; }
+        .lang-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); padding: 4px 10px; border-radius: 5px; cursor: pointer; font-size: 0.78em; font-family: 'Source Sans 3', sans-serif; transition: all 0.2s; }
+        .lang-btn.active { background: var(--gold); border-color: var(--gold); color: white; }
+
+        /* Hero */
+        .blog-hero { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%); color: white; padding: 60px 30px 50px; text-align: center; }
+        .blog-hero h1 { font-size: 2.5em; font-weight: 700; margin-bottom: 12px; }
+        .blog-hero p { font-size: 1.1em; opacity: 0.8; max-width: 500px; margin: 0 auto; }
+        .hero-line { width: 60px; height: 3px; background: var(--gold); margin: 18px auto 0; border-radius: 2px; }
+
+        /* Container */
+        .container { max-width: 1100px; margin: 0 auto; padding: 35px 20px; }
+
+        /* Category filter */
+        .filter-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; }
+        .filter-bar a { padding: 7px 16px; border-radius: 20px; border: 1.5px solid var(--border); text-decoration: none; color: var(--text-secondary); font-size: 0.87em; font-weight: 500; transition: all 0.2s; }
+        .filter-bar a:hover { border-color: var(--navy); color: var(--navy); }
+        .filter-bar a.active { background: var(--navy); border-color: var(--navy); color: white; }
+
+        /* Post grid */
+        .post-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 24px; }
+
+        .post-card { background: var(--card-bg); border-radius: var(--radius); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.07); transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; color: inherit; display: flex; flex-direction: column; }
+        .post-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+        .post-card-img { width: 100%; height: 200px; object-fit: cover; background: var(--warm-bg); }
+        .post-card-img-placeholder { width: 100%; height: 200px; background: linear-gradient(135deg, #e8e0d8, #d4c9be); display: flex; align-items: center; justify-content: center; }
+        .post-card-img-placeholder svg { width: 48px; height: 48px; opacity: 0.3; }
+        .post-card-body { padding: 18px 20px; flex: 1; display: flex; flex-direction: column; }
+        .post-cats { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+        .cat-badge { background: rgba(184,134,11,0.12); color: var(--gold); font-size: 0.75em; font-weight: 600; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .post-card h2 { font-size: 1.12em; font-weight: 600; color: var(--navy); margin-bottom: 8px; line-height: 1.35; }
+        .post-card .excerpt { font-size: 0.88em; color: var(--text-secondary); line-height: 1.6; flex: 1; }
+        .post-card-footer { margin-top: 14px; display: flex; align-items: center; justify-content: space-between; font-size: 0.8em; color: #9a9aad; border-top: 1px solid var(--border); padding-top: 12px; }
+        .read-more { color: var(--gold); font-weight: 600; font-size: 0.84em; }
+
+        /* Empty state */
+        .empty-state { text-align: center; padding: 80px 20px; color: var(--text-secondary); }
+        .empty-state svg { width: 60px; height: 60px; opacity: 0.25; margin-bottom: 16px; }
+        .empty-state h3 { font-size: 1.4em; margin-bottom: 8px; color: var(--navy); }
+
+        /* Pagination */
+        .pagination { display: flex; gap: 6px; justify-content: center; margin-top: 40px; flex-wrap: wrap; }
+        .pagination a, .pagination span { padding: 8px 14px; border-radius: 8px; font-size: 0.9em; font-weight: 500; text-decoration: none; transition: all 0.2s; }
+        .pagination a { border: 1.5px solid var(--border); color: var(--text-secondary); }
+        .pagination a:hover { border-color: var(--navy); color: var(--navy); }
+        .pagination span.current { background: var(--navy); color: white; border: 1.5px solid var(--navy); }
+        .pagination span.dots { color: var(--text-secondary); border: none; }
+
+        /* Footer */
+        footer { background: var(--navy); color: rgba(255,255,255,0.55); text-align: center; padding: 22px; font-size: 0.85em; margin-top: 40px; }
+        footer a { color: var(--gold-light); text-decoration: none; }
+
+        /* RTL support */
+        body.rtl { direction: rtl; text-align: right; }
+        body.rtl .header-nav { margin-left: 0; margin-right: auto; }
+        body.rtl .filter-bar { justify-content: flex-end; }
+
+        @media (max-width: 600px) {
+            .blog-hero h1 { font-size: 1.8em; }
+            .post-grid { grid-template-columns: 1fr; }
+            header { flex-wrap: wrap; }
+            .header-nav { margin-left: 0; width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body id="body-root">
+
+<header>
+    <a href="/"><img src="/static/logo.png" alt="Samarkand Bakery"></a>
+    <div class="header-title">
+        Samarkand Bakery
+        <span>Tetouan, Morocco</span>
+    </div>
+    <nav class="header-nav">
+        <a href="/">Shop</a>
+        <a href="/blog" class="active">Blog</a>
+        <div class="lang-switcher">
+            <button class="lang-btn active" onclick="setLang('en')">EN</button>
+            <button class="lang-btn" onclick="setLang('ar')">AR</button>
+            <button class="lang-btn" onclick="setLang('fr')">FR</button>
+        </div>
+    </nav>
+</header>
+
+<div class="blog-hero">
+    <h1 class="t" data-en="Our Blog" data-ar="مدونتنا" data-fr="Notre Blog">Our Blog</h1>
+    <p class="t" data-en="Recipes, stories and tips from our kitchen in Tetouan." data-ar="وصفات وقصص ونصائح من مطبخنا في تطوان." data-fr="Recettes, histoires et conseils depuis notre cuisine à Tétouan.">Recipes, stories and tips from our kitchen in Tetouan.</p>
+    <div class="hero-line"></div>
+</div>
+
+<div class="container">
+
+    <!-- Category filter -->
+    {% set all_label_en = "All Posts" %}
+    {% set all_label_ar = "جميع المقالات" %}
+    {% set all_label_fr = "Tous les articles" %}
+    <div class="filter-bar">
+        <a href="/blog" class="{% if not current_category %}active{% endif %} t" data-en="{{ all_label_en }}" data-ar="{{ all_label_ar }}" data-fr="{{ all_label_fr }}">All Posts</a>
+        {% for cat in categories %}
+        <a href="/blog?category={{ cat.slug }}" class="{% if current_category and current_category.id == cat.id %}active{% endif %} t"
+           data-en="{{ cat.name_en }}" data-ar="{{ cat.name_ar or cat.name_en }}" data-fr="{{ cat.name_fr or cat.name_en }}">
+            {{ cat.name_en }}
+        </a>
+        {% endfor %}
+    </div>
+
+    {% if error %}
+    <div class="empty-state">
+        <h3>{{ error }}</h3>
+    </div>
+    {% elif posts %}
+    <div class="post-grid">
+        {% for post in posts %}
+        <a href="/blog/{{ post.slug }}" class="post-card">
+            {% if post.featured_image %}
+            <img class="post-card-img" src="/static/blog/{{ post.featured_image }}" alt="{{ post.image_alt or post.title_en }}" loading="lazy">
+            {% else %}
+            <div class="post-card-img-placeholder">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
+            </div>
+            {% endif %}
+            <div class="post-card-body">
+                {% if post.categories %}
+                <div class="post-cats">
+                    {% for cat in post.categories %}
+                    <span class="cat-badge t" data-en="{{ cat.name_en }}" data-ar="{{ cat.name_ar or cat.name_en }}" data-fr="{{ cat.name_fr or cat.name_en }}">{{ cat.name_en }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <h2 class="t" data-en="{{ post.title_en }}" data-ar="{{ post.title_ar or post.title_en }}" data-fr="{{ post.title_fr or post.title_en }}">{{ post.title_en }}</h2>
+                <div class="excerpt t" data-en="{{ (post.excerpt_en or '')|truncate(130) }}" data-ar="{{ (post.excerpt_ar or post.excerpt_en or '')|truncate(130) }}" data-fr="{{ (post.excerpt_fr or post.excerpt_en or '')|truncate(130) }}">{{ (post.excerpt_en or "")|truncate(130) }}</div>
+                <div class="post-card-footer">
+                    <span>{{ post.published_at[:10] if post.published_at else "" }}</span>
+                    <span class="read-more t" data-en="Read more →" data-ar="اقرأ المزيد ←" data-fr="Lire la suite →">Read more →</span>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if total_pages > 1 %}
+    <div class="pagination">
+        {% if page > 1 %}
+        <a href="/blog?page={{ page - 1 }}{% if current_category %}&category={{ current_category.slug }}{% endif %}">←</a>
+        {% endif %}
+        {% for p in range(1, total_pages + 1) %}
+        {% if p == page %}
+        <span class="current">{{ p }}</span>
+        {% elif p <= 2 or p >= total_pages - 1 or (p >= page - 1 and p <= page + 1) %}
+        <a href="/blog?page={{ p }}{% if current_category %}&category={{ current_category.slug }}{% endif %}">{{ p }}</a>
+        {% elif p == 3 or p == total_pages - 2 %}
+        <span class="dots">…</span>
+        {% endif %}
+        {% endfor %}
+        {% if page < total_pages %}
+        <a href="/blog?page={{ page + 1 }}{% if current_category %}&category={{ current_category.slug }}{% endif %}">→</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div class="empty-state">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z"/></svg>
+        <h3 class="t" data-en="No posts yet" data-ar="لا توجد مقالات بعد" data-fr="Pas encore d'articles">No posts yet</h3>
+        <p class="t" data-en="Check back soon for recipes and stories." data-ar="تحقق مرة أخرى قريبًا للوصفات والقصص." data-fr="Revenez bientôt pour des recettes et des histoires.">Check back soon for recipes and stories.</p>
+    </div>
+    {% endif %}
+
+</div>
+
+<footer>
+    <p>&copy; 2025 <a href="/">Samarkand Bakery</a> &mdash; Tetouan, Morocco</p>
+</footer>
+
+<script>
+    var currentLang = localStorage.getItem("blog_lang") || "en";
+
+    function setLang(lang) {
+        currentLang = lang;
+        localStorage.setItem("blog_lang", lang);
+        applyLang();
+    }
+
+    function applyLang() {
+        var isRtl = currentLang === "ar";
+        document.getElementById("body-root").className = isRtl ? "rtl" : "";
+        document.getElementById("html-root").setAttribute("lang", currentLang);
+
+        var elems = document.querySelectorAll(".t");
+        for (var i = 0; i < elems.length; i++) {
+            var el = elems[i];
+            var val = el.getAttribute("data-" + currentLang) || el.getAttribute("data-en") || "";
+            if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+                el.placeholder = val;
+            } else {
+                el.textContent = val;
+            }
+        }
+
+        var btns = document.querySelectorAll(".lang-btn");
+        for (var j = 0; j < btns.length; j++) {
+            btns[j].className = "lang-btn" + (["en","ar","fr"][j] === currentLang ? " active" : "");
+        }
+    }
+
+    applyLang();
+</script>
+</body>
+</html>

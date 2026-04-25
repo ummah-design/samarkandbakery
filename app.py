@@ -46,9 +46,15 @@ from database import (create_order, get_orders, get_order, get_orders_by_date,
                       get_loyalty_balance, award_loyalty_points, redeem_loyalty_points,
                       adjust_loyalty, get_loyalty_transactions, get_all_loyalty_balances,
                       create_loyalty_code, verify_loyalty_code, consume_loyalty_code,
-                      LOYALTY_REDEEM_VALUE, LOYALTY_MIN_REDEEM, LOYALTY_EARN_RATE)
+                      LOYALTY_REDEEM_VALUE, LOYALTY_MIN_REDEEM, LOYALTY_EARN_RATE,
+                      create_blog_category, update_blog_category, delete_blog_category,
+                      get_blog_categories, get_blog_category_by_slug,
+                      create_blog_post, update_blog_post, delete_blog_post,
+                      get_blog_posts, get_blog_post_by_id, get_blog_post_by_slug,
+                      get_related_blog_posts, blog_slug_exists)
 import urllib.request
 import urllib.parse
+import urllib.error
 import base64
 
 app = Flask(__name__)
@@ -2020,6 +2026,395 @@ def telegram_status():
         except Exception as e:
             status["webhook_info"] = {"error": str(e)}
     return jsonify(status)
+
+
+# ── Blog ────────────────────────────────────────────────────────────────────
+
+BLOG_DIR = os.path.join(BASE_DIR, "static", "blog")
+ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
+
+# SSL context for Anthropic API calls — use certifi if available (fixes macOS dev cert errors)
+import ssl as _ssl
+try:
+    import certifi as _certifi
+    _SSL_CONTEXT = _ssl.create_default_context(cafile=_certifi.where())
+except Exception:
+    _SSL_CONTEXT = _ssl.create_default_context()
+
+
+@app.route("/blog")
+def blog_listing():
+    page = int(request.args.get("page", 1))
+    cat_slug = request.args.get("category", "")
+    cat = get_blog_category_by_slug(cat_slug) if cat_slug else None
+    cat_id = cat["id"] if cat else None
+    posts, total = get_blog_posts(status="published", category_id=cat_id, page=page, per_page=9)
+    categories = get_blog_categories()
+    total_pages = (total + 8) // 9
+    return render_template("blog.html",
+                           posts=posts,
+                           categories=categories,
+                           current_category=cat,
+                           page=page,
+                           total_pages=total_pages,
+                           total=total)
+
+
+@app.route("/blog/category/<slug>")
+def blog_category(slug):
+    return redirect("/blog?category=" + slug)
+
+
+@app.route("/blog/<slug>")
+def blog_post_page(slug):
+    post = get_blog_post_by_slug(slug)
+    if not post or post["status"] != "published":
+        return render_template("blog.html",
+                               posts=[], categories=get_blog_categories(),
+                               current_category=None, page=1, total_pages=1, total=0,
+                               error="Post not found"), 404
+    cat_ids = [c["id"] for c in post.get("categories", [])]
+    related = get_related_blog_posts(post["id"], cat_ids, limit=3)
+    return render_template("blog_post.html", post=post, related=related)
+
+
+# ── Admin: Blog posts ───────────────────────────────────────────────────────
+
+@app.route("/admin/blog")
+@admin_required
+def admin_blog():
+    status_filter = request.args.get("status", "")
+    cat_filter = request.args.get("category", "")
+    cat = get_blog_category_by_slug(cat_filter) if cat_filter else None
+    page = int(request.args.get("page", 1))
+    posts, total = get_blog_posts(
+        status=status_filter or None,
+        category_id=cat["id"] if cat else None,
+        page=page, per_page=20
+    )
+    categories = get_blog_categories()
+    return render_template("admin/blog_posts.html",
+                           posts=posts, total=total,
+                           categories=categories,
+                           status_filter=status_filter,
+                           cat_filter=cat_filter,
+                           page=page,
+                           total_pages=(total + 19) // 20,
+                           active_page="blog")
+
+
+@app.route("/admin/blog/new")
+@admin_required
+def admin_blog_new():
+    categories = get_blog_categories()
+    return render_template("admin/blog_editor.html",
+                           post=None,
+                           categories=categories,
+                           active_page="blog")
+
+
+@app.route("/admin/blog/<int:post_id>/edit")
+@admin_required
+def admin_blog_edit(post_id):
+    post = get_blog_post_by_id(post_id)
+    if not post:
+        return redirect("/admin/blog")
+    categories = get_blog_categories()
+    return render_template("admin/blog_editor.html",
+                           post=post,
+                           categories=categories,
+                           active_page="blog")
+
+
+@app.route("/api/admin/blog/posts", methods=["POST"])
+@admin_required
+def api_blog_post_create():
+    data = request.get_json()
+    title_en = (data.get("title_en") or "").strip()
+    slug = (data.get("slug") or "").strip()
+    if not title_en or not slug:
+        return jsonify({"error": "Title and slug are required"}), 400
+    if blog_slug_exists(slug):
+        return jsonify({"error": "Slug already in use"}), 400
+    cat_ids = [int(x) for x in (data.get("category_ids") or []) if str(x).isdigit()]
+    post_id = create_blog_post(
+        title_en=title_en,
+        slug=slug,
+        content_en=data.get("content_en"),
+        excerpt_en=data.get("excerpt_en"),
+        status=data.get("status", "draft"),
+        meta_title=data.get("meta_title"),
+        meta_description_en=data.get("meta_description_en"),
+        focus_keyword=data.get("focus_keyword"),
+        featured_image=data.get("featured_image"),
+        category_ids=cat_ids
+    )
+    return jsonify({"success": True, "id": post_id})
+
+
+@app.route("/api/admin/blog/posts/<int:post_id>", methods=["POST"])
+@admin_required
+def api_blog_post_update(post_id):
+    post = get_blog_post_by_id(post_id)
+    if not post:
+        return jsonify({"error": "Not found"}), 404
+    data = request.get_json()
+    slug = (data.get("slug") or "").strip()
+    if slug and blog_slug_exists(slug, exclude_id=post_id):
+        return jsonify({"error": "Slug already in use"}), 400
+    cat_ids = [int(x) for x in (data.get("category_ids") or []) if str(x).isdigit()]
+    fields = {
+        "title_en": data.get("title_en"),
+        "title_ar": data.get("title_ar"),
+        "title_fr": data.get("title_fr"),
+        "slug": slug or post["slug"],
+        "content_en": data.get("content_en"),
+        "content_ar": data.get("content_ar"),
+        "content_fr": data.get("content_fr"),
+        "excerpt_en": data.get("excerpt_en"),
+        "excerpt_ar": data.get("excerpt_ar"),
+        "excerpt_fr": data.get("excerpt_fr"),
+        "status": data.get("status", post["status"]),
+        "meta_title": data.get("meta_title"),
+        "meta_description_en": data.get("meta_description_en"),
+        "meta_description_ar": data.get("meta_description_ar"),
+        "meta_description_fr": data.get("meta_description_fr"),
+        "focus_keyword": data.get("focus_keyword"),
+        "featured_image": data.get("featured_image"),
+        "image_alt": data.get("image_alt"),
+        "category_ids": cat_ids,
+    }
+    update_blog_post(post_id, **fields)
+    return jsonify({"success": True})
+
+
+@app.route("/api/admin/blog/posts/<int:post_id>/delete", methods=["POST"])
+@admin_required
+def api_blog_post_delete(post_id):
+    post = get_blog_post_by_id(post_id)
+    if not post:
+        return jsonify({"error": "Not found"}), 404
+    # Remove featured image file if stored locally
+    if post.get("featured_image"):
+        img_path = os.path.join(BASE_DIR, "static", "blog", post["featured_image"])
+        if os.path.exists(img_path):
+            os.remove(img_path)
+    delete_blog_post(post_id)
+    return jsonify({"success": True})
+
+
+@app.route("/api/admin/blog/posts/<int:post_id>/image", methods=["POST"])
+@admin_required
+def api_blog_post_image(post_id):
+    os.makedirs(BLOG_DIR, exist_ok=True)
+    file = request.files.get("image")
+    if not file or not file.filename:
+        return jsonify({"error": "No file"}), 400
+    ext = os.path.splitext(file.filename)[1].lower()
+    if ext not in (".jpg", ".jpeg", ".png", ".webp"):
+        return jsonify({"error": "Only JPG, PNG, WEBP allowed"}), 400
+
+    # Build SEO-friendly filename from slug or focus keyword
+    import re as _re
+    import time as _time
+    slug_hint = (request.form.get("slug") or "").strip().lower()
+    if not slug_hint:
+        post = get_blog_post_by_id(post_id)
+        slug_hint = (post.get("slug") if post else "") or ""
+    # Sanitise: lowercase, replace non-alphanumeric with hyphens, collapse repeats
+    base = _re.sub(r"[^a-z0-9]+", "-", slug_hint.lower()).strip("-")
+    if not base:
+        base = "blog-" + str(post_id)
+    filename = base + "-" + str(int(_time.time()))[-6:] + ext
+    file.save(os.path.join(BLOG_DIR, filename))
+
+    # Remove old image if it's being replaced
+    old = (request.form.get("old_image") or "").strip()
+    if old and old != filename:
+        old_path = os.path.join(BLOG_DIR, old)
+        if os.path.exists(old_path):
+            try:
+                os.remove(old_path)
+            except Exception:
+                pass
+
+    return jsonify({"success": True, "filename": filename})
+
+
+@app.route("/api/admin/blog/generate-seo", methods=["POST"])
+@admin_required
+def api_blog_generate_seo():
+    """Generate excerpt + SEO metadata from a post's title and content using Claude."""
+    if not ANTHROPIC_API_KEY:
+        return jsonify({"error": "ANTHROPIC_API_KEY not set"}), 500
+
+    data = request.get_json() or {}
+    title = (data.get("title_en") or "").strip()
+    content = (data.get("content_en") or "").strip()
+    if not title and not content:
+        return jsonify({"error": "Please add a title or content first"}), 400
+
+    user_msg = (
+        "You are an SEO assistant for a bakery blog. Read the blog post below and "
+        "generate SEO metadata. Return ONLY valid JSON with these exact keys "
+        "(no markdown fences, no explanation):\n"
+        "- excerpt: a compelling 1-2 sentence summary (~140-160 chars) for the listing page, plain text\n"
+        "- meta_title: SEO title optimized for Google (50-60 chars), can include brand at end\n"
+        "- slug: URL slug (lowercase, hyphens between words, 3-6 words, no special chars or stop words)\n"
+        "- meta_description: 120-160 character description for Google search results — should entice clicks\n"
+        "- focus_keyword: 2-4 word keyword phrase that the post targets\n"
+        "- image_alt: descriptive alt text for the featured image (50-125 chars), include focus keyword naturally, describe what the image likely shows based on the post topic\n\n"
+        "Title: " + title + "\n\n"
+        "Content:\n" + content[:6000]
+    )
+
+    body = json.dumps({
+        "model": "claude-haiku-4-5-20251001",
+        "max_tokens": 800,
+        "messages": [{"role": "user", "content": user_msg}]
+    }).encode("utf-8")
+
+    import urllib.request as _ur
+    req = _ur.Request("https://api.anthropic.com/v1/messages", data=body, method="POST")
+    req.add_header("Content-Type", "application/json")
+    req.add_header("x-api-key", ANTHROPIC_API_KEY)
+    req.add_header("anthropic-version", "2023-06-01")
+
+    try:
+        resp = _ur.urlopen(req, timeout=45, context=_SSL_CONTEXT)
+        result = json.loads(resp.read().decode("utf-8"))
+        text = result["content"][0]["text"].strip()
+        # Strip code fences if Claude added them
+        if text.startswith("```"):
+            text = text.split("\n", 1)[1] if "\n" in text else text
+            if text.endswith("```"):
+                text = text.rsplit("```", 1)[0]
+        seo = json.loads(text.strip())
+        return jsonify({"success": True, "seo": seo})
+    except Exception as e:
+        return jsonify({"error": "Generation failed: " + str(e)}), 500
+
+
+@app.route("/api/admin/blog/translate", methods=["POST"])
+@admin_required
+def api_blog_translate():
+    """Translate English blog content into Arabic and French. Works on unsaved drafts."""
+    if not ANTHROPIC_API_KEY:
+        return jsonify({"error": "ANTHROPIC_API_KEY not set"}), 500
+
+    data = request.get_json() or {}
+    title_en = (data.get("title_en") or "").strip()
+    excerpt_en = (data.get("excerpt_en") or "").strip()
+    content_en = (data.get("content_en") or "").strip()
+    meta_en = (data.get("meta_description_en") or "").strip()
+
+    if not title_en and not content_en:
+        return jsonify({"error": "Add a title or content first."}), 400
+
+    system_prompt = (
+        "You are a professional translator specialising in food and bakery content. "
+        "You translate English content into Modern Standard Arabic and French. "
+        "You preserve all HTML tags, attributes, and structure exactly as given. "
+        "You output only valid JSON — no markdown code fences, no commentary, no explanation."
+    )
+
+    user_msg = (
+        "Translate the following blog post fields from English into Arabic and French. "
+        "Return ONLY a single JSON object with these exact keys: "
+        "title_ar, title_fr, excerpt_ar, excerpt_fr, content_ar, content_fr, meta_ar, meta_fr.\n\n"
+        "Rules:\n"
+        "- Preserve every HTML tag in content fields (<p>, <h2>, <a>, etc.) — translate only the text inside.\n"
+        "- Keep proper nouns (Samarkand, Tetouan, etc.) but transliterate naturally for Arabic.\n"
+        "- If a field is empty, return an empty string for both translations.\n"
+        "- Do not wrap your response in code fences.\n\n"
+        "===== Source content =====\n"
+        "title_en: " + title_en + "\n"
+        "excerpt_en: " + excerpt_en + "\n"
+        "meta_description_en: " + meta_en + "\n"
+        "content_en:\n" + content_en
+    )
+
+    body = json.dumps({
+        "model": "claude-sonnet-4-6",
+        "max_tokens": 8000,
+        "system": system_prompt,
+        "messages": [{"role": "user", "content": user_msg}]
+    }).encode("utf-8")
+
+    import urllib.request as _ur
+    req = _ur.Request("https://api.anthropic.com/v1/messages", data=body, method="POST")
+    req.add_header("Content-Type", "application/json")
+    req.add_header("x-api-key", ANTHROPIC_API_KEY)
+    req.add_header("anthropic-version", "2023-06-01")
+
+    try:
+        resp = _ur.urlopen(req, timeout=90, context=_SSL_CONTEXT)
+        result = json.loads(resp.read().decode("utf-8"))
+        text = result["content"][0]["text"].strip()
+        # Strip code fences if Claude added them
+        if text.startswith("```"):
+            text = text.split("\n", 1)[1] if "\n" in text else text
+            if text.endswith("```"):
+                text = text.rsplit("```", 1)[0]
+        # Find first { and last } for safety
+        start = text.find("{")
+        end = text.rfind("}")
+        if start >= 0 and end > start:
+            text = text[start:end + 1]
+        translated = json.loads(text.strip())
+        return jsonify({"success": True, "translations": translated})
+    except urllib.error.HTTPError as e:
+        try:
+            err_body = e.read().decode("utf-8")
+        except Exception:
+            err_body = str(e)
+        return jsonify({"error": "Anthropic API error: " + err_body}), 500
+    except Exception as e:
+        return jsonify({"error": "Translation failed: " + str(e)}), 500
+
+
+# ── Admin: Blog categories ───────────────────────────────────────────────────
+
+@app.route("/api/admin/blog/categories", methods=["GET"])
+@admin_required
+def api_blog_categories_list():
+    return jsonify(get_blog_categories())
+
+
+@app.route("/api/admin/blog/categories", methods=["POST"])
+@admin_required
+def api_blog_category_create():
+    data = request.get_json()
+    name_en = (data.get("name_en") or "").strip()
+    slug = (data.get("slug") or "").strip()
+    if not name_en or not slug:
+        return jsonify({"error": "Name and slug required"}), 400
+    try:
+        cat_id = create_blog_category(name_en, slug,
+                                      data.get("name_ar"), data.get("name_fr"))
+        return jsonify({"success": True, "id": cat_id})
+    except Exception:
+        return jsonify({"error": "Slug already exists"}), 400
+
+
+@app.route("/api/admin/blog/categories/<int:cat_id>", methods=["POST"])
+@admin_required
+def api_blog_category_update(cat_id):
+    data = request.get_json()
+    name_en = (data.get("name_en") or "").strip()
+    slug = (data.get("slug") or "").strip()
+    if not name_en or not slug:
+        return jsonify({"error": "Name and slug required"}), 400
+    update_blog_category(cat_id, name_en, slug,
+                         data.get("name_ar"), data.get("name_fr"))
+    return jsonify({"success": True})
+
+
+@app.route("/api/admin/blog/categories/<int:cat_id>/delete", methods=["POST"])
+@admin_required
+def api_blog_category_delete(cat_id):
+    delete_blog_category(cat_id)
+    return jsonify({"success": True})
 
 
 if __name__ == "__main__":

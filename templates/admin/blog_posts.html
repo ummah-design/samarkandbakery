@@ -1,0 +1,280 @@
+{% extends "admin_base.html" %}
+{% block title %}Blog Posts{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+        <div>
+            <h2 style="font-family:'Playfair Display',serif;color:var(--navy);font-size:1.6em;margin-bottom:4px;">Blog Posts</h2>
+            <p style="color:var(--text-secondary);font-size:0.9em;">{{ total }} post{{ 's' if total != 1 else '' }}</p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+            <a href="/admin/blog/new" style="background:var(--navy);color:white;text-decoration:none;padding:10px 20px;border-radius:8px;font-size:0.9em;font-weight:600;display:flex;align-items:center;gap:8px;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:16px;height:16px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                New Post
+            </a>
+            <button onclick="showCategoryModal()" style="background:var(--warm-bg);color:var(--navy);border:1.5px solid var(--border);padding:10px 18px;border-radius:8px;font-size:0.9em;font-weight:600;cursor:pointer;">
+                Manage Categories
+            </button>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="card" style="padding:16px 20px;margin-bottom:20px;">
+        <form method="get" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+            <select name="status" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:0.9em;background:var(--warm-bg-alt);color:var(--text-primary);font-family:inherit;" onchange="this.form.submit()">
+                <option value="" {% if not status_filter %}selected{% endif %}>All Statuses</option>
+                <option value="published" {% if status_filter=='published' %}selected{% endif %}>Published</option>
+                <option value="draft" {% if status_filter=='draft' %}selected{% endif %}>Drafts</option>
+            </select>
+            <select name="category" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:0.9em;background:var(--warm-bg-alt);color:var(--text-primary);font-family:inherit;" onchange="this.form.submit()">
+                <option value="" {% if not cat_filter %}selected{% endif %}>All Categories</option>
+                {% for cat in categories %}
+                <option value="{{ cat.slug }}" {% if cat_filter==cat.slug %}selected{% endif %}>{{ cat.name_en }}</option>
+                {% endfor %}
+            </select>
+            <a href="/admin/blog" style="color:var(--text-secondary);font-size:0.88em;text-decoration:none;">Clear</a>
+        </form>
+    </div>
+
+    {% if posts %}
+    <div class="card" style="padding:0;overflow:hidden;">
+        <table style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr style="background:var(--navy);color:white;">
+                    <th style="padding:12px 18px;text-align:left;font-size:0.85em;font-weight:600;">Post</th>
+                    <th style="padding:12px 14px;text-align:left;font-size:0.85em;font-weight:600;white-space:nowrap;">Categories</th>
+                    <th style="padding:12px 14px;text-align:left;font-size:0.85em;font-weight:600;">Status</th>
+                    <th style="padding:12px 14px;text-align:left;font-size:0.85em;font-weight:600;white-space:nowrap;">Published</th>
+                    <th style="padding:12px 14px;text-align:right;font-size:0.85em;font-weight:600;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for post in posts %}
+                <tr style="border-bottom:1px solid var(--border);transition:background 0.15s;" onmouseover="this.style.background='var(--warm-bg)'" onmouseout="this.style.background=''">
+                    <td style="padding:14px 18px;">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            {% if post.featured_image %}
+                            <img src="/static/blog/{{ post.featured_image }}" alt="" style="width:50px;height:40px;object-fit:cover;border-radius:6px;flex-shrink:0;">
+                            {% else %}
+                            <div style="width:50px;height:40px;background:var(--border);border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:18px;height:18px;opacity:0.35;"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
+                            </div>
+                            {% endif %}
+                            <div>
+                                <div style="font-weight:600;color:var(--navy);font-size:0.95em;">{{ post.title_en }}</div>
+                                <div style="font-size:0.78em;color:var(--text-secondary);margin-top:2px;">/blog/{{ post.slug }}</div>
+                                {% if post.title_ar or post.title_fr %}
+                                <div style="font-size:0.76em;color:var(--success);margin-top:2px;">
+                                    {% if post.title_ar %}AR{% endif %}
+                                    {% if post.title_fr %}FR{% endif %}
+                                    translated
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </td>
+                    <td style="padding:14px;">
+                        <div style="display:flex;gap:4px;flex-wrap:wrap;">
+                            {% for cat in post.categories %}
+                            <span style="background:rgba(184,134,11,0.12);color:var(--gold);font-size:0.73em;font-weight:600;padding:2px 8px;border-radius:20px;">{{ cat.name_en }}</span>
+                            {% endfor %}
+                        </div>
+                    </td>
+                    <td style="padding:14px;">
+                        {% if post.status == 'published' %}
+                        <span style="background:var(--success-bg);color:var(--success);font-size:0.8em;font-weight:600;padding:4px 10px;border-radius:20px;">Published</span>
+                        {% else %}
+                        <span style="background:var(--warning-bg);color:var(--warning);font-size:0.8em;font-weight:600;padding:4px 10px;border-radius:20px;">Draft</span>
+                        {% endif %}
+                    </td>
+                    <td style="padding:14px;font-size:0.85em;color:var(--text-secondary);white-space:nowrap;">
+                        {{ post.published_at[:10] if post.published_at else '—' }}
+                    </td>
+                    <td style="padding:14px;text-align:right;">
+                        <div style="display:flex;gap:8px;justify-content:flex-end;align-items:center;">
+                            {% if post.status == 'published' %}
+                            <a href="/blog/{{ post.slug }}" target="_blank" style="color:var(--text-secondary);text-decoration:none;font-size:0.82em;" title="View live">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:16px;height:16px;"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+                            </a>
+                            {% endif %}
+                            <a href="/admin/blog/{{ post.id }}/edit" style="background:var(--navy);color:white;text-decoration:none;padding:6px 14px;border-radius:6px;font-size:0.82em;font-weight:600;">Edit</a>
+                            <button onclick="deletePost({{ post.id }}, '{{ post.title_en | replace("'", "\\'") }}')" style="background:var(--danger-bg);color:var(--danger);border:none;padding:6px 12px;border-radius:6px;font-size:0.82em;font-weight:600;cursor:pointer;">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if total_pages > 1 %}
+    <div style="display:flex;gap:6px;justify-content:center;margin-top:24px;flex-wrap:wrap;">
+        {% if page > 1 %}
+        <a href="/admin/blog?page={{ page-1 }}&status={{ status_filter }}&category={{ cat_filter }}" style="padding:7px 13px;border:1.5px solid var(--border);border-radius:7px;color:var(--text-secondary);text-decoration:none;font-size:0.88em;">←</a>
+        {% endif %}
+        {% for p in range(1, total_pages+1) %}
+        {% if p == page %}
+        <span style="padding:7px 13px;background:var(--navy);color:white;border-radius:7px;font-size:0.88em;border:1.5px solid var(--navy);">{{ p }}</span>
+        {% else %}
+        <a href="/admin/blog?page={{ p }}&status={{ status_filter }}&category={{ cat_filter }}" style="padding:7px 13px;border:1.5px solid var(--border);border-radius:7px;color:var(--text-secondary);text-decoration:none;font-size:0.88em;">{{ p }}</a>
+        {% endif %}
+        {% endfor %}
+        {% if page < total_pages %}
+        <a href="/admin/blog?page={{ page+1 }}&status={{ status_filter }}&category={{ cat_filter }}" style="padding:7px 13px;border:1.5px solid var(--border);border-radius:7px;color:var(--text-secondary);text-decoration:none;font-size:0.88em;">→</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div class="card" style="text-align:center;padding:60px 30px;">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" style="width:52px;height:52px;opacity:0.2;margin-bottom:16px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z"/></svg>
+        <h3 style="color:var(--navy);margin-bottom:8px;">No blog posts yet</h3>
+        <p style="color:var(--text-secondary);margin-bottom:20px;">Create your first post to get started.</p>
+        <a href="/admin/blog/new" style="background:var(--navy);color:white;text-decoration:none;padding:10px 24px;border-radius:8px;font-size:0.9em;font-weight:600;">Write your first post</a>
+    </div>
+    {% endif %}
+
+</div>
+
+<!-- Category modal -->
+<div id="cat-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:999;overflow-y:auto;">
+    <div style="background:white;border-radius:14px;max-width:500px;margin:60px auto 30px;padding:30px;position:relative;">
+        <button onclick="closeCategoryModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;font-size:1.4em;cursor:pointer;color:var(--text-secondary);">&times;</button>
+        <h3 style="font-family:'Playfair Display',serif;color:var(--navy);margin-bottom:20px;font-size:1.3em;">Manage Categories</h3>
+
+        <div id="cat-list" style="margin-bottom:20px;display:flex;flex-direction:column;gap:8px;"></div>
+
+        <div style="border-top:1px solid var(--border);padding-top:18px;">
+            <h4 style="font-size:0.9em;font-weight:600;color:var(--navy);margin-bottom:12px;" id="cat-form-title">Add Category</h4>
+            <input type="hidden" id="edit-cat-id" value="">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+                <div>
+                    <label style="font-size:0.82em;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:4px;">Name (EN) *</label>
+                    <input type="text" id="cat-name-en" placeholder="e.g. Recipes" style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:0.9em;font-family:inherit;">
+                </div>
+                <div>
+                    <label style="font-size:0.82em;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:4px;">Slug *</label>
+                    <input type="text" id="cat-slug" placeholder="e.g. recipes" style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:0.9em;font-family:inherit;">
+                </div>
+                <div>
+                    <label style="font-size:0.82em;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:4px;">Name (AR)</label>
+                    <input type="text" id="cat-name-ar" placeholder="Arabic name" dir="auto" style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:0.9em;font-family:inherit;">
+                </div>
+                <div>
+                    <label style="font-size:0.82em;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:4px;">Name (FR)</label>
+                    <input type="text" id="cat-name-fr" placeholder="French name" style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:0.9em;font-family:inherit;">
+                </div>
+            </div>
+            <div id="cat-error" style="color:var(--danger);font-size:0.84em;margin-bottom:8px;display:none;"></div>
+            <div style="display:flex;gap:8px;">
+                <button onclick="saveCategory()" style="background:var(--navy);color:white;border:none;padding:9px 20px;border-radius:8px;font-size:0.9em;font-weight:600;cursor:pointer;">Save</button>
+                <button onclick="cancelCatEdit()" id="cat-cancel-btn" style="display:none;background:var(--warm-bg);color:var(--text-secondary);border:1.5px solid var(--border);padding:9px 16px;border-radius:8px;font-size:0.9em;cursor:pointer;">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function deletePost(id, title) {
+    if (!confirm('Delete "' + title + '"? This cannot be undone.')) return;
+    fetch('/api/admin/blog/posts/' + id + '/delete', {method:'POST'})
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+            if (d.success) location.reload();
+            else alert(d.error || 'Error');
+        });
+}
+
+function showCategoryModal() {
+    document.getElementById('cat-modal').style.display = 'block';
+    loadCategories();
+}
+function closeCategoryModal() {
+    document.getElementById('cat-modal').style.display = 'none';
+}
+
+function loadCategories() {
+    fetch('/api/admin/blog/categories')
+        .then(function(r) { return r.json(); })
+        .then(function(cats) {
+            var list = document.getElementById('cat-list');
+            if (!cats.length) {
+                list.innerHTML = '<p style="color:var(--text-secondary);font-size:0.88em;">No categories yet.</p>';
+                return;
+            }
+            list.innerHTML = '';
+            cats.forEach(function(c) {
+                var row = document.createElement('div');
+                row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--warm-bg);border-radius:8px;gap:10px;';
+                row.innerHTML = '<span style="font-size:0.9em;font-weight:500;color:var(--navy);">' + c.name_en + '<span style="color:var(--text-secondary);font-size:0.8em;margin-left:8px;">/' + c.slug + '</span></span>'
+                    + '<div style="display:flex;gap:6px;">'
+                    + '<button onclick="editCategory(' + c.id + ',\'' + esc(c.name_en) + '\',\'' + esc(c.slug) + '\',\'' + esc(c.name_ar||'') + '\',\'' + esc(c.name_fr||'') + '\')" style="background:none;border:1.5px solid var(--border);color:var(--text-secondary);padding:4px 10px;border-radius:6px;font-size:0.8em;cursor:pointer;">Edit</button>'
+                    + '<button onclick="deleteCat(' + c.id + ',\'' + esc(c.name_en) + '\')" style="background:none;border:1.5px solid var(--danger);color:var(--danger);padding:4px 10px;border-radius:6px;font-size:0.8em;cursor:pointer;">Delete</button>'
+                    + '</div>';
+                list.appendChild(row);
+            });
+        });
+}
+
+function esc(s) { return (s||'').replace(/'/g, "\\'"); }
+
+function editCategory(id, nameEn, slug, nameAr, nameFr) {
+    document.getElementById('edit-cat-id').value = id;
+    document.getElementById('cat-name-en').value = nameEn;
+    document.getElementById('cat-slug').value = slug;
+    document.getElementById('cat-name-ar').value = nameAr;
+    document.getElementById('cat-name-fr').value = nameFr;
+    document.getElementById('cat-form-title').textContent = 'Edit Category';
+    document.getElementById('cat-cancel-btn').style.display = 'inline-block';
+}
+
+function cancelCatEdit() {
+    document.getElementById('edit-cat-id').value = '';
+    document.getElementById('cat-name-en').value = '';
+    document.getElementById('cat-slug').value = '';
+    document.getElementById('cat-name-ar').value = '';
+    document.getElementById('cat-name-fr').value = '';
+    document.getElementById('cat-form-title').textContent = 'Add Category';
+    document.getElementById('cat-cancel-btn').style.display = 'none';
+    document.getElementById('cat-error').style.display = 'none';
+}
+
+function deleteCat(id, name) {
+    if (!confirm('Delete category "' + name + '"?')) return;
+    fetch('/api/admin/blog/categories/' + id + '/delete', {method:'POST'})
+        .then(function(r) { return r.json(); })
+        .then(function() { loadCategories(); });
+}
+
+function saveCategory() {
+    var id = document.getElementById('edit-cat-id').value;
+    var nameEn = document.getElementById('cat-name-en').value.trim();
+    var slug = document.getElementById('cat-slug').value.trim();
+    var nameAr = document.getElementById('cat-name-ar').value.trim();
+    var nameFr = document.getElementById('cat-name-fr').value.trim();
+    var errEl = document.getElementById('cat-error');
+    errEl.style.display = 'none';
+    if (!nameEn || !slug) { errEl.textContent='Name and slug required'; errEl.style.display='block'; return; }
+    var url = id ? '/api/admin/blog/categories/' + id : '/api/admin/blog/categories';
+    fetch(url, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({name_en:nameEn, slug:slug, name_ar:nameAr, name_fr:nameFr})
+    }).then(function(r) { return r.json(); })
+      .then(function(d) {
+          if (d.success) { cancelCatEdit(); loadCategories(); }
+          else { errEl.textContent = d.error || 'Error'; errEl.style.display = 'block'; }
+      });
+}
+
+// Auto-generate slug from name on the category form
+document.getElementById('cat-name-en').addEventListener('input', function() {
+    if (!document.getElementById('edit-cat-id').value) {
+        document.getElementById('cat-slug').value = this.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    }
+});
+</script>
+{% endblock %}

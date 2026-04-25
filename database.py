@@ -994,6 +994,268 @@ def consume_loyalty_code(email):
     return True
 
 
+# ── Blog ────────────────────────────────────────────────────────────────────
+
+
+def init_blog_tables():
+    """Create blog tables if they don't exist."""
+    conn = get_db()
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS blog_categories (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name_en TEXT NOT NULL,
+            name_ar TEXT,
+            name_fr TEXT,
+            slug TEXT UNIQUE NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS blog_posts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title_en TEXT NOT NULL,
+            title_ar TEXT,
+            title_fr TEXT,
+            slug TEXT UNIQUE NOT NULL,
+            content_en TEXT,
+            content_ar TEXT,
+            content_fr TEXT,
+            excerpt_en TEXT,
+            excerpt_ar TEXT,
+            excerpt_fr TEXT,
+            featured_image TEXT,
+            status TEXT DEFAULT 'draft',
+            published_at TIMESTAMP,
+            meta_title TEXT,
+            meta_description_en TEXT,
+            meta_description_ar TEXT,
+            meta_description_fr TEXT,
+            focus_keyword TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS blog_post_categories (
+            post_id INTEGER NOT NULL,
+            category_id INTEGER NOT NULL,
+            PRIMARY KEY (post_id, category_id)
+        )
+    """)
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_blog_posts_slug ON blog_posts(slug)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_blog_posts_status ON blog_posts(status)")
+    # Migration: add image_alt column if missing
+    try:
+        conn.execute("SELECT image_alt FROM blog_posts LIMIT 1")
+    except Exception:
+        conn.execute("ALTER TABLE blog_posts ADD COLUMN image_alt TEXT")
+    conn.commit()
+    conn.close()
+
+
+def create_blog_category(name_en, slug, name_ar=None, name_fr=None):
+    conn = get_db()
+    cursor = conn.execute(
+        "INSERT INTO blog_categories (name_en, name_ar, name_fr, slug) VALUES (?, ?, ?, ?)",
+        (name_en, name_ar, name_fr, slug)
+    )
+    conn.commit()
+    cat_id = cursor.lastrowid
+    conn.close()
+    return cat_id
+
+
+def update_blog_category(cat_id, name_en, slug, name_ar=None, name_fr=None):
+    conn = get_db()
+    conn.execute(
+        "UPDATE blog_categories SET name_en=?, name_ar=?, name_fr=?, slug=? WHERE id=?",
+        (name_en, name_ar, name_fr, slug, cat_id)
+    )
+    conn.commit()
+    conn.close()
+
+
+def delete_blog_category(cat_id):
+    conn = get_db()
+    conn.execute("DELETE FROM blog_post_categories WHERE category_id=?", (cat_id,))
+    conn.execute("DELETE FROM blog_categories WHERE id=?", (cat_id,))
+    conn.commit()
+    conn.close()
+
+
+def get_blog_categories():
+    conn = get_db()
+    rows = conn.execute("SELECT * FROM blog_categories ORDER BY name_en").fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
+
+
+def get_blog_category_by_slug(slug):
+    conn = get_db()
+    row = conn.execute("SELECT * FROM blog_categories WHERE slug=?", (slug,)).fetchone()
+    conn.close()
+    return dict(row) if row else None
+
+
+def create_blog_post(title_en, slug, content_en=None, excerpt_en=None,
+                     status="draft", meta_title=None, meta_description_en=None,
+                     focus_keyword=None, featured_image=None, category_ids=None):
+    conn = get_db()
+    published_at = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S") if status == "published" else None
+    cursor = conn.execute("""
+        INSERT INTO blog_posts
+            (title_en, slug, content_en, excerpt_en, status, published_at,
+             meta_title, meta_description_en, focus_keyword, featured_image)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (title_en, slug, content_en, excerpt_en, status, published_at,
+          meta_title, meta_description_en, focus_keyword, featured_image))
+    post_id = cursor.lastrowid
+    if category_ids:
+        for cid in category_ids:
+            conn.execute(
+                "INSERT OR IGNORE INTO blog_post_categories (post_id, category_id) VALUES (?, ?)",
+                (post_id, cid)
+            )
+    conn.commit()
+    conn.close()
+    return post_id
+
+
+def update_blog_post(post_id, **fields):
+    conn = get_db()
+    allowed = {
+        "title_en", "title_ar", "title_fr", "slug",
+        "content_en", "content_ar", "content_fr",
+        "excerpt_en", "excerpt_ar", "excerpt_fr",
+        "featured_image", "image_alt", "status", "meta_title",
+        "meta_description_en", "meta_description_ar", "meta_description_fr",
+        "focus_keyword"
+    }
+    data = {k: v for k, v in fields.items() if k in allowed}
+    if not data:
+        conn.close()
+        return
+    # Handle publish timestamp
+    current = conn.execute("SELECT status, published_at FROM blog_posts WHERE id=?", (post_id,)).fetchone()
+    if current:
+        new_status = data.get("status", current["status"])
+        if new_status == "published" and current["published_at"] is None:
+            data["published_at"] = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+    data["updated_at"] = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+    set_clause = ", ".join(k + "=?" for k in data)
+    values = list(data.values()) + [post_id]
+    conn.execute("UPDATE blog_posts SET " + set_clause + " WHERE id=?", values)
+    # Update categories if provided
+    if "category_ids" in fields:
+        conn.execute("DELETE FROM blog_post_categories WHERE post_id=?", (post_id,))
+        for cid in (fields["category_ids"] or []):
+            conn.execute(
+                "INSERT OR IGNORE INTO blog_post_categories (post_id, category_id) VALUES (?, ?)",
+                (post_id, cid)
+            )
+    conn.commit()
+    conn.close()
+
+
+def delete_blog_post(post_id):
+    conn = get_db()
+    conn.execute("DELETE FROM blog_post_categories WHERE post_id=?", (post_id,))
+    conn.execute("DELETE FROM blog_posts WHERE id=?", (post_id,))
+    conn.commit()
+    conn.close()
+
+
+def get_blog_posts(status=None, category_id=None, page=1, per_page=9):
+    conn = get_db()
+    query = "SELECT p.* FROM blog_posts p WHERE 1=1"
+    params = []
+    if status:
+        query += " AND p.status=?"
+        params.append(status)
+    if category_id:
+        query += " AND p.id IN (SELECT post_id FROM blog_post_categories WHERE category_id=?)"
+        params.append(category_id)
+    # count
+    count_row = conn.execute("SELECT COUNT(*) as total FROM (" + query + ")", params).fetchone()
+    total = count_row["total"] if count_row else 0
+    query += " ORDER BY p.published_at DESC, p.created_at DESC LIMIT ? OFFSET ?"
+    params += [per_page, (page - 1) * per_page]
+    rows = conn.execute(query, params).fetchall()
+    conn.close()
+    posts = _attach_categories(rows)
+    return posts, total
+
+
+def get_blog_post_by_id(post_id):
+    conn = get_db()
+    row = conn.execute("SELECT * FROM blog_posts WHERE id=?", (post_id,)).fetchone()
+    conn.close()
+    if not row:
+        return None
+    post = dict(row)
+    post["categories"] = _get_post_categories(post_id)
+    return post
+
+
+def get_blog_post_by_slug(slug):
+    conn = get_db()
+    row = conn.execute("SELECT * FROM blog_posts WHERE slug=?", (slug,)).fetchone()
+    conn.close()
+    if not row:
+        return None
+    post = dict(row)
+    post["categories"] = _get_post_categories(post["id"])
+    return post
+
+
+def get_related_blog_posts(post_id, category_ids, limit=3):
+    if not category_ids:
+        return []
+    conn = get_db()
+    placeholders = ",".join("?" for _ in category_ids)
+    rows = conn.execute("""
+        SELECT DISTINCT p.* FROM blog_posts p
+        JOIN blog_post_categories pc ON p.id = pc.post_id
+        WHERE pc.category_id IN ({}) AND p.id != ? AND p.status = 'published'
+        ORDER BY p.published_at DESC
+        LIMIT ?
+    """.format(placeholders), category_ids + [post_id, limit]).fetchall()
+    conn.close()
+    return _attach_categories(rows)
+
+
+def _get_post_categories(post_id):
+    conn = get_db()
+    rows = conn.execute("""
+        SELECT c.* FROM blog_categories c
+        JOIN blog_post_categories pc ON c.id = pc.category_id
+        WHERE pc.post_id = ?
+    """, (post_id,)).fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
+
+
+def _attach_categories(rows):
+    posts = []
+    for row in rows:
+        post = dict(row)
+        post["categories"] = _get_post_categories(post["id"])
+        posts.append(post)
+    return posts
+
+
+def blog_slug_exists(slug, exclude_id=None):
+    conn = get_db()
+    if exclude_id:
+        row = conn.execute(
+            "SELECT id FROM blog_posts WHERE slug=? AND id!=?", (slug, exclude_id)
+        ).fetchone()
+    else:
+        row = conn.execute("SELECT id FROM blog_posts WHERE slug=?", (slug,)).fetchone()
+    conn.close()
+    return row is not None
+
+
 # Initialize database on import
 init_db()
 init_reviews_table()
@@ -1001,3 +1263,4 @@ init_promo_table()
 init_review_requests_table()
 init_expenses_table()
 init_loyalty_tables()
+init_blog_tables()

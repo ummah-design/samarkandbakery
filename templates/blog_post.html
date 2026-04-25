@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO: dynamic title / meta description -->
+    <title>{{ post.meta_title or post.title_en }} — Samarkand Bakery</title>
+    <meta name="description" content="{{ post.meta_description_en or (post.excerpt_en or '') }}">
+    {% if post.focus_keyword %}<meta name="keywords" content="{{ post.focus_keyword }}">{% endif %}
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="{{ post.meta_title or post.title_en }}">
+    <meta property="og:description" content="{{ post.meta_description_en or (post.excerpt_en or '') }}">
+    {% if post.featured_image %}
+    <meta property="og:image" content="/static/blog/{{ post.featured_image }}">
+    {% endif %}
+    <meta property="og:url" content="/blog/{{ post.slug }}">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="/blog/{{ post.slug }}">
+
+    <!-- Article Schema JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "{{ post.title_en | replace('"', '\\"') }}",
+        "description": "{{ (post.meta_description_en or post.excerpt_en or '') | replace('"', '\\"') }}",
+        {% if post.featured_image %}"image": "/static/blog/{{ post.featured_image }}",{% endif %}
+        "datePublished": "{{ post.published_at or post.created_at }}",
+        "dateModified": "{{ post.updated_at or post.created_at }}",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Samarkand Bakery",
+            "url": "/"
+        }
+    }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #1e2a4a;
+            --navy-light: #2a3d6b;
+            --gold: #b8860b;
+            --gold-light: #d4a017;
+            --warm-bg: #f5f0eb;
+            --card-bg: #ffffff;
+            --text-primary: #2c2c2c;
+            --text-secondary: #6b6b80;
+            --border: #e8e0d8;
+            --radius: 12px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Source Sans 3', 'Segoe UI', sans-serif; background: var(--warm-bg); color: var(--text-primary); }
+        h1,h2,h3,h4 { font-family: 'Playfair Display', Georgia, serif; }
+
+        /* Header */
+        header { background: var(--navy); color: white; padding: 14px 30px; display: flex; align-items: center; gap: 20px; }
+        header img { height: 44px; width: auto; }
+        .header-title { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3em; font-weight: 600; }
+        .header-title span { font-family: 'Source Sans 3', sans-serif; font-size: 0.55em; font-weight: 400; opacity: 0.6; display: block; }
+        .header-nav { margin-left: auto; display: flex; align-items: center; gap: 18px; }
+        .header-nav a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.9em; font-weight: 500; transition: color 0.2s; }
+        .header-nav a:hover, .header-nav a.active { color: var(--gold-light); }
+        .lang-switcher { display: flex; gap: 4px; }
+        .lang-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); padding: 4px 10px; border-radius: 5px; cursor: pointer; font-size: 0.78em; font-family: 'Source Sans 3', sans-serif; transition: all 0.2s; }
+        .lang-btn.active { background: var(--gold); border-color: var(--gold); color: white; }
+
+        /* Layout */
+        .container { max-width: 760px; margin: 0 auto; padding: 35px 20px 60px; }
+
+        /* Breadcrumb */
+        .breadcrumb { font-size: 0.84em; color: var(--text-secondary); margin-bottom: 24px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .breadcrumb a { color: var(--text-secondary); text-decoration: none; }
+        .breadcrumb a:hover { color: var(--navy); }
+        .breadcrumb .sep { opacity: 0.4; }
+
+        /* Post header */
+        .post-cats { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+        .cat-badge { background: rgba(184,134,11,0.12); color: var(--gold); font-size: 0.78em; font-weight: 600; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; text-decoration: none; }
+        .cat-badge:hover { background: var(--gold); color: white; }
+
+        h1.post-title { font-size: 2.1em; font-weight: 700; color: var(--navy); line-height: 1.25; margin-bottom: 14px; }
+        .post-meta { font-size: 0.85em; color: var(--text-secondary); margin-bottom: 28px; display: flex; gap: 14px; flex-wrap: wrap; }
+        .post-meta svg { width: 15px; height: 15px; display: inline; vertical-align: middle; margin-right: 4px; }
+
+        /* Featured image */
+        .featured-img { width: 100%; max-height: 420px; object-fit: cover; border-radius: var(--radius); margin-bottom: 32px; }
+
+        /* Content typography */
+        .post-content { font-size: 1.05em; line-height: 1.8; color: var(--text-primary); }
+        .post-content h2 { font-size: 1.5em; color: var(--navy); margin: 32px 0 14px; border-bottom: 2px solid var(--border); padding-bottom: 8px; }
+        .post-content h3 { font-size: 1.2em; color: var(--navy); margin: 24px 0 10px; }
+        .post-content p { margin-bottom: 18px; }
+        .post-content ul, .post-content ol { margin: 0 0 18px 24px; }
+        .post-content li { margin-bottom: 6px; }
+        .post-content a { color: var(--gold); text-decoration: underline; }
+        .post-content a:hover { color: var(--gold-light); }
+        .post-content img { max-width: 100%; border-radius: 8px; margin: 14px 0; }
+        .post-content blockquote { border-left: 4px solid var(--gold); padding: 12px 20px; background: rgba(184,134,11,0.06); border-radius: 0 8px 8px 0; margin: 20px 0; font-style: italic; color: var(--text-secondary); }
+        .post-content table { width: 100%; border-collapse: collapse; margin: 18px 0; }
+        .post-content table th { background: var(--navy); color: white; padding: 10px 14px; text-align: left; }
+        .post-content table td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+        .post-content table tr:hover td { background: #faf6f1; }
+
+        /* Back to blog */
+        .back-link { display: inline-flex; align-items: center; gap: 6px; color: var(--text-secondary); text-decoration: none; font-size: 0.9em; margin-top: 32px; border-top: 1px solid var(--border); padding-top: 24px; width: 100%; }
+        .back-link:hover { color: var(--navy); }
+
+        /* Related posts */
+        .related-section { margin-top: 50px; }
+        .related-section h3 { font-size: 1.3em; color: var(--navy); margin-bottom: 20px; }
+        .related-line { width: 40px; height: 2px; background: var(--gold); margin-bottom: 22px; border-radius: 2px; }
+        .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+        .related-card { background: var(--card-bg); border-radius: var(--radius); overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.06); text-decoration: none; color: inherit; transition: transform 0.2s; }
+        .related-card:hover { transform: translateY(-2px); }
+        .related-card img { width: 100%; height: 130px; object-fit: cover; }
+        .related-card-ph { width: 100%; height: 130px; background: linear-gradient(135deg, #e8e0d8, #d4c9be); display: flex; align-items: center; justify-content: center; }
+        .related-card-ph svg { width: 32px; height: 32px; opacity: 0.3; }
+        .related-card-body { padding: 12px 14px; }
+        .related-card-body h4 { font-size: 0.92em; font-weight: 600; color: var(--navy); line-height: 1.35; }
+        .related-card-body .date { font-size: 0.78em; color: var(--text-secondary); margin-top: 5px; }
+
+        /* Footer */
+        footer { background: var(--navy); color: rgba(255,255,255,0.55); text-align: center; padding: 22px; font-size: 0.85em; }
+        footer a { color: var(--gold-light); text-decoration: none; }
+
+        /* RTL */
+        body.rtl { direction: rtl; text-align: right; }
+        body.rtl .post-content ul, body.rtl .post-content ol { margin: 0 24px 18px 0; }
+        body.rtl .post-content blockquote { border-left: none; border-right: 4px solid var(--gold); }
+        body.rtl .header-nav { margin-left: 0; margin-right: auto; }
+        body.rtl .back-link { flex-direction: row-reverse; }
+
+        @media (max-width: 600px) {
+            h1.post-title { font-size: 1.6em; }
+            header { flex-wrap: wrap; }
+            .header-nav { margin-left: 0; width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body id="body-root">
+
+<header>
+    <a href="/"><img src="/static/logo.png" alt="Samarkand Bakery"></a>
+    <div class="header-title">
+        Samarkand Bakery
+        <span>Tetouan, Morocco</span>
+    </div>
+    <nav class="header-nav">
+        <a href="/">Shop</a>
+        <a href="/blog" class="active">Blog</a>
+        <div class="lang-switcher">
+            <button class="lang-btn active" onclick="setLang('en')">EN</button>
+            <button class="lang-btn" onclick="setLang('ar')">AR</button>
+            <button class="lang-btn" onclick="setLang('fr')">FR</button>
+        </div>
+    </nav>
+</header>
+
+<div class="container">
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+        <a href="/" class="t" data-en="Home" data-ar="الرئيسية" data-fr="Accueil">Home</a>
+        <span class="sep">/</span>
+        <a href="/blog" class="t" data-en="Blog" data-ar="المدونة" data-fr="Blog">Blog</a>
+        {% if post.categories %}
+        <span class="sep">/</span>
+        <a href="/blog?category={{ post.categories[0].slug }}" class="t"
+           data-en="{{ post.categories[0].name_en }}"
+           data-ar="{{ post.categories[0].name_ar or post.categories[0].name_en }}"
+           data-fr="{{ post.categories[0].name_fr or post.categories[0].name_en }}">{{ post.categories[0].name_en }}</a>
+        {% endif %}
+    </nav>
+
+    <!-- Categories -->
+    {% if post.categories %}
+    <div class="post-cats">
+        {% for cat in post.categories %}
+        <a href="/blog?category={{ cat.slug }}" class="cat-badge t"
+           data-en="{{ cat.name_en }}" data-ar="{{ cat.name_ar or cat.name_en }}" data-fr="{{ cat.name_fr or cat.name_en }}">
+            {{ cat.name_en }}
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Title -->
+    <h1 class="post-title t"
+        data-en="{{ post.title_en }}"
+        data-ar="{{ post.title_ar or post.title_en }}"
+        data-fr="{{ post.title_fr or post.title_en }}">{{ post.title_en }}</h1>
+
+    <!-- Meta -->
+    <div class="post-meta">
+        {% if post.published_at %}
+        <span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 9v7.5"/></svg>
+            {{ post.published_at[:10] }}
+        </span>
+        {% endif %}
+        {% if post.focus_keyword %}
+        <span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z"/><path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z"/></svg>
+            {{ post.focus_keyword }}
+        </span>
+        {% endif %}
+    </div>
+
+    <!-- Featured Image -->
+    {% if post.featured_image %}
+    <img class="featured-img" src="/static/blog/{{ post.featured_image }}" alt="{{ post.image_alt or post.title_en }}">
+    {% endif %}
+
+    <!-- Content (language-switched via JS) -->
+    <div class="post-content" id="post-content-en">{{ post.content_en | safe if post.content_en else "" }}</div>
+    <div class="post-content" id="post-content-ar" style="display:none">{{ post.content_ar | safe if post.content_ar else "" }}</div>
+    <div class="post-content" id="post-content-fr" style="display:none">{{ post.content_fr | safe if post.content_fr else "" }}</div>
+
+    <a href="/blog" class="back-link t" data-en="← Back to Blog" data-ar="→ العودة إلى المدونة" data-fr="← Retour au Blog">← Back to Blog</a>
+
+    <!-- Related Posts -->
+    {% if related %}
+    <div class="related-section">
+        <h3 class="t" data-en="More from the blog" data-ar="المزيد من المدونة" data-fr="Plus du blog">More from the blog</h3>
+        <div class="related-line"></div>
+        <div class="related-grid">
+            {% for rp in related %}
+            <a href="/blog/{{ rp.slug }}" class="related-card">
+                {% if rp.featured_image %}
+                <img src="/static/blog/{{ rp.featured_image }}" alt="{{ rp.image_alt or rp.title_en }}" loading="lazy">
+                {% else %}
+                <div class="related-card-ph">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
+                </div>
+                {% endif %}
+                <div class="related-card-body">
+                    <h4 class="t"
+                        data-en="{{ rp.title_en }}"
+                        data-ar="{{ rp.title_ar or rp.title_en }}"
+                        data-fr="{{ rp.title_fr or rp.title_en }}">{{ rp.title_en }}</h4>
+                    <div class="date">{{ rp.published_at[:10] if rp.published_at else "" }}</div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+<footer>
+    <p>&copy; 2025 <a href="/">Samarkand Bakery</a> &mdash; Tetouan, Morocco</p>
+</footer>
+
+<script>
+    var currentLang = localStorage.getItem("blog_lang") || "en";
+
+    function setLang(lang) {
+        currentLang = lang;
+        localStorage.setItem("blog_lang", lang);
+        applyLang();
+    }
+
+    function applyLang() {
+        var isRtl = currentLang === "ar";
+        document.getElementById("body-root").className = isRtl ? "rtl" : "";
+        document.getElementById("html-root").setAttribute("lang", currentLang);
+
+        // Switch translatable text nodes
+        var elems = document.querySelectorAll(".t");
+        for (var i = 0; i < elems.length; i++) {
+            var el = elems[i];
+            var val = el.getAttribute("data-" + currentLang) || el.getAttribute("data-en") || "";
+            el.textContent = val;
+        }
+
+        // Switch blog content panels
+        var langs = ["en", "ar", "fr"];
+        for (var j = 0; j < langs.length; j++) {
+            var panel = document.getElementById("post-content-" + langs[j]);
+            if (panel) {
+                var hasContent = panel.innerHTML.trim() !== "";
+                panel.style.display = (langs[j] === currentLang && hasContent) ? "block" : "none";
+            }
+        }
+        // Fallback to EN if chosen lang has no content
+        var active = document.getElementById("post-content-" + currentLang);
+        if (active && active.innerHTML.trim() === "") {
+            document.getElementById("post-content-en").style.display = "block";
+        }
+
+        // Lang buttons
+        var btns = document.querySelectorAll(".lang-btn");
+        var langList = ["en", "ar", "fr"];
+        for (var k = 0; k < btns.length; k++) {
+            btns[k].className = "lang-btn" + (langList[k] === currentLang ? " active" : "");
+        }
+    }
+
+    applyLang();
+</script>
+</body>
+</html>

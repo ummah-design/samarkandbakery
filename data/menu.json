@@ -25,6 +25,8 @@
             "product_keys": [
                 "cheburek_potato",
                 "cheburek_meat",
+                "gozleme_potato",
+                "gozleme_spinach",
                 "turkish_simit"
             ]
         },
@@ -94,6 +96,10 @@
             "description_long": "Our Black Olive Knots start with the same soft, enriched pogaca dough made with flour, milk, yoghurt, and egg. Each ball of dough is rolled out into a thin circle and spread with a light homemade black olive paste — simply black olives blended with a touch of olive oil for a smooth, savoury spread. The circle is then rolled up tightly into a log and tied into an elegant knot before baking. The result is a beautifully shaped bun with swirls of olive paste running through the soft, fluffy bread. Perfect as a snack, with breakfast, or alongside soups and dips.",
             "description_long_ar": "عقد الزيتون الاسود لدينا تبدا بنفس عجينة البوغاتشا الطرية الغنية. كل كرة عجين تفرد على شكل دائرة رقيقة وتدهن بمعجون الزيتون الاسود المنزلي الخفيف. ثم تلف بإحكام على شكل اسطوانة وتعقد على شكل عقدة انيقة قبل الخبز. النتيجة هي كعكة جميلة الشكل مع لفائف من معجون الزيتون عبر الخبز الطري.",
             "description_long_fr": "Nos Noeuds aux Olives Noires commencent avec la meme pate de pogaca moelleuse et enrichie. Chaque boule est etalee en un cercle fin et tartinee d'une pate d'olives noires maison legere. Le cercle est ensuite roule en boudin et noue en un noeud elegant avant la cuisson. Le resultat est un petit pain joliment forme avec des spirales de pate d'olive a travers le pain moelleux.",
+            "gallery": [
+                "black_olive_knots_gallery_1777145381.jpeg",
+                "black_olive_knots_gallery_1777145387.jpeg"
+            ],
             "image": "black_olive_knots.jpeg",
             "ingredients": [
                 "Flour",
@@ -144,10 +150,6 @@
                 "protein": "4g"
             },
             "price": 5.0,
-            "gallery": [
-                "black_olive_knots_gallery_1777145381.jpeg",
-                "black_olive_knots_gallery_1777145387.jpeg"
-            ],
             "videos": [
                 "black_olive_knots_1777145430.mp4"
             ]
@@ -310,6 +312,163 @@
                 "cheburek_potato.mp4"
             ]
         },
+        "gozleme_potato": {
+            "allergens": [
+                "Gluten (wheat)",
+                "Dairy (butter)"
+            ],
+            "allergens_ar": [
+                "غلوتين (قمح)",
+                "منتجات الألبان (زبدة)"
+            ],
+            "allergens_fr": [
+                "Gluten (blé)",
+                "Produits laitiers (beurre)"
+            ],
+            "cooking_method": "Pan cooked",
+            "cooking_method_ar": "مطبوخة على المقلاة",
+            "cooking_method_fr": "Cuit à la poêle",
+            "description": "Savoury Turkish flatbread cooked on a hot pan, filled with a juicy potato and onion filling, seasoned with cumin and paprika.",
+            "description_ar": "خبز تركي مسطح مطبوخ على المقلاة الساخنة، محشو ببطاطس وبصل غنية بالنكهات، متبل بالكمون والبابريكا.",
+            "description_fr": "Galette turque salée cuite à la poêle, garnie d'une farce juteuse de pommes de terre et d'oignons, assaisonnée au cumin et au paprika.",
+            "description_long": "Gozleme (gözleme) is a beloved Turkish flatbread, traditionally rolled thin, stuffed with savoury fillings, then cooked on a hot griddle until lightly blistered and golden. Our potato version uses the same seasoned filling as our cheburek — potato, onions, butter, cumin, paprika, and fresh parsley — but is pan cooked rather than fried, giving a soft, lightly crisp flatbread with no added oil. A lighter, healthier vegetarian option.",
+            "description_long_ar": "الغوزلمه هو خبز تركي مسطح محبوب، يُفرد رقيقًا تقليديًا، ويُحشى بحشوات لذيذة، ثم يُطهى على صاج ساخن حتى يصبح ذهبيًا. نسختنا بالبطاطس تستخدم نفس حشوة الشيبوريك — بطاطس وبصل وزبدة وكمون وبابريكا وبقدونس طازج — لكنها مطبوخة على المقلاة بدلًا من القلي، مما يمنحها قوامًا طريًا مع قرمشة خفيفة بدون أي زيت مضاف. خيار نباتي أخف وأكثر صحة.",
+            "description_long_fr": "Le Gozleme (gözleme) est une galette turque traditionnelle, finement étalée, garnie de farces salées, puis cuite à la poêle chaude jusqu'à ce qu'elle soit légèrement dorée. Notre version aux pommes de terre utilise la même farce assaisonnée que notre cheburek — pommes de terre, oignons, beurre, cumin, paprika et persil frais — mais cuite à la poêle plutôt que frite, pour une galette moelleuse, légèrement croustillante, sans huile ajoutée. Une option végétarienne plus légère et saine.",
+            "dietary": [
+                "Vegetarian"
+            ],
+            "image": "gozleme-potato.png",
+            "ingredients": [
+                "Wheat flour",
+                "Potato",
+                "Butter",
+                "Onions",
+                "Salt",
+                "Black pepper",
+                "Cumin",
+                "Paprika",
+                "Fresh parsley"
+            ],
+            "ingredients_ar": [
+                "دقيق القمح",
+                "بطاطس",
+                "زبدة",
+                "بصل",
+                "ملح",
+                "فلفل أسود",
+                "كمون",
+                "بابريكا",
+                "بقدونس طازج"
+            ],
+            "ingredients_fr": [
+                "Farine de blé",
+                "Pomme de terre",
+                "Beurre",
+                "Oignons",
+                "Sel",
+                "Poivre noir",
+                "Cumin",
+                "Paprika",
+                "Persil frais"
+            ],
+            "may_contain": [],
+            "name": "Gozleme (Potato)",
+            "name_ar": "غوزلمه (بطاطس)",
+            "name_fr": "Gozleme (Pomme de Terre)",
+            "nutrition": {
+                "calories": 170,
+                "carbs": 26,
+                "fat": 5,
+                "fibre": 2,
+                "protein": 4,
+                "serving": "1 piece (~80g)",
+                "serving_ar": "قطعة واحدة (~80 غ)",
+                "serving_fr": "1 pièce (~80g)"
+            },
+            "price": 6.0,
+            "recommended": [
+                "turkish_ezme",
+                "cheese_garlic_herb_dip"
+            ],
+            "videos": []
+        },
+        "gozleme_spinach": {
+            "allergens": [
+                "Gluten (wheat)"
+            ],
+            "allergens_ar": [
+                "غلوتين (قمح)"
+            ],
+            "allergens_fr": [
+                "Gluten (blé)"
+            ],
+            "cooking_method": "Pan cooked",
+            "cooking_method_ar": "مطبوخة على المقلاة",
+            "cooking_method_fr": "Cuit à la poêle",
+            "description": "Savoury Turkish flatbread cooked on a hot pan, filled with seasoned spinach, onion, garlic, lemon and olive oil.",
+            "description_ar": "خبز تركي مسطح مطبوخ على المقلاة الساخنة، محشو بالسبانخ المتبلة مع البصل والثوم والليمون وزيت الزيتون.",
+            "description_fr": "Galette turque salée cuite à la poêle, garnie d'épinards assaisonnés, oignon, ail, citron et huile d'olive.",
+            "description_long": "Gozleme is a beloved Turkish flatbread, traditionally rolled thin, stuffed with savoury fillings, then cooked on a hot griddle until lightly blistered and golden. Our spinach version features a fresh, lightly seasoned filling of spinach, onion, garlic, lemon juice, olive oil, salt, pepper, and paprika. Pan cooked with no added frying oil — a light, healthy vegetarian option.",
+            "description_long_ar": "الغوزلمه هو خبز تركي مسطح محبوب، يُفرد رقيقًا تقليديًا، ويُحشى بحشوات لذيذة، ثم يُطهى على صاج ساخن حتى يصبح ذهبيًا. نسختنا بالسبانخ تتميز بحشوة طازجة من السبانخ والبصل والثوم وعصير الليمون وزيت الزيتون والملح والفلفل والبابريكا. مطبوخة على المقلاة بدون زيت قلي — خيار نباتي خفيف وصحي.",
+            "description_long_fr": "Le Gozleme est une galette turque traditionnelle, finement étalée, garnie de farces salées, puis cuite à la poêle chaude jusqu'à ce qu'elle soit légèrement dorée. Notre version aux épinards présente une garniture fraîche et légèrement assaisonnée d'épinards, oignon, ail, jus de citron, huile d'olive, sel, poivre et paprika. Cuite à la poêle sans huile de friture — une option végétarienne légère et saine.",
+            "dietary": [
+                "Vegetarian"
+            ],
+            "image": "gozleme-spinach.jpeg",
+            "ingredients": [
+                "Wheat flour",
+                "Spinach (tinned)",
+                "Onion",
+                "Garlic",
+                "Lemon juice",
+                "Olive oil",
+                "Salt",
+                "Black pepper",
+                "Paprika"
+            ],
+            "ingredients_ar": [
+                "دقيق القمح",
+                "سبانخ (معلبة)",
+                "بصل",
+                "ثوم",
+                "عصير ليمون",
+                "زيت زيتون",
+                "ملح",
+                "فلفل أسود",
+                "بابريكا"
+            ],
+            "ingredients_fr": [
+                "Farine de blé",
+                "Épinards (en conserve)",
+                "Oignon",
+                "Ail",
+                "Jus de citron",
+                "Huile d'olive",
+                "Sel",
+                "Poivre noir",
+                "Paprika"
+            ],
+            "may_contain": [],
+            "name": "Gozleme (Spinach)",
+            "name_ar": "غوزلمه (سبانخ)",
+            "name_fr": "Gozleme (Épinards)",
+            "nutrition": {
+                "calories": 160,
+                "carbs": 24,
+                "fat": 5,
+                "fibre": 3,
+                "protein": 5,
+                "serving": "1 piece (~80g)",
+                "serving_ar": "قطعة واحدة (~80 غ)",
+                "serving_fr": "1 pièce (~80g)"
+            },
+            "price": 8.0,
+            "recommended": [
+                "turkish_ezme",
+                "cheese_garlic_herb_dip"
+            ],
+            "videos": []
+        },
         "cheese_garlic_herb_dip": {
             "allergens": [
                 "dairy"
@@ -393,6 +552,10 @@
             "description_long": "Our Cheese Pogaca is a Turkish filled bread roll with a rich, savoury cheese filling. The soft, pillowy dough enriched with milk, yoghurt, and egg wraps around a generous filling of grated mozzarella and creamy labneh (Jibn Jebli), seasoned with grated garlic, chopped spring onion, dried mixed herbs, and a sprinkle of red pepper flakes for gentle warmth. Each pogaca is hand-shaped and baked until golden, with the cheese melting into a deliciously gooey centre. Perfect for breakfast, snacking, or as a side with soups.",
             "description_long_ar": "بوغاتشا الجبنة لدينا هي خبز محشو تركي بحشوة جبنة غنية ولذيذة. العجينة الطرية الغنية بالحليب والزبادي والبيض تلف حشوة سخية من الموزاريلا المبشورة واللبنة الكريمية، متبلة بالثوم المبشور والبصل الاخضر المفروم والاعشاب المجففة المشكلة ورشة من رقائق الفلفل الاحمر.",
             "description_long_fr": "Notre Pogaca au Fromage est un petit pain fourre turc avec une garniture de fromage riche et savoureuse. La pate moelleuse enrichie de lait, yaourt et oeuf enveloppe une genereuse garniture de mozzarella rapee et de labneh cremeux, assaisonnee d'ail rape, d'oignon vert hache, d'herbes sechees melangees et d'une pincee de flocons de piment rouge.",
+            "gallery": [
+                "cheese_pogaca_gallery_1777144572.jpeg",
+                "cheese_pogaca_gallery_1777144606.jpeg"
+            ],
             "image": "cheese_pogaca.jpeg",
             "ingredients": [
                 "Flour",
@@ -454,11 +617,7 @@
                 "fibre": "1g",
                 "protein": "8g"
             },
-            "price": 10.0,
-            "gallery": [
-                "cheese_pogaca_gallery_1777144572.jpeg",
-                "cheese_pogaca_gallery_1777144606.jpeg"
-            ]
+            "price": 10.0
         },
         "chicken_samsa": {
             "allergens": [
@@ -620,86 +779,6 @@
                 "chicken_spinach_borek.mp4"
             ]
         },
-        "mini_chicken_spinach_borek": {
-            "allergens": [
-                "gluten",
-                "dairy"
-            ],
-            "allergens_ar": [
-                "جلوتين",
-                "منتجات الالبان"
-            ],
-            "allergens_fr": [
-                "gluten",
-                "produits laitiers"
-            ],
-            "cooking_method": "oven",
-            "cooking_method_ar": "فرن",
-            "cooking_method_fr": "four",
-            "description": "An individual-sized golden baked Turkish borek with seasoned chicken, spinach, and melted mozzarella. Perfect single serving.",
-            "description_ar": "بورك تركي ذهبي مخبوز بحجم فردي مع الدجاج المتبل والسبانخ والموزاريلا الذائبة. حصة فردية مثالية.",
-            "description_fr": "Un borek turc dore au format individuel avec poulet assaisonne, epinards et mozzarella fondue. Portion individuelle parfaite.",
-            "description_long": "Our Mini Chicken and Spinach Borek brings the same beloved recipe as our family-sized borek, but in a personal portion. Thin, handmade dough is filled with tender chicken breast cooked with onion, garlic, and a squeeze of lemon, combined with spinach and seasoned with paprika and black pepper. Brushed with melted butter and topped with grated mozzarella that melts into golden, gooey perfection. Baked for 30 minutes until crispy on top and soft inside. Sold as one individual mini borek — ideal for solo meals, lunches, or when you want to try the borek without committing to the large one.",
-            "description_long_ar": "بورك الدجاج والسبانخ المصغر لدينا يقدم نفس الوصفة المحبوبة من البورك العائلي ولكن في حصة فردية. عجين رقيق مصنوع يدوياً محشو بصدر دجاج طري مطبوخ مع البصل والثوم وعصير الليمون ممزوج بالسبانخ ومتبل بالبابريكا والفلفل الاسود. مدهون بالزبدة الذائبة ومغطى بالموزاريلا المبشورة. يخبز لمدة 30 دقيقة. يباع كبورك مصغر فردي — مثالي للوجبات الفردية او الغداء او لتجربة البورك دون الالتزام بالحجم الكبير.",
-            "description_long_fr": "Notre Mini Borek au Poulet et Epinards offre la meme recette adoree que notre borek familial, mais en portion individuelle. Une pate fine faite a la main est garnie de blanc de poulet tendre cuit avec de l'oignon, de l'ail et un filet de citron, combines avec des epinards et assaisonnes de paprika et de poivre noir. Badigeonne de beurre fondu et garni de mozzarella rapee. Cuit pendant 30 minutes. Vendu en un mini borek individuel — ideal pour les repas en solo, les dejeuners, ou pour gouter le borek sans s'engager sur le grand format.",
-            "image": "mini_chicken_spinach_borek.png",
-            "ingredients": [
-                "Flour",
-                "Chicken Breast",
-                "Spinach",
-                "Mozzarella",
-                "Onion",
-                "Garlic",
-                "Lemon",
-                "Butter",
-                "Salt",
-                "Black Pepper",
-                "Paprika"
-            ],
-            "ingredients_ar": [
-                "دقيق",
-                "صدر دجاج",
-                "سبانخ",
-                "موزاريلا",
-                "بصل",
-                "ثوم",
-                "ليمون",
-                "زبدة",
-                "ملح",
-                "فلفل اسود",
-                "بابريكا"
-            ],
-            "ingredients_fr": [
-                "Farine",
-                "Blanc de poulet",
-                "Epinards",
-                "Mozzarella",
-                "Oignon",
-                "Ail",
-                "Citron",
-                "Beurre",
-                "Sel",
-                "Poivre noir",
-                "Paprika"
-            ],
-            "meta_description": "Order a Mini Chicken and Spinach Borek in Tetouan. Individual-sized Turkish pastry with chicken, spinach, and melted mozzarella. 25 MAD. Delivery and pickup available.",
-            "meta_title": "Mini Chicken & Spinach Borek — Individual Turkish Baked Pastry | Samarkand Bakery",
-            "name": "Mini Chicken & Spinach Borek",
-            "name_ar": "بورك مصغر بالدجاج والسبانخ",
-            "name_fr": "Mini Borek au Poulet et Epinards",
-            "nutrition": {
-                "calories": "80 kcal",
-                "carbs": "7g",
-                "fat": "4g",
-                "fibre": "0.5g",
-                "protein": "4.5g"
-            },
-            "price": 25.0,
-            "videos": [],
-            "gallery": [
-                "mini_chicken_spinach_borek_gallery_1777147639.png"
-            ]
-        },
         "meat_samsa": {
             "allergens": [
                 "Gluten (wheat)",
@@ -782,6 +861,86 @@
                 "shared_samsa_olives.mp4",
                 "meat_samsa_video.mp4"
             ]
+        },
+        "mini_chicken_spinach_borek": {
+            "allergens": [
+                "gluten",
+                "dairy"
+            ],
+            "allergens_ar": [
+                "جلوتين",
+                "منتجات الالبان"
+            ],
+            "allergens_fr": [
+                "gluten",
+                "produits laitiers"
+            ],
+            "cooking_method": "oven",
+            "cooking_method_ar": "فرن",
+            "cooking_method_fr": "four",
+            "description": "An individual-sized golden baked Turkish borek with seasoned chicken, spinach, and melted mozzarella. Perfect single serving.",
+            "description_ar": "بورك تركي ذهبي مخبوز بحجم فردي مع الدجاج المتبل والسبانخ والموزاريلا الذائبة. حصة فردية مثالية.",
+            "description_fr": "Un borek turc dore au format individuel avec poulet assaisonne, epinards et mozzarella fondue. Portion individuelle parfaite.",
+            "description_long": "Our Mini Chicken and Spinach Borek brings the same beloved recipe as our family-sized borek, but in a personal portion. Thin, handmade dough is filled with tender chicken breast cooked with onion, garlic, and a squeeze of lemon, combined with spinach and seasoned with paprika and black pepper. Brushed with melted butter and topped with grated mozzarella that melts into golden, gooey perfection. Baked for 30 minutes until crispy on top and soft inside. Sold as one individual mini borek — ideal for solo meals, lunches, or when you want to try the borek without committing to the large one.",
+            "description_long_ar": "بورك الدجاج والسبانخ المصغر لدينا يقدم نفس الوصفة المحبوبة من البورك العائلي ولكن في حصة فردية. عجين رقيق مصنوع يدوياً محشو بصدر دجاج طري مطبوخ مع البصل والثوم وعصير الليمون ممزوج بالسبانخ ومتبل بالبابريكا والفلفل الاسود. مدهون بالزبدة الذائبة ومغطى بالموزاريلا المبشورة. يخبز لمدة 30 دقيقة. يباع كبورك مصغر فردي — مثالي للوجبات الفردية او الغداء او لتجربة البورك دون الالتزام بالحجم الكبير.",
+            "description_long_fr": "Notre Mini Borek au Poulet et Epinards offre la meme recette adoree que notre borek familial, mais en portion individuelle. Une pate fine faite a la main est garnie de blanc de poulet tendre cuit avec de l'oignon, de l'ail et un filet de citron, combines avec des epinards et assaisonnes de paprika et de poivre noir. Badigeonne de beurre fondu et garni de mozzarella rapee. Cuit pendant 30 minutes. Vendu en un mini borek individuel — ideal pour les repas en solo, les dejeuners, ou pour gouter le borek sans s'engager sur le grand format.",
+            "gallery": [
+                "mini_chicken_spinach_borek_gallery_1777147639.png"
+            ],
+            "image": "mini_chicken_spinach_borek.png",
+            "ingredients": [
+                "Flour",
+                "Chicken Breast",
+                "Spinach",
+                "Mozzarella",
+                "Onion",
+                "Garlic",
+                "Lemon",
+                "Butter",
+                "Salt",
+                "Black Pepper",
+                "Paprika"
+            ],
+            "ingredients_ar": [
+                "دقيق",
+                "صدر دجاج",
+                "سبانخ",
+                "موزاريلا",
+                "بصل",
+                "ثوم",
+                "ليمون",
+                "زبدة",
+                "ملح",
+                "فلفل اسود",
+                "بابريكا"
+            ],
+            "ingredients_fr": [
+                "Farine",
+                "Blanc de poulet",
+                "Epinards",
+                "Mozzarella",
+                "Oignon",
+                "Ail",
+                "Citron",
+                "Beurre",
+                "Sel",
+                "Poivre noir",
+                "Paprika"
+            ],
+            "meta_description": "Order a Mini Chicken and Spinach Borek in Tetouan. Individual-sized Turkish pastry with chicken, spinach, and melted mozzarella. 25 MAD. Delivery and pickup available.",
+            "meta_title": "Mini Chicken & Spinach Borek — Individual Turkish Baked Pastry | Samarkand Bakery",
+            "name": "Mini Chicken & Spinach Borek",
+            "name_ar": "بورك مصغر بالدجاج والسبانخ",
+            "name_fr": "Mini Borek au Poulet et Epinards",
+            "nutrition": {
+                "calories": "80 kcal",
+                "carbs": "7g",
+                "fat": "4g",
+                "fibre": "0.5g",
+                "protein": "4.5g"
+            },
+            "price": 25.0,
+            "videos": []
         },
         "ochiq_samsa": {
             "allergens": [
@@ -1492,6 +1651,9 @@
             "description_long": "Turkey's most beloved street food, the Simit is a circular sesame-crusted bread ring that has been a staple since the 16th century Ottoman Empire. Each simit is hand-twisted from two ropes of dense, chewy dough, dipped in a sweet pomegranate molasses glaze, then generously rolled in roasted sesame seeds before being oven-baked to golden perfection. The result is an irresistible combination of crunchy sesame exterior and soft, slightly chewy interior. Perfect with cream cheese, olives, or simply enjoyed on its own with a cup of Turkish tea.",
             "description_long_ar": "أشهر طعام شارع تركي، السميت هو خبز دائري مغطى بالسمسم كان عنصرًا أساسيًا منذ الإمبراطورية العثمانية في القرن السادس عشر. يُلف كل سميت يدويًا من حبلين من العجين الكثيف والمطاطي، ويُغمس في طلاء حلو من دبس الرمان، ثم يُلف بسخاء في بذور السمسم المحمصة قبل خبزه في الفرن حتى يصبح ذهبيًا مثاليًا. النتيجة هي مزيج لا يقاوم من الخارج المقرمش بالسمسم والداخل الطري. مثالي مع الجبن الكريمي أو الزيتون أو ببساطة يُستمتع به وحده مع كوب من الشاي التركي.",
             "description_long_fr": "Le street food turc le plus apprécié, le Simit est un pain en forme d'anneau recouvert de sésame, un incontournable depuis l'Empire ottoman du XVIe siècle. Chaque simit est torsadé à la main à partir de deux cordes de pâte dense et moelleuse, trempé dans un glaçage sucré à la mélasse de grenade, puis généreusement roulé dans des graines de sésame grillées avant d'être cuit au four jusqu'à une perfection dorée. Le résultat est une combinaison irrésistible d'extérieur croustillant au sésame et d'intérieur moelleux. Parfait avec du fromage frais, des olives, ou simplement dégusté seul avec une tasse de thé turc.",
+            "free_extra": "Free Cheese, Garlic & Herb Dip included",
+            "free_extra_ar": "صلصة الجبنة والثوم والأعشاب مجانية",
+            "free_extra_fr": "Dip Fromage, Ail et Herbes offert",
             "image": "turkish_simit.jpg",
             "ingredients": [
                 "Flour",
@@ -1529,10 +1691,7 @@
                 "fibre": "3g",
                 "protein": "8g"
             },
-            "price": 12.0,
-            "free_extra": "Free Cheese, Garlic & Herb Dip included",
-            "free_extra_ar": "صلصة الجبنة والثوم والأعشاب مجانية",
-            "free_extra_fr": "Dip Fromage, Ail et Herbes offert"
+            "price": 12.0
         },
         "uzbek_bread": {
             "allergens": [
@@ -1709,6 +1868,9 @@
             "description_long": "Our Veggie Pogaca is a beloved Turkish filled bread roll, soft and pillowy on the inside with a golden crust on the outside. The dough is enriched with milk, yoghurt, and egg for a tender, brioche-like texture. The filling is a hearty mix of sautéed carrot, courgette, potato, green and red bell peppers, and onion, seasoned with paprika, black pepper, and fresh parsley. Each pogaca is hand-shaped, filled generously, and baked until beautifully golden. Perfect as a snack, breakfast item, or alongside soups and salads.",
             "description_long_ar": "بوغاتشا الخضار لدينا هي خبز محشو تركي محبوب، طري ومنفوش من الداخل مع قشرة ذهبية من الخارج. العجينة غنية بالحليب والزبادي والبيض لقوام طري شبيه بالبريوش. الحشوة مزيج شهي من الجزر والكوسا والبطاطس والفلفل الأخضر والأحمر والبصل المقلي، متبل بالبابريكا والفلفل الأسود والبقدونس الطازج.",
             "description_long_fr": "Notre Pogaca aux Légumes est un petit pain fourré turc apprécié, moelleux à l'intérieur avec une croûte dorée à l'extérieur. La pâte est enrichie de lait, yaourt et œuf pour une texture tendre de type brioche. La garniture est un mélange copieux de carotte, courgette, pomme de terre, poivrons verts et rouges, et oignon sautés, assaisonnés de paprika, poivre noir et persil frais.",
+            "gallery": [
+                "veggie_pogaca_gallery_1777148878.png"
+            ],
             "image": "veggie_pogaca.jpeg",
             "ingredients": [
                 "Flour",

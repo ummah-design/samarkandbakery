@@ -73,6 +73,19 @@ def calculate_energy_cost(recipe, quantity, energy):
             "total_minutes": minutes * num_batches,
             "cost": round(cost, 2)
         }
+    elif cooking["method"] == "pan":
+        items_per_batch = cooking.get("items_per_batch", 1)
+        minutes = cooking["minutes_per_batch"]
+        num_batches = math.ceil(quantity / items_per_batch)
+        hours = (minutes / 60) * num_batches
+        cost = (energy.get("stovetop_watts", watts) / 1000) * hours * rate
+        return {
+            "pan_batches": num_batches,
+            "items_per_batch": items_per_batch,
+            "minutes_per_batch": minutes,
+            "total_minutes": minutes * num_batches,
+            "cost": round(cost, 2)
+        }
     return {"cost": 0.0}
 
 

@@ -214,6 +214,72 @@
             }
         }
     },
+    "gozleme_potato": {
+        "name": "Gozleme (Potato)",
+        "selling_price": 6.0,
+        "packaging_type": "pastry_boxes",
+        "cooking": {
+            "method": "pan",
+            "minutes_per_batch": 6,
+            "items_per_batch": 1
+        },
+        "components": {
+            "dough": {
+                "yields": 15,
+                "ingredients": {
+                    "flour_per_kg": 0.5,
+                    "salt_per_kg": 0.012,
+                    "water_litres": 0.3
+                }
+            },
+            "filling": {
+                "yields": 15,
+                "ingredients": {
+                    "potato_per_kg": 0.5,
+                    "salted_butter_per_kg": 0.03,
+                    "salt_per_kg": 0.009,
+                    "black_pepper_per_kg": 0.0015,
+                    "cumin_powder_per_kg": 0.003,
+                    "paprika_per_kg": 0.003,
+                    "onion_per_kg": 0.3,
+                    "fresh_parsley_per_kg": 0.03
+                }
+            }
+        }
+    },
+    "gozleme_spinach": {
+        "name": "Gozleme (Spinach)",
+        "selling_price": 8.0,
+        "packaging_type": "pastry_boxes",
+        "cooking": {
+            "method": "pan",
+            "minutes_per_batch": 6,
+            "items_per_batch": 1
+        },
+        "components": {
+            "dough": {
+                "yields": 15,
+                "ingredients": {
+                    "flour_per_kg": 0.5,
+                    "salt_per_kg": 0.012,
+                    "water_litres": 0.3
+                }
+            },
+            "filling": {
+                "yields": 10,
+                "ingredients": {
+                    "tinned_spinach_per_tin": 1,
+                    "onion_per_kg": 0.15,
+                    "lemon_each": 0.5,
+                    "garlic_per_kg": 0.006,
+                    "olive_oil_per_litre": 0.045,
+                    "salt_per_kg": 0.006,
+                    "black_pepper_per_kg": 0.0007,
+                    "paprika_per_kg": 0.0025
+                }
+            }
+        }
+    },
     "pide_minced_beef": {
         "name": "Pide (Minced Beef)",
         "selling_price": 20.0,
@@ -414,7 +480,7 @@
     },
     "walnut_fig_jam": {
         "name": "Walnut & Fig Jam",
-        "selling_price": 7.0,
+        "selling_price": 10.0,
         "packaging_type": "dip_pots",
         "cooking": {
             "method": "oven",

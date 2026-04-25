@@ -1074,9 +1074,12 @@ const productKey = "{{ product_key }}";
 const T = {{ t | tojson }};
 const LANG = '{{ lang }}';
 
+var qtyDirty = false;
 function changeQty(delta) {
     qty = Math.max(1, qty + delta);
     document.getElementById('qty-display').textContent = qty;
+    qtyDirty = true;
+    updateProductCartBar();
 }
 
 function addToOrder() {
@@ -1093,7 +1096,53 @@ function addToOrder() {
         btn.innerHTML = '\u{1F6D2} {{ t.add_to_order if t.add_to_order else "Add to Order" }}';
         btn.style.background = 'var(--navy)';
     }, 1500);
+    qty = 1;
+    qtyDirty = false;
+    document.getElementById('qty-display').textContent = qty;
     updateProductCartBar();
+}
+
+function commitPendingAndCheckout(e) {
+    if (qtyDirty && qty > 0) {
+        var existing = JSON.parse(localStorage.getItem('samarkand_cart') || '{}');
+        existing[productKey] = (existing[productKey] || 0) + qty;
+        localStorage.setItem('samarkand_cart', JSON.stringify(existing));
+        qtyDirty = false;
+    }
+    // Allow normal navigation
+    return true;
+}
+
+var PRODUCT_PRICES = {{ menu['products'] | tojson }};
+var autoDiscount = { enabled: false, threshold: 0, percent: 0 };
+
+(async function loadAutoDiscount() {
+    try {
+        var res = await fetch('/api/auto-discount');
+        if (res.ok) {
+            var data = await res.json();
+            autoDiscount = {
+                enabled: !!data.enabled,
+                threshold: parseFloat(data.threshold) || 0,
+                percent: parseFloat(data.percent) || 0
+            };
+            updateProductCartBar();
+        }
+    } catch (e) { /* silent — bar still shows count */ }
+})();
+
+function computeCartSubtotal(includePending) {
+    var cart = JSON.parse(localStorage.getItem('samarkand_cart') || '{}');
+    var subtotal = 0;
+    for (var k in cart) {
+        if (cart.hasOwnProperty(k) && PRODUCT_PRICES[k]) {
+            subtotal += (PRODUCT_PRICES[k].price || 0) * cart[k];
+        }
+    }
+    if (includePending && PRODUCT_PRICES[productKey]) {
+        subtotal += (PRODUCT_PRICES[productKey].price || 0) * qty;
+    }
+    return subtotal;
 }
 
 function updateProductCartBar() {
@@ -1106,6 +1155,26 @@ function updateProductCartBar() {
         bar.style.transform = 'translateY(0)';
     } else {
         bar.style.transform = 'translateY(100%)';
+    }
+
+    var promoEl = document.getElementById('product-cart-promo');
+    if (!promoEl) return;
+    if (!autoDiscount.enabled || autoDiscount.threshold <= 0 || autoDiscount.percent <= 0) {
+        promoEl.textContent = '';
+        return;
+    }
+    // Always preview current qty selector so the bar reacts before "Add to Order"
+    var subtotal = computeCartSubtotal(true);
+    if (subtotal <= 0) { promoEl.textContent = ''; return; }
+    var pctStr = (autoDiscount.percent % 1 === 0) ? autoDiscount.percent.toFixed(0) : String(autoDiscount.percent);
+    if (subtotal + 1e-9 >= autoDiscount.threshold) {
+        var qTpl = T.auto_discount_qualified || 'You qualified for {percent}% off';
+        promoEl.innerHTML = '<span style="color:var(--gold-pale,#f7d774);font-weight:600;font-style:normal;">' +
+            qTpl.replace('{percent}', pctStr) + '</span>';
+    } else {
+        var remaining = (autoDiscount.threshold - subtotal).toFixed(2);
+        var pTpl = T.auto_discount_progress || 'Add {amount} MAD more to get {percent}% off';
+        promoEl.textContent = pTpl.replace('{amount}', remaining).replace('{percent}', pctStr);
     }
 }
 
@@ -1325,12 +1394,13 @@ function closeMobileMenu() {
 </footer>
 
 <!-- Floating cart bar -->
-<div id="product-cart-bar" style="position:fixed;bottom:0;left:0;right:0;background:var(--navy);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;z-index:1000;transform:translateY(100%);transition:transform 0.3s ease;box-shadow:0 -4px 20px rgba(0,0,0,0.15);">
-    <div style="display:flex;align-items:center;gap:10px;">
+<div id="product-cart-bar" style="position:fixed;bottom:0;left:0;right:0;background:var(--navy);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;z-index:1000;transform:translateY(100%);transition:transform 0.3s ease;box-shadow:0 -4px 20px rgba(0,0,0,0.15);">
+    <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
         <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:22px;height:22px;"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/></svg>
         <span><span id="product-cart-count">0</span> item(s) in cart</span>
     </div>
-    <a href="/?checkout=1#menu" style="background:var(--gold);color:#fff;text-decoration:none;padding:10px 24px;border-radius:24px;font-weight:600;font-size:0.9rem;">View Cart & Checkout</a>
+    <div id="product-cart-promo" style="flex:1 1 200px;text-align:center;font-size:0.85rem;color:rgba(255,255,255,0.85);font-style:italic;"></div>
+    <a href="/?checkout=1#menu" onclick="return commitPendingAndCheckout(event);" style="background:var(--gold);color:#fff;text-decoration:none;padding:10px 24px;border-radius:24px;font-weight:600;font-size:0.9rem;flex-shrink:0;">View Cart & Checkout</a>
 </div>
 </body>
 </html>

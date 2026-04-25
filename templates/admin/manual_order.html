@@ -94,6 +94,7 @@
     <div>
         <div class="cart-info" id="cart-info">0 items</div>
         <div class="cart-total" id="cart-total-display">0.00 MAD</div>
+        <div id="cart-bar-nudge" style="display:none;font-size:0.78em;color:#f5d78e;margin-top:2px;"></div>
     </div>
     <button class="checkout-btn" onclick="openCheckout()">Checkout</button>
 </div>
@@ -105,6 +106,11 @@
             <h2>Manual Order</h2>
             <p style="color:#6b6b80;font-size:0.85em;margin-bottom:12px;">Add an order on behalf of a customer (phone/email/walk-in).</p>
             <div class="cart-summary" id="checkout-cart-summary"></div>
+            <div style="margin:0 0 16px;">
+                <label for="manual-discount" style="display:block;margin-bottom:6px;">Discount (MAD) <span style="font-weight:400;color:#888;font-size:0.85em;">— optional</span></label>
+                <input type="number" id="manual-discount" min="0" step="0.5" placeholder="0.00" oninput="updateDiscount()" style="padding:10px;border:1px solid #e8e0d8;border-radius:8px;font-size:1em;width:100%;box-sizing:border-box;">
+                <div id="discount-preview" style="display:none;margin-top:8px;padding:8px 12px;background:#f0f9f0;border-radius:6px;font-size:0.88em;color:#2d7a4f;"></div>
+            </div>
             <label for="customer-email">Customer Email</label>
             <div style="position:relative;">
                 <input type="email" id="customer-email" placeholder="customer@email.com" required autocomplete="off">
@@ -254,8 +260,27 @@
         }
     });
 
+    // ===== AUTO-DISCOUNT CONFIG =====
+    var autoDiscount = { enabled: false, threshold: 0, percent: 0 };
+
+    async function loadAutoDiscount() {
+        try {
+            var res = await fetch('/api/auto-discount');
+            var data = await res.json();
+            autoDiscount = { enabled: !!data.enabled, threshold: parseFloat(data.threshold) || 0, percent: parseFloat(data.percent) || 0 };
+        } catch(e) {}
+    }
+    loadAutoDiscount();
+
+    function getAutoDiscountAmount(subtotal) {
+        if (!autoDiscount.enabled || autoDiscount.threshold <= 0 || autoDiscount.percent <= 0) return 0;
+        if (subtotal + 1e-9 < autoDiscount.threshold) return 0;
+        return Math.round(subtotal * autoDiscount.percent) / 100;
+    }
+
     // ===== ORDERING (SHOP) =====
     var cart = {};
+    var manualDiscount = 0;
     var deliveryType = 'pickup';
     var checkoutMap = null;
     var marker = null;
@@ -299,10 +324,28 @@
         if (totalItems > 0) {
             bar.classList.add('visible');
             document.getElementById('cart-info').textContent = totalItems + ' item' + (totalItems > 1 ? 's' : '');
-            document.getElementById('cart-total-display').textContent = totalPrice.toFixed(2) + ' MAD';
+            var autoAmt = getAutoDiscountAmount(totalPrice);
+            var displayTotal = Math.max(0, totalPrice - autoAmt);
+            document.getElementById('cart-total-display').textContent = displayTotal.toFixed(2) + ' MAD';
+            var nudgeEl = document.getElementById('cart-bar-nudge');
+            if (nudgeEl) {
+                if (autoDiscount.enabled && autoDiscount.threshold > 0 && totalPrice + 1e-9 < autoDiscount.threshold) {
+                    var remaining = (autoDiscount.threshold - totalPrice).toFixed(2);
+                    var pct = (autoDiscount.percent % 1 === 0) ? autoDiscount.percent : autoDiscount.percent.toFixed(1);
+                    nudgeEl.textContent = 'Add ' + remaining + ' MAD more for ' + pct + '% off';
+                    nudgeEl.style.display = 'block';
+                } else {
+                    nudgeEl.style.display = 'none';
+                }
+            }
         } else {
             bar.classList.remove('visible');
         }
+    }
+
+    function updateDiscount() {
+        manualDiscount = parseFloat(document.getElementById('manual-discount').value) || 0;
+        renderCheckoutSummary();
     }
 
     function openCheckout() {
@@ -333,7 +376,28 @@
                 + '</div></div>';
         }
         if (total > 0) {
-            html += '<div class="cart-total-row"><span>Total</span><span class="amount">' + total.toFixed(2) + ' MAD</span></div>';
+            var autoAmt = getAutoDiscountAmount(total);
+            var manualAmt = Math.min(manualDiscount, total);
+            var finalTotal = Math.max(0, total - autoAmt - manualAmt);
+            var hasAnyDiscount = autoAmt > 0 || manualAmt > 0;
+            if (hasAnyDiscount) {
+                html += '<div class="cart-total-row" style="border-top:1px solid #ddd;padding-top:8px;font-size:1em;font-weight:400;"><span>Subtotal</span><span>' + total.toFixed(2) + ' MAD</span></div>';
+                if (autoAmt > 0) {
+                    var pct = (autoDiscount.percent % 1 === 0) ? autoDiscount.percent : autoDiscount.percent.toFixed(1);
+                    html += '<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:0.9em;color:#2d7a4f;font-weight:600;"><span>Order discount (' + pct + '%)</span><span>− ' + autoAmt.toFixed(2) + ' MAD</span></div>';
+                }
+                if (manualAmt > 0) {
+                    html += '<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:0.9em;color:#2d7a4f;font-weight:600;"><span>Manual discount</span><span>− ' + manualAmt.toFixed(2) + ' MAD</span></div>';
+                }
+                html += '<div class="cart-total-row" style="border-top:2px solid #1e2a4a;"><span>Total</span><span class="amount">' + finalTotal.toFixed(2) + ' MAD</span></div>';
+            } else {
+                html += '<div class="cart-total-row"><span>Total</span><span class="amount">' + total.toFixed(2) + ' MAD</span></div>';
+                if (autoDiscount.enabled && autoDiscount.threshold > 0 && autoDiscount.percent > 0) {
+                    var remaining = (autoDiscount.threshold - total).toFixed(2);
+                    var pct = (autoDiscount.percent % 1 === 0) ? autoDiscount.percent : autoDiscount.percent.toFixed(1);
+                    html += '<div style="margin-top:8px;padding:8px 12px;background:#faf6f1;border:1px dashed #ddd;border-radius:6px;font-size:0.83em;color:#888;text-align:center;">Add ' + remaining + ' MAD more to get ' + pct + '% off</div>';
+                }
+            }
         } else {
             html = '<p style="text-align:center;color:#999;padding:20px 0;">No items in cart. Close and add products first.</p>';
         }
@@ -386,7 +450,7 @@
         try {
             var res = await fetch('/api/orders/submit', {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ customer_name: name, customer_email: email, customer_phone: phone, preferred_date: preferredDate || null, delivery_type: deliveryType, delivery_address: document.getElementById('delivery-address') ? document.getElementById('delivery-address').value : '', delivery_lat: selectedLat, delivery_lng: selectedLng, items: items, notes: document.getElementById('order-notes').value, payment_method: 'cod' })
+                body: JSON.stringify({ customer_name: name, customer_email: email, customer_phone: phone, preferred_date: preferredDate || null, delivery_type: deliveryType, delivery_address: document.getElementById('delivery-address') ? document.getElementById('delivery-address').value : '', delivery_lat: selectedLat, delivery_lng: selectedLng, items: items, notes: document.getElementById('order-notes').value, payment_method: 'cod', manual_discount_amount: manualDiscount })
             });
             var data = await res.json();
             if (data.success) {
@@ -412,7 +476,8 @@
     }
 
     function resetOrder() {
-        cart = {}; selectedLat = null; selectedLng = null;
+        cart = {}; manualDiscount = 0; selectedLat = null; selectedLng = null;
+        document.getElementById('manual-discount').value = '';
         if (marker && checkoutMap) checkoutMap.removeLayer(marker); marker = null;
         var allKeys = Object.keys(menuData.products);
         for (var ki = 0; ki < allKeys.length; ki++) updateCardControls(allKeys[ki]);

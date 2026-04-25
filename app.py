@@ -347,6 +347,13 @@ def api_submit_order():
                 total_price -= loyalty_redeem_mad
                 discount_amt += loyalty_redeem_mad
 
+    # Manual discount entered by admin (manual order form only)
+    manual_discount = float(req.get("manual_discount_amount") or 0)
+    if manual_discount > 0:
+        manual_discount = min(manual_discount, total_price)
+        discount_amt += manual_discount
+        total_price -= manual_discount
+
     data = load_data()
     cost_items = [{"recipe_key": i["key"], "quantity": i["quantity"]} for i in items]
     cost_result = calculate_order(cost_items, data)

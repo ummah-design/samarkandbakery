@@ -584,6 +584,12 @@ def admin_backups_page():
     return render_template("admin/backups.html", active_page="backups")
 
 
+@app.route("/admin/reports")
+@admin_required
+def admin_reports_page():
+    return render_template("admin/reports.html", active_page="reports")
+
+
 @app.route("/admin/product/<product_key>/edit")
 @admin_required
 def admin_product_edit(product_key):
@@ -1511,6 +1517,296 @@ def api_admin_expenses_update(expense_id):
 def api_admin_expenses_delete(expense_id):
     delete_expense(expense_id)
     return jsonify({"success": True})
+
+
+# ── Reports / Analytics ───────────────────────────────────────────────────────
+
+@app.route("/api/admin/reports")
+@admin_required
+def api_admin_reports():
+    """Aggregate analytics for the Reports dashboard.
+
+    Query params:
+      start_date, end_date — YYYY-MM-DD (inclusive). Both optional.
+    """
+    start_date = (request.args.get("start_date") or "").strip() or None
+    end_date = (request.args.get("end_date") or "").strip() or None
+
+    # Pull all orders in range (large limit; date filter caps it server-side).
+    orders = get_orders(start_date=start_date, end_date=end_date, limit=10000)
+    # Cancelled orders are excluded from financial calculations but kept for status counts.
+    active_orders = [o for o in orders if (o.get("status") or "") != "cancelled"]
+
+    menu = load_menu()
+    products = menu.get("products", {})
+    categories = menu.get("categories", [])
+
+    # Build product_key -> category name map
+    product_to_category = {}
+    for cat in categories:
+        cat_name = cat.get("name") or "Uncategorised"
+        for k in cat.get("product_keys", []) or []:
+            product_to_category[k] = cat_name
+
+    # ── KPIs and financial roll-up ────────────────────────────────────────
+    total_revenue = 0.0
+    total_cost = 0.0
+    total_profit = 0.0
+    total_discount = 0.0
+    total_items = 0
+    customer_emails = set()
+    customer_phones = set()
+
+    # Per-product aggregation
+    product_stats = {}
+    # Per-category
+    category_stats = {}
+    # Status / payment / delivery / time-of-day buckets
+    status_counts = {}
+    payment_counts = {}
+    delivery_counts = {"delivery": 0, "pickup": 0}
+    hour_buckets = [0] * 24
+    dow_buckets = [0] * 7  # 0 = Mon, 6 = Sun
+    # Per-day timeseries
+    daily = {}
+    # Top customers
+    customer_stats = {}
+    # Promo usage
+    promo_stats = {}
+
+    def _parse_dt(value):
+        if not value:
+            return None
+        try:
+            return datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
+        except Exception:
+            try:
+                return datetime.strptime(value[:19], "%Y-%m-%dT%H:%M:%S")
+            except Exception:
+                return None
+
+    # Status counts include all orders (so cancelled shows up too)
+    for o in orders:
+        st = (o.get("status") or "unknown").lower()
+        status_counts[st] = status_counts.get(st, 0) + 1
+
+    for o in active_orders:
+        revenue = float(o.get("total_price") or 0)
+        cost = float(o.get("total_cost") or 0)
+        profit = float(o.get("total_profit") or 0)
+        discount = float(o.get("discount_amount") or 0)
+        total_revenue += revenue
+        total_cost += cost
+        total_profit += profit
+        total_discount += discount
+
+        email = (o.get("customer_email") or "").strip().lower()
+        phone = (o.get("customer_phone") or "").strip()
+        if email:
+            customer_emails.add(email)
+        elif phone:
+            customer_phones.add(phone)
+
+        # Payment method
+        pm = (o.get("payment_method") or "cod").lower()
+        payment_counts[pm] = payment_counts.get(pm, 0) + 1
+
+        # Delivery vs pickup
+        dt_type = (o.get("delivery_type") or "").lower()
+        if dt_type == "pickup":
+            delivery_counts["pickup"] += 1
+        else:
+            delivery_counts["delivery"] += 1
+
+        # Time-of-day / day-of-week from created_at
+        dt = _parse_dt(o.get("created_at"))
+        if dt is not None:
+            hour_buckets[dt.hour] += 1
+            dow_buckets[dt.weekday()] += 1
+            day_key = dt.strftime("%Y-%m-%d")
+            d = daily.setdefault(day_key, {"date": day_key, "revenue": 0.0, "orders": 0, "profit": 0.0})
+            d["revenue"] += revenue
+            d["orders"] += 1
+            d["profit"] += profit
+
+        # Per-customer stats
+        cust_key = email or ("phone:" + phone) if (email or phone) else None
+        if cust_key:
+            cs = customer_stats.setdefault(cust_key, {
+                "name": o.get("customer_name") or "",
+                "email": email,
+                "phone": phone,
+                "orders": 0,
+                "revenue": 0.0,
+                "profit": 0.0,
+            })
+            cs["orders"] += 1
+            cs["revenue"] += revenue
+            cs["profit"] += profit
+            if not cs["name"] and o.get("customer_name"):
+                cs["name"] = o["customer_name"]
+
+        # Promo usage
+        promo_code = (o.get("promo_code") or "").strip()
+        if promo_code:
+            ps = promo_stats.setdefault(promo_code, {"code": promo_code, "uses": 0, "revenue": 0.0, "discount": 0.0})
+            ps["uses"] += 1
+            ps["revenue"] += revenue
+            ps["discount"] += discount
+
+        # Items breakdown
+        for it in (o.get("items") or []):
+            key = it.get("key") or "unknown"
+            name = it.get("name") or key
+            qty = int(it.get("quantity") or 0)
+            line_revenue = float(it.get("subtotal") or (qty * float(it.get("price") or 0)))
+            total_items += qty
+            ps = product_stats.setdefault(key, {
+                "key": key,
+                "name": name,
+                "units": 0,
+                "revenue": 0.0,
+            })
+            ps["units"] += qty
+            ps["revenue"] += line_revenue
+
+            cat_name = product_to_category.get(key, "Uncategorised")
+            cs2 = category_stats.setdefault(cat_name, {"name": cat_name, "units": 0, "revenue": 0.0})
+            cs2["units"] += qty
+            cs2["revenue"] += line_revenue
+
+    # Backfill product cost / margin from current menu prices (best-effort)
+    for key, ps in product_stats.items():
+        prod = products.get(key) or {}
+        unit_price = float(prod.get("price") or 0)
+        # We don't have per-unit cost in menu; estimate margin from order-level totals proportionally.
+        ps["avg_unit_price"] = round(ps["revenue"] / ps["units"], 2) if ps["units"] else 0
+        # Mark whether this product still exists in the menu
+        ps["in_menu"] = key in products
+
+    # Sorted product lists
+    products_by_revenue = sorted(product_stats.values(), key=lambda p: p["revenue"], reverse=True)
+    products_by_units = sorted(product_stats.values(), key=lambda p: p["units"], reverse=True)
+    top_products = products_by_revenue[:10]
+    bottom_products_in_menu = [p for p in products_by_revenue if p["in_menu"]]
+    bottom_products = list(reversed(bottom_products_in_menu))[:10]
+
+    # Products in menu that have ZERO sales in this range (full inventory check)
+    sold_keys = set(product_stats.keys())
+    no_sales = []
+    for k, p in products.items():
+        if k in sold_keys:
+            continue
+        no_sales.append({
+            "key": k,
+            "name": p.get("name") or k,
+            "price": float(p.get("price") or 0),
+        })
+    no_sales.sort(key=lambda x: x["name"])
+
+    # Categories sorted
+    categories_sorted = sorted(category_stats.values(), key=lambda c: c["revenue"], reverse=True)
+
+    # Timeseries: fill gaps so chart looks continuous
+    timeseries = []
+    if daily:
+        sorted_days = sorted(daily.keys())
+        try:
+            d_start = datetime.strptime(sorted_days[0], "%Y-%m-%d").date()
+            d_end = datetime.strptime(sorted_days[-1], "%Y-%m-%d").date()
+            from datetime import timedelta
+            cur = d_start
+            while cur <= d_end:
+                k = cur.strftime("%Y-%m-%d")
+                if k in daily:
+                    timeseries.append(daily[k])
+                else:
+                    timeseries.append({"date": k, "revenue": 0.0, "orders": 0, "profit": 0.0})
+                cur += timedelta(days=1)
+        except Exception:
+            timeseries = [daily[k] for k in sorted_days]
+
+    # Top customers
+    top_customers = sorted(customer_stats.values(), key=lambda c: c["revenue"], reverse=True)[:10]
+
+    # Expenses breakdown for the same window
+    exp_rows = get_expenses(start_date=start_date, end_date=end_date)
+    expense_total = sum(float(e.get("amount") or 0) for e in exp_rows)
+    exp_cat = {}
+    for e in exp_rows:
+        cat = e.get("category") or "Other"
+        exp_cat[cat] = exp_cat.get(cat, 0.0) + float(e.get("amount") or 0)
+    expense_breakdown = sorted(
+        [{"category": k, "amount": round(v, 2)} for k, v in exp_cat.items()],
+        key=lambda x: x["amount"], reverse=True
+    )
+
+    # Reviews summary in window
+    review_rows = get_reviews(status="approved", limit=1000)
+    if start_date or end_date:
+        from datetime import datetime as _dt
+        def _in_range(r):
+            ts = r.get("created_at") or ""
+            day = ts[:10]
+            if start_date and day < start_date:
+                return False
+            if end_date and day > end_date:
+                return False
+            return True
+        review_rows = [r for r in review_rows if _in_range(r)]
+    rev_count = len(review_rows)
+    rev_avg = (sum(int(r.get("rating") or 0) for r in review_rows) / rev_count) if rev_count else 0
+    by_star = {"5": 0, "4": 0, "3": 0, "2": 0, "1": 0}
+    for r in review_rows:
+        rating = str(int(r.get("rating") or 0))
+        if rating in by_star:
+            by_star[rating] += 1
+
+    # Net profit (after expenses)
+    net_profit = total_profit - expense_total
+    profit_margin_pct = (total_profit / total_revenue * 100.0) if total_revenue else 0.0
+    aov = (total_revenue / len(active_orders)) if active_orders else 0
+    unique_customers = len(customer_emails) + len(customer_phones)
+
+    return jsonify({
+        "range": {"start": start_date or "", "end": end_date or ""},
+        "kpis": {
+            "revenue": round(total_revenue, 2),
+            "cost": round(total_cost, 2),
+            "gross_profit": round(total_profit, 2),
+            "profit_margin_pct": round(profit_margin_pct, 1),
+            "orders": len(active_orders),
+            "items_sold": total_items,
+            "aov": round(aov, 2),
+            "unique_customers": unique_customers,
+            "discounts": round(total_discount, 2),
+            "expenses": round(expense_total, 2),
+            "net_profit": round(net_profit, 2),
+        },
+        "timeseries": timeseries,
+        "products_by_revenue": products_by_revenue,
+        "products_by_units": products_by_units,
+        "top_products": top_products,
+        "bottom_products": bottom_products,
+        "no_sales_products": no_sales,
+        "categories": categories_sorted,
+        "statuses": status_counts,
+        "payment_methods": payment_counts,
+        "delivery_types": delivery_counts,
+        "hour_of_day": [{"hour": h, "orders": hour_buckets[h]} for h in range(24)],
+        "day_of_week": [
+            {"day": i, "name": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][i], "orders": dow_buckets[i]}
+            for i in range(7)
+        ],
+        "top_customers": top_customers,
+        "expense_breakdown": expense_breakdown,
+        "promos": sorted(promo_stats.values(), key=lambda p: p["revenue"], reverse=True),
+        "reviews": {
+            "avg_rating": round(rev_avg, 2),
+            "count": rev_count,
+            "by_star": by_star,
+        },
+    })
 
 
 # ── Telegram Webhook ──────────────────────────────────────────────────────────

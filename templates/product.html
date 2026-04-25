@@ -909,6 +909,14 @@
                 {{ "%.0f"|format(item.price) }}<span class="product-price-unit"> {{ t.currency }}</span>
             </div>
 
+            {% set free_extra_text = item['free_extra_' + lang] if lang != 'en' and item.get('free_extra_' + lang) else item.free_extra %}
+            {% if free_extra_text %}
+            <div style="display:inline-flex;align-items:center;gap:8px;padding:10px 14px;margin-bottom:20px;background:linear-gradient(135deg,#f5e6c8 0%,#fff3cd 100%);border:1.5px solid var(--gold);border-radius:var(--radius-sm);font-size:0.92rem;font-weight:600;color:var(--navy);box-shadow:var(--shadow-sm);">
+                <span style="background:var(--gold);color:#fff;padding:2px 8px;border-radius:4px;font-size:0.72rem;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;flex-shrink:0;">{{ t.get('free_label', 'Free') }}</span>
+                <span>{{ free_extra_text }}</span>
+            </div>
+            {% endif %}
+
             <div class="order-controls">
                 <div class="qty-stepper-large">
                     <button class="qty-btn-lg qty-btn-lg--minus" onclick="changeQty(-1)" aria-label="Decrease quantity">

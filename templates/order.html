@@ -1590,6 +1590,13 @@
                 <div class="product-body">
                     <a href="/product/{{ item_key }}?lang={{ lang }}" style="text-decoration:none; color:inherit;"><h3 class="product-name">{{ item['name_' + lang] if lang != 'en' and item.get('name_' + lang) else item.name }}</h3></a>
                     <p class="product-desc">{{ item['description_' + lang] if lang != 'en' and item.get('description_' + lang) else item.description }}</p>
+                    {% set free_extra_text = item['free_extra_' + lang] if lang != 'en' and item.get('free_extra_' + lang) else item.free_extra %}
+                    {% if free_extra_text %}
+                    <div style="display:inline-flex;align-items:center;gap:6px;margin:6px 0 4px;padding:5px 10px;background:linear-gradient(135deg,#f5e6c8 0%,#fff3cd 100%);border:1px solid #d4a017;border-radius:6px;font-size:0.78rem;font-weight:600;color:#1e2a4a;line-height:1.3;">
+                        <span style="background:#b8860b;color:#fff;padding:1px 6px;border-radius:3px;font-size:0.65rem;font-weight:700;letter-spacing:0.4px;text-transform:uppercase;flex-shrink:0;">{{ t.get('free_label', 'Free') }}</span>
+                        <span>{{ free_extra_text }}</span>
+                    </div>
+                    {% endif %}
                     <div class="product-footer">
                         <div class="product-price">
                             {{ "%.0f"|format(item.price) }}<span class="product-price-unit"> {{ t.currency }}</span>

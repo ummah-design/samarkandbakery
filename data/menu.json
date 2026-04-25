@@ -1,1 +1,1740 @@
-{"allergen_notice":"Our products are prepared in a home kitchen where allergens including gluten, dairy, eggs, and sesame are present. Cross-contamination may occur. If you have a severe allergy, please contact us before ordering. Nutritional values are approximate estimates and may vary.","allergen_notice_ar":"\u0645\u0646\u062a\u062c\u0627\u062a\u0646\u0627 \u0645\u062d\u0636\u0631\u0629 \u0641\u064a \u0645\u0637\u0628\u062e \u0645\u0646\u0632\u0644\u064a \u062d\u064a\u062b \u062a\u0648\u062c\u062f \u0645\u0633\u0628\u0628\u0627\u062a \u0627\u0644\u062d\u0633\u0627\u0633\u064a\u0629 \u0628\u0645\u0627 \u0641\u064a \u0630\u0644\u0643 \u0627\u0644\u063a\u0644\u0648\u062a\u064a\u0646 \u0648\u0645\u0646\u062a\u062c\u0627\u062a \u0627\u0644\u0623\u0644\u0628\u0627\u0646 \u0648\u0627\u0644\u0628\u064a\u0636 \u0648\u0627\u0644\u0633\u0645\u0633\u0645. \u0642\u062f \u064a\u062d\u062f\u062b \u062a\u0644\u0648\u062b \u0645\u062a\u0642\u0627\u0637\u0639. \u0625\u0630\u0627 \u0643\u0627\u0646\u062a \u0644\u062f\u064a\u0643 \u062d\u0633\u0627\u0633\u064a\u0629 \u0634\u062f\u064a\u062f\u0629\u060c \u064a\u0631\u062c\u0649 \u0627\u0644\u0627\u062a\u0635\u0627\u0644 \u0628\u0646\u0627 \u0642\u0628\u0644 \u0627\u0644\u0637\u0644\u0628. \u0627\u0644\u0642\u064a\u0645 \u0627\u0644\u063a\u0630\u0627\u0626\u064a\u0629 \u062a\u0642\u062f\u064a\u0631\u0627\u062a \u062a\u0642\u0631\u064a\u0628\u064a\u0629 \u0648\u0642\u062f \u062a\u062e\u062a\u0644\u0641.","allergen_notice_fr":"Nos produits sont pr\u00e9par\u00e9s dans une cuisine domestique o\u00f9 des allerg\u00e8nes tels que le gluten, les produits laitiers, les \u0153ufs et le s\u00e9same sont pr\u00e9sents. Une contamination crois\u00e9e peut survenir. Si vous avez une allergie s\u00e9v\u00e8re, veuillez nous contacter avant de commander. Les valeurs nutritionnelles sont des estimations approximatives et peuvent varier.","categories":[{"name":"Samsa & Pies","name_ar":"\u0633\u0645\u0633\u0627 \u0648\u0641\u0637\u0627\u0626\u0631","name_fr":"Samsa & Tourtes","product_keys":["meat_samsa","chicken_samsa","ochiq_samsa","veggie_pogaca","cheese_pogaca","chicken_spinach_borek","black_olive_knots"]},{"name":"Flatbreads & Turnovers","name_ar":"\u062e\u0628\u0632 \u0645\u0633\u0637\u062d \u0648\u0645\u0642\u0644\u064a\u0627\u062a","name_fr":"Galettes & Chaussons","product_keys":["cheburek_potato","cheburek_meat","turkish_simit"]},{"name":"Pide","name_ar":"\u0628\u064a\u062f\u0627","name_fr":"Pide","product_keys":["pide_minced_beef","pide_cheese_spinach","pide_cheese_sausage"]},{"name":"Breads","name_ar":"\u062e\u0628\u0632","name_fr":"Pains","product_keys":["uzbek_bread","turkish_bread","olive_buns"]},{"name":"Cakes & Desserts","name_ar":"\u0643\u064a\u0643 \u0648\u062d\u0644\u0648\u064a\u0627\u062a","name_fr":"G\u00e2teaux & Desserts","product_keys":["uzbek_honey_cake","tres_leches_cake"]},{"name":"Sides & Dips","name_ar":"\u0645\u0642\u0628\u0644\u0627\u062a \u0648\u0635\u0644\u0635\u0627\u062a","name_fr":"Accompagnements","product_keys":["turkish_ezme","walnut_fig_jam","cheese_garlic_herb_dip"]}],"products":{"black_olive_knots":{"allergens":["gluten","eggs","dairy"],"allergens_ar":["\u062c\u0644\u0648\u062a\u064a\u0646","\u0628\u064a\u0636","\u0645\u0646\u062a\u062c\u0627\u062a \u0627\u0644\u0627\u0644\u0628\u0627\u0646"],"allergens_fr":["gluten","oeufs","produits laitiers"],"cooking_method":"oven","cooking_method_ar":"\u0641\u0631\u0646","cooking_method_fr":"four","description":"Soft pogaca dough rolled thin, spread with homemade black olive paste, rolled into a log and knotted into a beautiful bun. Oven baked to golden perfection.","description_ar":"\u0639\u062c\u064a\u0646\u0629 \u0628\u0648\u063a\u0627\u062a\u0634\u0627 \u0637\u0631\u064a\u0629 \u0645\u0641\u0631\u0648\u062f\u0629 \u0631\u0642\u064a\u0642\u0629\u060c \u0645\u062f\u0647\u0648\u0646\u0629 \u0628\u0645\u0639\u062c\u0648\u0646 \u0627\u0644\u0632\u064a\u062a\u0648\u0646 \u0627\u0644\u0627\u0633\u0648\u062f \u0627\u0644\u0645\u0646\u0632\u0644\u064a\u060c \u0645\u0644\u0641\u0648\u0641\u0629 \u0648\u0645\u0639\u0642\u0648\u062f\u0629 \u0639\u0644\u0649 \u0634\u0643\u0644 \u0643\u0639\u0643\u0629 \u062c\u0645\u064a\u0644\u0629. \u0645\u062e\u0628\u0648\u0632\u0629 \u0641\u064a \u0627\u0644\u0641\u0631\u0646 \u062d\u062a\u0649 \u062a\u0635\u0628\u062d \u0630\u0647\u0628\u064a\u0629.","description_fr":"Pate de pogaca moelleuse etalee finement, tartinee de pate d'olives noires maison, roulee en boudin et nouee en un joli petit pain. Cuit au four jusqu'a perfection doree.","description_long":"Our Black Olive Knots start with the same soft, enriched pogaca dough made with flour, milk, yoghurt, and egg. Each ball of dough is rolled out into a thin circle and spread with a light homemade black olive paste \u2014 simply black olives blended with a touch of olive oil for a smooth, savoury spread. The circle is then rolled up tightly into a log and tied into an elegant knot before baking. The result is a beautifully shaped bun with swirls of olive paste running through the soft, fluffy bread. Perfect as a snack, with breakfast, or alongside soups and dips.","description_long_ar":"\u0639\u0642\u062f \u0627\u0644\u0632\u064a\u062a\u0648\u0646 \u0627\u0644\u0627\u0633\u0648\u062f \u0644\u062f\u064a\u0646\u0627 \u062a\u0628\u062f\u0627 \u0628\u0646\u0641\u0633 \u0639\u062c\u064a\u0646\u0629 \u0627\u0644\u0628\u0648\u063a\u0627\u062a\u0634\u0627 \u0627\u0644\u0637\u0631\u064a\u0629 \u0627\u0644\u063a\u0646\u064a\u0629. \u0643\u0644 \u0643\u0631\u0629 \u0639\u062c\u064a\u0646 \u062a\u0641\u0631\u062f \u0639\u0644\u0649 \u0634\u0643\u0644 \u062f\u0627\u0626\u0631\u0629 \u0631\u0642\u064a\u0642\u0629 \u0648\u062a\u062f\u0647\u0646 \u0628\u0645\u0639\u062c\u0648\u0646 \u0627\u0644\u0632\u064a\u062a\u0648\u0646 \u0627\u0644\u0627\u0633\u0648\u062f \u0627\u0644\u0645\u0646\u0632\u0644\u064a \u0627\u0644\u062e\u0641\u064a\u0641. \u062b\u0645 \u062a\u0644\u0641 \u0628\u0625\u062d\u0643\u0627\u0645 \u0639\u0644\u0649 \u0634\u0643\u0644 \u0627\u0633\u0637\u0648\u0627\u0646\u0629 \u0648\u062a\u0639\u0642\u062f \u0639\u0644\u0649 \u0634\u0643\u0644 \u0639\u0642\u062f\u0629 \u0627\u0646\u064a\u0642\u0629 \u0642\u0628\u0644 \u0627\u0644\u062e\u0628\u0632. \u0627\u0644\u0646\u062a\u064a\u062c\u0629 \u0647\u064a \u0643\u0639\u0643\u0629 \u062c\u0645\u064a\u0644\u0629 \u0627\u0644\u0634\u0643\u0644 \u0645\u0639 \u0644\u0641\u0627\u0626\u0641 \u0645\u0646 \u0645\u0639\u062c\u0648\u0646 \u0627\u0644\u0632\u064a\u062a\u0648\u0646 \u0639\u0628\u0631 \u0627\u0644\u062e\u0628\u0632 \u0627\u0644\u0637\u0631\u064a.","description_long_fr":"Nos Noeuds aux Olives Noires commencent avec la meme pate de pogaca moelleuse et enrichie. Chaque boule est etalee en un cercle fin et tartinee d'une pate d'olives noires maison legere. Le cercle est ensuite roule en boudin et noue en un noeud elegant avant la cuisson. Le resultat est un petit pain joliment forme avec des spirales de pate d'olive a travers le pain moelleux.","draft":true,"image":"pogaca.png","ingredients":["Flour","Black Olives","Olive Oil","Egg","Milk","Yoghurt","Vegetable Oil","Yeast","Sugar","Salt"],"ingredients_ar":["\u062f\u0642\u064a\u0642","\u0632\u064a\u062a\u0648\u0646 \u0627\u0633\u0648\u062f","\u0632\u064a\u062a \u0632\u064a\u062a\u0648\u0646","\u0628\u064a\u0636","\u062d\u0644\u064a\u0628","\u0632\u0628\u0627\u062f\u064a","\u0632\u064a\u062a \u0646\u0628\u0627\u062a\u064a","\u062e\u0645\u064a\u0631\u0629","\u0633\u0643\u0631","\u0645\u0644\u062d"],"ingredients_fr":["Farine","Olives noires","Huile d'olive","Oeuf","Lait","Yaourt","Huile vegetale","Levure","Sucre","Sel"],"meta_description":"Order fresh Black Olive Knots in Tetouan. Soft pogaca dough knotted with homemade black olive paste. 5 MAD each. Delivery and pickup available.","meta_title":"Black Olive Pogaca \u2014 Olive Swirl Bread Rolls | Samarkand Bakery","name":"Black Olive Pogaca","name_ar":"\u0628\u0648\u063a\u0627\u062a\u0634\u0627 \u0628\u0627\u0644\u0632\u064a\u062a\u0648\u0646 \u0627\u0644\u0627\u0633\u0648\u062f","name_fr":"Pogaca aux Olives Noires","nutrition":{"calories":"180 kcal","carbs":"24g","fat":"7g","fibre":"1.5g","protein":"4g"},"price":5.0},"cheburek_meat":{"allergens":["Gluten (wheat)"],"allergens_ar":["\u063a\u0644\u0648\u062a\u064a\u0646 (\u0642\u0645\u062d)"],"allergens_fr":["Gluten (bl\u00e9)"],"cooking_method":"Deep fried","cooking_method_ar":"\u0645\u0642\u0644\u064a","cooking_method_fr":"Frit","description":"Savoury deep fried pies filled with a juicy minced meat and onion filling.","description_ar":"\u0641\u0637\u0627\u0626\u0631 \u0645\u0642\u0644\u064a\u0629 \u0645\u062d\u0634\u0648\u0629 \u0628\u062d\u0634\u0648\u0629 \u0644\u062d\u0645 \u0645\u0641\u0631\u0648\u0645 \u0648\u0628\u0635\u0644 \u063a\u0646\u064a\u0629.","description_fr":"Des chaussons frits garnis d'une farce juteuse de viande hach\u00e9e et d'oignons.","description_long":"The classic Cheburek features a thin, hand-rolled dough filled with seasoned minced beef and onions, then deep fried until the pastry turns golden and irresistibly crispy. The filling stays juicy inside the crispy shell, seasoned with cumin, paprika, and fresh parsley. A traditional street food favourite from Uzbekistan.","description_long_ar":"\u0627\u0644\u0634\u064a\u0628\u0648\u0631\u064a\u0643 \u0627\u0644\u0643\u0644\u0627\u0633\u064a\u0643\u064a \u064a\u062a\u0645\u064a\u0632 \u0628\u0639\u062c\u064a\u0646\u0629 \u0631\u0642\u064a\u0642\u0629 \u0645\u0641\u0631\u0648\u062f\u0629 \u064a\u062f\u0648\u064a\u0627\u064b \u0645\u062d\u0634\u0648\u0629 \u0628\u0644\u062d\u0645 \u0628\u0642\u0631\u064a \u0645\u0641\u0631\u0648\u0645 \u0645\u062a\u0628\u0644 \u0648\u0628\u0635\u0644\u060c \u062b\u0645 \u0645\u0642\u0644\u064a\u0629 \u062d\u062a\u0649 \u062a\u0635\u0628\u062d \u0630\u0647\u0628\u064a\u0629 \u0648\u0645\u0642\u0631\u0645\u0634\u0629 \u0628\u0634\u0643\u0644 \u0644\u0627 \u064a\u0642\u0627\u0648\u0645. \u0627\u0644\u062d\u0634\u0648\u0629 \u062a\u0628\u0642\u0649 \u0637\u0631\u064a\u0629 \u062f\u0627\u062e\u0644 \u0627\u0644\u0642\u0634\u0631\u0629 \u0627\u0644\u0645\u0642\u0631\u0645\u0634\u0629. \u0637\u0639\u0627\u0645 \u0634\u0627\u0631\u0639 \u062a\u0642\u0644\u064a\u062f\u064a \u0645\u062d\u0628\u0648\u0628 \u0645\u0646 \u0623\u0648\u0632\u0628\u0643\u0633\u062a\u0627\u0646.","description_long_fr":"Le Cheburek classique pr\u00e9sente une p\u00e2te fine roul\u00e9e \u00e0 la main, garnie de b\u0153uf hach\u00e9 assaisonn\u00e9 et d'oignons, puis frit jusqu'\u00e0 ce que la p\u00e2te devienne dor\u00e9e et irr\u00e9sistiblement croustillante. La garniture reste juteuse \u00e0 l'int\u00e9rieur de la coque croustillante. Un favori de la cuisine de rue traditionnelle d'Ouzb\u00e9kistan.","image":"cheburek_meat.jpg","ingredients":["Wheat flour","Minced beef","Onions","Salt","Black pepper","Cumin","Paprika","Fresh parsley","Vegetable oil (for frying)"],"ingredients_ar":["\u062f\u0642\u064a\u0642 \u0627\u0644\u0642\u0645\u062d","\u0644\u062d\u0645 \u0628\u0642\u0631\u064a \u0645\u0641\u0631\u0648\u0645","\u0628\u0635\u0644","\u0645\u0644\u062d","\u0641\u0644\u0641\u0644 \u0623\u0633\u0648\u062f","\u0643\u0645\u0648\u0646","\u0628\u0627\u0628\u0631\u064a\u0643\u0627","\u0628\u0642\u062f\u0648\u0646\u0633 \u0637\u0627\u0632\u062c","\u0632\u064a\u062a \u0646\u0628\u0627\u062a\u064a (\u0644\u0644\u0642\u0644\u064a)"],"ingredients_fr":["Farine de bl\u00e9","B\u0153uf hach\u00e9","Oignons","Sel","Poivre noir","Cumin","Paprika","Persil frais","Huile v\u00e9g\u00e9tale (pour friture)"],"may_contain":[],"name":"Cheburek (Meat)","name_ar":"\u0634\u064a\u0628\u0648\u0631\u064a\u0643 (\u0644\u062d\u0645)","name_fr":"Cheburek (Viande)","nutrition":{"calories":295,"carbs":22,"fat":18,"fibre":1,"protein":13,"serving":"1 piece (~85g)","serving_ar":"\u0642\u0637\u0639\u0629 \u0648\u0627\u062d\u062f\u0629 (~85 \u063a)","serving_fr":"1 pi\u00e8ce (~85g)"},"price":18.0,"recommended":["turkish_ezme","cheese_garlic_herb_dip"]},"cheburek_potato":{"allergens":["Gluten (wheat)","Dairy (butter)"],"allergens_ar":["\u063a\u0644\u0648\u062a\u064a\u0646 (\u0642\u0645\u062d)","\u0645\u0646\u062a\u062c\u0627\u062a \u0627\u0644\u0623\u0644\u0628\u0627\u0646 (\u0632\u0628\u062f\u0629)"],"allergens_fr":["Gluten (bl\u00e9)","Produits laitiers (beurre)"],"cooking_method":"Deep fried","cooking_method_ar":"\u0645\u0642\u0644\u064a","cooking_method_fr":"Frit","description":"Savoury deep fried pies filled with a juicy potato and onion filling, seasoned with cumin and paprika.","description_ar":"\u0641\u0637\u0627\u0626\u0631 \u0645\u0642\u0644\u064a\u0629 \u0645\u062d\u0634\u0648\u0629 \u0628\u062d\u0634\u0648\u0629 \u0628\u0637\u0627\u0637\u0633 \u0648\u0628\u0635\u0644 \u063a\u0646\u064a\u0629\u060c \u0645\u062a\u0628\u0644\u0629 \u0628\u0627\u0644\u0643\u0645\u0648\u0646 \u0648\u0627\u0644\u0628\u0627\u0628\u0631\u064a\u0643\u0627.","description_fr":"Des chaussons frits garnis d'une farce juteuse de pommes de terre et d'oignons, assaisonn\u00e9s au cumin et au paprika.","description_long":"Cheburek is a beloved deep-fried turnover found across Central Asia and the Caucasus. Our potato version features a thin, crispy dough filled with a seasoned mixture of potato, onions, butter, cumin, paprika, and fresh parsley. Deep fried until the pastry is golden and bubbly with a satisfying crunch. A delicious vegetarian option.","description_long_ar":"\u0627\u0644\u0634\u064a\u0628\u0648\u0631\u064a\u0643 \u0647\u0648 \u0641\u0637\u064a\u0631\u0629 \u0645\u0642\u0644\u064a\u0629 \u0645\u062d\u0628\u0648\u0628\u0629 \u0641\u064a \u062c\u0645\u064a\u0639 \u0623\u0646\u062d\u0627\u0621 \u0622\u0633\u064a\u0627 \u0627\u0644\u0648\u0633\u0637\u0649 \u0648\u0627\u0644\u0642\u0648\u0642\u0627\u0632. \u0646\u0633\u062e\u062a\u0646\u0627 \u0628\u0627\u0644\u0628\u0637\u0627\u0637\u0633 \u062a\u062a\u0645\u064a\u0632 \u0628\u0639\u062c\u064a\u0646\u0629 \u0631\u0642\u064a\u0642\u0629 \u0648\u0645\u0642\u0631\u0645\u0634\u0629 \u0645\u062d\u0634\u0648\u0629 \u0628\u062e\u0644\u064a\u0637 \u0645\u062a\u0628\u0644 \u0645\u0646 \u0627\u0644\u0628\u0637\u0627\u0637\u0633 \u0648\u0627\u0644\u0628\u0635\u0644 \u0648\u0627\u0644\u0632\u0628\u062f\u0629 \u0648\u0627\u0644\u0643\u0645\u0648\u0646 \u0648\u0627\u0644\u0628\u0627\u0628\u0631\u064a\u0643\u0627 \u0648\u0627\u0644\u0628\u0642\u062f\u0648\u0646\u0633 \u0627\u0644\u0637\u0627\u0632\u062c. \u0645\u0642\u0644\u064a\u0629 \u062d\u062a\u0649 \u062a\u0635\u0628\u062d \u0630\u0647\u0628\u064a\u0629 \u0648\u0645\u0642\u0631\u0645\u0634\u0629. \u062e\u064a\u0627\u0631 \u0646\u0628\u0627\u062a\u064a \u0644\u0630\u064a\u0630.","description_long_fr":"Le Cheburek est un chausson frit populaire dans toute l'Asie Centrale et le Caucase. Notre version aux pommes de terre pr\u00e9sente une p\u00e2te fine et croustillante garnie d'un m\u00e9lange assaisonn\u00e9 de pommes de terre, oignons, beurre, cumin, paprika et persil frais. Frit jusqu'\u00e0 ce que la p\u00e2te soit dor\u00e9e et croustillante. Une d\u00e9licieuse option v\u00e9g\u00e9tarienne.","dietary":["Vegetarian"],"image":"cheburek.png","ingredients":["Wheat flour","Potato","Butter","Onions","Salt","Black pepper","Cumin","Paprika","Fresh parsley","Vegetable oil (for frying)"],"ingredients_ar":["\u062f\u0642\u064a\u0642 \u0627\u0644\u0642\u0645\u062d","\u0628\u0637\u0627\u0637\u0633","\u0632\u0628\u062f\u0629","\u0628\u0635\u0644","\u0645\u0644\u062d","\u0641\u0644\u0641\u0644 \u0623\u0633\u0648\u062f","\u0643\u0645\u0648\u0646","\u0628\u0627\u0628\u0631\u064a\u0643\u0627","\u0628\u0642\u062f\u0648\u0646\u0633 \u0637\u0627\u0632\u062c","\u0632\u064a\u062a \u0646\u0628\u0627\u062a\u064a (\u0644\u0644\u0642\u0644\u064a)"],"ingredients_fr":["Farine de bl\u00e9","Pomme de terre","Beurre","Oignons","Sel","Poivre noir","Cumin","Paprika","Persil frais","Huile v\u00e9g\u00e9tale (pour friture)"],"may_contain":[],"name":"Cheburek (Potato)","name_ar":"\u0634\u064a\u0628\u0648\u0631\u064a\u0643 (\u0628\u0637\u0627\u0637\u0633)","name_fr":"Cheburek (Pomme de Terre)","nutrition":{"calories":220,"carbs":26,"fat":12,"fibre":2,"protein":4,"serving":"1 piece (~80g)","serving_ar":"\u0642\u0637\u0639\u0629 \u0648\u0627\u062d\u062f\u0629 (~80 \u063a)","serving_fr":"1 pi\u00e8ce (~80g)"},"price":10.0,"recommended":["turkish_ezme","cheese_garlic_herb_dip"],"videos":["cheburek_potato.mp4"]},"cheese_garlic_herb_dip":{"allergens":["dairy"],"allergens_ar":["\u0645\u0646\u062a\u062c\u0627\u062a \u0627\u0644\u0627\u0644\u0628\u0627\u0646"],"allergens_fr":["produits laitiers"],"cooking_method":"fresh","cooking_method_ar":"\u0637\u0627\u0632\u062c","cooking_method_fr":"frais","description":"A creamy blend of soured cream and labneh with garlic, spring onion, dried herbs and a hint of red pepper flakes. Perfect for dipping.","description_ar":"\u0645\u0632\u064a\u062c \u0643\u0631\u064a\u0645\u064a \u0645\u0646 \u0627\u0644\u0643\u0631\u064a\u0645\u0629 \u0627\u0644\u062d\u0627\u0645\u0636\u0629 \u0648\u0627\u0644\u0644\u0628\u0646\u0629 \u0645\u0639 \u0627\u0644\u062b\u0648\u0645 \u0648\u0627\u0644\u0628\u0635\u0644 \u0627\u0644\u0627\u062e\u0636\u0631 \u0648\u0627\u0644\u0627\u0639\u0634\u0627\u0628 \u0627\u0644\u0645\u062c\u0641\u0641\u0629 \u0648\u0644\u0645\u0633\u0629 \u0645\u0646 \u0631\u0642\u0627\u0626\u0642 \u0627\u0644\u0641\u0644\u0641\u0644 \u0627\u0644\u0627\u062d\u0645\u0631. \u0645\u062b\u0627\u0644\u064a \u0644\u0644\u063a\u0645\u0633.","description_fr":"Un melange cremeux de creme aigre et de labneh avec de l'ail, de l'oignon vert, des herbes sechees et une pointe de flocons de piment rouge. Parfait pour tremper.","description_long":"Our Cheese, Garlic and Herb Dip is a rich, creamy dip made with soured cream and labneh (Jibn Jebli) as the base, infused with freshly grated garlic, finely chopped spring onion, aromatic dried mixed herbs, and a gentle sprinkle of red pepper flakes for a subtle warmth. Served in a small pot \u2014 the perfect accompaniment to our Cheburek, Pogaca, Samsa, and breads.","description_long_ar":"\u0635\u0644\u0635\u0629 \u0627\u0644\u062c\u0628\u0646\u0629 \u0648\u0627\u0644\u062b\u0648\u0645 \u0648\u0627\u0644\u0627\u0639\u0634\u0627\u0628 \u0644\u062f\u064a\u0646\u0627 \u0647\u064a \u0635\u0644\u0635\u0629 \u0643\u0631\u064a\u0645\u064a\u0629 \u063a\u0646\u064a\u0629 \u0645\u0635\u0646\u0648\u0639\u0629 \u0645\u0646 \u0627\u0644\u0643\u0631\u064a\u0645\u0629 \u0627\u0644\u062d\u0627\u0645\u0636\u0629 \u0648\u0627\u0644\u0644\u0628\u0646\u0629 \u0643\u0642\u0627\u0639\u062f\u0629\u060c \u0645\u0646\u0643\u0647\u0629 \u0628\u0627\u0644\u062b\u0648\u0645 \u0627\u0644\u0645\u0628\u0634\u0648\u0631 \u0627\u0644\u0637\u0627\u0632\u062c \u0648\u0627\u0644\u0628\u0635\u0644 \u0627\u0644\u0627\u062e\u0636\u0631 \u0627\u0644\u0645\u0641\u0631\u0648\u0645 \u0646\u0627\u0639\u0645\u0627\u064b \u0648\u0627\u0644\u0627\u0639\u0634\u0627\u0628 \u0627\u0644\u0645\u062c\u0641\u0641\u0629 \u0627\u0644\u0639\u0637\u0631\u064a\u0629 \u0648\u0631\u0634\u0629 \u062e\u0641\u064a\u0641\u0629 \u0645\u0646 \u0631\u0642\u0627\u0626\u0642 \u0627\u0644\u0641\u0644\u0641\u0644 \u0627\u0644\u0627\u062d\u0645\u0631. \u062a\u0642\u062f\u0645 \u0641\u064a \u0648\u0639\u0627\u0621 \u0635\u063a\u064a\u0631.","description_long_fr":"Notre Dip Fromage, Ail et Herbes est une sauce cremieuse et riche a base de creme aigre et de labneh, infusee d'ail fraichement rape, d'oignon vert finement hache, d'herbes sechees aromatiques et d'une legere pincee de flocons de piment rouge. Servie en petit pot \u2014 l'accompagnement parfait pour nos Cheburek, Pogaca, Samsa et pains.","image":"cheese_garlic_herb_dip.jpg","ingredients":["Soured Cream","Labneh","Garlic","Spring Onion","Dried Mixed Herbs","Red Pepper Flakes"],"ingredients_ar":["\u0643\u0631\u064a\u0645\u0629 \u062d\u0627\u0645\u0636\u0629","\u0644\u0628\u0646\u0629","\u062b\u0648\u0645","\u0628\u0635\u0644 \u0627\u062e\u0636\u0631","\u0627\u0639\u0634\u0627\u0628 \u0645\u062c\u0641\u0641\u0629","\u0631\u0642\u0627\u0626\u0642 \u0641\u0644\u0641\u0644 \u0627\u062d\u0645\u0631"],"ingredients_fr":["Creme aigre","Labneh","Ail","Oignon vert","Herbes sechees","Flocons de piment"],"meta_description":"Order Cheese, Garlic and Herb Dip in Tetouan. Creamy soured cream and labneh dip with garlic, spring onion and herbs. 8 MAD per pot.","meta_title":"Cheese, Garlic & Herb Dip \u2014 Creamy Dipping Sauce | Samarkand Bakery","name":"Cheese, Garlic & Herb Dip","name_ar":"\u0635\u0644\u0635\u0629 \u0627\u0644\u062c\u0628\u0646\u0629 \u0648\u0627\u0644\u062b\u0648\u0645 \u0648\u0627\u0644\u0623\u0639\u0634\u0627\u0628","name_fr":"Dip Fromage, Ail et Herbes","nutrition":{"calories":"85 kcal","carbs":"2g","fat":"8g","fibre":"0g","protein":"2g"},"price":8.0},"cheese_pogaca":{"allergens":["gluten","eggs","dairy"],"allergens_ar":["\u062c\u0644\u0648\u062a\u064a\u0646","\u0628\u064a\u0636","\u0645\u0646\u062a\u062c\u0627\u062a \u0627\u0644\u0627\u0644\u0628\u0627\u0646"],"allergens_fr":["gluten","oeufs","produits laitiers"],"cooking_method":"oven","cooking_method_ar":"\u0641\u0631\u0646","cooking_method_fr":"four","description":"A soft, golden Turkish pastry filled with melted mozzarella, creamy labneh, garlic, spring onion and herbs. Oven baked to perfection.","description_ar":"\u0645\u0639\u062c\u0646\u0627\u062a \u062a\u0631\u0643\u064a\u0629 \u0630\u0647\u0628\u064a\u0629 \u0637\u0631\u064a\u0629 \u0645\u062d\u0634\u0648\u0629 \u0628\u0627\u0644\u0645\u0648\u0632\u0627\u0631\u064a\u0644\u0627 \u0627\u0644\u0630\u0627\u0626\u0628\u0629 \u0648\u0627\u0644\u0644\u0628\u0646\u0629 \u0627\u0644\u0643\u0631\u064a\u0645\u064a\u0629 \u0648\u0627\u0644\u062b\u0648\u0645 \u0648\u0627\u0644\u0628\u0635\u0644 \u0627\u0644\u0627\u062e\u0636\u0631 \u0648\u0627\u0644\u0627\u0639\u0634\u0627\u0628. \u0645\u062e\u0628\u0648\u0632\u0629 \u0641\u064a \u0627\u0644\u0641\u0631\u0646 \u062d\u062a\u0649 \u0627\u0644\u0643\u0645\u0627\u0644.","description_fr":"Une patisserie turque doree et moelleuse, garnie de mozzarella fondue, de labneh cremeux, d'ail, d'oignon vert et d'herbes. Cuite au four a la perfection.","description_long":"Our Cheese Pogaca is a Turkish filled bread roll with a rich, savoury cheese filling. The soft, pillowy dough enriched with milk, yoghurt, and egg wraps around a generous filling of grated mozzarella and creamy labneh (Jibn Jebli), seasoned with grated garlic, chopped spring onion, dried mixed herbs, and a sprinkle of red pepper flakes for gentle warmth. Each pogaca is hand-shaped and baked until golden, with the cheese melting into a deliciously gooey centre. Perfect for breakfast, snacking, or as a side with soups.","description_long_ar":"\u0628\u0648\u063a\u0627\u062a\u0634\u0627 \u0627\u0644\u062c\u0628\u0646\u0629 \u0644\u062f\u064a\u0646\u0627 \u0647\u064a \u062e\u0628\u0632 \u0645\u062d\u0634\u0648 \u062a\u0631\u0643\u064a \u0628\u062d\u0634\u0648\u0629 \u062c\u0628\u0646\u0629 \u063a\u0646\u064a\u0629 \u0648\u0644\u0630\u064a\u0630\u0629. \u0627\u0644\u0639\u062c\u064a\u0646\u0629 \u0627\u0644\u0637\u0631\u064a\u0629 \u0627\u0644\u063a\u0646\u064a\u0629 \u0628\u0627\u0644\u062d\u0644\u064a\u0628 \u0648\u0627\u0644\u0632\u0628\u0627\u062f\u064a \u0648\u0627\u0644\u0628\u064a\u0636 \u062a\u0644\u0641 \u062d\u0634\u0648\u0629 \u0633\u062e\u064a\u0629 \u0645\u0646 \u0627\u0644\u0645\u0648\u0632\u0627\u0631\u064a\u0644\u0627 \u0627\u0644\u0645\u0628\u0634\u0648\u0631\u0629 \u0648\u0627\u0644\u0644\u0628\u0646\u0629 \u0627\u0644\u0643\u0631\u064a\u0645\u064a\u0629\u060c \u0645\u062a\u0628\u0644\u0629 \u0628\u0627\u0644\u062b\u0648\u0645 \u0627\u0644\u0645\u0628\u0634\u0648\u0631 \u0648\u0627\u0644\u0628\u0635\u0644 \u0627\u0644\u0627\u062e\u0636\u0631 \u0627\u0644\u0645\u0641\u0631\u0648\u0645 \u0648\u0627\u0644\u0627\u0639\u0634\u0627\u0628 \u0627\u0644\u0645\u062c\u0641\u0641\u0629 \u0627\u0644\u0645\u0634\u0643\u0644\u0629 \u0648\u0631\u0634\u0629 \u0645\u0646 \u0631\u0642\u0627\u0626\u0642 \u0627\u0644\u0641\u0644\u0641\u0644 \u0627\u0644\u0627\u062d\u0645\u0631.","description_long_fr":"Notre Pogaca au Fromage est un petit pain fourre turc avec une garniture de fromage riche et savoureuse. La pate moelleuse enrichie de lait, yaourt et oeuf enveloppe une genereuse garniture de mozzarella rapee et de labneh cremeux, assaisonnee d'ail rape, d'oignon vert hache, d'herbes sechees melangees et d'une pincee de flocons de piment rouge.","image":"pogaca.png","ingredients":["Flour","Egg","Milk","Yoghurt","Oil","Mozzarella","Labneh","Garlic","Spring Onion","Dried Mixed Herbs","Red Pepper Flakes","Yeast","Salt","Sugar"],"ingredients_ar":["\u062f\u0642\u064a\u0642","\u0628\u064a\u0636","\u062d\u0644\u064a\u0628","\u0632\u0628\u0627\u062f\u064a","\u0632\u064a\u062a","\u0645\u0648\u0632\u0627\u0631\u064a\u0644\u0627","\u0644\u0628\u0646\u0629","\u062b\u0648\u0645","\u0628\u0635\u0644 \u0627\u062e\u0636\u0631","\u0627\u0639\u0634\u0627\u0628 \u0645\u062c\u0641\u0641\u0629","\u0631\u0642\u0627\u0626\u0642 \u0641\u0644\u0641\u0644 \u0627\u062d\u0645\u0631","\u062e\u0645\u064a\u0631\u0629","\u0645\u0644\u062d","\u0633\u0643\u0631"],"ingredients_fr":["Farine","Oeuf","Lait","Yaourt","Huile","Mozzarella","Labneh","Ail","Oignon vert","Herbes sechees","Flocons de piment","Levure","Sel","Sucre"],"meta_description":"Order fresh Cheese Pogaca in Tetouan. Soft Turkish bread roll filled with mozzarella, labneh, garlic and herbs. 10 MAD each. Delivery and pickup available.","meta_title":"Cheese Pogaca \u2014 Turkish Cheese Filled Bread Roll | Samarkand Bakery","name":"Cheese Pogaca","name_ar":"\u0628\u0648\u063a\u0627\u062a\u0634\u0627 \u0628\u0627\u0644\u062c\u0628\u0646\u0629","name_fr":"Pogaca au Fromage","nutrition":{"calories":"240 kcal","carbs":"28g","fat":"11g","fibre":"1g","protein":"8g"},"price":10.0},"chicken_samsa":{"allergens":["Gluten (wheat)","Dairy (butter)"],"allergens_ar":["\u063a\u0644\u0648\u062a\u064a\u0646 (\u0642\u0645\u062d)","\u0645\u0646\u062a\u062c\u0627\u062a \u0627\u0644\u0623\u0644\u0628\u0627\u0646 (\u0632\u0628\u062f\u0629)"],"allergens_fr":["Gluten (bl\u00e9)","Produits laitiers (beurre)"],"cooking_method":"Oven baked","cooking_method_ar":"\u0645\u062e\u0628\u0648\u0632 \u0641\u064a \u0627\u0644\u0641\u0631\u0646","cooking_method_fr":"Cuit au four","description":"Chicken meat, sliced carrot & onions are perfectly seasoned and wrapped in homemade flaky, golden puff pastry, creating a delicious savoury chicken pie.","description_ar":"\u0644\u062d\u0645 \u062f\u062c\u0627\u062c \u0648\u062c\u0632\u0631 \u0645\u0642\u0637\u0639 \u0648\u0628\u0635\u0644 \u0645\u062a\u0628\u0644 \u0628\u0634\u0643\u0644 \u0645\u062b\u0627\u0644\u064a \u0648\u0645\u0644\u0641\u0648\u0641 \u0641\u064a \u0639\u062c\u064a\u0646\u0629 \u0628\u0641 \u0628\u0627\u0633\u062a\u0631\u064a \u0630\u0647\u0628\u064a\u0629 \u0645\u0642\u0631\u0645\u0634\u0629 \u0645\u062d\u0636\u0631\u0629 \u0645\u0646\u0632\u0644\u064a\u0627\u064b.","description_fr":"Du poulet, des carottes tranch\u00e9es et des oignons parfaitement assaisonn\u00e9s, envelopp\u00e9s dans une p\u00e2te feuillet\u00e9e maison dor\u00e9e et croustillante.","description_long":"Our Chicken Samsa features tender chicken fillet with finely sliced carrots and onions, all perfectly seasoned and encased in our signature hand-made flaky puff pastry. Oven baked to a beautiful golden colour, each samsa delivers a lighter alternative to the meat version while being equally satisfying.","description_long_ar":"\u0633\u0645\u0633\u0627 \u0627\u0644\u062f\u062c\u0627\u062c \u0644\u062f\u064a\u0646\u0627 \u062a\u062a\u0645\u064a\u0632 \u0628\u0641\u064a\u0644\u064a\u0647 \u062f\u062c\u0627\u062c \u0637\u0631\u064a \u0645\u0639 \u062c\u0632\u0631 \u0645\u0642\u0637\u0639 \u0646\u0627\u0639\u0645 \u0648\u0628\u0635\u0644\u060c \u0627\u0644\u0643\u0644 \u0645\u062a\u0628\u0644 \u0628\u0634\u0643\u0644 \u0645\u062b\u0627\u0644\u064a \u0648\u0645\u0644\u0641\u0648\u0641 \u0641\u064a \u0639\u062c\u064a\u0646\u062a\u0646\u0627 \u0627\u0644\u0645\u0645\u064a\u0632\u0629 \u0627\u0644\u0645\u0642\u0631\u0645\u0634\u0629. \u0645\u062e\u0628\u0648\u0632\u0629 \u062d\u062a\u0649 \u062a\u0635\u0628\u062d \u0630\u0647\u0628\u064a\u0629 \u0627\u0644\u0644\u0648\u0646\u060c \u0628\u062f\u064a\u0644 \u0623\u062e\u0641 \u0644\u0646\u0633\u062e\u0629 \u0627\u0644\u0644\u062d\u0645 \u0645\u0639 \u0646\u0641\u0633 \u0627\u0644\u0645\u062a\u0639\u0629.","description_long_fr":"Notre Samsa au Poulet est pr\u00e9par\u00e9e avec du filet de poulet tendre, des carottes finement tranch\u00e9es et des oignons, le tout parfaitement assaisonn\u00e9 et envelopp\u00e9 dans notre p\u00e2te feuillet\u00e9e maison. Cuite au four jusqu'\u00e0 obtenir une belle couleur dor\u00e9e, c'est une alternative plus l\u00e9g\u00e8re mais tout aussi savoureuse.","image":"chicken_samsa.jpeg","ingredients":["Wheat flour","Salted butter","Chicken fillet","Onions","Salt","Cumin","Coriander","Black pepper"],"ingredients_ar":["\u062f\u0642\u064a\u0642 \u0627\u0644\u0642\u0645\u062d","\u0632\u0628\u062f\u0629 \u0645\u0645\u0644\u062d\u0629","\u0641\u064a\u0644\u064a\u0647 \u062f\u062c\u0627\u062c","\u0628\u0635\u0644","\u0645\u0644\u062d","\u0643\u0645\u0648\u0646","\u0643\u0632\u0628\u0631\u0629","\u0641\u0644\u0641\u0644 \u0623\u0633\u0648\u062f"],"ingredients_fr":["Farine de bl\u00e9","Beurre sal\u00e9","Filet de poulet","Oignons","Sel","Cumin","Coriandre","Poivre noir"],"may_contain":["Sesame"],"may_contain_ar":["\u0633\u0645\u0633\u0645"],"may_contain_fr":["S\u00e9same"],"name":"Chicken Samsa","name_ar":"\u0633\u0645\u0633\u0627 \u0628\u0627\u0644\u062f\u062c\u0627\u062c","name_fr":"Samsa au Poulet","nutrition":{"calories":248,"carbs":24,"fat":11,"fibre":1,"protein":14,"serving":"1 piece (~90g)","serving_ar":"\u0642\u0637\u0639\u0629 \u0648\u0627\u062d\u062f\u0629 (~90 \u063a)","serving_fr":"1 pi\u00e8ce (~90g)"},"price":15.0,"videos":["shared_samsa_olives.mp4","chicken_samsa.mp4"]},"chicken_spinach_borek":{"allergens":["gluten","dairy"],"allergens_ar":["\u062c\u0644\u0648\u062a\u064a\u0646","\u0645\u0646\u062a\u062c\u0627\u062a \u0627\u0644\u0627\u0644\u0628\u0627\u0646"],"allergens_fr":["gluten","produits laitiers"],"cooking_method":"oven","cooking_method_ar":"\u0641\u0631\u0646","cooking_method_fr":"four","description":"A large, golden baked Turkish borek layered with seasoned chicken, spinach, and melted mozzarella. Serves the whole family.","description_ar":"\u0628\u0648\u0631\u0643 \u062a\u0631\u0643\u064a \u0643\u0628\u064a\u0631 \u0630\u0647\u0628\u064a \u0645\u062e\u0628\u0648\u0632 \u0628\u0637\u0628\u0642\u0627\u062a \u0645\u0646 \u0627\u0644\u062f\u062c\u0627\u062c \u0627\u0644\u0645\u062a\u0628\u0644 \u0648\u0627\u0644\u0633\u0628\u0627\u0646\u062e \u0648\u0627\u0644\u0645\u0648\u0632\u0627\u0631\u064a\u0644\u0627 \u0627\u0644\u0630\u0627\u0626\u0628\u0629. \u064a\u0643\u0641\u064a \u0644\u062c\u0645\u064a\u0639 \u0627\u0641\u0631\u0627\u062f \u0627\u0644\u0639\u0627\u0626\u0644\u0629.","description_fr":"Un grand borek turc dore, garni de couches de poulet assaisonne, d'epinards et de mozzarella fondue. Pour toute la famille.","description_long":"Our Chicken and Spinach Borek is a show-stopping Turkish baked pastry, perfect for sharing. Thin, handmade dough layers are filled with tender chicken breast cooked with onion, garlic, and a squeeze of lemon, combined with spinach and seasoned with paprika and black pepper. Each layer is brushed with melted butter and topped with grated mozzarella cheese that melts into golden, gooey perfection. Baked for 30 minutes until the top is crispy and golden while the inside stays soft and flavourful. Sold as one large borek \u2014 ideal for family gatherings, weekend meals, or special occasions.","description_long_ar":"\u0628\u0648\u0631\u0643 \u0627\u0644\u062f\u062c\u0627\u062c \u0648\u0627\u0644\u0633\u0628\u0627\u0646\u062e \u0644\u062f\u064a\u0646\u0627 \u0647\u0648 \u0645\u0639\u062c\u0646\u0627\u062a \u062a\u0631\u0643\u064a\u0629 \u0645\u062e\u0628\u0648\u0632\u0629 \u0631\u0627\u0626\u0639\u0629 \u0645\u062b\u0627\u0644\u064a\u0629 \u0644\u0644\u0645\u0634\u0627\u0631\u0643\u0629. \u0637\u0628\u0642\u0627\u062a \u0631\u0642\u064a\u0642\u0629 \u0645\u0646 \u0627\u0644\u0639\u062c\u064a\u0646 \u0627\u0644\u0645\u0635\u0646\u0648\u0639 \u064a\u062f\u0648\u064a\u0627\u064b \u0645\u062d\u0634\u0648\u0629 \u0628\u0635\u062f\u0631 \u062f\u062c\u0627\u062c \u0637\u0631\u064a \u0645\u0637\u0628\u0648\u062e \u0645\u0639 \u0627\u0644\u0628\u0635\u0644 \u0648\u0627\u0644\u062b\u0648\u0645 \u0648\u0639\u0635\u064a\u0631 \u0627\u0644\u0644\u064a\u0645\u0648\u0646 \u0645\u0645\u0632\u0648\u062c \u0628\u0627\u0644\u0633\u0628\u0627\u0646\u062e \u0648\u0645\u062a\u0628\u0644 \u0628\u0627\u0644\u0628\u0627\u0628\u0631\u064a\u0643\u0627 \u0648\u0627\u0644\u0641\u0644\u0641\u0644 \u0627\u0644\u0627\u0633\u0648\u062f. \u0643\u0644 \u0637\u0628\u0642\u0629 \u0645\u062f\u0647\u0648\u0646\u0629 \u0628\u0627\u0644\u0632\u0628\u062f\u0629 \u0627\u0644\u0630\u0627\u0626\u0628\u0629 \u0648\u0645\u063a\u0637\u0627\u0629 \u0628\u0627\u0644\u0645\u0648\u0632\u0627\u0631\u064a\u0644\u0627 \u0627\u0644\u0645\u0628\u0634\u0648\u0631\u0629. \u064a\u062e\u0628\u0632 \u0644\u0645\u062f\u0629 30 \u062f\u0642\u064a\u0642\u0629. \u064a\u0628\u0627\u0639 \u0643\u0628\u0648\u0631\u0643 \u0643\u0628\u064a\u0631 \u0648\u0627\u062d\u062f \u2014 \u0645\u062b\u0627\u0644\u064a \u0644\u062a\u062c\u0645\u0639\u0627\u062a \u0627\u0644\u0639\u0627\u0626\u0644\u0629.","description_long_fr":"Notre Borek au Poulet et Epinards est une patisserie turque impressionnante, parfaite pour le partage. Des couches de pate fine faites a la main sont garnies de blanc de poulet tendre cuit avec de l'oignon, de l'ail et un filet de citron, combines avec des epinards et assaisonnes de paprika et de poivre noir. Chaque couche est badigeonnee de beurre fondu et garnie de mozzarella rapee. Cuit pendant 30 minutes. Vendu en un grand borek \u2014 ideal pour les repas en famille.","image":"chicken_spinach_borek.jpg","ingredients":["Flour","Chicken Breast","Spinach","Mozzarella","Onion","Garlic","Lemon","Butter","Salt","Black Pepper","Paprika"],"ingredients_ar":["\u062f\u0642\u064a\u0642","\u0635\u062f\u0631 \u062f\u062c\u0627\u062c","\u0633\u0628\u0627\u0646\u062e","\u0645\u0648\u0632\u0627\u0631\u064a\u0644\u0627","\u0628\u0635\u0644","\u062b\u0648\u0645","\u0644\u064a\u0645\u0648\u0646","\u0632\u0628\u062f\u0629","\u0645\u0644\u062d","\u0641\u0644\u0641\u0644 \u0627\u0633\u0648\u062f","\u0628\u0627\u0628\u0631\u064a\u0643\u0627"],"ingredients_fr":["Farine","Blanc de poulet","Epinards","Mozzarella","Oignon","Ail","Citron","Beurre","Sel","Poivre noir","Paprika"],"meta_description":"Order a large Chicken and Spinach Borek in Tetouan. Layered Turkish pastry with chicken, spinach, and melted mozzarella. 80 MAD. Delivery and pickup available.","meta_title":"Chicken & Spinach Borek \u2014 Large Turkish Baked Pastry | Samarkand Bakery","name":"Chicken & Spinach Borek","name_ar":"\u0628\u0648\u0631\u0643 \u0628\u0627\u0644\u062f\u062c\u0627\u062c \u0648\u0627\u0644\u0633\u0628\u0627\u0646\u062e","name_fr":"Borek au Poulet et Epinards","nutrition":{"calories":"320 kcal","carbs":"28g","fat":"15g","fibre":"2g","protein":"18g"},"price":85.0,"videos":["chicken_spinach_borek.mp4"]},"meat_samsa":{"allergens":["Gluten (wheat)","Dairy (butter)"],"allergens_ar":["\u063a\u0644\u0648\u062a\u064a\u0646 (\u0642\u0645\u062d)","\u0645\u0646\u062a\u062c\u0627\u062a \u0627\u0644\u0623\u0644\u0628\u0627\u0646 (\u0632\u0628\u062f\u0629)"],"allergens_fr":["Gluten (bl\u00e9)","Produits laitiers (beurre)"],"cooking_method":"Oven baked","cooking_method_ar":"\u0645\u062e\u0628\u0648\u0632 \u0641\u064a \u0627\u0644\u0641\u0631\u0646","cooking_method_fr":"Cuit au four","description":"A juicy minced meat & onion filling enveloped with a crunchy puff pastry to create these delicious oven-baked meat pies.\r\n\r\nA juicy minced meat & onion filling enveloped with a crunchy puff pastry to create these delicious oven-baked meat pies.","description_ar":"\u062d\u0634\u0648\u0629 \u0644\u062d\u0645 \u0645\u0641\u0631\u0648\u0645 \u0648\u0628\u0635\u0644 \u063a\u0646\u064a\u0629 \u0628\u0627\u0644\u0646\u0643\u0647\u0629 \u0645\u0644\u0641\u0648\u0641\u0629 \u0641\u064a \u0639\u062c\u064a\u0646\u0629 \u0628\u0641 \u0628\u0627\u0633\u062a\u0631\u064a \u0645\u0642\u0631\u0645\u0634\u0629 \u0644\u0635\u0646\u0639 \u0647\u0630\u0647 \u0627\u0644\u0641\u0637\u0627\u0626\u0631 \u0627\u0644\u0644\u0630\u064a\u0630\u0629 \u0627\u0644\u0645\u062e\u0628\u0648\u0632\u0629 \u0641\u064a \u0627\u0644\u0641\u0631\u0646.","description_fr":"Une garniture juteuse de viande hach\u00e9e et d'oignons envelopp\u00e9e dans une p\u00e2te feuillet\u00e9e croustillante pour cr\u00e9er ces d\u00e9licieuses tourtes cuites au four.","description_long":"Our signature Meat Samsa is a traditional Uzbek pastry made with layers of flaky, buttery puff pastry wrapped around a savoury filling of seasoned minced beef and onions. Each samsa is hand-shaped and oven-baked until golden and crispy. The filling is seasoned with cumin, coriander, and black pepper for an authentic Central Asian flavour.","description_long_ar":"\u0627\u0644\u0633\u0645\u0633\u0627 \u0627\u0644\u0645\u0645\u064a\u0632\u0629 \u0644\u062f\u064a\u0646\u0627 \u0647\u064a \u0645\u0639\u062c\u0646\u0627\u062a \u0623\u0648\u0632\u0628\u0643\u064a\u0629 \u062a\u0642\u0644\u064a\u062f\u064a\u0629 \u0645\u0635\u0646\u0648\u0639\u0629 \u0645\u0646 \u0637\u0628\u0642\u0627\u062a \u0645\u0646 \u0639\u062c\u064a\u0646\u0629 \u0627\u0644\u0628\u0641 \u0628\u0627\u0633\u062a\u0631\u064a \u0627\u0644\u0645\u0642\u0631\u0645\u0634\u0629 \u0645\u0644\u0641\u0648\u0641\u0629 \u062d\u0648\u0644 \u062d\u0634\u0648\u0629 \u0644\u0630\u064a\u0630\u0629 \u0645\u0646 \u0627\u0644\u0644\u062d\u0645 \u0627\u0644\u0628\u0642\u0631\u064a \u0627\u0644\u0645\u0641\u0631\u0648\u0645 \u0627\u0644\u0645\u062a\u0628\u0644 \u0648\u0627\u0644\u0628\u0635\u0644. \u0643\u0644 \u0633\u0645\u0633\u0627 \u0645\u0634\u0643\u0644\u0629 \u064a\u062f\u0648\u064a\u0627\u064b \u0648\u0645\u062e\u0628\u0648\u0632\u0629 \u062d\u062a\u0649 \u062a\u0635\u0628\u062d \u0630\u0647\u0628\u064a\u0629 \u0648\u0645\u0642\u0631\u0645\u0634\u0629. \u0627\u0644\u062d\u0634\u0648\u0629 \u0645\u062a\u0628\u0644\u0629 \u0628\u0627\u0644\u0643\u0645\u0648\u0646 \u0648\u0627\u0644\u0643\u0632\u0628\u0631\u0629 \u0648\u0627\u0644\u0641\u0644\u0641\u0644 \u0627\u0644\u0623\u0633\u0648\u062f \u0644\u0646\u0643\u0647\u0629 \u0622\u0633\u064a\u0648\u064a\u0629 \u0648\u0633\u0637\u0649 \u0623\u0635\u064a\u0644\u0629.","description_long_fr":"Notre Samsa signature est une p\u00e2tisserie ouzb\u00e8ke traditionnelle faite de couches de p\u00e2te feuillet\u00e9e beurr\u00e9e enveloppant une garniture savoureuse de b\u0153uf hach\u00e9 assaisonn\u00e9 et d'oignons. Chaque samsa est fa\u00e7onn\u00e9e \u00e0 la main et cuite au four jusqu'\u00e0 obtenir une couleur dor\u00e9e et croustillante. La garniture est assaisonn\u00e9e au cumin, coriandre et poivre noir pour un go\u00fbt authentique d'Asie Centrale.","image":"meat_samsa.jpg","ingredients":["Wheat flour","Salted butter","Minced beef","Onions","Salt","Cumin","Coriander","Black pepper"],"ingredients_ar":["\u062f\u0642\u064a\u0642 \u0627\u0644\u0642\u0645\u062d","\u0632\u0628\u062f\u0629 \u0645\u0645\u0644\u062d\u0629","\u0644\u062d\u0645 \u0628\u0642\u0631\u064a \u0645\u0641\u0631\u0648\u0645","\u0628\u0635\u0644","\u0645\u0644\u062d","\u0643\u0645\u0648\u0646","\u0643\u0632\u0628\u0631\u0629","\u0641\u0644\u0641\u0644 \u0623\u0633\u0648\u062f"],"ingredients_fr":["Farine de bl\u00e9","Beurre sal\u00e9","B\u0153uf hach\u00e9","Oignons","Sel","Cumin","Coriandre","Poivre noir"],"may_contain":["Sesame"],"may_contain_ar":["\u0633\u0645\u0633\u0645"],"may_contain_fr":["S\u00e9same"],"meta_description":"","meta_title":"","name":"Meat Samsa","name_ar":"\u0633\u0645\u0633\u0627 \u0628\u0627\u0644\u0644\u062d\u0645","name_fr":"Samsa \u00e0 la Viande","nutrition":{"calories":285,"carbs":24,"fat":16,"fibre":1,"protein":12,"serving":"1 piece (~90g)","serving_ar":"\u0642\u0637\u0639\u0629 \u0648\u0627\u062d\u062f\u0629 (~90 \u063a)","serving_fr":"1 pi\u00e8ce (~90g)"},"price":18.0,"videos":["shared_samsa_olives.mp4","meat_samsa_video.mp4"]},"ochiq_samsa":{"allergens":["Gluten (wheat)","Dairy (butter, milk)","Eggs","Sesame"],"allergens_ar":["\u063a\u0644\u0648\u062a\u064a\u0646 (\u0642\u0645\u062d)","\u0645\u0646\u062a\u062c\u0627\u062a \u0627\u0644\u0623\u0644\u0628\u0627\u0646 (\u0632\u0628\u062f\u0629\u060c \u062d\u0644\u064a\u0628)","\u0628\u064a\u0636","\u0633\u0645\u0633\u0645"],"allergens_fr":["Gluten (bl\u00e9)","Produits laitiers (beurre, lait)","\u0152ufs","S\u00e9same"],"cooking_method":"Oven baked","cooking_method_ar":"\u0645\u062e\u0628\u0648\u0632 \u0641\u064a \u0627\u0644\u0641\u0631\u0646","cooking_method_fr":"Cuit au four","description":"These open style Uzbek samosas are reminiscent of Eastern European Piroshki. A juicy minced meat, potato & onion filling is combined with a soft and silky dough.","description_ar":"\u0647\u0630\u0647 \u0627\u0644\u0633\u0645\u0633\u0627 \u0627\u0644\u0645\u0641\u062a\u0648\u062d\u0629 \u0639\u0644\u0649 \u0627\u0644\u0637\u0631\u064a\u0642\u0629 \u0627\u0644\u0623\u0648\u0632\u0628\u0643\u064a\u0629 \u062a\u0634\u0628\u0647 \u0627\u0644\u0628\u064a\u0631\u0648\u0634\u0643\u064a \u0645\u0646 \u0623\u0648\u0631\u0648\u0628\u0627 \u0627\u0644\u0634\u0631\u0642\u064a\u0629. \u062d\u0634\u0648\u0629 \u063a\u0646\u064a\u0629 \u0645\u0646 \u0627\u0644\u0644\u062d\u0645 \u0627\u0644\u0645\u0641\u0631\u0648\u0645 \u0648\u0627\u0644\u0628\u0637\u0627\u0637\u0633 \u0648\u0627\u0644\u0628\u0635\u0644 \u0645\u0639 \u0639\u062c\u064a\u0646\u0629 \u0646\u0627\u0639\u0645\u0629 \u0648\u062d\u0631\u064a\u0631\u064a\u0629.","description_fr":"Ces samosas ouvertes \u00e0 l'ouzb\u00e8ke rappellent les piroshki d'Europe de l'Est. Une garniture juteuse de viande hach\u00e9e, pommes de terre et oignons combin\u00e9e avec une p\u00e2te douce et soyeuse.","description_long":"Ochiq means 'open' in Uzbek, and these distinctive open-topped pastries showcase their filling proudly. Made with a soft yeasted dough enriched with milk, butter, and egg, the filling combines minced beef, diced potato, and onions seasoned with cumin seeds, coriander, and black pepper. Finished with an egg wash and sesame seeds, then baked until golden. Inspired by the culinary traditions of Central Asia, Russia, and Eastern Europe.","description_long_ar":"\u0623\u0648\u062a\u0634\u064a\u0642 \u062a\u0639\u0646\u064a '\u0645\u0641\u062a\u0648\u062d' \u0628\u0627\u0644\u0623\u0648\u0632\u0628\u0643\u064a\u0629\u060c \u0648\u0647\u0630\u0647 \u0627\u0644\u0645\u0639\u062c\u0646\u0627\u062a \u0627\u0644\u0645\u0645\u064a\u0632\u0629 \u0630\u0627\u062a \u0627\u0644\u062c\u0632\u0621 \u0627\u0644\u0639\u0644\u0648\u064a \u0627\u0644\u0645\u0641\u062a\u0648\u062d \u062a\u0639\u0631\u0636 \u062d\u0634\u0648\u062a\u0647\u0627 \u0628\u0641\u062e\u0631. \u0645\u0635\u0646\u0648\u0639\u0629 \u0645\u0646 \u0639\u062c\u064a\u0646\u0629 \u062e\u0645\u064a\u0631\u0629 \u063a\u0646\u064a\u0629 \u0628\u0627\u0644\u062d\u0644\u064a\u0628 \u0648\u0627\u0644\u0632\u0628\u062f\u0629 \u0648\u0627\u0644\u0628\u064a\u0636\u060c \u0627\u0644\u062d\u0634\u0648\u0629 \u062a\u062c\u0645\u0639 \u0628\u064a\u0646 \u0627\u0644\u0644\u062d\u0645 \u0627\u0644\u0628\u0642\u0631\u064a \u0627\u0644\u0645\u0641\u0631\u0648\u0645 \u0648\u0627\u0644\u0628\u0637\u0627\u0637\u0633 \u0627\u0644\u0645\u0642\u0637\u0639\u0629 \u0648\u0627\u0644\u0628\u0635\u0644 \u0627\u0644\u0645\u062a\u0628\u0644 \u0628\u0628\u0630\u0648\u0631 \u0627\u0644\u0643\u0645\u0648\u0646 \u0648\u0627\u0644\u0643\u0632\u0628\u0631\u0629 \u0648\u0627\u0644\u0641\u0644\u0641\u0644 \u0627\u0644\u0623\u0633\u0648\u062f. \u0645\u064f\u0646\u0647\u0627\u0629 \u0628\u0637\u0644\u0627\u0621 \u0627\u0644\u0628\u064a\u0636 \u0648\u0628\u0630\u0648\u0631 \u0627\u0644\u0633\u0645\u0633\u0645 \u062b\u0645 \u0645\u062e\u0628\u0648\u0632\u0629 \u062d\u062a\u0649 \u062a\u0635\u0628\u062d \u0630\u0647\u0628\u064a\u0629.","description_long_fr":"Ochiq signifie 'ouvert' en ouzbek, et ces p\u00e2tisseries distinctives \u00e0 dessus ouvert mettent fi\u00e8rement en valeur leur garniture. Faites avec une p\u00e2te lev\u00e9e enrichie de lait, beurre et \u0153uf, la garniture combine b\u0153uf hach\u00e9, pommes de terre en d\u00e9s et oignons assaisonn\u00e9s de graines de cumin, coriandre et poivre noir. Finies avec une dorure \u00e0 l'\u0153uf et des graines de s\u00e9same, puis cuites jusqu'\u00e0 obtenir une couleur dor\u00e9e.","image":"ochiq_samsa.jpg","ingredients":["Wheat flour","Milk","Butter","Egg","Dry yeast","Sugar","Minced beef","Potato","Onions","Cumin powder","Cumin seeds","Coriander seeds","Salt","Black pepper","Sesame seeds"],"ingredients_ar":["\u062f\u0642\u064a\u0642 \u0627\u0644\u0642\u0645\u062d","\u062d\u0644\u064a\u0628","\u0632\u0628\u062f\u0629","\u0628\u064a\u0636","\u062e\u0645\u064a\u0631\u0629 \u062c\u0627\u0641\u0629","\u0633\u0643\u0631","\u0644\u062d\u0645 \u0628\u0642\u0631\u064a \u0645\u0641\u0631\u0648\u0645","\u0628\u0637\u0627\u0637\u0633","\u0628\u0635\u0644","\u0643\u0645\u0648\u0646 \u0645\u0637\u062d\u0648\u0646","\u0628\u0630\u0648\u0631 \u0643\u0645\u0648\u0646","\u0628\u0630\u0648\u0631 \u0643\u0632\u0628\u0631\u0629","\u0645\u0644\u062d","\u0641\u0644\u0641\u0644 \u0623\u0633\u0648\u062f","\u0628\u0630\u0648\u0631 \u0633\u0645\u0633\u0645"],"ingredients_fr":["Farine de bl\u00e9","Lait","Beurre","\u0152uf","Levure s\u00e8che","Sucre","B\u0153uf hach\u00e9","Pomme de terre","Oignons","Cumin en poudre","Graines de cumin","Graines de coriandre","Sel","Poivre noir","Graines de s\u00e9same"],"may_contain":[],"name":"Ochiq Samsa","name_ar":"\u0633\u0645\u0633\u0627 \u0645\u0641\u062a\u0648\u062d\u0629","name_fr":"Samsa Ochiq","nutrition":{"calories":265,"carbs":28,"fat":12,"fibre":2,"protein":11,"serving":"1 piece (~95g)","serving_ar":"\u0642\u0637\u0639\u0629 \u0648\u0627\u062d\u062f\u0629 (~95 \u063a)","serving_fr":"1 pi\u00e8ce (~95g)"},"price":15.0,"videos":["shared_samsa_olives.mp4"]},"olive_buns":{"allergens":["gluten","eggs","dairy"],"allergens_ar":["\u062c\u0644\u0648\u062a\u064a\u0646","\u0628\u064a\u0636","\u0645\u0646\u062a\u062c\u0627\u062a \u0627\u0644\u0627\u0644\u0628\u0627\u0646"],"allergens_fr":["gluten","oeufs","produits laitiers"],"cooking_method":"oven","cooking_method_ar":"\u0641\u0631\u0646","cooking_method_fr":"four","description":"Soft, fluffy buns filled with sliced green olives and labneh, topped with black seeds. A savoury treat perfect with tea or as a snack.","description_ar":"\u062e\u0628\u0632 \u0637\u0631\u064a \u0648\u0631\u0642\u064a\u0642 \u0645\u062d\u0634\u0648 \u0628\u0634\u0631\u0627\u0626\u062d \u0627\u0644\u0632\u064a\u062a\u0648\u0646 \u0627\u0644\u0627\u062e\u0636\u0631 \u0648\u0627\u0644\u0644\u0628\u0646\u0629\u060c \u0645\u0631\u0634\u0648\u0634 \u0628\u062d\u0628\u0629 \u0627\u0644\u0628\u0631\u0643\u0629. \u0648\u062c\u0628\u0629 \u062e\u0641\u064a\u0641\u0629 \u0644\u0630\u064a\u0630\u0629 \u0645\u062b\u0627\u0644\u064a\u0629 \u0645\u0639 \u0627\u0644\u0634\u0627\u064a.","description_fr":"Petits pains moelleux garnis d'olives vertes tranchees et de labneh, parsemes de graines de nigelle. Un regal sale parfait avec le the.","description_long":"Our Olive Buns are soft, pillowy bread rolls made with self-raising flour, dried yeast, and a generous amount of labneh (cream cheese) worked into the dough for extra richness and tenderness. The dough is studded with sliced green olives and fresh chopped parsley, shaped into individual buns, brushed with egg wash, and sprinkled with black seeds (nigella) before baking to golden perfection. Each bun has a beautiful golden crust with a soft, flavourful interior. Perfect for breakfast, afternoon tea, or as a side with soups and salads.","description_long_ar":"\u062e\u0628\u0632 \u0627\u0644\u0632\u064a\u062a\u0648\u0646 \u0644\u062f\u064a\u0646\u0627 \u0647\u0648 \u062e\u0628\u0632 \u0637\u0631\u064a \u0645\u0635\u0646\u0648\u0639 \u0645\u0646 \u062f\u0642\u064a\u0642 \u0630\u0627\u062a\u064a \u0627\u0644\u0631\u0641\u0639 \u0648\u0627\u0644\u062e\u0645\u064a\u0631\u0629 \u0627\u0644\u062c\u0627\u0641\u0629 \u0648\u0643\u0645\u064a\u0629 \u0633\u062e\u064a\u0629 \u0645\u0646 \u0627\u0644\u0644\u0628\u0646\u0629 \u0627\u0644\u0645\u0639\u062c\u0648\u0646\u0629 \u0641\u064a \u0627\u0644\u0639\u062c\u064a\u0646 \u0644\u0645\u0632\u064a\u062f \u0645\u0646 \u0627\u0644\u063a\u0646\u0649 \u0648\u0627\u0644\u0637\u0631\u0627\u0648\u0629. \u0627\u0644\u0639\u062c\u064a\u0646 \u0645\u0631\u0635\u0639 \u0628\u0634\u0631\u0627\u0626\u062d \u0627\u0644\u0632\u064a\u062a\u0648\u0646 \u0627\u0644\u0627\u062e\u0636\u0631 \u0648\u0627\u0644\u0628\u0642\u062f\u0648\u0646\u0633 \u0627\u0644\u0637\u0627\u0632\u062c \u0627\u0644\u0645\u0641\u0631\u0648\u0645\u060c \u064a\u0634\u0643\u0644 \u0639\u0644\u0649 \u0647\u064a\u0626\u0629 \u0643\u0639\u0643\u0627\u062a \u0641\u0631\u062f\u064a\u0629\u060c \u064a\u062f\u0647\u0646 \u0628\u0627\u0644\u0628\u064a\u0636 \u0648\u064a\u0631\u0634 \u0628\u062d\u0628\u0629 \u0627\u0644\u0628\u0631\u0643\u0629 \u0642\u0628\u0644 \u0627\u0644\u062e\u0628\u0632.","description_long_fr":"Nos Petits Pains aux Olives sont des pains moelleux faits avec de la farine auto-levante, de la levure sechee et une genereuse quantite de labneh travaillee dans la pate pour plus de richesse. La pate est parsemee d'olives vertes tranchees et de persil frais hache, faconnee en petits pains individuels, badigeonnee d'oeuf et saupoudree de graines de nigelle avant d'etre cuite a la perfection doree.","image":"olive_buns.jpg","ingredients":["Self-Raising Flour","Green Olives","Labneh","Parsley","Egg","Vegetable Oil","Dried Yeast","Black Seed","Salt","Water"],"ingredients_ar":["\u062f\u0642\u064a\u0642 \u0630\u0627\u062a\u064a \u0627\u0644\u0631\u0641\u0639","\u0632\u064a\u062a\u0648\u0646 \u0627\u062e\u0636\u0631","\u0644\u0628\u0646\u0629","\u0628\u0642\u062f\u0648\u0646\u0633","\u0628\u064a\u0636","\u0632\u064a\u062a \u0646\u0628\u0627\u062a\u064a","\u062e\u0645\u064a\u0631\u0629 \u062c\u0627\u0641\u0629","\u062d\u0628\u0629 \u0627\u0644\u0628\u0631\u0643\u0629","\u0645\u0644\u062d","\u0645\u0627\u0621"],"ingredients_fr":["Farine auto-levante","Olives vertes","Labneh","Persil","Oeuf","Huile vegetale","Levure sechee","Graine de nigelle","Sel","Eau"],"meta_description":"Order fresh Olive Buns in Tetouan. Soft bread rolls with green olives, labneh, and black seeds. 20 MAD each. Delivery and pickup available.","meta_title":"Olive Buns \u2014 Soft Bread Rolls with Green Olives | Samarkand Bakery","name":"Olive Buns","name_ar":"\u062e\u0628\u0632 \u0628\u0627\u0644\u0632\u064a\u062a\u0648\u0646","name_fr":"Petits Pains aux Olives","nutrition":{"calories":"195 kcal","carbs":"26g","fat":"8g","fibre":"2g","protein":"5g"},"price":5.0,"videos":["shared_samsa_olives.mp4"]},"pide_cheese_sausage":{"allergens":["Gluten (wheat)","Dairy (mozzarella)"],"allergens_ar":["\u063a\u0644\u0648\u062a\u064a\u0646 (\u0642\u0645\u062d)","\u0645\u0646\u062a\u062c\u0627\u062a \u0627\u0644\u0623\u0644\u0628\u0627\u0646 (\u0645\u0648\u0632\u0627\u0631\u064a\u0644\u0627)"],"allergens_fr":["Gluten (bl\u00e9)","Produits laitiers (mozzarella)"],"cooking_method":"Oven baked","cooking_method_ar":"\u0645\u062e\u0628\u0648\u0632 \u0641\u064a \u0627\u0644\u0641\u0631\u0646","cooking_method_fr":"Cuit au four","description":"Oven baked Turkish style pizza with fluffy yeasted dough topped with sausage and mozzarella cheese.","description_ar":"\u0628\u064a\u062a\u0632\u0627 \u062a\u0631\u0643\u064a\u0629 \u0645\u062e\u0628\u0648\u0632\u0629 \u0641\u064a \u0627\u0644\u0641\u0631\u0646 \u0645\u0639 \u0639\u062c\u064a\u0646\u0629 \u062e\u0645\u064a\u0631\u0629 \u0647\u0634\u0629 \u0645\u063a\u0637\u0627\u0629 \u0628\u0627\u0644\u0646\u0642\u0627\u0646\u0642 \u0648\u062c\u0628\u0646 \u0627\u0644\u0645\u0648\u0632\u0627\u0631\u064a\u0644\u0627.","description_fr":"Pizza turque cuite au four avec une p\u00e2te lev\u00e9e moelleuse garnie de saucisse et de mozzarella.","description_long":"Our Cheese & Sausage Pide pairs sliced sausage with melted mozzarella on a soft, fluffy yeasted base. Simple but incredibly satisfying \u2014 the sausage adds a savoury, slightly smoky flavour while the mozzarella melts into stretchy, golden perfection. A crowd pleaser for all ages.","description_long_ar":"\u0628\u064a\u062f\u0627 \u0627\u0644\u062c\u0628\u0646 \u0648\u0627\u0644\u0646\u0642\u0627\u0646\u0642 \u0644\u062f\u064a\u0646\u0627 \u062a\u062c\u0645\u0639 \u0628\u064a\u0646 \u0634\u0631\u0627\u0626\u062d \u0627\u0644\u0646\u0642\u0627\u0646\u0642 \u0648\u0627\u0644\u0645\u0648\u0632\u0627\u0631\u064a\u0644\u0627 \u0627\u0644\u0630\u0627\u0626\u0628\u0629 \u0639\u0644\u0649 \u0642\u0627\u0639\u062f\u0629 \u062e\u0645\u064a\u0631\u0629 \u0637\u0631\u064a\u0629 \u0648\u0647\u0634\u0629. \u0628\u0633\u064a\u0637\u0629 \u0648\u0644\u0643\u0646 \u0645\u064f\u0631\u0636\u064a\u0629 \u0628\u0634\u0643\u0644 \u0644\u0627 \u064a\u0635\u062f\u0642 \u2014 \u0627\u0644\u0646\u0642\u0627\u0646\u0642 \u062a\u0636\u064a\u0641 \u0646\u0643\u0647\u0629 \u0645\u062f\u062e\u0646\u0629 \u062e\u0641\u064a\u0641\u0629 \u0628\u064a\u0646\u0645\u0627 \u062a\u0630\u0648\u0628 \u0627\u0644\u0645\u0648\u0632\u0627\u0631\u064a\u0644\u0627 \u0628\u0634\u0643\u0644 \u0645\u062b\u0627\u0644\u064a.","description_long_fr":"Notre Pide Fromage & Saucisse associe des tranches de saucisse avec de la mozzarella fondue sur une base lev\u00e9e douce et moelleuse. Simple mais incroyablement satisfaisant \u2014 la saucisse ajoute une saveur l\u00e9g\u00e8rement fum\u00e9e tandis que la mozzarella fond en une perfection dor\u00e9e et filante.","image":"pide_cheese_sausage.jpg","ingredients":["Wheat flour","Dry yeast","Sugar","Salt","Vegetable oil","Sausage","Mozzarella cheese"],"ingredients_ar":["\u062f\u0642\u064a\u0642 \u0627\u0644\u0642\u0645\u062d","\u062e\u0645\u064a\u0631\u0629 \u062c\u0627\u0641\u0629","\u0633\u0643\u0631","\u0645\u0644\u062d","\u0632\u064a\u062a \u0646\u0628\u0627\u062a\u064a","\u0646\u0642\u0627\u0646\u0642","\u0645\u0648\u0632\u0627\u0631\u064a\u0644\u0627"],"ingredients_fr":["Farine de bl\u00e9","Levure s\u00e8che","Sucre","Sel","Huile v\u00e9g\u00e9tale","Saucisse","Mozzarella"],"may_contain":["Sesame","Soya"],"may_contain_ar":["\u0633\u0645\u0633\u0645","\u0635\u0648\u064a\u0627"],"may_contain_fr":["S\u00e9same","Soja"],"name":"Pide (Cheese & Sausage)","name_ar":"\u0628\u064a\u062f\u0627 (\u062c\u0628\u0646 \u0648\u0646\u0642\u0627\u0646\u0642)","name_fr":"Pide (Fromage & Saucisse)","nutrition":{"calories":365,"carbs":36,"fat":18,"fibre":1,"protein":15,"serving":"1 pide (~175g)","serving_ar":"\u0628\u064a\u062f\u0627 \u0648\u0627\u062d\u062f\u0629 (~175 \u063a)","serving_fr":"1 pide (~175g)"},"price":18.0},"pide_cheese_spinach":{"allergens":["Gluten (wheat)","Dairy (butter, cheese, mozzarella)","Eggs"],"allergens_ar":["\u063a\u0644\u0648\u062a\u064a\u0646 (\u0642\u0645\u062d)","\u0645\u0646\u062a\u062c\u0627\u062a \u0627\u0644\u0623\u0644\u0628\u0627\u0646 (\u0632\u0628\u062f\u0629\u060c \u062c\u0628\u0646\u060c \u0645\u0648\u0632\u0627\u0631\u064a\u0644\u0627)","\u0628\u064a\u0636"],"allergens_fr":["Gluten (bl\u00e9)","Produits laitiers (beurre, fromage, mozzarella)","\u0152ufs"],"cooking_method":"Oven baked","cooking_method_ar":"\u0645\u062e\u0628\u0648\u0632 \u0641\u064a \u0627\u0644\u0641\u0631\u0646","cooking_method_fr":"Cuit au four","description":"Oven baked Turkish style pizza with fluffy yeasted dough topped with spinach, white cheese and mozzarella.","description_ar":"\u0628\u064a\u062a\u0632\u0627 \u062a\u0631\u0643\u064a\u0629 \u0645\u062e\u0628\u0648\u0632\u0629 \u0641\u064a \u0627\u0644\u0641\u0631\u0646 \u0645\u0639 \u0639\u062c\u064a\u0646\u0629 \u062e\u0645\u064a\u0631\u0629 \u0647\u0634\u0629 \u0645\u063a\u0637\u0627\u0629 \u0628\u0627\u0644\u0633\u0628\u0627\u0646\u062e \u0648\u0627\u0644\u062c\u0628\u0646 \u0627\u0644\u0623\u0628\u064a\u0636 \u0648\u0627\u0644\u0645\u0648\u0632\u0627\u0631\u064a\u0644\u0627.","description_fr":"Pizza turque cuite au four avec une p\u00e2te lev\u00e9e moelleuse garnie d'\u00e9pinards, de fromage blanc et de mozzarella.","description_long":"A vegetarian favourite \u2014 our Cheese & Spinach Pide combines a soft yeasted base with a rich topping of spinach, crumbled white cheese (similar to feta), melted mozzarella, egg, butter, and garlic. The cheeses melt together beautifully during baking, creating a gooey, flavourful filling with the earthy spinach.","description_long_ar":"\u0627\u0644\u0645\u0641\u0636\u0644 \u0644\u062f\u0649 \u0627\u0644\u0646\u0628\u0627\u062a\u064a\u064a\u0646 \u2014 \u0628\u064a\u062f\u0627 \u0627\u0644\u062c\u0628\u0646 \u0648\u0627\u0644\u0633\u0628\u0627\u0646\u062e \u0644\u062f\u064a\u0646\u0627 \u062a\u062c\u0645\u0639 \u0628\u064a\u0646 \u0642\u0627\u0639\u062f\u0629 \u062e\u0645\u064a\u0631\u0629 \u0637\u0631\u064a\u0629 \u0648\u062d\u0634\u0648\u0629 \u063a\u0646\u064a\u0629 \u0645\u0646 \u0627\u0644\u0633\u0628\u0627\u0646\u062e \u0648\u0627\u0644\u062c\u0628\u0646 \u0627\u0644\u0623\u0628\u064a\u0636 \u0627\u0644\u0645\u0641\u062a\u062a \u0648\u0627\u0644\u0645\u0648\u0632\u0627\u0631\u064a\u0644\u0627 \u0627\u0644\u0630\u0627\u0626\u0628\u0629 \u0648\u0627\u0644\u0628\u064a\u0636 \u0648\u0627\u0644\u0632\u0628\u062f\u0629 \u0648\u0627\u0644\u062b\u0648\u0645. \u0627\u0644\u0623\u062c\u0628\u0627\u0646 \u062a\u0630\u0648\u0628 \u0645\u0639\u0627\u064b \u0628\u0634\u0643\u0644 \u062c\u0645\u064a\u0644 \u0623\u062b\u0646\u0627\u0621 \u0627\u0644\u062e\u0628\u0632.","description_long_fr":"Un favori des v\u00e9g\u00e9tariens \u2014 notre Pide Fromage & \u00c9pinards combine une base lev\u00e9e moelleuse avec une riche garniture d'\u00e9pinards, de fromage blanc \u00e9miett\u00e9 (similaire \u00e0 la feta), de mozzarella fondue, d'\u0153uf, de beurre et d'ail. Les fromages fondent ensemble magnifiquement pendant la cuisson.","dietary":["Vegetarian"],"image":"pide_cheese_spinach.jpg","ingredients":["Wheat flour","Dry yeast","Sugar","Salt","Vegetable oil","Frozen spinach","White cheese","Mozzarella cheese","Egg","Butter","Garlic"],"ingredients_ar":["\u062f\u0642\u064a\u0642 \u0627\u0644\u0642\u0645\u062d","\u062e\u0645\u064a\u0631\u0629 \u062c\u0627\u0641\u0629","\u0633\u0643\u0631","\u0645\u0644\u062d","\u0632\u064a\u062a \u0646\u0628\u0627\u062a\u064a","\u0633\u0628\u0627\u0646\u062e \u0645\u062c\u0645\u062f\u0629","\u062c\u0628\u0646 \u0623\u0628\u064a\u0636","\u0645\u0648\u0632\u0627\u0631\u064a\u0644\u0627","\u0628\u064a\u0636","\u0632\u0628\u062f\u0629","\u062b\u0648\u0645"],"ingredients_fr":["Farine de bl\u00e9","Levure s\u00e8che","Sucre","Sel","Huile v\u00e9g\u00e9tale","\u00c9pinards surgel\u00e9s","Fromage blanc","Mozzarella","\u0152uf","Beurre","Ail"],"may_contain":["Sesame"],"may_contain_ar":["\u0633\u0645\u0633\u0645"],"may_contain_fr":["S\u00e9same"],"name":"Pide (Cheese & Spinach)","name_ar":"\u0628\u064a\u062f\u0627 (\u062c\u0628\u0646 \u0648\u0633\u0628\u0627\u0646\u062e)","name_fr":"Pide (Fromage & \u00c9pinards)","nutrition":{"calories":340,"carbs":34,"fat":16,"fibre":2,"protein":16,"serving":"1 pide (~170g)","serving_ar":"\u0628\u064a\u062f\u0627 \u0648\u0627\u062d\u062f\u0629 (~170 \u063a)","serving_fr":"1 pide (~170g)"},"price":15.0},"pide_minced_beef":{"allergens":["Gluten (wheat)"],"allergens_ar":["\u063a\u0644\u0648\u062a\u064a\u0646 (\u0642\u0645\u062d)"],"allergens_fr":["Gluten (bl\u00e9)"],"cooking_method":"Oven baked","cooking_method_ar":"\u0645\u062e\u0628\u0648\u0632 \u0641\u064a \u0627\u0644\u0641\u0631\u0646","cooking_method_fr":"Cuit au four","description":"Oven baked Turkish style pizza with fluffy yeasted dough topped with seasoned minced beef.","description_ar":"\u0628\u064a\u062a\u0632\u0627 \u062a\u0631\u0643\u064a\u0629 \u0645\u062e\u0628\u0648\u0632\u0629 \u0641\u064a \u0627\u0644\u0641\u0631\u0646 \u0645\u0639 \u0639\u062c\u064a\u0646\u0629 \u062e\u0645\u064a\u0631\u0629 \u0647\u0634\u0629 \u0645\u063a\u0637\u0627\u0629 \u0628\u0644\u062d\u0645 \u0628\u0642\u0631\u064a \u0645\u0641\u0631\u0648\u0645 \u0645\u062a\u0628\u0644.","description_fr":"Pizza turque cuite au four avec une p\u00e2te lev\u00e9e moelleuse garnie de b\u0153uf hach\u00e9 assaisonn\u00e9.","description_long":"Turkish Pide is often called 'Turkish pizza' \u2014 a boat-shaped flatbread with a soft, fluffy yeasted base and a generous topping. Our Minced Beef Pide features seasoned ground beef cooked with onions, garlic, tomato paste, cumin, paprika, coriander, oregano, and a drizzle of olive oil. Baked until the edges are golden and the topping is perfectly cooked.","description_long_ar":"\u0627\u0644\u0628\u064a\u062f\u0627 \u0627\u0644\u062a\u0631\u0643\u064a\u0629 \u063a\u0627\u0644\u0628\u0627\u064b \u0645\u0627 \u062a\u0633\u0645\u0649 '\u0627\u0644\u0628\u064a\u062a\u0632\u0627 \u0627\u0644\u062a\u0631\u0643\u064a\u0629' \u2014 \u062e\u0628\u0632 \u0645\u0633\u0637\u062d \u0639\u0644\u0649 \u0634\u0643\u0644 \u0642\u0627\u0631\u0628 \u0645\u0639 \u0642\u0627\u0639\u062f\u0629 \u062e\u0645\u064a\u0631\u0629 \u0637\u0631\u064a\u0629 \u0648\u062d\u0634\u0648\u0629 \u0633\u062e\u064a\u0629. \u0628\u064a\u062f\u0627 \u0627\u0644\u0644\u062d\u0645 \u0627\u0644\u0645\u0641\u0631\u0648\u0645 \u0644\u062f\u064a\u0646\u0627 \u062a\u062a\u0645\u064a\u0632 \u0628\u0644\u062d\u0645 \u0628\u0642\u0631\u064a \u0645\u062a\u0628\u0644 \u0645\u0637\u0628\u0648\u062e \u0645\u0639 \u0627\u0644\u0628\u0635\u0644 \u0648\u0627\u0644\u062b\u0648\u0645 \u0648\u0645\u0639\u062c\u0648\u0646 \u0627\u0644\u0637\u0645\u0627\u0637\u0645 \u0648\u0627\u0644\u0643\u0645\u0648\u0646 \u0648\u0627\u0644\u0628\u0627\u0628\u0631\u064a\u0643\u0627 \u0648\u0627\u0644\u0643\u0632\u0628\u0631\u0629 \u0648\u0627\u0644\u0623\u0648\u0631\u064a\u063a\u0627\u0646\u0648 \u0648\u0632\u064a\u062a \u0627\u0644\u0632\u064a\u062a\u0648\u0646. \u0645\u062e\u0628\u0648\u0632\u0629 \u062d\u062a\u0649 \u062a\u0635\u0628\u062d \u0627\u0644\u062d\u0648\u0627\u0641 \u0630\u0647\u0628\u064a\u0629.","description_long_fr":"Le Pide turc est souvent appel\u00e9 'pizza turque' \u2014 un pain plat en forme de bateau avec une base lev\u00e9e douce et moelleuse et une garniture g\u00e9n\u00e9reuse. Notre Pide au B\u0153uf Hach\u00e9 est garni de b\u0153uf assaisonn\u00e9 cuit avec des oignons, de l'ail, de la p\u00e2te de tomates, du cumin, du paprika, de la coriandre, de l'origan et un filet d'huile d'olive. Cuit jusqu'\u00e0 ce que les bords soient dor\u00e9s.","image":"pide_minced_beef.jpg","ingredients":["Wheat flour","Dry yeast","Sugar","Salt","Vegetable oil","Minced beef","Onions","Garlic","Tomato paste","Paprika","Cumin","Black pepper","Coriander","Oregano","Olive oil"],"ingredients_ar":["\u062f\u0642\u064a\u0642 \u0627\u0644\u0642\u0645\u062d","\u062e\u0645\u064a\u0631\u0629 \u062c\u0627\u0641\u0629","\u0633\u0643\u0631","\u0645\u0644\u062d","\u0632\u064a\u062a \u0646\u0628\u0627\u062a\u064a","\u0644\u062d\u0645 \u0628\u0642\u0631\u064a \u0645\u0641\u0631\u0648\u0645","\u0628\u0635\u0644","\u062b\u0648\u0645","\u0645\u0639\u062c\u0648\u0646 \u0637\u0645\u0627\u0637\u0645","\u0628\u0627\u0628\u0631\u064a\u0643\u0627","\u0643\u0645\u0648\u0646","\u0641\u0644\u0641\u0644 \u0623\u0633\u0648\u062f","\u0643\u0632\u0628\u0631\u0629","\u0623\u0648\u0631\u064a\u063a\u0627\u0646\u0648","\u0632\u064a\u062a \u0632\u064a\u062a\u0648\u0646"],"ingredients_fr":["Farine de bl\u00e9","Levure s\u00e8che","Sucre","Sel","Huile v\u00e9g\u00e9tale","B\u0153uf hach\u00e9","Oignons","Ail","Concentr\u00e9 de tomates","Paprika","Cumin","Poivre noir","Coriandre","Origan","Huile d'olive"],"may_contain":["Sesame"],"may_contain_ar":["\u0633\u0645\u0633\u0645"],"may_contain_fr":["S\u00e9same"],"name":"Pide (Minced Beef)","name_ar":"\u0628\u064a\u062f\u0627 (\u0644\u062d\u0645 \u0645\u0641\u0631\u0648\u0645)","name_fr":"Pide (B\u0153uf Hach\u00e9)","nutrition":{"calories":380,"carbs":38,"fat":17,"fibre":2,"protein":18,"serving":"1 pide (~180g)","serving_ar":"\u0628\u064a\u062f\u0627 \u0648\u0627\u062d\u062f\u0629 (~180 \u063a)","serving_fr":"1 pide (~180g)"},"price":20.0},"tres_leches_cake":{"allergens":["gluten","eggs","dairy"],"allergens_ar":["\u062c\u0644\u0648\u062a\u064a\u0646","\u0628\u064a\u0636","\u0645\u0646\u062a\u062c\u0627\u062a \u0627\u0644\u0623\u0644\u0628\u0627\u0646"],"allergens_fr":["gluten","\u0153ufs","produits laitiers"],"cooking_method":"oven","cooking_method_ar":"\u0641\u0631\u0646","cooking_method_fr":"four","description":"A light, moist sponge cake soaked in a sweet three-milk mixture and topped with fresh whipped cream and cinnamon. Sold by the slice.","description_ar":"\u0643\u064a\u0643\u0629 \u0625\u0633\u0641\u0646\u062c\u064a\u0629 \u062e\u0641\u064a\u0641\u0629 \u0648\u0631\u0637\u0628\u0629 \u0645\u0646\u0642\u0648\u0639\u0629 \u0641\u064a \u062e\u0644\u064a\u0637 \u062d\u0644\u0648 \u0645\u0646 \u062b\u0644\u0627\u062b\u0629 \u0623\u0646\u0648\u0627\u0639 \u062d\u0644\u064a\u0628\u060c \u0645\u063a\u0637\u0627\u0629 \u0628\u0627\u0644\u0643\u0631\u064a\u0645\u0629 \u0627\u0644\u0645\u062e\u0641\u0648\u0642\u0629 \u0627\u0644\u0637\u0627\u0632\u062c\u0629 \u0648\u0627\u0644\u0642\u0631\u0641\u0629. \u062a\u0628\u0627\u0639 \u0628\u0627\u0644\u0634\u0631\u064a\u062d\u0629.","description_fr":"Un g\u00e2teau \u00e9ponge l\u00e9ger et moelleux imbib\u00e9 d'un m\u00e9lange sucr\u00e9 de trois laits, garni de cr\u00e8me fouett\u00e9e fra\u00eeche et de cannelle. Vendu \u00e0 la tranche.","description_long":"Tres Leches Cake is a beloved Latin American dessert that has won hearts worldwide. Our version starts with a light, airy sponge made from separated eggs for extra lift, soaked generously in a luscious mixture of evaporated milk, sweetened condensed milk, and whole milk. The result is an ultra-moist cake that melts in your mouth. Topped with billowy fresh whipped cream and a dusting of ground cinnamon, each slice is a perfect balance of sweetness and lightness. Our generous double-size portions ensure a truly satisfying treat.","description_long_ar":"\u0643\u064a\u0643\u0629 \u062a\u0631\u064a\u0633 \u0644\u064a\u062a\u0634\u064a\u0633 \u0647\u064a \u062d\u0644\u0648\u0649 \u0644\u0627\u062a\u064a\u0646\u064a\u0629 \u0623\u0645\u0631\u064a\u0643\u064a\u0629 \u0645\u062d\u0628\u0648\u0628\u0629 \u0627\u0643\u062a\u0633\u0628\u062a \u0634\u0647\u0631\u0629 \u0639\u0627\u0644\u0645\u064a\u0629. \u0646\u0633\u062e\u062a\u0646\u0627 \u062a\u0628\u062f\u0623 \u0628\u0625\u0633\u0641\u0646\u062c\u0629 \u062e\u0641\u064a\u0641\u0629 \u0648\u0647\u0648\u0627\u0626\u064a\u0629 \u0645\u0646\u0642\u0648\u0639\u0629 \u0628\u0633\u062e\u0627\u0621 \u0641\u064a \u062e\u0644\u064a\u0637 \u0641\u0627\u062e\u0631 \u0645\u0646 \u0627\u0644\u062d\u0644\u064a\u0628 \u0627\u0644\u0645\u0628\u062e\u0631 \u0648\u0627\u0644\u062d\u0644\u064a\u0628 \u0627\u0644\u0645\u0643\u062b\u0641 \u0627\u0644\u0645\u062d\u0644\u0649 \u0648\u0627\u0644\u062d\u0644\u064a\u0628 \u0627\u0644\u0643\u0627\u0645\u0644. \u0627\u0644\u0646\u062a\u064a\u062c\u0629 \u0643\u064a\u0643\u0629 \u0631\u0637\u0628\u0629 \u0644\u0644\u063a\u0627\u064a\u0629 \u062a\u0630\u0648\u0628 \u0641\u064a \u0627\u0644\u0641\u0645. \u0645\u063a\u0637\u0627\u0629 \u0628\u0643\u0631\u064a\u0645\u0629 \u0645\u062e\u0641\u0648\u0642\u0629 \u0637\u0627\u0632\u062c\u0629 \u0648\u0631\u0634\u0629 \u0645\u0646 \u0627\u0644\u0642\u0631\u0641\u0629 \u0627\u0644\u0645\u0637\u062d\u0648\u0646\u0629\u060c \u0643\u0644 \u0634\u0631\u064a\u062d\u0629 \u062a\u0648\u0627\u0632\u0646 \u0645\u062b\u0627\u0644\u064a \u0628\u064a\u0646 \u0627\u0644\u062d\u0644\u0627\u0648\u0629 \u0648\u0627\u0644\u062e\u0641\u0629.","description_long_fr":"Le g\u00e2teau Tres Leches est un dessert latino-am\u00e9ricain bien-aim\u00e9 qui a conquis les c\u0153urs du monde entier. Notre version commence par une g\u00e9noise l\u00e9g\u00e8re et a\u00e9r\u00e9e, imbib\u00e9e g\u00e9n\u00e9reusement d'un m\u00e9lange luxueux de lait \u00e9vapor\u00e9, de lait concentr\u00e9 sucr\u00e9 et de lait entier. Le r\u00e9sultat est un g\u00e2teau ultra-moelleux qui fond en bouche. Garni de cr\u00e8me fouett\u00e9e onctueuse et d'une pinc\u00e9e de cannelle moulue, chaque tranche offre un \u00e9quilibre parfait entre douceur et l\u00e9g\u00e8ret\u00e9.","gallery":["tres_leches_cake_almond.png","tres_leches_cake_caramel.png"],"image":"tres_leches_cake_main.png","ingredients":["Flour","Eggs","Sugar","Whole Milk","Baking Powder","Vanilla Extract","Evaporated Milk","Condensed Milk","Whipping Cream","Icing Sugar","Cinnamon"],"ingredients_ar":["\u062f\u0642\u064a\u0642","\u0628\u064a\u0636","\u0633\u0643\u0631","\u062d\u0644\u064a\u0628 \u0643\u0627\u0645\u0644","\u0628\u064a\u0643\u0646\u062c \u0628\u0648\u062f\u0631","\u062e\u0644\u0627\u0635\u0629 \u0627\u0644\u0641\u0627\u0646\u064a\u0644\u064a\u0627","\u062d\u0644\u064a\u0628 \u0645\u0628\u062e\u0631","\u062d\u0644\u064a\u0628 \u0645\u0643\u062b\u0641","\u0643\u0631\u064a\u0645\u0629 \u062e\u0641\u0642","\u0633\u0643\u0631 \u0628\u0648\u062f\u0631\u0629","\u0642\u0631\u0641\u0629"],"ingredients_fr":["Farine","\u0152ufs","Sucre","Lait entier","Levure chimique","Extrait de vanille","Lait \u00e9vapor\u00e9","Lait concentr\u00e9","Cr\u00e8me fouett\u00e9e","Sucre glace","Cannelle"],"meta_description":"Order fresh Tres Leches Cake in Tetouan. Light sponge soaked in three milks, topped with whipped cream and cinnamon. 28 MAD per slice. Delivery & pickup available.","meta_title":"Tres Leches Cake \u2014 Three-Milk Soaked Cake | Samarkand Bakery","name":"Tres Leches Cake","name_ar":"\u0643\u064a\u0643\u0629 \u062a\u0631\u064a\u0633 \u0644\u064a\u062a\u0634\u064a\u0633","name_fr":"G\u00e2teau Tres Leches","nutrition":{"calories":"420 kcal","carbs":"52g","fat":"20g","fibre":"0.3g","protein":"8g"},"price":28.0},"turkish_bread":{"allergens":["Gluten (wheat)","Dairy (milk, yoghurt)","Eggs"],"allergens_ar":["\u063a\u0644\u0648\u062a\u064a\u0646 (\u0642\u0645\u062d)","\u0645\u0646\u062a\u062c\u0627\u062a \u0627\u0644\u0623\u0644\u0628\u0627\u0646 (\u062d\u0644\u064a\u0628\u060c \u0632\u0628\u0627\u062f\u064a)","\u0628\u064a\u0636"],"allergens_fr":["Gluten (bl\u00e9)","Produits laitiers (lait, yaourt)","\u0152ufs"],"cooking_method":"Oven baked","cooking_method_ar":"\u0645\u062e\u0628\u0648\u0632 \u0641\u064a \u0627\u0644\u0641\u0631\u0646","cooking_method_fr":"Cuit au four","description":"Soft, fluffy Turkish bread topped with sesame and nigella seeds. Perfect with any meal.","description_ar":"\u062e\u0628\u0632 \u062a\u0631\u0643\u064a \u0637\u0631\u064a \u0648\u0647\u0634 \u0645\u0632\u064a\u0646 \u0628\u0628\u0630\u0648\u0631 \u0627\u0644\u0633\u0645\u0633\u0645 \u0648\u0627\u0644\u062d\u0628\u0629 \u0627\u0644\u0633\u0648\u062f\u0627\u0621. \u0645\u062b\u0627\u0644\u064a \u0645\u0639 \u0623\u064a \u0648\u062c\u0628\u0629.","description_fr":"Pain turc moelleux garni de graines de s\u00e9same et de nigelle. Parfait avec tout repas.","description_long":"Our Turkish Bread is a soft, pillowy loaf made with flour, milk, yoghurt, egg, and vegetable oil, leavened with yeast for a light and airy texture. The dough is shaped into a round loaf, topped with sesame and nigella seeds, and baked until beautifully golden. Pairs perfectly with dips, soups, grilled meats, or simply with butter.","description_long_ar":"\u0627\u0644\u062e\u0628\u0632 \u0627\u0644\u062a\u0631\u0643\u064a \u0644\u062f\u064a\u0646\u0627 \u0631\u063a\u064a\u0641 \u0637\u0631\u064a \u0648\u0645\u0646\u0641\u0648\u0634 \u0645\u0635\u0646\u0648\u0639 \u0645\u0646 \u0627\u0644\u062f\u0642\u064a\u0642 \u0648\u0627\u0644\u062d\u0644\u064a\u0628 \u0648\u0627\u0644\u0632\u0628\u0627\u062f\u064a \u0648\u0627\u0644\u0628\u064a\u0636 \u0648\u0627\u0644\u0632\u064a\u062a \u0627\u0644\u0646\u0628\u0627\u062a\u064a\u060c \u0645\u062e\u0645\u0631 \u0628\u0627\u0644\u062e\u0645\u064a\u0631\u0629 \u0644\u0642\u0648\u0627\u0645 \u062e\u0641\u064a\u0641 \u0648\u0647\u0648\u0627\u0626\u064a. \u062a\u064f\u0634\u0643\u0644 \u0627\u0644\u0639\u062c\u064a\u0646\u0629 \u0639\u0644\u0649 \u0634\u0643\u0644 \u0631\u063a\u064a\u0641 \u0645\u0633\u062a\u062f\u064a\u0631 \u0648\u0645\u0632\u064a\u0646 \u0628\u0628\u0630\u0648\u0631 \u0627\u0644\u0633\u0645\u0633\u0645 \u0648\u0627\u0644\u062d\u0628\u0629 \u0627\u0644\u0633\u0648\u062f\u0627\u0621 \u0648\u0645\u062e\u0628\u0648\u0632 \u062d\u062a\u0649 \u064a\u0635\u0628\u062d \u0630\u0647\u0628\u064a\u0627\u064b \u0628\u0634\u0643\u0644 \u062c\u0645\u064a\u0644. \u064a\u062a\u0646\u0627\u0633\u0628 \u062a\u0645\u0627\u0645\u0627\u064b \u0645\u0639 \u0627\u0644\u0645\u0642\u0628\u0644\u0627\u062a \u0648\u0627\u0644\u0634\u0648\u0631\u0628\u0627\u062a \u0648\u0627\u0644\u0644\u062d\u0648\u0645 \u0627\u0644\u0645\u0634\u0648\u064a\u0629 \u0623\u0648 \u0628\u0628\u0633\u0627\u0637\u0629 \u0645\u0639 \u0627\u0644\u0632\u0628\u062f\u0629.","description_long_fr":"Notre Pain Turc est un pain moelleux fait avec de la farine, du lait, du yaourt, de l'\u0153uf et de l'huile v\u00e9g\u00e9tale, lev\u00e9 avec de la levure pour une texture l\u00e9g\u00e8re et a\u00e9rienne. La p\u00e2te est fa\u00e7onn\u00e9e en un pain rond, garni de graines de s\u00e9same et de nigelle, et cuit jusqu'\u00e0 obtenir une belle couleur dor\u00e9e. Se marie parfaitement avec des trempettes, des soupes, des viandes grill\u00e9es ou simplement du beurre.","image":"turkish_bread.jpg","ingredients":["Wheat flour","Milk","Yoghurt","Egg","Vegetable oil","Dry yeast","Sugar","Salt"],"ingredients_ar":["\u062f\u0642\u064a\u0642 \u0627\u0644\u0642\u0645\u062d","\u062d\u0644\u064a\u0628","\u0632\u0628\u0627\u062f\u064a","\u0628\u064a\u0636","\u0632\u064a\u062a \u0646\u0628\u0627\u062a\u064a","\u062e\u0645\u064a\u0631\u0629 \u062c\u0627\u0641\u0629","\u0633\u0643\u0631","\u0645\u0644\u062d"],"ingredients_fr":["Farine de bl\u00e9","Lait","Yaourt","\u0152uf","Huile v\u00e9g\u00e9tale","Levure s\u00e8che","Sucre","Sel"],"may_contain":["Sesame"],"may_contain_ar":["\u0633\u0645\u0633\u0645"],"may_contain_fr":["S\u00e9same"],"name":"Turkish Bread","name_ar":"\u062e\u0628\u0632 \u062a\u0631\u0643\u064a","name_fr":"Pain Turc","nutrition":{"calories":235,"carbs":38,"fat":6,"fibre":1,"protein":7,"serving":"1 slice (~90g)","serving_ar":"\u0634\u0631\u064a\u062d\u0629 \u0648\u0627\u062d\u062f\u0629 (~90 \u063a)","serving_fr":"1 tranche (~90g)"},"price":10.0},"turkish_ezme":{"allergens":[],"allergens_ar":[],"allergens_fr":[],"cooking_method":"fresh","cooking_method_ar":"\u0637\u0627\u0632\u062c","cooking_method_fr":"frais","description":"A vibrant, spicy Turkish salad of finely chopped tomatoes, peppers, onion and herbs, dressed with olive oil, pomegranate molasses and sumac. Served in a small pot.","description_ar":"\u0633\u0644\u0637\u0629 \u062a\u0631\u0643\u064a\u0629 \u062d\u064a\u0648\u064a\u0629 \u0648\u062d\u0627\u0631\u0629 \u0645\u0646 \u0627\u0644\u0637\u0645\u0627\u0637\u0645 \u0648\u0627\u0644\u0641\u0644\u0641\u0644 \u0648\u0627\u0644\u0628\u0635\u0644 \u0648\u0627\u0644\u0623\u0639\u0634\u0627\u0628 \u0627\u0644\u0645\u0641\u0631\u0648\u0645\u0629 \u0646\u0627\u0639\u0645\u0627\u064b\u060c \u0645\u062a\u0628\u0644\u0629 \u0628\u0632\u064a\u062a \u0627\u0644\u0632\u064a\u062a\u0648\u0646 \u0648\u062f\u0628\u0633 \u0627\u0644\u0631\u0645\u0627\u0646 \u0648\u0627\u0644\u0633\u0645\u0627\u0642. \u062a\u0642\u062f\u0645 \u0641\u064a \u0648\u0639\u0627\u0621 \u0635\u063a\u064a\u0631.","description_fr":"Une salade turque vibrante et \u00e9pic\u00e9e de tomates, poivrons, oignon et herbes finement hach\u00e9s, assaisonn\u00e9e d'huile d'olive, de m\u00e9lasse de grenade et de sumac. Servie en petit pot.","description_long":"Ezme is one of Turkey's most popular mezes \u2014 a finely chopped salad bursting with fresh Mediterranean flavours. Ripe tomatoes, red and green bell peppers, onion, parsley, and fresh mint are finely diced and combined with garlic, tomato paste, and red pepper paste. The dressing brings everything together: fruity olive oil, tangy lemon juice, sweet-tart pomegranate molasses, and aromatic sumac and dried mint. A touch of Aleppo pepper flakes adds gentle warmth without overpowering heat. Each small pot (60-80g) is the perfect accompaniment to our breads and pastries, or enjoyed on its own as a refreshing side.","description_long_ar":"\u0627\u0644\u0625\u0632\u0645\u0629 \u0647\u064a \u0648\u0627\u062d\u062f\u0629 \u0645\u0646 \u0623\u0634\u0647\u0631 \u0627\u0644\u0645\u0642\u0628\u0644\u0627\u062a \u0627\u0644\u062a\u0631\u0643\u064a\u0629 \u2014 \u0633\u0644\u0637\u0629 \u0645\u0641\u0631\u0648\u0645\u0629 \u0646\u0627\u0639\u0645\u0627\u064b \u0645\u0644\u064a\u0626\u0629 \u0628\u0646\u0643\u0647\u0627\u062a \u0627\u0644\u0628\u062d\u0631 \u0627\u0644\u0645\u062a\u0648\u0633\u0637 \u0627\u0644\u0637\u0627\u0632\u062c\u0629. \u0637\u0645\u0627\u0637\u0645 \u0646\u0627\u0636\u062c\u0629 \u0648\u0641\u0644\u0641\u0644 \u0623\u062d\u0645\u0631 \u0648\u0623\u062e\u0636\u0631 \u0648\u0628\u0635\u0644 \u0648\u0628\u0642\u062f\u0648\u0646\u0633 \u0648\u0646\u0639\u0646\u0627\u0639 \u0637\u0627\u0632\u062c \u0645\u0641\u0631\u0648\u0645\u0629 \u0646\u0627\u0639\u0645\u0627\u064b \u0648\u0645\u062e\u0644\u0648\u0637\u0629 \u0645\u0639 \u0627\u0644\u062b\u0648\u0645 \u0648\u0645\u0639\u062c\u0648\u0646 \u0627\u0644\u0637\u0645\u0627\u0637\u0645 \u0648\u0645\u0639\u062c\u0648\u0646 \u0627\u0644\u0641\u0644\u0641\u0644 \u0627\u0644\u0623\u062d\u0645\u0631. \u0627\u0644\u062a\u062a\u0628\u064a\u0644\u0629 \u062a\u062c\u0645\u0639 \u0643\u0644 \u0634\u064a\u0621 \u0645\u0639\u0627\u064b: \u0632\u064a\u062a \u0632\u064a\u062a\u0648\u0646 \u0641\u0627\u0643\u0647\u064a \u0648\u0639\u0635\u064a\u0631 \u0644\u064a\u0645\u0648\u0646 \u062d\u0627\u0645\u0636 \u0648\u062f\u0628\u0633 \u0631\u0645\u0627\u0646 \u062d\u0644\u0648-\u062d\u0627\u0645\u0636 \u0648\u0633\u0645\u0627\u0642 \u0648\u0646\u0639\u0646\u0627\u0639 \u0645\u062c\u0641\u0641 \u0639\u0637\u0631\u064a. \u0643\u0644 \u0648\u0639\u0627\u0621 \u0635\u063a\u064a\u0631 (60-80 \u062c\u0645) \u0647\u0648 \u0627\u0644\u0645\u0631\u0627\u0641\u0642 \u0627\u0644\u0645\u062b\u0627\u0644\u064a \u0644\u062e\u0628\u0632\u0646\u0627 \u0648\u0645\u0639\u062c\u0646\u0627\u062a\u0646\u0627.","description_long_fr":"L'Ezme est l'un des mezze les plus populaires de Turquie \u2014 une salade finement hach\u00e9e d\u00e9bordante de saveurs m\u00e9diterran\u00e9ennes fra\u00eeches. Des tomates m\u00fbres, des poivrons rouges et verts, de l'oignon, du persil et de la menthe fra\u00eeche sont finement coup\u00e9s et combin\u00e9s avec de l'ail, de la p\u00e2te de tomate et de la p\u00e2te de poivron rouge. L'assaisonnement r\u00e9unit le tout : huile d'olive fruit\u00e9e, jus de citron acidul\u00e9, m\u00e9lasse de grenade aigre-douce, et sumac et menthe s\u00e9ch\u00e9e aromatiques. Chaque petit pot (60-80g) est l'accompagnement parfait pour nos pains et p\u00e2tisseries.","image":"ezme.jpg","ingredients":["Tomatoes","Red Bell Pepper","Green Bell Pepper","Parsley","Fresh Mint","Onion","Garlic","Tomato Paste","Red Pepper Paste","Olive Oil","Lemon","Pomegranate Molasses","Sumac","Dried Mint","Salt","Black Pepper"],"ingredients_ar":["\u0637\u0645\u0627\u0637\u0645","\u0641\u0644\u0641\u0644 \u0623\u062d\u0645\u0631","\u0641\u0644\u0641\u0644 \u0623\u062e\u0636\u0631","\u0628\u0642\u062f\u0648\u0646\u0633","\u0646\u0639\u0646\u0627\u0639 \u0637\u0627\u0632\u062c","\u0628\u0635\u0644","\u062b\u0648\u0645","\u0645\u0639\u062c\u0648\u0646 \u0637\u0645\u0627\u0637\u0645","\u0645\u0639\u062c\u0648\u0646 \u0641\u0644\u0641\u0644 \u0623\u062d\u0645\u0631","\u0632\u064a\u062a \u0632\u064a\u062a\u0648\u0646","\u0644\u064a\u0645\u0648\u0646","\u062f\u0628\u0633 \u0631\u0645\u0627\u0646","\u0633\u0645\u0627\u0642","\u0646\u0639\u0646\u0627\u0639 \u0645\u062c\u0641\u0641","\u0645\u0644\u062d","\u0641\u0644\u0641\u0644 \u0623\u0633\u0648\u062f"],"ingredients_fr":["Tomates","Poivron rouge","Poivron vert","Persil","Menthe fraiche","Oignon","Ail","Concentre de tomate","Pate de poivron rouge","Huile d'olive","Citron","Melasse de grenade","Sumac","Menthe sechee","Sel","Poivre noir"],"meta_description":"Order fresh Turkish Ezme Salad in Tetouan. Finely chopped tomatoes, peppers, herbs with olive oil and pomegranate molasses. 7 MAD per pot. Delivery & pickup.","meta_title":"Turkish Ezme Salad \u2014 Fresh Spicy Tomato Dip | Samarkand Bakery","name":"Turkish Ezme Salad","name_ar":"\u0633\u0644\u0637\u0629 \u0625\u0632\u0645\u0629 \u0627\u0644\u062a\u0631\u0643\u064a\u0629","name_fr":"Salade Ezme Turque","nutrition":{"calories":"65 kcal","carbs":"5g","fat":"5g","fibre":"1g","protein":"1g"},"price":8.0},"turkish_simit":{"allergens":["gluten","sesame"],"allergens_ar":["\u062c\u0644\u0648\u062a\u064a\u0646","\u0633\u0645\u0633\u0645"],"allergens_fr":["gluten","s\u00e9same"],"cooking_method":"oven","cooking_method_ar":"\u0641\u0631\u0646","cooking_method_fr":"four","description":"Turkey's iconic sesame-crusted bread ring \u2014 crunchy on the outside, chewy on the inside, coated in molasses and roasted sesame seeds.","description_ar":"\u062e\u0628\u0632 \u0627\u0644\u0633\u0645\u064a\u062a \u0627\u0644\u062a\u0631\u0643\u064a \u0627\u0644\u0634\u0647\u064a\u0631 \u0639\u0644\u0649 \u0634\u0643\u0644 \u062d\u0644\u0642\u0629 \u0628\u0627\u0644\u0633\u0645\u0633\u0645 \u2014 \u0645\u0642\u0631\u0645\u0634 \u0645\u0646 \u0627\u0644\u062e\u0627\u0631\u062c\u060c \u0637\u0631\u064a \u0645\u0646 \u0627\u0644\u062f\u0627\u062e\u0644\u060c \u0645\u063a\u0637\u0649 \u0628\u0627\u0644\u062f\u0628\u0633 \u0648\u0628\u0630\u0648\u0631 \u0627\u0644\u0633\u0645\u0633\u0645 \u0627\u0644\u0645\u062d\u0645\u0635\u0629.","description_fr":"Le pain turc embl\u00e9matique en forme d'anneau au s\u00e9same \u2014 croustillant \u00e0 l'ext\u00e9rieur, moelleux \u00e0 l'int\u00e9rieur, enrob\u00e9 de m\u00e9lasse et de graines de s\u00e9same grill\u00e9es.","description_long":"Turkey's most beloved street food, the Simit is a circular sesame-crusted bread ring that has been a staple since the 16th century Ottoman Empire. Each simit is hand-twisted from two ropes of dense, chewy dough, dipped in a sweet pomegranate molasses glaze, then generously rolled in roasted sesame seeds before being oven-baked to golden perfection. The result is an irresistible combination of crunchy sesame exterior and soft, slightly chewy interior. Perfect with cream cheese, olives, or simply enjoyed on its own with a cup of Turkish tea.","description_long_ar":"\u0623\u0634\u0647\u0631 \u0637\u0639\u0627\u0645 \u0634\u0627\u0631\u0639 \u062a\u0631\u0643\u064a\u060c \u0627\u0644\u0633\u0645\u064a\u062a \u0647\u0648 \u062e\u0628\u0632 \u062f\u0627\u0626\u0631\u064a \u0645\u063a\u0637\u0649 \u0628\u0627\u0644\u0633\u0645\u0633\u0645 \u0643\u0627\u0646 \u0639\u0646\u0635\u0631\u064b\u0627 \u0623\u0633\u0627\u0633\u064a\u064b\u0627 \u0645\u0646\u0630 \u0627\u0644\u0625\u0645\u0628\u0631\u0627\u0637\u0648\u0631\u064a\u0629 \u0627\u0644\u0639\u062b\u0645\u0627\u0646\u064a\u0629 \u0641\u064a \u0627\u0644\u0642\u0631\u0646 \u0627\u0644\u0633\u0627\u062f\u0633 \u0639\u0634\u0631. \u064a\u064f\u0644\u0641 \u0643\u0644 \u0633\u0645\u064a\u062a \u064a\u062f\u0648\u064a\u064b\u0627 \u0645\u0646 \u062d\u0628\u0644\u064a\u0646 \u0645\u0646 \u0627\u0644\u0639\u062c\u064a\u0646 \u0627\u0644\u0643\u062b\u064a\u0641 \u0648\u0627\u0644\u0645\u0637\u0627\u0637\u064a\u060c \u0648\u064a\u064f\u063a\u0645\u0633 \u0641\u064a \u0637\u0644\u0627\u0621 \u062d\u0644\u0648 \u0645\u0646 \u062f\u0628\u0633 \u0627\u0644\u0631\u0645\u0627\u0646\u060c \u062b\u0645 \u064a\u064f\u0644\u0641 \u0628\u0633\u062e\u0627\u0621 \u0641\u064a \u0628\u0630\u0648\u0631 \u0627\u0644\u0633\u0645\u0633\u0645 \u0627\u0644\u0645\u062d\u0645\u0635\u0629 \u0642\u0628\u0644 \u062e\u0628\u0632\u0647 \u0641\u064a \u0627\u0644\u0641\u0631\u0646 \u062d\u062a\u0649 \u064a\u0635\u0628\u062d \u0630\u0647\u0628\u064a\u064b\u0627 \u0645\u062b\u0627\u0644\u064a\u064b\u0627. \u0627\u0644\u0646\u062a\u064a\u062c\u0629 \u0647\u064a \u0645\u0632\u064a\u062c \u0644\u0627 \u064a\u0642\u0627\u0648\u0645 \u0645\u0646 \u0627\u0644\u062e\u0627\u0631\u062c \u0627\u0644\u0645\u0642\u0631\u0645\u0634 \u0628\u0627\u0644\u0633\u0645\u0633\u0645 \u0648\u0627\u0644\u062f\u0627\u062e\u0644 \u0627\u0644\u0637\u0631\u064a. \u0645\u062b\u0627\u0644\u064a \u0645\u0639 \u0627\u0644\u062c\u0628\u0646 \u0627\u0644\u0643\u0631\u064a\u0645\u064a \u0623\u0648 \u0627\u0644\u0632\u064a\u062a\u0648\u0646 \u0623\u0648 \u0628\u0628\u0633\u0627\u0637\u0629 \u064a\u064f\u0633\u062a\u0645\u062a\u0639 \u0628\u0647 \u0648\u062d\u062f\u0647 \u0645\u0639 \u0643\u0648\u0628 \u0645\u0646 \u0627\u0644\u0634\u0627\u064a \u0627\u0644\u062a\u0631\u0643\u064a.","description_long_fr":"Le street food turc le plus appr\u00e9ci\u00e9, le Simit est un pain en forme d'anneau recouvert de s\u00e9same, un incontournable depuis l'Empire ottoman du XVIe si\u00e8cle. Chaque simit est torsad\u00e9 \u00e0 la main \u00e0 partir de deux cordes de p\u00e2te dense et moelleuse, tremp\u00e9 dans un gla\u00e7age sucr\u00e9 \u00e0 la m\u00e9lasse de grenade, puis g\u00e9n\u00e9reusement roul\u00e9 dans des graines de s\u00e9same grill\u00e9es avant d'\u00eatre cuit au four jusqu'\u00e0 une perfection dor\u00e9e. Le r\u00e9sultat est une combinaison irr\u00e9sistible d'ext\u00e9rieur croustillant au s\u00e9same et d'int\u00e9rieur moelleux. Parfait avec du fromage frais, des olives, ou simplement d\u00e9gust\u00e9 seul avec une tasse de th\u00e9 turc.","image":"turkish_simit.jpg","ingredients":["Flour","Water","Sesame Seeds","Pomegranate Molasses","Yeast","Salt"],"ingredients_ar":["\u062f\u0642\u064a\u0642","\u0645\u0627\u0621","\u0628\u0630\u0648\u0631 \u0627\u0644\u0633\u0645\u0633\u0645","\u062f\u0628\u0633 \u0627\u0644\u0631\u0645\u0627\u0646","\u062e\u0645\u064a\u0631\u0629","\u0645\u0644\u062d"],"ingredients_fr":["Farine","Eau","Graines de s\u00e9same","M\u00e9lasse de grenade","Levure","Sel"],"meta_description":"Order fresh handmade Turkish Simit in Tetouan. Crunchy sesame-crusted bread ring with molasses glaze, baked to golden perfection. Delivery & pickup available.","meta_title":"Turkish Simit \u2014 Authentic Sesame Bread Ring | Samarkand Bakery","name":"Turkish Simit","name_ar":"\u0633\u0645\u064a\u062a \u062a\u0631\u0643\u064a","name_fr":"Simit Turc","nutrition":{"calories":"280 kcal","carbs":"48g","fat":"6g","fibre":"3g","protein":"8g"},"price":12.0},"uzbek_bread":{"allergens":["Gluten (wheat)","Dairy (butter, milk)","Eggs"],"allergens_ar":["\u063a\u0644\u0648\u062a\u064a\u0646 (\u0642\u0645\u062d)","\u0645\u0646\u062a\u062c\u0627\u062a \u0627\u0644\u0623\u0644\u0628\u0627\u0646 (\u0632\u0628\u062f\u0629\u060c \u062d\u0644\u064a\u0628)","\u0628\u064a\u0636"],"allergens_fr":["Gluten (bl\u00e9)","Produits laitiers (beurre, lait)","\u0152ufs"],"cooking_method":"Oven baked","cooking_method_ar":"\u0645\u062e\u0628\u0648\u0632 \u0641\u064a \u0627\u0644\u0641\u0631\u0646","cooking_method_fr":"Cuit au four","description":"Traditional Uzbek flatbread, oven baked with a beautifully patterned centre and black sesame seeds.","description_ar":"\u062e\u0628\u0632 \u0623\u0648\u0632\u0628\u0643\u064a \u062a\u0642\u0644\u064a\u062f\u064a \u0645\u0633\u0637\u062d\u060c \u0645\u062e\u0628\u0648\u0632 \u0641\u064a \u0627\u0644\u0641\u0631\u0646 \u0628\u0646\u0642\u0648\u0634 \u062c\u0645\u064a\u0644\u0629 \u0641\u064a \u0627\u0644\u0645\u0646\u062a\u0635\u0641 \u0648\u0628\u0630\u0648\u0631 \u0627\u0644\u0633\u0645\u0633\u0645 \u0627\u0644\u0623\u0633\u0648\u062f.","description_fr":"Pain plat ouzbek traditionnel, cuit au four avec un beau motif central et des graines de s\u00e9same noir.","description_long":"Non \u2014 traditional Uzbek bread \u2014 is the centrepiece of every Uzbek meal. Our version is made with flour, milk, butter, and a touch of yeast, then hand-shaped with the traditional patterned centre using a bread stamp (chekich). Topped with sesame or nigella seeds and baked until golden. Soft inside with a slightly crisp crust. Each loaf is made fresh to order.","description_long_ar":"\u0627\u0644\u0646\u0627\u0646 \u2014 \u0627\u0644\u062e\u0628\u0632 \u0627\u0644\u0623\u0648\u0632\u0628\u0643\u064a \u0627\u0644\u062a\u0642\u0644\u064a\u062f\u064a \u2014 \u0647\u0648 \u0645\u062d\u0648\u0631 \u0643\u0644 \u0648\u062c\u0628\u0629 \u0623\u0648\u0632\u0628\u0643\u064a\u0629. \u0646\u0633\u062e\u062a\u0646\u0627 \u0645\u0635\u0646\u0648\u0639\u0629 \u0645\u0646 \u0627\u0644\u062f\u0642\u064a\u0642 \u0648\u0627\u0644\u062d\u0644\u064a\u0628 \u0648\u0627\u0644\u0632\u0628\u062f\u0629 \u0648\u0644\u0645\u0633\u0629 \u0645\u0646 \u0627\u0644\u062e\u0645\u064a\u0631\u0629\u060c \u062b\u0645 \u062a\u064f\u0634\u0643\u0644 \u064a\u062f\u0648\u064a\u0627\u064b \u0628\u0627\u0644\u0646\u0642\u0634 \u0627\u0644\u062a\u0642\u0644\u064a\u062f\u064a \u0641\u064a \u0627\u0644\u0645\u0646\u062a\u0635\u0641 \u0628\u0627\u0633\u062a\u062e\u062f\u0627\u0645 \u062e\u062a\u0645 \u0627\u0644\u062e\u0628\u0632 (\u062a\u0634\u064a\u0643\u064a\u062a\u0634). \u0645\u0632\u064a\u0646 \u0628\u0628\u0630\u0648\u0631 \u0627\u0644\u0633\u0645\u0633\u0645 \u0623\u0648 \u0627\u0644\u062d\u0628\u0629 \u0627\u0644\u0633\u0648\u062f\u0627\u0621 \u0648\u0645\u062e\u0628\u0648\u0632 \u062d\u062a\u0649 \u064a\u0635\u0628\u062d \u0630\u0647\u0628\u064a\u0627\u064b. \u0637\u0631\u064a \u0645\u0646 \u0627\u0644\u062f\u0627\u062e\u0644 \u0645\u0639 \u0642\u0634\u0631\u0629 \u0645\u0642\u0631\u0645\u0634\u0629 \u0642\u0644\u064a\u0644\u0627\u064b.","description_long_fr":"Le Non \u2014 pain ouzbek traditionnel \u2014 est la pi\u00e8ce ma\u00eetresse de chaque repas ouzbek. Notre version est faite avec de la farine, du lait, du beurre et une touche de levure, puis fa\u00e7onn\u00e9e \u00e0 la main avec le motif central traditionnel \u00e0 l'aide d'un tampon \u00e0 pain (chekich). Garni de graines de s\u00e9same ou de nigelle et cuit jusqu'\u00e0 obtenir une couleur dor\u00e9e. Moelleux \u00e0 l'int\u00e9rieur avec une cro\u00fbte l\u00e9g\u00e8rement croustillante.","image":"uzbek_bread.jpg","ingredients":["Wheat flour","Milk","Butter","Egg","Dry yeast","Sugar","Salt"],"ingredients_ar":["\u062f\u0642\u064a\u0642 \u0627\u0644\u0642\u0645\u062d","\u062d\u0644\u064a\u0628","\u0632\u0628\u062f\u0629","\u0628\u064a\u0636","\u062e\u0645\u064a\u0631\u0629 \u062c\u0627\u0641\u0629","\u0633\u0643\u0631","\u0645\u0644\u062d"],"ingredients_fr":["Farine de bl\u00e9","Lait","Beurre","\u0152uf","Levure s\u00e8che","Sucre","Sel"],"may_contain":["Sesame"],"may_contain_ar":["\u0633\u0645\u0633\u0645"],"may_contain_fr":["S\u00e9same"],"name":"Uzbek Bread","name_ar":"\u062e\u0628\u0632 \u0623\u0648\u0632\u0628\u0643\u064a","name_fr":"Pain Ouzbek","nutrition":{"calories":210,"carbs":36,"fat":5,"fibre":1,"protein":6,"serving":"1 slice (~80g)","serving_ar":"\u0634\u0631\u064a\u062d\u0629 \u0648\u0627\u062d\u062f\u0629 (~80 \u063a)","serving_fr":"1 tranche (~80g)"},"price":10.0,"recommended":["walnut_fig_jam"]},"uzbek_honey_cake":{"allergens":["gluten","eggs","dairy"],"allergens_ar":["\u062c\u0644\u0648\u062a\u064a\u0646","\u0628\u064a\u0636","\u0645\u0646\u062a\u062c\u0627\u062a \u0627\u0644\u0623\u0644\u0628\u0627\u0646"],"allergens_fr":["gluten","\u0153ufs","produits laitiers"],"cooking_method":"oven","cooking_method_ar":"\u0641\u0631\u0646","cooking_method_fr":"four","description":"A rich layered honey cake (Medovik) with delicate sponge layers soaked in honey syrup, filled with a silky butter cream. Sold by the slice.","description_ar":"\u0643\u064a\u0643\u0629 \u0639\u0633\u0644 \u063a\u0646\u064a\u0629 \u0645\u062a\u0639\u062f\u062f\u0629 \u0627\u0644\u0637\u0628\u0642\u0627\u062a (\u0645\u064a\u062f\u0648\u0641\u064a\u0643) \u0645\u0639 \u0637\u0628\u0642\u0627\u062a \u0625\u0633\u0641\u0646\u062c\u064a\u0629 \u0631\u0642\u064a\u0642\u0629 \u0645\u0646\u0642\u0648\u0639\u0629 \u0641\u064a \u0634\u0631\u0627\u0628 \u0627\u0644\u0639\u0633\u0644\u060c \u0645\u062d\u0634\u0648\u0629 \u0628\u0643\u0631\u064a\u0645\u0629 \u0632\u0628\u062f\u0629 \u0646\u0627\u0639\u0645\u0629. \u062a\u0628\u0627\u0639 \u0628\u0627\u0644\u0634\u0631\u064a\u062d\u0629.","description_fr":"Un riche g\u00e2teau au miel en couches (Medovik) avec des couches de g\u00e9noise d\u00e9licates imbib\u00e9es de sirop de miel, garnies d'une cr\u00e8me au beurre soyeuse. Vendu \u00e0 la tranche.","description_long":"The Uzbek Honey Cake, known as Medovik, is a beloved Central Asian dessert with roots in Russian imperial baking traditions. Our version features multiple thin, golden sponge layers made with eggs, flour, and a fragrant honey-sugar syrup infused with bicarbonate of soda for that signature lightness. Each layer is generously filled with a luxurious butter cream made from pure unsalted butter and condensed milk, creating a melt-in-your-mouth experience. The cake is assembled and left to rest, allowing the cream to soften the sponge layers into a perfectly moist, harmonious dessert. Each slice is approximately 7cm x 7cm \u2014 the perfect portion with tea or coffee.","description_long_ar":"\u0643\u064a\u0643\u0629 \u0627\u0644\u0639\u0633\u0644 \u0627\u0644\u0623\u0648\u0632\u0628\u0643\u064a\u0629\u060c \u0627\u0644\u0645\u0639\u0631\u0648\u0641\u0629 \u0628\u0627\u0633\u0645 \u0645\u064a\u062f\u0648\u0641\u064a\u0643\u060c \u0647\u064a \u062d\u0644\u0648\u0649 \u0622\u0633\u064a\u0648\u064a\u0629 \u0648\u0633\u0637\u0649 \u0645\u062d\u0628\u0648\u0628\u0629 \u0630\u0627\u062a \u062c\u0630\u0648\u0631 \u0641\u064a \u062a\u0642\u0627\u0644\u064a\u062f \u0627\u0644\u062e\u0628\u0632 \u0627\u0644\u0625\u0645\u0628\u0631\u0627\u0637\u0648\u0631\u064a \u0627\u0644\u0631\u0648\u0633\u064a. \u0646\u0633\u062e\u062a\u0646\u0627 \u062a\u062a\u0645\u064a\u0632 \u0628\u0639\u062f\u0629 \u0637\u0628\u0642\u0627\u062a \u0631\u0642\u064a\u0642\u0629 \u0630\u0647\u0628\u064a\u0629 \u0645\u0646 \u0627\u0644\u0625\u0633\u0641\u0646\u062c \u0627\u0644\u0645\u0635\u0646\u0648\u0639 \u0645\u0646 \u0627\u0644\u0628\u064a\u0636 \u0648\u0627\u0644\u062f\u0642\u064a\u0642 \u0648\u0634\u0631\u0627\u0628 \u0627\u0644\u0639\u0633\u0644 \u0648\u0627\u0644\u0633\u0643\u0631 \u0627\u0644\u0645\u0639\u0637\u0631 \u0628\u0628\u064a\u0643\u0631\u0628\u0648\u0646\u0627\u062a \u0627\u0644\u0635\u0648\u062f\u0627 \u0644\u062a\u0644\u0643 \u0627\u0644\u062e\u0641\u0629 \u0627\u0644\u0645\u0645\u064a\u0632\u0629. \u0643\u0644 \u0637\u0628\u0642\u0629 \u0645\u062d\u0634\u0648\u0629 \u0628\u0633\u062e\u0627\u0621 \u0628\u0643\u0631\u064a\u0645\u0629 \u0632\u0628\u062f\u0629 \u0641\u0627\u062e\u0631\u0629 \u0645\u0635\u0646\u0648\u0639\u0629 \u0645\u0646 \u0627\u0644\u0632\u0628\u062f\u0629 \u063a\u064a\u0631 \u0627\u0644\u0645\u0645\u0644\u062d\u0629 \u0648\u0627\u0644\u062d\u0644\u064a\u0628 \u0627\u0644\u0645\u0643\u062b\u0641. \u064a\u062a\u0645 \u062a\u062c\u0645\u064a\u0639 \u0627\u0644\u0643\u064a\u0643\u0629 \u0648\u062a\u0631\u0643\u0647\u0627 \u0644\u062a\u0631\u062a\u0627\u062d\u060c \u0645\u0645\u0627 \u064a\u0633\u0645\u062d \u0644\u0644\u0643\u0631\u064a\u0645\u0629 \u0628\u062a\u0644\u064a\u064a\u0646 \u0637\u0628\u0642\u0627\u062a \u0627\u0644\u0625\u0633\u0641\u0646\u062c. \u0643\u0644 \u0634\u0631\u064a\u062d\u0629 \u062d\u0648\u0627\u0644\u064a 7 \u0633\u0645 \u00d7 7 \u0633\u0645.","description_long_fr":"Le g\u00e2teau au miel ouzbek, connu sous le nom de Medovik, est un dessert d'Asie centrale bien-aim\u00e9 aux racines dans les traditions p\u00e2tissi\u00e8res de l'empire russe. Notre version pr\u00e9sente plusieurs fines couches de g\u00e9noise dor\u00e9e, pr\u00e9par\u00e9es avec des \u0153ufs, de la farine et un sirop de miel parfum\u00e9 au bicarbonate de soude pour cette l\u00e9g\u00e8ret\u00e9 caract\u00e9ristique. Chaque couche est g\u00e9n\u00e9reusement garnie d'une cr\u00e8me au beurre luxueuse \u00e0 base de beurre non sal\u00e9 et de lait concentr\u00e9, cr\u00e9ant une exp\u00e9rience fondante. Le g\u00e2teau est assembl\u00e9 et laiss\u00e9 reposer, permettant \u00e0 la cr\u00e8me d'adoucir les couches en un dessert parfaitement moelleux et harmonieux. Chaque tranche mesure environ 7cm x 7cm.","image":"uzbek_honey_cake.jpg","ingredients":["Eggs","Flour","Sugar","Honey","Unsalted Butter","Condensed Milk","Bicarbonate of Soda","Butter"],"ingredients_ar":["\u0628\u064a\u0636","\u062f\u0642\u064a\u0642","\u0633\u0643\u0631","\u0639\u0633\u0644","\u0632\u0628\u062f\u0629 \u063a\u064a\u0631 \u0645\u0645\u0644\u062d\u0629","\u062d\u0644\u064a\u0628 \u0645\u0643\u062b\u0641","\u0628\u064a\u0643\u0631\u0628\u0648\u0646\u0627\u062a \u0627\u0644\u0635\u0648\u062f\u0627","\u0632\u0628\u062f\u0629"],"ingredients_fr":["\u0152ufs","Farine","Sucre","Miel","Beurre non sal\u00e9","Lait concentr\u00e9","Bicarbonate de soude","Beurre"],"meta_description":"Order fresh Uzbek Honey Cake (Medovik) in Tetouan. Rich layered sponge with honey syrup and butter cream. 20 MAD per slice. Delivery & pickup available.","meta_title":"Uzbek Honey Cake (Medovik) \u2014 Layered Honey Cake | Samarkand Bakery","name":"Uzbek Honey Cake","name_ar":"\u0643\u064a\u0643\u0629 \u0627\u0644\u0639\u0633\u0644 \u0627\u0644\u0623\u0648\u0632\u0628\u0643\u064a\u0629","name_fr":"G\u00e2teau au Miel Ouzbek","nutrition":{"calories":"380 kcal","carbs":"42g","fat":"22g","fibre":"0.5g","protein":"6g"},"price":20.0},"veggie_pogaca":{"allergens":["gluten","eggs","dairy"],"allergens_ar":["\u062c\u0644\u0648\u062a\u064a\u0646","\u0628\u064a\u0636","\u0645\u0646\u062a\u062c\u0627\u062a \u0627\u0644\u0623\u0644\u0628\u0627\u0646"],"allergens_fr":["gluten","\u0153ufs","produits laitiers"],"cooking_method":"oven","cooking_method_ar":"\u0641\u0631\u0646","cooking_method_fr":"four","description":"A soft, golden Turkish pastry filled with a savoury mix of carrot, courgette, potato, peppers, onion and herbs. Oven baked to perfection.","description_ar":"\u0645\u0639\u062c\u0646\u0627\u062a \u062a\u0631\u0643\u064a\u0629 \u0630\u0647\u0628\u064a\u0629 \u0637\u0631\u064a\u0629 \u0645\u062d\u0634\u0648\u0629 \u0628\u0645\u0632\u064a\u062c \u0644\u0630\u064a\u0630 \u0645\u0646 \u0627\u0644\u062c\u0632\u0631 \u0648\u0627\u0644\u0643\u0648\u0633\u0627 \u0648\u0627\u0644\u0628\u0637\u0627\u0637\u0633 \u0648\u0627\u0644\u0641\u0644\u0641\u0644 \u0648\u0627\u0644\u0628\u0635\u0644 \u0648\u0627\u0644\u0623\u0639\u0634\u0627\u0628. \u0645\u062e\u0628\u0648\u0632\u0629 \u0641\u064a \u0627\u0644\u0641\u0631\u0646 \u062d\u062a\u0649 \u0627\u0644\u0643\u0645\u0627\u0644.","description_fr":"Une p\u00e2tisserie turque dor\u00e9e et moelleuse, garnie d'un m\u00e9lange savoureux de carotte, courgette, pomme de terre, poivrons, oignon et herbes. Cuite au four \u00e0 la perfection.","description_long":"Our Veggie Pogaca is a beloved Turkish filled bread roll, soft and pillowy on the inside with a golden crust on the outside. The dough is enriched with milk, yoghurt, and egg for a tender, brioche-like texture. The filling is a hearty mix of saut\u00e9ed carrot, courgette, potato, green and red bell peppers, and onion, seasoned with paprika, black pepper, and fresh parsley. Each pogaca is hand-shaped, filled generously, and baked until beautifully golden. Perfect as a snack, breakfast item, or alongside soups and salads.","description_long_ar":"\u0628\u0648\u063a\u0627\u062a\u0634\u0627 \u0627\u0644\u062e\u0636\u0627\u0631 \u0644\u062f\u064a\u0646\u0627 \u0647\u064a \u062e\u0628\u0632 \u0645\u062d\u0634\u0648 \u062a\u0631\u0643\u064a \u0645\u062d\u0628\u0648\u0628\u060c \u0637\u0631\u064a \u0648\u0645\u0646\u0641\u0648\u0634 \u0645\u0646 \u0627\u0644\u062f\u0627\u062e\u0644 \u0645\u0639 \u0642\u0634\u0631\u0629 \u0630\u0647\u0628\u064a\u0629 \u0645\u0646 \u0627\u0644\u062e\u0627\u0631\u062c. \u0627\u0644\u0639\u062c\u064a\u0646\u0629 \u063a\u0646\u064a\u0629 \u0628\u0627\u0644\u062d\u0644\u064a\u0628 \u0648\u0627\u0644\u0632\u0628\u0627\u062f\u064a \u0648\u0627\u0644\u0628\u064a\u0636 \u0644\u0642\u0648\u0627\u0645 \u0637\u0631\u064a \u0634\u0628\u064a\u0647 \u0628\u0627\u0644\u0628\u0631\u064a\u0648\u0634. \u0627\u0644\u062d\u0634\u0648\u0629 \u0645\u0632\u064a\u062c \u0634\u0647\u064a \u0645\u0646 \u0627\u0644\u062c\u0632\u0631 \u0648\u0627\u0644\u0643\u0648\u0633\u0627 \u0648\u0627\u0644\u0628\u0637\u0627\u0637\u0633 \u0648\u0627\u0644\u0641\u0644\u0641\u0644 \u0627\u0644\u0623\u062e\u0636\u0631 \u0648\u0627\u0644\u0623\u062d\u0645\u0631 \u0648\u0627\u0644\u0628\u0635\u0644 \u0627\u0644\u0645\u0642\u0644\u064a\u060c \u0645\u062a\u0628\u0644 \u0628\u0627\u0644\u0628\u0627\u0628\u0631\u064a\u0643\u0627 \u0648\u0627\u0644\u0641\u0644\u0641\u0644 \u0627\u0644\u0623\u0633\u0648\u062f \u0648\u0627\u0644\u0628\u0642\u062f\u0648\u0646\u0633 \u0627\u0644\u0637\u0627\u0632\u062c.","description_long_fr":"Notre Pogaca aux L\u00e9gumes est un petit pain fourr\u00e9 turc appr\u00e9ci\u00e9, moelleux \u00e0 l'int\u00e9rieur avec une cro\u00fbte dor\u00e9e \u00e0 l'ext\u00e9rieur. La p\u00e2te est enrichie de lait, yaourt et \u0153uf pour une texture tendre de type brioche. La garniture est un m\u00e9lange copieux de carotte, courgette, pomme de terre, poivrons verts et rouges, et oignon saut\u00e9s, assaisonn\u00e9s de paprika, poivre noir et persil frais.","image":"veggie_pogaca.jpeg","ingredients":["Flour","Egg","Milk","Yoghurt","Oil","Carrot","Courgette","Potato","Bell Pepper","Onion","Parsley","Yeast","Salt","Paprika","Black Pepper"],"ingredients_ar":["\u062f\u0642\u064a\u0642","\u0628\u064a\u0636","\u062d\u0644\u064a\u0628","\u0632\u0628\u0627\u062f\u064a","\u0632\u064a\u062a","\u062c\u0632\u0631","\u0643\u0648\u0633\u0627","\u0628\u0637\u0627\u0637\u0633","\u0641\u0644\u0641\u0644","\u0628\u0635\u0644","\u0628\u0642\u062f\u0648\u0646\u0633","\u062e\u0645\u064a\u0631\u0629","\u0645\u0644\u062d","\u0628\u0627\u0628\u0631\u064a\u0643\u0627","\u0641\u0644\u0641\u0644 \u0623\u0633\u0648\u062f"],"ingredients_fr":["Farine","\u0152uf","Lait","Yaourt","Huile","Carotte","Courgette","Pomme de terre","Poivron","Oignon","Persil","Levure","Sel","Paprika","Poivre noir"],"meta_description":"Order fresh Veggie Pogaca in Tetouan. Soft Turkish bread roll filled with carrot, courgette, potato and peppers. 10 MAD each. Delivery & pickup available.","meta_title":"Veggie Pogaca \u2014 Turkish Filled Bread Roll | Samarkand Bakery","name":"Veggie Pogaca","name_ar":"\u0628\u0648\u063a\u0627\u062a\u0634\u0627 \u0628\u0627\u0644\u062e\u0636\u0627\u0631","name_fr":"Pogaca aux L\u00e9gumes","nutrition":{"calories":"220 kcal","carbs":"30g","fat":"9g","fibre":"2g","protein":"5g"},"price":10.0},"walnut_fig_jam":{"allergens":["nuts"],"allergens_ar":["\u0645\u0643\u0633\u0631\u0627\u062a"],"allergens_fr":["fruits \u00e0 coque"],"cooking_method":"stovetop","cooking_method_ar":"\u0639\u0644\u0649 \u0627\u0644\u0645\u0648\u0642\u062f","cooking_method_fr":"cuisini\u00e8re","description":"A rich, naturally sweet jam made from dried figs and crushed walnuts. Perfect as a dip with our breads and pastries.","description_ar":"\u0645\u0631\u0628\u0649 \u063a\u0646\u064a\u0629 \u0648\u062d\u0644\u0648\u0629 \u0637\u0628\u064a\u0639\u064a\u0627\u064b \u0645\u0635\u0646\u0648\u0639\u0629 \u0645\u0646 \u0627\u0644\u062a\u064a\u0646 \u0627\u0644\u0645\u062c\u0641\u0641 \u0648\u0627\u0644\u062c\u0648\u0632 \u0627\u0644\u0645\u0643\u0633\u0631. \u0645\u062b\u0627\u0644\u064a\u0629 \u0643\u0645\u0642\u0628\u0644\u0629 \u0645\u0639 \u062e\u0628\u0632\u0646\u0627 \u0648\u0645\u0639\u062c\u0646\u0627\u062a\u0646\u0627.","description_fr":"Une confiture riche et naturellement sucr\u00e9e \u00e0 base de figues s\u00e9ch\u00e9es et de noix concass\u00e9es. Parfaite en accompagnement de nos pains et p\u00e2tisseries.","description_long":"Our Walnut & Fig Jam is a rustic, wholesome spread inspired by Central Asian and Mediterranean traditions. Dried figs are gently simmered with water and a touch of sugar until they break down into a thick, luscious jam, then folded through with coarsely crushed walnuts for texture and depth. The natural sweetness of the figs pairs beautifully with the earthy, slightly bitter crunch of the walnuts. Served in a small 60g pot \u2014 the perfect companion to our Uzbek Bread, Turkish Bread, or Simit.","description_long_ar":"\u0645\u0631\u0628\u0649 \u0627\u0644\u062c\u0648\u0632 \u0648\u0627\u0644\u062a\u064a\u0646 \u0644\u062f\u064a\u0646\u0627 \u0647\u064a \u0645\u0631\u0628\u0649 \u0631\u064a\u0641\u064a\u0629 \u0635\u062d\u064a\u0629 \u0645\u0633\u062a\u0648\u062d\u0627\u0629 \u0645\u0646 \u062a\u0642\u0627\u0644\u064a\u062f \u0622\u0633\u064a\u0627 \u0627\u0644\u0648\u0633\u0637\u0649 \u0648\u0627\u0644\u0628\u062d\u0631 \u0627\u0644\u0645\u062a\u0648\u0633\u0637. \u064a\u064f\u0637\u0647\u0649 \u0627\u0644\u062a\u064a\u0646 \u0627\u0644\u0645\u062c\u0641\u0641 \u0628\u0631\u0641\u0642 \u0645\u0639 \u0627\u0644\u0645\u0627\u0621 \u0648\u0644\u0645\u0633\u0629 \u0645\u0646 \u0627\u0644\u0633\u0643\u0631 \u062d\u062a\u0649 \u064a\u062a\u062d\u0648\u0644 \u0625\u0644\u0649 \u0645\u0631\u0628\u0649 \u0633\u0645\u064a\u0643\u0629 \u0648\u0641\u0627\u062e\u0631\u0629\u060c \u062b\u0645 \u064a\u064f\u062e\u0644\u0637 \u0645\u0639 \u0627\u0644\u062c\u0648\u0632 \u0627\u0644\u0645\u0643\u0633\u0631 \u0628\u0634\u0643\u0644 \u062e\u0634\u0646 \u0644\u0644\u0642\u0648\u0627\u0645 \u0648\u0627\u0644\u0639\u0645\u0642. \u062a\u0642\u062f\u0645 \u0641\u064a \u0648\u0639\u0627\u0621 \u0635\u063a\u064a\u0631 60 \u062c\u0645.","description_long_fr":"Notre Confiture de Noix & Figues est une tartinade rustique et saine inspir\u00e9e des traditions d'Asie centrale et de la M\u00e9diterran\u00e9e. Les figues s\u00e9ch\u00e9es sont doucement mijot\u00e9es avec de l'eau et une touche de sucre jusqu'\u00e0 ce qu'elles se transforment en une confiture \u00e9paisse et onctueuse, puis m\u00e9lang\u00e9es avec des noix grossi\u00e8rement concass\u00e9es pour la texture. Servie en petit pot de 60g.","image":"walnut_fig_jam.jpg","ingredients":["Dried Figs","Walnuts","Sugar","Water"],"ingredients_ar":["\u062a\u064a\u0646 \u0645\u062c\u0641\u0641","\u062c\u0648\u0632","\u0633\u0643\u0631","\u0645\u0627\u0621"],"ingredients_fr":["Figues s\u00e9ch\u00e9es","Noix","Sucre","Eau"],"meta_description":"Order Walnut & Fig Jam in Tetouan. Naturally sweet dried fig jam with crushed walnuts. 7 MAD per pot. Perfect with bread. Delivery & pickup available.","meta_title":"Walnut & Fig Jam \u2014 Natural Fruit Dip | Samarkand Bakery","name":"Walnut & Fig Jam","name_ar":"\u0645\u0631\u0628\u0649 \u0627\u0644\u062c\u0648\u0632 \u0648\u0627\u0644\u062a\u064a\u0646","name_fr":"Confiture de Noix & Figues","nutrition":{"calories":"95 kcal","carbs":"16g","fat":"3g","fibre":"2g","protein":"1.5g"},"price":10.0}}}
+{
+  "allergen_notice": "Our products are prepared in a home kitchen where allergens including gluten, dairy, eggs, and sesame are present. Cross-contamination may occur. If you have a severe allergy, please contact us before ordering. Nutritional values are approximate estimates and may vary.",
+  "allergen_notice_ar": "منتجاتنا محضرة في مطبخ منزلي حيث توجد مسببات الحساسية بما في ذلك الغلوتين ومنتجات الألبان والبيض والسمسم. قد يحدث تلوث متقاطع. إذا كانت لديك حساسية شديدة، يرجى الاتصال بنا قبل الطلب. القيم الغذائية تقديرات تقريبية وقد تختلف.",
+  "allergen_notice_fr": "Nos produits sont préparés dans une cuisine domestique où des allergènes tels que le gluten, les produits laitiers, les œufs et le sésame sont présents. Une contamination croisée peut survenir. Si vous avez une allergie sévère, veuillez nous contacter avant de commander. Les valeurs nutritionnelles sont des estimations approximatives et peuvent varier.",
+  "categories": [
+    {
+      "name": "Samsa & Pies",
+      "name_ar": "سمسا وفطائر",
+      "name_fr": "Samsa & Tourtes",
+      "product_keys": [
+        "meat_samsa",
+        "chicken_samsa",
+        "ochiq_samsa",
+        "veggie_pogaca",
+        "cheese_pogaca",
+        "chicken_spinach_borek",
+        "black_olive_knots"
+      ]
+    },
+    {
+      "name": "Flatbreads & Turnovers",
+      "name_ar": "خبز مسطح ومقليات",
+      "name_fr": "Galettes & Chaussons",
+      "product_keys": [
+        "cheburek_potato",
+        "cheburek_meat",
+        "turkish_simit"
+      ]
+    },
+    {
+      "name": "Pide",
+      "name_ar": "بيدا",
+      "name_fr": "Pide",
+      "product_keys": [
+        "pide_minced_beef",
+        "pide_cheese_spinach",
+        "pide_cheese_sausage"
+      ]
+    },
+    {
+      "name": "Breads",
+      "name_ar": "خبز",
+      "name_fr": "Pains",
+      "product_keys": [
+        "uzbek_bread",
+        "turkish_bread",
+        "olive_buns"
+      ]
+    },
+    {
+      "name": "Cakes & Desserts",
+      "name_ar": "كيك وحلويات",
+      "name_fr": "Gâteaux & Desserts",
+      "product_keys": [
+        "uzbek_honey_cake",
+        "tres_leches_cake"
+      ]
+    },
+    {
+      "name": "Sides & Dips",
+      "name_ar": "مقبلات وصلصات",
+      "name_fr": "Accompagnements",
+      "product_keys": [
+        "turkish_ezme",
+        "walnut_fig_jam",
+        "cheese_garlic_herb_dip"
+      ]
+    }
+  ],
+  "products": {
+    "black_olive_knots": {
+      "allergens": [
+        "gluten",
+        "eggs",
+        "dairy"
+      ],
+      "allergens_ar": [
+        "جلوتين",
+        "بيض",
+        "منتجات الالبان"
+      ],
+      "allergens_fr": [
+        "gluten",
+        "oeufs",
+        "produits laitiers"
+      ],
+      "cooking_method": "oven",
+      "cooking_method_ar": "فرن",
+      "cooking_method_fr": "four",
+      "description": "Soft pogaca dough rolled thin, spread with homemade black olive paste, rolled into a log and knotted into a beautiful bun. Oven baked to golden perfection.",
+      "description_ar": "عجينة بوغاتشا طرية مفرودة رقيقة، مدهونة بمعجون الزيتون الاسود المنزلي، ملفوفة ومعقودة على شكل كعكة جميلة. مخبوزة في الفرن حتى تصبح ذهبية.",
+      "description_fr": "Pate de pogaca moelleuse etalee finement, tartinee de pate d'olives noires maison, roulee en boudin et nouee en un joli petit pain. Cuit au four jusqu'a perfection doree.",
+      "description_long": "Our Black Olive Knots start with the same soft, enriched pogaca dough made with flour, milk, yoghurt, and egg. Each ball of dough is rolled out into a thin circle and spread with a light homemade black olive paste — simply black olives blended with a touch of olive oil for a smooth, savoury spread. The circle is then rolled up tightly into a log and tied into an elegant knot before baking. The result is a beautifully shaped bun with swirls of olive paste running through the soft, fluffy bread. Perfect as a snack, with breakfast, or alongside soups and dips.",
+      "description_long_ar": "عقد الزيتون الاسود لدينا تبدا بنفس عجينة البوغاتشا الطرية الغنية. كل كرة عجين تفرد على شكل دائرة رقيقة وتدهن بمعجون الزيتون الاسود المنزلي الخفيف. ثم تلف بإحكام على شكل اسطوانة وتعقد على شكل عقدة انيقة قبل الخبز. النتيجة هي كعكة جميلة الشكل مع لفائف من معجون الزيتون عبر الخبز الطري.",
+      "description_long_fr": "Nos Noeuds aux Olives Noires commencent avec la meme pate de pogaca moelleuse et enrichie. Chaque boule est etalee en un cercle fin et tartinee d'une pate d'olives noires maison legere. Le cercle est ensuite roule en boudin et noue en un noeud elegant avant la cuisson. Le resultat est un petit pain joliment forme avec des spirales de pate d'olive a travers le pain moelleux.",
+      "draft": true,
+      "image": "pogaca.png",
+      "ingredients": [
+        "Flour",
+        "Black Olives",
+        "Olive Oil",
+        "Egg",
+        "Milk",
+        "Yoghurt",
+        "Vegetable Oil",
+        "Yeast",
+        "Sugar",
+        "Salt"
+      ],
+      "ingredients_ar": [
+        "دقيق",
+        "زيتون اسود",
+        "زيت زيتون",
+        "بيض",
+        "حليب",
+        "زبادي",
+        "زيت نباتي",
+        "خميرة",
+        "سكر",
+        "ملح"
+      ],
+      "ingredients_fr": [
+        "Farine",
+        "Olives noires",
+        "Huile d'olive",
+        "Oeuf",
+        "Lait",
+        "Yaourt",
+        "Huile vegetale",
+        "Levure",
+        "Sucre",
+        "Sel"
+      ],
+      "meta_description": "Order fresh Black Olive Knots in Tetouan. Soft pogaca dough knotted with homemade black olive paste. 5 MAD each. Delivery and pickup available.",
+      "meta_title": "Black Olive Pogaca — Olive Swirl Bread Rolls | Samarkand Bakery",
+      "name": "Black Olive Pogaca",
+      "name_ar": "بوغاتشا بالزيتون الاسود",
+      "name_fr": "Pogaca aux Olives Noires",
+      "nutrition": {
+        "calories": "180 kcal",
+        "carbs": "24g",
+        "fat": "7g",
+        "fibre": "1.5g",
+        "protein": "4g"
+      },
+      "price": 5.0
+    },
+    "cheburek_meat": {
+      "allergens": [
+        "Gluten (wheat)"
+      ],
+      "allergens_ar": [
+        "غلوتين (قمح)"
+      ],
+      "allergens_fr": [
+        "Gluten (blé)"
+      ],
+      "cooking_method": "Deep fried",
+      "cooking_method_ar": "مقلي",
+      "cooking_method_fr": "Frit",
+      "description": "Savoury deep fried pies filled with a juicy minced meat and onion filling.",
+      "description_ar": "فطائر مقلية محشوة بحشوة لحم مفروم وبصل غنية.",
+      "description_fr": "Des chaussons frits garnis d'une farce juteuse de viande hachée et d'oignons.",
+      "description_long": "The classic Cheburek features a thin, hand-rolled dough filled with seasoned minced beef and onions, then deep fried until the pastry turns golden and irresistibly crispy. The filling stays juicy inside the crispy shell, seasoned with cumin, paprika, and fresh parsley. A traditional street food favourite from Uzbekistan.",
+      "description_long_ar": "الشيبوريك الكلاسيكي يتميز بعجينة رقيقة مفرودة يدوياً محشوة بلحم بقري مفروم متبل وبصل، ثم مقلية حتى تصبح ذهبية ومقرمشة بشكل لا يقاوم. الحشوة تبقى طرية داخل القشرة المقرمشة. طعام شارع تقليدي محبوب من أوزبكستان.",
+      "description_long_fr": "Le Cheburek classique présente une pâte fine roulée à la main, garnie de bœuf haché assaisonné et d'oignons, puis frit jusqu'à ce que la pâte devienne dorée et irrésistiblement croustillante. La garniture reste juteuse à l'intérieur de la coque croustillante. Un favori de la cuisine de rue traditionnelle d'Ouzbékistan.",
+      "image": "cheburek_meat.jpg",
+      "ingredients": [
+        "Wheat flour",
+        "Minced beef",
+        "Onions",
+        "Salt",
+        "Black pepper",
+        "Cumin",
+        "Paprika",
+        "Fresh parsley",
+        "Vegetable oil (for frying)"
+      ],
+      "ingredients_ar": [
+        "دقيق القمح",
+        "لحم بقري مفروم",
+        "بصل",
+        "ملح",
+        "فلفل أسود",
+        "كمون",
+        "بابريكا",
+        "بقدونس طازج",
+        "زيت نباتي (للقلي)"
+      ],
+      "ingredients_fr": [
+        "Farine de blé",
+        "Bœuf haché",
+        "Oignons",
+        "Sel",
+        "Poivre noir",
+        "Cumin",
+        "Paprika",
+        "Persil frais",
+        "Huile végétale (pour friture)"
+      ],
+      "may_contain": [],
+      "name": "Cheburek (Meat)",
+      "name_ar": "شيبوريك (لحم)",
+      "name_fr": "Cheburek (Viande)",
+      "nutrition": {
+        "calories": 295,
+        "carbs": 22,
+        "fat": 18,
+        "fibre": 1,
+        "protein": 13,
+        "serving": "1 piece (~85g)",
+        "serving_ar": "قطعة واحدة (~85 غ)",
+        "serving_fr": "1 pièce (~85g)"
+      },
+      "price": 18.0,
+      "recommended": [
+        "turkish_ezme",
+        "cheese_garlic_herb_dip"
+      ]
+    },
+    "cheburek_potato": {
+      "allergens": [
+        "Gluten (wheat)",
+        "Dairy (butter)"
+      ],
+      "allergens_ar": [
+        "غلوتين (قمح)",
+        "منتجات الألبان (زبدة)"
+      ],
+      "allergens_fr": [
+        "Gluten (blé)",
+        "Produits laitiers (beurre)"
+      ],
+      "cooking_method": "Deep fried",
+      "cooking_method_ar": "مقلي",
+      "cooking_method_fr": "Frit",
+      "description": "Savoury deep fried pies filled with a juicy potato and onion filling, seasoned with cumin and paprika.",
+      "description_ar": "فطائر مقلية محشوة بحشوة بطاطس وبصل غنية، متبلة بالكمون والبابريكا.",
+      "description_fr": "Des chaussons frits garnis d'une farce juteuse de pommes de terre et d'oignons, assaisonnés au cumin et au paprika.",
+      "description_long": "Cheburek is a beloved deep-fried turnover found across Central Asia and the Caucasus. Our potato version features a thin, crispy dough filled with a seasoned mixture of potato, onions, butter, cumin, paprika, and fresh parsley. Deep fried until the pastry is golden and bubbly with a satisfying crunch. A delicious vegetarian option.",
+      "description_long_ar": "الشيبوريك هو فطيرة مقلية محبوبة في جميع أنحاء آسيا الوسطى والقوقاز. نسختنا بالبطاطس تتميز بعجينة رقيقة ومقرمشة محشوة بخليط متبل من البطاطس والبصل والزبدة والكمون والبابريكا والبقدونس الطازج. مقلية حتى تصبح ذهبية ومقرمشة. خيار نباتي لذيذ.",
+      "description_long_fr": "Le Cheburek est un chausson frit populaire dans toute l'Asie Centrale et le Caucase. Notre version aux pommes de terre présente une pâte fine et croustillante garnie d'un mélange assaisonné de pommes de terre, oignons, beurre, cumin, paprika et persil frais. Frit jusqu'à ce que la pâte soit dorée et croustillante. Une délicieuse option végétarienne.",
+      "dietary": [
+        "Vegetarian"
+      ],
+      "image": "cheburek.png",
+      "ingredients": [
+        "Wheat flour",
+        "Potato",
+        "Butter",
+        "Onions",
+        "Salt",
+        "Black pepper",
+        "Cumin",
+        "Paprika",
+        "Fresh parsley",
+        "Vegetable oil (for frying)"
+      ],
+      "ingredients_ar": [
+        "دقيق القمح",
+        "بطاطس",
+        "زبدة",
+        "بصل",
+        "ملح",
+        "فلفل أسود",
+        "كمون",
+        "بابريكا",
+        "بقدونس طازج",
+        "زيت نباتي (للقلي)"
+      ],
+      "ingredients_fr": [
+        "Farine de blé",
+        "Pomme de terre",
+        "Beurre",
+        "Oignons",
+        "Sel",
+        "Poivre noir",
+        "Cumin",
+        "Paprika",
+        "Persil frais",
+        "Huile végétale (pour friture)"
+      ],
+      "may_contain": [],
+      "name": "Cheburek (Potato)",
+      "name_ar": "شيبوريك (بطاطس)",
+      "name_fr": "Cheburek (Pomme de Terre)",
+      "nutrition": {
+        "calories": 220,
+        "carbs": 26,
+        "fat": 12,
+        "fibre": 2,
+        "protein": 4,
+        "serving": "1 piece (~80g)",
+        "serving_ar": "قطعة واحدة (~80 غ)",
+        "serving_fr": "1 pièce (~80g)"
+      },
+      "price": 10.0,
+      "recommended": [
+        "turkish_ezme",
+        "cheese_garlic_herb_dip"
+      ],
+      "videos": [
+        "cheburek_potato.mp4"
+      ]
+    },
+    "cheese_garlic_herb_dip": {
+      "allergens": [
+        "dairy"
+      ],
+      "allergens_ar": [
+        "منتجات الالبان"
+      ],
+      "allergens_fr": [
+        "produits laitiers"
+      ],
+      "cooking_method": "fresh",
+      "cooking_method_ar": "طازج",
+      "cooking_method_fr": "frais",
+      "description": "A creamy blend of soured cream and labneh with garlic, spring onion, dried herbs and a hint of red pepper flakes. Perfect for dipping.",
+      "description_ar": "مزيج كريمي من الكريمة الحامضة واللبنة مع الثوم والبصل الاخضر والاعشاب المجففة ولمسة من رقائق الفلفل الاحمر. مثالي للغمس.",
+      "description_fr": "Un melange cremeux de creme aigre et de labneh avec de l'ail, de l'oignon vert, des herbes sechees et une pointe de flocons de piment rouge. Parfait pour tremper.",
+      "description_long": "Our Cheese, Garlic and Herb Dip is a rich, creamy dip made with soured cream and labneh (Jibn Jebli) as the base, infused with freshly grated garlic, finely chopped spring onion, aromatic dried mixed herbs, and a gentle sprinkle of red pepper flakes for a subtle warmth. Served in a small pot — the perfect accompaniment to our Cheburek, Pogaca, Samsa, and breads.",
+      "description_long_ar": "صلصة الجبنة والثوم والاعشاب لدينا هي صلصة كريمية غنية مصنوعة من الكريمة الحامضة واللبنة كقاعدة، منكهة بالثوم المبشور الطازج والبصل الاخضر المفروم ناعماً والاعشاب المجففة العطرية ورشة خفيفة من رقائق الفلفل الاحمر. تقدم في وعاء صغير.",
+      "description_long_fr": "Notre Dip Fromage, Ail et Herbes est une sauce cremieuse et riche a base de creme aigre et de labneh, infusee d'ail fraichement rape, d'oignon vert finement hache, d'herbes sechees aromatiques et d'une legere pincee de flocons de piment rouge. Servie en petit pot — l'accompagnement parfait pour nos Cheburek, Pogaca, Samsa et pains.",
+      "image": "cheese_garlic_herb_dip.jpg",
+      "ingredients": [
+        "Soured Cream",
+        "Labneh",
+        "Garlic",
+        "Spring Onion",
+        "Dried Mixed Herbs",
+        "Red Pepper Flakes"
+      ],
+      "ingredients_ar": [
+        "كريمة حامضة",
+        "لبنة",
+        "ثوم",
+        "بصل اخضر",
+        "اعشاب مجففة",
+        "رقائق فلفل احمر"
+      ],
+      "ingredients_fr": [
+        "Creme aigre",
+        "Labneh",
+        "Ail",
+        "Oignon vert",
+        "Herbes sechees",
+        "Flocons de piment"
+      ],
+      "meta_description": "Order Cheese, Garlic and Herb Dip in Tetouan. Creamy soured cream and labneh dip with garlic, spring onion and herbs. 8 MAD per pot.",
+      "meta_title": "Cheese, Garlic & Herb Dip — Creamy Dipping Sauce | Samarkand Bakery",
+      "name": "Cheese, Garlic & Herb Dip",
+      "name_ar": "صلصة الجبنة والثوم والأعشاب",
+      "name_fr": "Dip Fromage, Ail et Herbes",
+      "nutrition": {
+        "calories": "85 kcal",
+        "carbs": "2g",
+        "fat": "8g",
+        "fibre": "0g",
+        "protein": "2g"
+      },
+      "price": 8.0
+    },
+    "cheese_pogaca": {
+      "allergens": [
+        "gluten",
+        "eggs",
+        "dairy"
+      ],
+      "allergens_ar": [
+        "جلوتين",
+        "بيض",
+        "منتجات الالبان"
+      ],
+      "allergens_fr": [
+        "gluten",
+        "oeufs",
+        "produits laitiers"
+      ],
+      "cooking_method": "oven",
+      "cooking_method_ar": "فرن",
+      "cooking_method_fr": "four",
+      "description": "A soft, golden Turkish pastry filled with melted mozzarella, creamy labneh, garlic, spring onion and herbs. Oven baked to perfection.",
+      "description_ar": "معجنات تركية ذهبية طرية محشوة بالموزاريلا الذائبة واللبنة الكريمية والثوم والبصل الاخضر والاعشاب. مخبوزة في الفرن حتى الكمال.",
+      "description_fr": "Une patisserie turque doree et moelleuse, garnie de mozzarella fondue, de labneh cremeux, d'ail, d'oignon vert et d'herbes. Cuite au four a la perfection.",
+      "description_long": "Our Cheese Pogaca is a Turkish filled bread roll with a rich, savoury cheese filling. The soft, pillowy dough enriched with milk, yoghurt, and egg wraps around a generous filling of grated mozzarella and creamy labneh (Jibn Jebli), seasoned with grated garlic, chopped spring onion, dried mixed herbs, and a sprinkle of red pepper flakes for gentle warmth. Each pogaca is hand-shaped and baked until golden, with the cheese melting into a deliciously gooey centre. Perfect for breakfast, snacking, or as a side with soups.",
+      "description_long_ar": "بوغاتشا الجبنة لدينا هي خبز محشو تركي بحشوة جبنة غنية ولذيذة. العجينة الطرية الغنية بالحليب والزبادي والبيض تلف حشوة سخية من الموزاريلا المبشورة واللبنة الكريمية، متبلة بالثوم المبشور والبصل الاخضر المفروم والاعشاب المجففة المشكلة ورشة من رقائق الفلفل الاحمر.",
+      "description_long_fr": "Notre Pogaca au Fromage est un petit pain fourre turc avec une garniture de fromage riche et savoureuse. La pate moelleuse enrichie de lait, yaourt et oeuf enveloppe une genereuse garniture de mozzarella rapee et de labneh cremeux, assaisonnee d'ail rape, d'oignon vert hache, d'herbes sechees melangees et d'une pincee de flocons de piment rouge.",
+      "image": "pogaca.png",
+      "ingredients": [
+        "Flour",
+        "Egg",
+        "Milk",
+        "Yoghurt",
+        "Oil",
+        "Mozzarella",
+        "Labneh",
+        "Garlic",
+        "Spring Onion",
+        "Dried Mixed Herbs",
+        "Red Pepper Flakes",
+        "Yeast",
+        "Salt",
+        "Sugar"
+      ],
+      "ingredients_ar": [
+        "دقيق",
+        "بيض",
+        "حليب",
+        "زبادي",
+        "زيت",
+        "موزاريلا",
+        "لبنة",
+        "ثوم",
+        "بصل اخضر",
+        "اعشاب مجففة",
+        "رقائق فلفل احمر",
+        "خميرة",
+        "ملح",
+        "سكر"
+      ],
+      "ingredients_fr": [
+        "Farine",
+        "Oeuf",
+        "Lait",
+        "Yaourt",
+        "Huile",
+        "Mozzarella",
+        "Labneh",
+        "Ail",
+        "Oignon vert",
+        "Herbes sechees",
+        "Flocons de piment",
+        "Levure",
+        "Sel",
+        "Sucre"
+      ],
+      "meta_description": "Order fresh Cheese Pogaca in Tetouan. Soft Turkish bread roll filled with mozzarella, labneh, garlic and herbs. 10 MAD each. Delivery and pickup available.",
+      "meta_title": "Cheese Pogaca — Turkish Cheese Filled Bread Roll | Samarkand Bakery",
+      "name": "Cheese Pogaca",
+      "name_ar": "بوغاتشا بالجبنة",
+      "name_fr": "Pogaca au Fromage",
+      "nutrition": {
+        "calories": "240 kcal",
+        "carbs": "28g",
+        "fat": "11g",
+        "fibre": "1g",
+        "protein": "8g"
+      },
+      "price": 10.0
+    },
+    "chicken_samsa": {
+      "allergens": [
+        "Gluten (wheat)",
+        "Dairy (butter)"
+      ],
+      "allergens_ar": [
+        "غلوتين (قمح)",
+        "منتجات الألبان (زبدة)"
+      ],
+      "allergens_fr": [
+        "Gluten (blé)",
+        "Produits laitiers (beurre)"
+      ],
+      "cooking_method": "Oven baked",
+      "cooking_method_ar": "مخبوز في الفرن",
+      "cooking_method_fr": "Cuit au four",
+      "description": "Chicken meat, sliced carrot & onions are perfectly seasoned and wrapped in homemade flaky, golden puff pastry, creating a delicious savoury chicken pie.",
+      "description_ar": "لحم دجاج وجزر مقطع وبصل متبل بشكل مثالي وملفوف في عجينة بف باستري ذهبية مقرمشة محضرة منزلياً.",
+      "description_fr": "Du poulet, des carottes tranchées et des oignons parfaitement assaisonnés, enveloppés dans une pâte feuilletée maison dorée et croustillante.",
+      "description_long": "Our Chicken Samsa features tender chicken fillet with finely sliced carrots and onions, all perfectly seasoned and encased in our signature hand-made flaky puff pastry. Oven baked to a beautiful golden colour, each samsa delivers a lighter alternative to the meat version while being equally satisfying.",
+      "description_long_ar": "سمسا الدجاج لدينا تتميز بفيليه دجاج طري مع جزر مقطع ناعم وبصل، الكل متبل بشكل مثالي وملفوف في عجينتنا المميزة المقرمشة. مخبوزة حتى تصبح ذهبية اللون، بديل أخف لنسخة اللحم مع نفس المتعة.",
+      "description_long_fr": "Notre Samsa au Poulet est préparée avec du filet de poulet tendre, des carottes finement tranchées et des oignons, le tout parfaitement assaisonné et enveloppé dans notre pâte feuilletée maison. Cuite au four jusqu'à obtenir une belle couleur dorée, c'est une alternative plus légère mais tout aussi savoureuse.",
+      "image": "chicken_samsa.jpeg",
+      "ingredients": [
+        "Wheat flour",
+        "Salted butter",
+        "Chicken fillet",
+        "Onions",
+        "Salt",
+        "Cumin",
+        "Coriander",
+        "Black pepper"
+      ],
+      "ingredients_ar": [
+        "دقيق القمح",
+        "زبدة مملحة",
+        "فيليه دجاج",
+        "بصل",
+        "ملح",
+        "كمون",
+        "كزبرة",
+        "فلفل أسود"
+      ],
+      "ingredients_fr": [
+        "Farine de blé",
+        "Beurre salé",
+        "Filet de poulet",
+        "Oignons",
+        "Sel",
+        "Cumin",
+        "Coriandre",
+        "Poivre noir"
+      ],
+      "may_contain": [
+        "Sesame"
+      ],
+      "may_contain_ar": [
+        "سمسم"
+      ],
+      "may_contain_fr": [
+        "Sésame"
+      ],
+      "name": "Chicken Samsa",
+      "name_ar": "سمسا بالدجاج",
+      "name_fr": "Samsa au Poulet",
+      "nutrition": {
+        "calories": 248,
+        "carbs": 24,
+        "fat": 11,
+        "fibre": 1,
+        "protein": 14,
+        "serving": "1 piece (~90g)",
+        "serving_ar": "قطعة واحدة (~90 غ)",
+        "serving_fr": "1 pièce (~90g)"
+      },
+      "price": 15.0,
+      "videos": [
+        "shared_samsa_olives.mp4",
+        "chicken_samsa.mp4"
+      ]
+    },
+    "chicken_spinach_borek": {
+      "allergens": [
+        "gluten",
+        "dairy"
+      ],
+      "allergens_ar": [
+        "جلوتين",
+        "منتجات الالبان"
+      ],
+      "allergens_fr": [
+        "gluten",
+        "produits laitiers"
+      ],
+      "cooking_method": "oven",
+      "cooking_method_ar": "فرن",
+      "cooking_method_fr": "four",
+      "description": "A large, golden baked Turkish borek layered with seasoned chicken, spinach, and melted mozzarella. Serves the whole family.",
+      "description_ar": "بورك تركي كبير ذهبي مخبوز بطبقات من الدجاج المتبل والسبانخ والموزاريلا الذائبة. يكفي لجميع افراد العائلة.",
+      "description_fr": "Un grand borek turc dore, garni de couches de poulet assaisonne, d'epinards et de mozzarella fondue. Pour toute la famille.",
+      "description_long": "Our Chicken and Spinach Borek is a show-stopping Turkish baked pastry, perfect for sharing. Thin, handmade dough layers are filled with tender chicken breast cooked with onion, garlic, and a squeeze of lemon, combined with spinach and seasoned with paprika and black pepper. Each layer is brushed with melted butter and topped with grated mozzarella cheese that melts into golden, gooey perfection. Baked for 30 minutes until the top is crispy and golden while the inside stays soft and flavourful. Sold as one large borek — ideal for family gatherings, weekend meals, or special occasions.",
+      "description_long_ar": "بورك الدجاج والسبانخ لدينا هو معجنات تركية مخبوزة رائعة مثالية للمشاركة. طبقات رقيقة من العجين المصنوع يدوياً محشوة بصدر دجاج طري مطبوخ مع البصل والثوم وعصير الليمون ممزوج بالسبانخ ومتبل بالبابريكا والفلفل الاسود. كل طبقة مدهونة بالزبدة الذائبة ومغطاة بالموزاريلا المبشورة. يخبز لمدة 30 دقيقة. يباع كبورك كبير واحد — مثالي لتجمعات العائلة.",
+      "description_long_fr": "Notre Borek au Poulet et Epinards est une patisserie turque impressionnante, parfaite pour le partage. Des couches de pate fine faites a la main sont garnies de blanc de poulet tendre cuit avec de l'oignon, de l'ail et un filet de citron, combines avec des epinards et assaisonnes de paprika et de poivre noir. Chaque couche est badigeonnee de beurre fondu et garnie de mozzarella rapee. Cuit pendant 30 minutes. Vendu en un grand borek — ideal pour les repas en famille.",
+      "image": "chicken_spinach_borek.jpg",
+      "ingredients": [
+        "Flour",
+        "Chicken Breast",
+        "Spinach",
+        "Mozzarella",
+        "Onion",
+        "Garlic",
+        "Lemon",
+        "Butter",
+        "Salt",
+        "Black Pepper",
+        "Paprika"
+      ],
+      "ingredients_ar": [
+        "دقيق",
+        "صدر دجاج",
+        "سبانخ",
+        "موزاريلا",
+        "بصل",
+        "ثوم",
+        "ليمون",
+        "زبدة",
+        "ملح",
+        "فلفل اسود",
+        "بابريكا"
+      ],
+      "ingredients_fr": [
+        "Farine",
+        "Blanc de poulet",
+        "Epinards",
+        "Mozzarella",
+        "Oignon",
+        "Ail",
+        "Citron",
+        "Beurre",
+        "Sel",
+        "Poivre noir",
+        "Paprika"
+      ],
+      "meta_description": "Order a large Chicken and Spinach Borek in Tetouan. Layered Turkish pastry with chicken, spinach, and melted mozzarella. 80 MAD. Delivery and pickup available.",
+      "meta_title": "Chicken & Spinach Borek — Large Turkish Baked Pastry | Samarkand Bakery",
+      "name": "Chicken & Spinach Borek",
+      "name_ar": "بورك بالدجاج والسبانخ",
+      "name_fr": "Borek au Poulet et Epinards",
+      "nutrition": {
+        "calories": "320 kcal",
+        "carbs": "28g",
+        "fat": "15g",
+        "fibre": "2g",
+        "protein": "18g"
+      },
+      "price": 85.0,
+      "videos": [
+        "chicken_spinach_borek.mp4"
+      ]
+    },
+    "meat_samsa": {
+      "allergens": [
+        "Gluten (wheat)",
+        "Dairy (butter)"
+      ],
+      "allergens_ar": [
+        "غلوتين (قمح)",
+        "منتجات الألبان (زبدة)"
+      ],
+      "allergens_fr": [
+        "Gluten (blé)",
+        "Produits laitiers (beurre)"
+      ],
+      "cooking_method": "Oven baked",
+      "cooking_method_ar": "مخبوز في الفرن",
+      "cooking_method_fr": "Cuit au four",
+      "description": "A juicy minced meat & onion filling enveloped with a crunchy puff pastry to create these delicious oven-baked meat pies.\r\n\r\nA juicy minced meat & onion filling enveloped with a crunchy puff pastry to create these delicious oven-baked meat pies.",
+      "description_ar": "حشوة لحم مفروم وبصل غنية بالنكهة ملفوفة في عجينة بف باستري مقرمشة لصنع هذه الفطائر اللذيذة المخبوزة في الفرن.",
+      "description_fr": "Une garniture juteuse de viande hachée et d'oignons enveloppée dans une pâte feuilletée croustillante pour créer ces délicieuses tourtes cuites au four.",
+      "description_long": "Our signature Meat Samsa is a traditional Uzbek pastry made with layers of flaky, buttery puff pastry wrapped around a savoury filling of seasoned minced beef and onions. Each samsa is hand-shaped and oven-baked until golden and crispy. The filling is seasoned with cumin, coriander, and black pepper for an authentic Central Asian flavour.",
+      "description_long_ar": "السمسا المميزة لدينا هي معجنات أوزبكية تقليدية مصنوعة من طبقات من عجينة البف باستري المقرمشة ملفوفة حول حشوة لذيذة من اللحم البقري المفروم المتبل والبصل. كل سمسا مشكلة يدوياً ومخبوزة حتى تصبح ذهبية ومقرمشة. الحشوة متبلة بالكمون والكزبرة والفلفل الأسود لنكهة آسيوية وسطى أصيلة.",
+      "description_long_fr": "Notre Samsa signature est une pâtisserie ouzbèke traditionnelle faite de couches de pâte feuilletée beurrée enveloppant une garniture savoureuse de bœuf haché assaisonné et d'oignons. Chaque samsa est façonnée à la main et cuite au four jusqu'à obtenir une couleur dorée et croustillante. La garniture est assaisonnée au cumin, coriandre et poivre noir pour un goût authentique d'Asie Centrale.",
+      "image": "meat_samsa.jpg",
+      "ingredients": [
+        "Wheat flour",
+        "Salted butter",
+        "Minced beef",
+        "Onions",
+        "Salt",
+        "Cumin",
+        "Coriander",
+        "Black pepper"
+      ],
+      "ingredients_ar": [
+        "دقيق القمح",
+        "زبدة مملحة",
+        "لحم بقري مفروم",
+        "بصل",
+        "ملح",
+        "كمون",
+        "كزبرة",
+        "فلفل أسود"
+      ],
+      "ingredients_fr": [
+        "Farine de blé",
+        "Beurre salé",
+        "Bœuf haché",
+        "Oignons",
+        "Sel",
+        "Cumin",
+        "Coriandre",
+        "Poivre noir"
+      ],
+      "may_contain": [
+        "Sesame"
+      ],
+      "may_contain_ar": [
+        "سمسم"
+      ],
+      "may_contain_fr": [
+        "Sésame"
+      ],
+      "meta_description": "",
+      "meta_title": "",
+      "name": "Meat Samsa",
+      "name_ar": "سمسا باللحم",
+      "name_fr": "Samsa à la Viande",
+      "nutrition": {
+        "calories": 285,
+        "carbs": 24,
+        "fat": 16,
+        "fibre": 1,
+        "protein": 12,
+        "serving": "1 piece (~90g)",
+        "serving_ar": "قطعة واحدة (~90 غ)",
+        "serving_fr": "1 pièce (~90g)"
+      },
+      "price": 18.0,
+      "videos": [
+        "shared_samsa_olives.mp4",
+        "meat_samsa_video.mp4"
+      ]
+    },
+    "ochiq_samsa": {
+      "allergens": [
+        "Gluten (wheat)",
+        "Dairy (butter, milk)",
+        "Eggs",
+        "Sesame"
+      ],
+      "allergens_ar": [
+        "غلوتين (قمح)",
+        "منتجات الألبان (زبدة، حليب)",
+        "بيض",
+        "سمسم"
+      ],
+      "allergens_fr": [
+        "Gluten (blé)",
+        "Produits laitiers (beurre, lait)",
+        "Œufs",
+        "Sésame"
+      ],
+      "cooking_method": "Oven baked",
+      "cooking_method_ar": "مخبوز في الفرن",
+      "cooking_method_fr": "Cuit au four",
+      "description": "These open style Uzbek samosas are reminiscent of Eastern European Piroshki. A juicy minced meat, potato & onion filling is combined with a soft and silky dough.",
+      "description_ar": "هذه السمسا المفتوحة على الطريقة الأوزبكية تشبه البيروشكي من أوروبا الشرقية. حشوة غنية من اللحم المفروم والبطاطس والبصل مع عجينة ناعمة وحريرية.",
+      "description_fr": "Ces samosas ouvertes à l'ouzbèke rappellent les piroshki d'Europe de l'Est. Une garniture juteuse de viande hachée, pommes de terre et oignons combinée avec une pâte douce et soyeuse.",
+      "description_long": "Ochiq means 'open' in Uzbek, and these distinctive open-topped pastries showcase their filling proudly. Made with a soft yeasted dough enriched with milk, butter, and egg, the filling combines minced beef, diced potato, and onions seasoned with cumin seeds, coriander, and black pepper. Finished with an egg wash and sesame seeds, then baked until golden. Inspired by the culinary traditions of Central Asia, Russia, and Eastern Europe.",
+      "description_long_ar": "أوتشيق تعني 'مفتوح' بالأوزبكية، وهذه المعجنات المميزة ذات الجزء العلوي المفتوح تعرض حشوتها بفخر. مصنوعة من عجينة خميرة غنية بالحليب والزبدة والبيض، الحشوة تجمع بين اللحم البقري المفروم والبطاطس المقطعة والبصل المتبل ببذور الكمون والكزبرة والفلفل الأسود. مُنهاة بطلاء البيض وبذور السمسم ثم مخبوزة حتى تصبح ذهبية.",
+      "description_long_fr": "Ochiq signifie 'ouvert' en ouzbek, et ces pâtisseries distinctives à dessus ouvert mettent fièrement en valeur leur garniture. Faites avec une pâte levée enrichie de lait, beurre et œuf, la garniture combine bœuf haché, pommes de terre en dés et oignons assaisonnés de graines de cumin, coriandre et poivre noir. Finies avec une dorure à l'œuf et des graines de sésame, puis cuites jusqu'à obtenir une couleur dorée.",
+      "image": "ochiq_samsa.jpg",
+      "ingredients": [
+        "Wheat flour",
+        "Milk",
+        "Butter",
+        "Egg",
+        "Dry yeast",
+        "Sugar",
+        "Minced beef",
+        "Potato",
+        "Onions",
+        "Cumin powder",
+        "Cumin seeds",
+        "Coriander seeds",
+        "Salt",
+        "Black pepper",
+        "Sesame seeds"
+      ],
+      "ingredients_ar": [
+        "دقيق القمح",
+        "حليب",
+        "زبدة",
+        "بيض",
+        "خميرة جافة",
+        "سكر",
+        "لحم بقري مفروم",
+        "بطاطس",
+        "بصل",
+        "كمون مطحون",
+        "بذور كمون",
+        "بذور كزبرة",
+        "ملح",
+        "فلفل أسود",
+        "بذور سمسم"
+      ],
+      "ingredients_fr": [
+        "Farine de blé",
+        "Lait",
+        "Beurre",
+        "Œuf",
+        "Levure sèche",
+        "Sucre",
+        "Bœuf haché",
+        "Pomme de terre",
+        "Oignons",
+        "Cumin en poudre",
+        "Graines de cumin",
+        "Graines de coriandre",
+        "Sel",
+        "Poivre noir",
+        "Graines de sésame"
+      ],
+      "may_contain": [],
+      "name": "Ochiq Samsa",
+      "name_ar": "سمسا مفتوحة",
+      "name_fr": "Samsa Ochiq",
+      "nutrition": {
+        "calories": 265,
+        "carbs": 28,
+        "fat": 12,
+        "fibre": 2,
+        "protein": 11,
+        "serving": "1 piece (~95g)",
+        "serving_ar": "قطعة واحدة (~95 غ)",
+        "serving_fr": "1 pièce (~95g)"
+      },
+      "price": 15.0,
+      "videos": [
+        "shared_samsa_olives.mp4"
+      ]
+    },
+    "olive_buns": {
+      "allergens": [
+        "gluten",
+        "eggs",
+        "dairy"
+      ],
+      "allergens_ar": [
+        "جلوتين",
+        "بيض",
+        "منتجات الالبان"
+      ],
+      "allergens_fr": [
+        "gluten",
+        "oeufs",
+        "produits laitiers"
+      ],
+      "cooking_method": "oven",
+      "cooking_method_ar": "فرن",
+      "cooking_method_fr": "four",
+      "description": "Soft, fluffy buns filled with sliced green olives and labneh, topped with black seeds. A savoury treat perfect with tea or as a snack.",
+      "description_ar": "خبز طري ورقيق محشو بشرائح الزيتون الاخضر واللبنة، مرشوش بحبة البركة. وجبة خفيفة لذيذة مثالية مع الشاي.",
+      "description_fr": "Petits pains moelleux garnis d'olives vertes tranchees et de labneh, parsemes de graines de nigelle. Un regal sale parfait avec le the.",
+      "description_long": "Our Olive Buns are soft, pillowy bread rolls made with self-raising flour, dried yeast, and a generous amount of labneh (cream cheese) worked into the dough for extra richness and tenderness. The dough is studded with sliced green olives and fresh chopped parsley, shaped into individual buns, brushed with egg wash, and sprinkled with black seeds (nigella) before baking to golden perfection. Each bun has a beautiful golden crust with a soft, flavourful interior. Perfect for breakfast, afternoon tea, or as a side with soups and salads.",
+      "description_long_ar": "خبز الزيتون لدينا هو خبز طري مصنوع من دقيق ذاتي الرفع والخميرة الجافة وكمية سخية من اللبنة المعجونة في العجين لمزيد من الغنى والطراوة. العجين مرصع بشرائح الزيتون الاخضر والبقدونس الطازج المفروم، يشكل على هيئة كعكات فردية، يدهن بالبيض ويرش بحبة البركة قبل الخبز.",
+      "description_long_fr": "Nos Petits Pains aux Olives sont des pains moelleux faits avec de la farine auto-levante, de la levure sechee et une genereuse quantite de labneh travaillee dans la pate pour plus de richesse. La pate est parsemee d'olives vertes tranchees et de persil frais hache, faconnee en petits pains individuels, badigeonnee d'oeuf et saupoudree de graines de nigelle avant d'etre cuite a la perfection doree.",
+      "image": "olive_buns.jpg",
+      "ingredients": [
+        "Self-Raising Flour",
+        "Green Olives",
+        "Labneh",
+        "Parsley",
+        "Egg",
+        "Vegetable Oil",
+        "Dried Yeast",
+        "Black Seed",
+        "Salt",
+        "Water"
+      ],
+      "ingredients_ar": [
+        "دقيق ذاتي الرفع",
+        "زيتون اخضر",
+        "لبنة",
+        "بقدونس",
+        "بيض",
+        "زيت نباتي",
+        "خميرة جافة",
+        "حبة البركة",
+        "ملح",
+        "ماء"
+      ],
+      "ingredients_fr": [
+        "Farine auto-levante",
+        "Olives vertes",
+        "Labneh",
+        "Persil",
+        "Oeuf",
+        "Huile vegetale",
+        "Levure sechee",
+        "Graine de nigelle",
+        "Sel",
+        "Eau"
+      ],
+      "meta_description": "Order fresh Olive Buns in Tetouan. Soft bread rolls with green olives, labneh, and black seeds. 20 MAD each. Delivery and pickup available.",
+      "meta_title": "Olive Buns — Soft Bread Rolls with Green Olives | Samarkand Bakery",
+      "name": "Olive Buns",
+      "name_ar": "خبز بالزيتون",
+      "name_fr": "Petits Pains aux Olives",
+      "nutrition": {
+        "calories": "195 kcal",
+        "carbs": "26g",
+        "fat": "8g",
+        "fibre": "2g",
+        "protein": "5g"
+      },
+      "price": 5.0,
+      "videos": [
+        "shared_samsa_olives.mp4"
+      ]
+    },
+    "pide_cheese_sausage": {
+      "allergens": [
+        "Gluten (wheat)",
+        "Dairy (mozzarella)"
+      ],
+      "allergens_ar": [
+        "غلوتين (قمح)",
+        "منتجات الألبان (موزاريلا)"
+      ],
+      "allergens_fr": [
+        "Gluten (blé)",
+        "Produits laitiers (mozzarella)"
+      ],
+      "cooking_method": "Oven baked",
+      "cooking_method_ar": "مخبوز في الفرن",
+      "cooking_method_fr": "Cuit au four",
+      "description": "Oven baked Turkish style pizza with fluffy yeasted dough topped with sausage and mozzarella cheese.",
+      "description_ar": "بيتزا تركية مخبوزة في الفرن مع عجينة خميرة هشة مغطاة بالنقانق وجبن الموزاريلا.",
+      "description_fr": "Pizza turque cuite au four avec une pâte levée moelleuse garnie de saucisse et de mozzarella.",
+      "description_long": "Our Cheese & Sausage Pide pairs sliced sausage with melted mozzarella on a soft, fluffy yeasted base. Simple but incredibly satisfying — the sausage adds a savoury, slightly smoky flavour while the mozzarella melts into stretchy, golden perfection. A crowd pleaser for all ages.",
+      "description_long_ar": "بيدا الجبن والنقانق لدينا تجمع بين شرائح النقانق والموزاريلا الذائبة على قاعدة خميرة طرية وهشة. بسيطة ولكن مُرضية بشكل لا يصدق — النقانق تضيف نكهة مدخنة خفيفة بينما تذوب الموزاريلا بشكل مثالي.",
+      "description_long_fr": "Notre Pide Fromage & Saucisse associe des tranches de saucisse avec de la mozzarella fondue sur une base levée douce et moelleuse. Simple mais incroyablement satisfaisant — la saucisse ajoute une saveur légèrement fumée tandis que la mozzarella fond en une perfection dorée et filante.",
+      "image": "pide_cheese_sausage.jpg",
+      "ingredients": [
+        "Wheat flour",
+        "Dry yeast",
+        "Sugar",
+        "Salt",
+        "Vegetable oil",
+        "Sausage",
+        "Mozzarella cheese"
+      ],
+      "ingredients_ar": [
+        "دقيق القمح",
+        "خميرة جافة",
+        "سكر",
+        "ملح",
+        "زيت نباتي",
+        "نقانق",
+        "موزاريلا"
+      ],
+      "ingredients_fr": [
+        "Farine de blé",
+        "Levure sèche",
+        "Sucre",
+        "Sel",
+        "Huile végétale",
+        "Saucisse",
+        "Mozzarella"
+      ],
+      "may_contain": [
+        "Sesame",
+        "Soya"
+      ],
+      "may_contain_ar": [
+        "سمسم",
+        "صويا"
+      ],
+      "may_contain_fr": [
+        "Sésame",
+        "Soja"
+      ],
+      "name": "Pide (Cheese & Sausage)",
+      "name_ar": "بيدا (جبن ونقانق)",
+      "name_fr": "Pide (Fromage & Saucisse)",
+      "nutrition": {
+        "calories": 365,
+        "carbs": 36,
+        "fat": 18,
+        "fibre": 1,
+        "protein": 15,
+        "serving": "1 pide (~175g)",
+        "serving_ar": "بيدا واحدة (~175 غ)",
+        "serving_fr": "1 pide (~175g)"
+      },
+      "price": 18.0
+    },
+    "pide_cheese_spinach": {
+      "allergens": [
+        "Gluten (wheat)",
+        "Dairy (butter, cheese, mozzarella)",
+        "Eggs"
+      ],
+      "allergens_ar": [
+        "غلوتين (قمح)",
+        "منتجات الألبان (زبدة، جبن، موزاريلا)",
+        "بيض"
+      ],
+      "allergens_fr": [
+        "Gluten (blé)",
+        "Produits laitiers (beurre, fromage, mozzarella)",
+        "Œufs"
+      ],
+      "cooking_method": "Oven baked",
+      "cooking_method_ar": "مخبوز في الفرن",
+      "cooking_method_fr": "Cuit au four",
+      "description": "Oven baked Turkish style pizza with fluffy yeasted dough topped with spinach, white cheese and mozzarella.",
+      "description_ar": "بيتزا تركية مخبوزة في الفرن مع عجينة خميرة هشة مغطاة بالسبانخ والجبن الأبيض والموزاريلا.",
+      "description_fr": "Pizza turque cuite au four avec une pâte levée moelleuse garnie d'épinards, de fromage blanc et de mozzarella.",
+      "description_long": "A vegetarian favourite — our Cheese & Spinach Pide combines a soft yeasted base with a rich topping of spinach, crumbled white cheese (similar to feta), melted mozzarella, egg, butter, and garlic. The cheeses melt together beautifully during baking, creating a gooey, flavourful filling with the earthy spinach.",
+      "description_long_ar": "المفضل لدى النباتيين — بيدا الجبن والسبانخ لدينا تجمع بين قاعدة خميرة طرية وحشوة غنية من السبانخ والجبن الأبيض المفتت والموزاريلا الذائبة والبيض والزبدة والثوم. الأجبان تذوب معاً بشكل جميل أثناء الخبز.",
+      "description_long_fr": "Un favori des végétariens — notre Pide Fromage & Épinards combine une base levée moelleuse avec une riche garniture d'épinards, de fromage blanc émietté (similaire à la feta), de mozzarella fondue, d'œuf, de beurre et d'ail. Les fromages fondent ensemble magnifiquement pendant la cuisson.",
+      "dietary": [
+        "Vegetarian"
+      ],
+      "image": "pide_cheese_spinach.jpg",
+      "ingredients": [
+        "Wheat flour",
+        "Dry yeast",
+        "Sugar",
+        "Salt",
+        "Vegetable oil",
+        "Frozen spinach",
+        "White cheese",
+        "Mozzarella cheese",
+        "Egg",
+        "Butter",
+        "Garlic"
+      ],
+      "ingredients_ar": [
+        "دقيق القمح",
+        "خميرة جافة",
+        "سكر",
+        "ملح",
+        "زيت نباتي",
+        "سبانخ مجمدة",
+        "جبن أبيض",
+        "موزاريلا",
+        "بيض",
+        "زبدة",
+        "ثوم"
+      ],
+      "ingredients_fr": [
+        "Farine de blé",
+        "Levure sèche",
+        "Sucre",
+        "Sel",
+        "Huile végétale",
+        "Épinards surgelés",
+        "Fromage blanc",
+        "Mozzarella",
+        "Œuf",
+        "Beurre",
+        "Ail"
+      ],
+      "may_contain": [
+        "Sesame"
+      ],
+      "may_contain_ar": [
+        "سمسم"
+      ],
+      "may_contain_fr": [
+        "Sésame"
+      ],
+      "name": "Pide (Cheese & Spinach)",
+      "name_ar": "بيدا (جبن وسبانخ)",
+      "name_fr": "Pide (Fromage & Épinards)",
+      "nutrition": {
+        "calories": 340,
+        "carbs": 34,
+        "fat": 16,
+        "fibre": 2,
+        "protein": 16,
+        "serving": "1 pide (~170g)",
+        "serving_ar": "بيدا واحدة (~170 غ)",
+        "serving_fr": "1 pide (~170g)"
+      },
+      "price": 15.0
+    },
+    "pide_minced_beef": {
+      "allergens": [
+        "Gluten (wheat)"
+      ],
+      "allergens_ar": [
+        "غلوتين (قمح)"
+      ],
+      "allergens_fr": [
+        "Gluten (blé)"
+      ],
+      "cooking_method": "Oven baked",
+      "cooking_method_ar": "مخبوز في الفرن",
+      "cooking_method_fr": "Cuit au four",
+      "description": "Oven baked Turkish style pizza with fluffy yeasted dough topped with seasoned minced beef.",
+      "description_ar": "بيتزا تركية مخبوزة في الفرن مع عجينة خميرة هشة مغطاة بلحم بقري مفروم متبل.",
+      "description_fr": "Pizza turque cuite au four avec une pâte levée moelleuse garnie de bœuf haché assaisonné.",
+      "description_long": "Turkish Pide is often called 'Turkish pizza' — a boat-shaped flatbread with a soft, fluffy yeasted base and a generous topping. Our Minced Beef Pide features seasoned ground beef cooked with onions, garlic, tomato paste, cumin, paprika, coriander, oregano, and a drizzle of olive oil. Baked until the edges are golden and the topping is perfectly cooked.",
+      "description_long_ar": "البيدا التركية غالباً ما تسمى 'البيتزا التركية' — خبز مسطح على شكل قارب مع قاعدة خميرة طرية وحشوة سخية. بيدا اللحم المفروم لدينا تتميز بلحم بقري متبل مطبوخ مع البصل والثوم ومعجون الطماطم والكمون والبابريكا والكزبرة والأوريغانو وزيت الزيتون. مخبوزة حتى تصبح الحواف ذهبية.",
+      "description_long_fr": "Le Pide turc est souvent appelé 'pizza turque' — un pain plat en forme de bateau avec une base levée douce et moelleuse et une garniture généreuse. Notre Pide au Bœuf Haché est garni de bœuf assaisonné cuit avec des oignons, de l'ail, de la pâte de tomates, du cumin, du paprika, de la coriandre, de l'origan et un filet d'huile d'olive. Cuit jusqu'à ce que les bords soient dorés.",
+      "image": "pide_minced_beef.jpg",
+      "ingredients": [
+        "Wheat flour",
+        "Dry yeast",
+        "Sugar",
+        "Salt",
+        "Vegetable oil",
+        "Minced beef",
+        "Onions",
+        "Garlic",
+        "Tomato paste",
+        "Paprika",
+        "Cumin",
+        "Black pepper",
+        "Coriander",
+        "Oregano",
+        "Olive oil"
+      ],
+      "ingredients_ar": [
+        "دقيق القمح",
+        "خميرة جافة",
+        "سكر",
+        "ملح",
+        "زيت نباتي",
+        "لحم بقري مفروم",
+        "بصل",
+        "ثوم",
+        "معجون طماطم",
+        "بابريكا",
+        "كمون",
+        "فلفل أسود",
+        "كزبرة",
+        "أوريغانو",
+        "زيت زيتون"
+      ],
+      "ingredients_fr": [
+        "Farine de blé",
+        "Levure sèche",
+        "Sucre",
+        "Sel",
+        "Huile végétale",
+        "Bœuf haché",
+        "Oignons",
+        "Ail",
+        "Concentré de tomates",
+        "Paprika",
+        "Cumin",
+        "Poivre noir",
+        "Coriandre",
+        "Origan",
+        "Huile d'olive"
+      ],
+      "may_contain": [
+        "Sesame"
+      ],
+      "may_contain_ar": [
+        "سمسم"
+      ],
+      "may_contain_fr": [
+        "Sésame"
+      ],
+      "name": "Pide (Minced Beef)",
+      "name_ar": "بيدا (لحم مفروم)",
+      "name_fr": "Pide (Bœuf Haché)",
+      "nutrition": {
+        "calories": 380,
+        "carbs": 38,
+        "fat": 17,
+        "fibre": 2,
+        "protein": 18,
+        "serving": "1 pide (~180g)",
+        "serving_ar": "بيدا واحدة (~180 غ)",
+        "serving_fr": "1 pide (~180g)"
+      },
+      "price": 20.0
+    },
+    "tres_leches_cake": {
+      "allergens": [
+        "gluten",
+        "eggs",
+        "dairy"
+      ],
+      "allergens_ar": [
+        "جلوتين",
+        "بيض",
+        "منتجات الألبان"
+      ],
+      "allergens_fr": [
+        "gluten",
+        "œufs",
+        "produits laitiers"
+      ],
+      "cooking_method": "oven",
+      "cooking_method_ar": "فرن",
+      "cooking_method_fr": "four",
+      "description": "A light, moist sponge cake soaked in a sweet three-milk mixture and topped with fresh whipped cream and cinnamon. Sold by the slice.",
+      "description_ar": "كيكة إسفنجية خفيفة ورطبة منقوعة في خليط حلو من ثلاثة أنواع حليب، مغطاة بالكريمة المخفوقة الطازجة والقرفة. تباع بالشريحة.",
+      "description_fr": "Un gâteau éponge léger et moelleux imbibé d'un mélange sucré de trois laits, garni de crème fouettée fraîche et de cannelle. Vendu à la tranche.",
+      "description_long": "Tres Leches Cake is a beloved Latin American dessert that has won hearts worldwide. Our version starts with a light, airy sponge made from separated eggs for extra lift, soaked generously in a luscious mixture of evaporated milk, sweetened condensed milk, and whole milk. The result is an ultra-moist cake that melts in your mouth. Topped with billowy fresh whipped cream and a dusting of ground cinnamon, each slice is a perfect balance of sweetness and lightness. Our generous double-size portions ensure a truly satisfying treat.",
+      "description_long_ar": "كيكة تريس ليتشيس هي حلوى لاتينية أمريكية محبوبة اكتسبت شهرة عالمية. نسختنا تبدأ بإسفنجة خفيفة وهوائية منقوعة بسخاء في خليط فاخر من الحليب المبخر والحليب المكثف المحلى والحليب الكامل. النتيجة كيكة رطبة للغاية تذوب في الفم. مغطاة بكريمة مخفوقة طازجة ورشة من القرفة المطحونة، كل شريحة توازن مثالي بين الحلاوة والخفة.",
+      "description_long_fr": "Le gâteau Tres Leches est un dessert latino-américain bien-aimé qui a conquis les cœurs du monde entier. Notre version commence par une génoise légère et aérée, imbibée généreusement d'un mélange luxueux de lait évaporé, de lait concentré sucré et de lait entier. Le résultat est un gâteau ultra-moelleux qui fond en bouche. Garni de crème fouettée onctueuse et d'une pincée de cannelle moulue, chaque tranche offre un équilibre parfait entre douceur et légèreté.",
+      "gallery": [
+        "tres_leches_cake_almond.png",
+        "tres_leches_cake_caramel.png"
+      ],
+      "image": "tres_leches_cake_main.png",
+      "ingredients": [
+        "Flour",
+        "Eggs",
+        "Sugar",
+        "Whole Milk",
+        "Baking Powder",
+        "Vanilla Extract",
+        "Evaporated Milk",
+        "Condensed Milk",
+        "Whipping Cream",
+        "Icing Sugar",
+        "Cinnamon"
+      ],
+      "ingredients_ar": [
+        "دقيق",
+        "بيض",
+        "سكر",
+        "حليب كامل",
+        "بيكنج بودر",
+        "خلاصة الفانيليا",
+        "حليب مبخر",
+        "حليب مكثف",
+        "كريمة خفق",
+        "سكر بودرة",
+        "قرفة"
+      ],
+      "ingredients_fr": [
+        "Farine",
+        "Œufs",
+        "Sucre",
+        "Lait entier",
+        "Levure chimique",
+        "Extrait de vanille",
+        "Lait évaporé",
+        "Lait concentré",
+        "Crème fouettée",
+        "Sucre glace",
+        "Cannelle"
+      ],
+      "meta_description": "Order fresh Tres Leches Cake in Tetouan. Light sponge soaked in three milks, topped with whipped cream and cinnamon. 28 MAD per slice. Delivery & pickup available.",
+      "meta_title": "Tres Leches Cake — Three-Milk Soaked Cake | Samarkand Bakery",
+      "name": "Tres Leches Cake",
+      "name_ar": "كيكة تريس ليتشيس",
+      "name_fr": "Gâteau Tres Leches",
+      "nutrition": {
+        "calories": "420 kcal",
+        "carbs": "52g",
+        "fat": "20g",
+        "fibre": "0.3g",
+        "protein": "8g"
+      },
+      "price": 28.0
+    },
+    "turkish_bread": {
+      "allergens": [
+        "Gluten (wheat)",
+        "Dairy (milk, yoghurt)",
+        "Eggs"
+      ],
+      "allergens_ar": [
+        "غلوتين (قمح)",
+        "منتجات الألبان (حليب، زبادي)",
+        "بيض"
+      ],
+      "allergens_fr": [
+        "Gluten (blé)",
+        "Produits laitiers (lait, yaourt)",
+        "Œufs"
+      ],
+      "cooking_method": "Oven baked",
+      "cooking_method_ar": "مخبوز في الفرن",
+      "cooking_method_fr": "Cuit au four",
+      "description": "Soft, fluffy Turkish bread topped with sesame and nigella seeds. Perfect with any meal.",
+      "description_ar": "خبز تركي طري وهش مزين ببذور السمسم والحبة السوداء. مثالي مع أي وجبة.",
+      "description_fr": "Pain turc moelleux garni de graines de sésame et de nigelle. Parfait avec tout repas.",
+      "description_long": "Our Turkish Bread is a soft, pillowy loaf made with flour, milk, yoghurt, egg, and vegetable oil, leavened with yeast for a light and airy texture. The dough is shaped into a round loaf, topped with sesame and nigella seeds, and baked until beautifully golden. Pairs perfectly with dips, soups, grilled meats, or simply with butter.",
+      "description_long_ar": "الخبز التركي لدينا رغيف طري ومنفوش مصنوع من الدقيق والحليب والزبادي والبيض والزيت النباتي، مخمر بالخميرة لقوام خفيف وهوائي. تُشكل العجينة على شكل رغيف مستدير ومزين ببذور السمسم والحبة السوداء ومخبوز حتى يصبح ذهبياً بشكل جميل. يتناسب تماماً مع المقبلات والشوربات واللحوم المشوية أو ببساطة مع الزبدة.",
+      "description_long_fr": "Notre Pain Turc est un pain moelleux fait avec de la farine, du lait, du yaourt, de l'œuf et de l'huile végétale, levé avec de la levure pour une texture légère et aérienne. La pâte est façonnée en un pain rond, garni de graines de sésame et de nigelle, et cuit jusqu'à obtenir une belle couleur dorée. Se marie parfaitement avec des trempettes, des soupes, des viandes grillées ou simplement du beurre.",
+      "image": "turkish_bread.jpg",
+      "ingredients": [
+        "Wheat flour",
+        "Milk",
+        "Yoghurt",
+        "Egg",
+        "Vegetable oil",
+        "Dry yeast",
+        "Sugar",
+        "Salt"
+      ],
+      "ingredients_ar": [
+        "دقيق القمح",
+        "حليب",
+        "زبادي",
+        "بيض",
+        "زيت نباتي",
+        "خميرة جافة",
+        "سكر",
+        "ملح"
+      ],
+      "ingredients_fr": [
+        "Farine de blé",
+        "Lait",
+        "Yaourt",
+        "Œuf",
+        "Huile végétale",
+        "Levure sèche",
+        "Sucre",
+        "Sel"
+      ],
+      "may_contain": [
+        "Sesame"
+      ],
+      "may_contain_ar": [
+        "سمسم"
+      ],
+      "may_contain_fr": [
+        "Sésame"
+      ],
+      "name": "Turkish Bread",
+      "name_ar": "خبز تركي",
+      "name_fr": "Pain Turc",
+      "nutrition": {
+        "calories": 235,
+        "carbs": 38,
+        "fat": 6,
+        "fibre": 1,
+        "protein": 7,
+        "serving": "1 slice (~90g)",
+        "serving_ar": "شريحة واحدة (~90 غ)",
+        "serving_fr": "1 tranche (~90g)"
+      },
+      "price": 10.0
+    },
+    "turkish_ezme": {
+      "allergens": [],
+      "allergens_ar": [],
+      "allergens_fr": [],
+      "cooking_method": "fresh",
+      "cooking_method_ar": "طازج",
+      "cooking_method_fr": "frais",
+      "description": "A vibrant, spicy Turkish salad of finely chopped tomatoes, peppers, onion and herbs, dressed with olive oil, pomegranate molasses and sumac. Served in a small pot.",
+      "description_ar": "سلطة تركية حيوية وحارة من الطماطم والفلفل والبصل والأعشاب المفرومة ناعماً، متبلة بزيت الزيتون ودبس الرمان والسماق. تقدم في وعاء صغير.",
+      "description_fr": "Une salade turque vibrante et épicée de tomates, poivrons, oignon et herbes finement hachés, assaisonnée d'huile d'olive, de mélasse de grenade et de sumac. Servie en petit pot.",
+      "description_long": "Ezme is one of Turkey's most popular mezes — a finely chopped salad bursting with fresh Mediterranean flavours. Ripe tomatoes, red and green bell peppers, onion, parsley, and fresh mint are finely diced and combined with garlic, tomato paste, and red pepper paste. The dressing brings everything together: fruity olive oil, tangy lemon juice, sweet-tart pomegranate molasses, and aromatic sumac and dried mint. A touch of Aleppo pepper flakes adds gentle warmth without overpowering heat. Each small pot (60-80g) is the perfect accompaniment to our breads and pastries, or enjoyed on its own as a refreshing side.",
+      "description_long_ar": "الإزمة هي واحدة من أشهر المقبلات التركية — سلطة مفرومة ناعماً مليئة بنكهات البحر المتوسط الطازجة. طماطم ناضجة وفلفل أحمر وأخضر وبصل وبقدونس ونعناع طازج مفرومة ناعماً ومخلوطة مع الثوم ومعجون الطماطم ومعجون الفلفل الأحمر. التتبيلة تجمع كل شيء معاً: زيت زيتون فاكهي وعصير ليمون حامض ودبس رمان حلو-حامض وسماق ونعناع مجفف عطري. كل وعاء صغير (60-80 جم) هو المرافق المثالي لخبزنا ومعجناتنا.",
+      "description_long_fr": "L'Ezme est l'un des mezze les plus populaires de Turquie — une salade finement hachée débordante de saveurs méditerranéennes fraîches. Des tomates mûres, des poivrons rouges et verts, de l'oignon, du persil et de la menthe fraîche sont finement coupés et combinés avec de l'ail, de la pâte de tomate et de la pâte de poivron rouge. L'assaisonnement réunit le tout : huile d'olive fruitée, jus de citron acidulé, mélasse de grenade aigre-douce, et sumac et menthe séchée aromatiques. Chaque petit pot (60-80g) est l'accompagnement parfait pour nos pains et pâtisseries.",
+      "image": "ezme.jpg",
+      "ingredients": [
+        "Tomatoes",
+        "Red Bell Pepper",
+        "Green Bell Pepper",
+        "Parsley",
+        "Fresh Mint",
+        "Onion",
+        "Garlic",
+        "Tomato Paste",
+        "Red Pepper Paste",
+        "Olive Oil",
+        "Lemon",
+        "Pomegranate Molasses",
+        "Sumac",
+        "Dried Mint",
+        "Salt",
+        "Black Pepper"
+      ],
+      "ingredients_ar": [
+        "طماطم",
+        "فلفل أحمر",
+        "فلفل أخضر",
+        "بقدونس",
+        "نعناع طازج",
+        "بصل",
+        "ثوم",
+        "معجون طماطم",
+        "معجون فلفل أحمر",
+        "زيت زيتون",
+        "ليمون",
+        "دبس رمان",
+        "سماق",
+        "نعناع مجفف",
+        "ملح",
+        "فلفل أسود"
+      ],
+      "ingredients_fr": [
+        "Tomates",
+        "Poivron rouge",
+        "Poivron vert",
+        "Persil",
+        "Menthe fraiche",
+        "Oignon",
+        "Ail",
+        "Concentre de tomate",
+        "Pate de poivron rouge",
+        "Huile d'olive",
+        "Citron",
+        "Melasse de grenade",
+        "Sumac",
+        "Menthe sechee",
+        "Sel",
+        "Poivre noir"
+      ],
+      "meta_description": "Order fresh Turkish Ezme Salad in Tetouan. Finely chopped tomatoes, peppers, herbs with olive oil and pomegranate molasses. 7 MAD per pot. Delivery & pickup.",
+      "meta_title": "Turkish Ezme Salad — Fresh Spicy Tomato Dip | Samarkand Bakery",
+      "name": "Turkish Ezme Salad",
+      "name_ar": "سلطة إزمة التركية",
+      "name_fr": "Salade Ezme Turque",
+      "nutrition": {
+        "calories": "65 kcal",
+        "carbs": "5g",
+        "fat": "5g",
+        "fibre": "1g",
+        "protein": "1g"
+      },
+      "price": 8.0
+    },
+    "turkish_simit": {
+      "allergens": [
+        "gluten",
+        "sesame"
+      ],
+      "allergens_ar": [
+        "جلوتين",
+        "سمسم"
+      ],
+      "allergens_fr": [
+        "gluten",
+        "sésame"
+      ],
+      "cooking_method": "oven",
+      "cooking_method_ar": "فرن",
+      "cooking_method_fr": "four",
+      "description": "Turkey's iconic sesame-crusted bread ring — crunchy on the outside, chewy on the inside, coated in molasses and roasted sesame seeds.",
+      "description_ar": "خبز السميت التركي الشهير على شكل حلقة بالسمسم — مقرمش من الخارج، طري من الداخل، مغطى بالدبس وبذور السمسم المحمصة.",
+      "description_fr": "Le pain turc emblématique en forme d'anneau au sésame — croustillant à l'extérieur, moelleux à l'intérieur, enrobé de mélasse et de graines de sésame grillées.",
+      "description_long": "Turkey's most beloved street food, the Simit is a circular sesame-crusted bread ring that has been a staple since the 16th century Ottoman Empire. Each simit is hand-twisted from two ropes of dense, chewy dough, dipped in a sweet pomegranate molasses glaze, then generously rolled in roasted sesame seeds before being oven-baked to golden perfection. The result is an irresistible combination of crunchy sesame exterior and soft, slightly chewy interior. Perfect with cream cheese, olives, or simply enjoyed on its own with a cup of Turkish tea.",
+      "description_long_ar": "أشهر طعام شارع تركي، السميت هو خبز دائري مغطى بالسمسم كان عنصرًا أساسيًا منذ الإمبراطورية العثمانية في القرن السادس عشر. يُلف كل سميت يدويًا من حبلين من العجين الكثيف والمطاطي، ويُغمس في طلاء حلو من دبس الرمان، ثم يُلف بسخاء في بذور السمسم المحمصة قبل خبزه في الفرن حتى يصبح ذهبيًا مثاليًا. النتيجة هي مزيج لا يقاوم من الخارج المقرمش بالسمسم والداخل الطري. مثالي مع الجبن الكريمي أو الزيتون أو ببساطة يُستمتع به وحده مع كوب من الشاي التركي.",
+      "description_long_fr": "Le street food turc le plus apprécié, le Simit est un pain en forme d'anneau recouvert de sésame, un incontournable depuis l'Empire ottoman du XVIe siècle. Chaque simit est torsadé à la main à partir de deux cordes de pâte dense et moelleuse, trempé dans un glaçage sucré à la mélasse de grenade, puis généreusement roulé dans des graines de sésame grillées avant d'être cuit au four jusqu'à une perfection dorée. Le résultat est une combinaison irrésistible d'extérieur croustillant au sésame et d'intérieur moelleux. Parfait avec du fromage frais, des olives, ou simplement dégusté seul avec une tasse de thé turc.",
+      "image": "turkish_simit.jpg",
+      "ingredients": [
+        "Flour",
+        "Water",
+        "Sesame Seeds",
+        "Pomegranate Molasses",
+        "Yeast",
+        "Salt"
+      ],
+      "ingredients_ar": [
+        "دقيق",
+        "ماء",
+        "بذور السمسم",
+        "دبس الرمان",
+        "خميرة",
+        "ملح"
+      ],
+      "ingredients_fr": [
+        "Farine",
+        "Eau",
+        "Graines de sésame",
+        "Mélasse de grenade",
+        "Levure",
+        "Sel"
+      ],
+      "meta_description": "Order fresh handmade Turkish Simit in Tetouan. Crunchy sesame-crusted bread ring with molasses glaze, baked to golden perfection. Delivery & pickup available.",
+      "meta_title": "Turkish Simit — Authentic Sesame Bread Ring | Samarkand Bakery",
+      "name": "Turkish Simit",
+      "name_ar": "سميت تركي",
+      "name_fr": "Simit Turc",
+      "nutrition": {
+        "calories": "280 kcal",
+        "carbs": "48g",
+        "fat": "6g",
+        "fibre": "3g",
+        "protein": "8g"
+      },
+      "price": 12.0,
+      "free_extra": "Free Cheese, Garlic & Herb Dip included",
+      "free_extra_ar": "صلصة الجبنة والثوم والأعشاب مجانية",
+      "free_extra_fr": "Dip Fromage, Ail et Herbes offert"
+    },
+    "uzbek_bread": {
+      "allergens": [
+        "Gluten (wheat)",
+        "Dairy (butter, milk)",
+        "Eggs"
+      ],
+      "allergens_ar": [
+        "غلوتين (قمح)",
+        "منتجات الألبان (زبدة، حليب)",
+        "بيض"
+      ],
+      "allergens_fr": [
+        "Gluten (blé)",
+        "Produits laitiers (beurre, lait)",
+        "Œufs"
+      ],
+      "cooking_method": "Oven baked",
+      "cooking_method_ar": "مخبوز في الفرن",
+      "cooking_method_fr": "Cuit au four",
+      "description": "Traditional Uzbek flatbread, oven baked with a beautifully patterned centre and black sesame seeds.",
+      "description_ar": "خبز أوزبكي تقليدي مسطح، مخبوز في الفرن بنقوش جميلة في المنتصف وبذور السمسم الأسود.",
+      "description_fr": "Pain plat ouzbek traditionnel, cuit au four avec un beau motif central et des graines de sésame noir.",
+      "description_long": "Non — traditional Uzbek bread — is the centrepiece of every Uzbek meal. Our version is made with flour, milk, butter, and a touch of yeast, then hand-shaped with the traditional patterned centre using a bread stamp (chekich). Topped with sesame or nigella seeds and baked until golden. Soft inside with a slightly crisp crust. Each loaf is made fresh to order.",
+      "description_long_ar": "النان — الخبز الأوزبكي التقليدي — هو محور كل وجبة أوزبكية. نسختنا مصنوعة من الدقيق والحليب والزبدة ولمسة من الخميرة، ثم تُشكل يدوياً بالنقش التقليدي في المنتصف باستخدام ختم الخبز (تشيكيتش). مزين ببذور السمسم أو الحبة السوداء ومخبوز حتى يصبح ذهبياً. طري من الداخل مع قشرة مقرمشة قليلاً.",
+      "description_long_fr": "Le Non — pain ouzbek traditionnel — est la pièce maîtresse de chaque repas ouzbek. Notre version est faite avec de la farine, du lait, du beurre et une touche de levure, puis façonnée à la main avec le motif central traditionnel à l'aide d'un tampon à pain (chekich). Garni de graines de sésame ou de nigelle et cuit jusqu'à obtenir une couleur dorée. Moelleux à l'intérieur avec une croûte légèrement croustillante.",
+      "image": "uzbek_bread.jpg",
+      "ingredients": [
+        "Wheat flour",
+        "Milk",
+        "Butter",
+        "Egg",
+        "Dry yeast",
+        "Sugar",
+        "Salt"
+      ],
+      "ingredients_ar": [
+        "دقيق القمح",
+        "حليب",
+        "زبدة",
+        "بيض",
+        "خميرة جافة",
+        "سكر",
+        "ملح"
+      ],
+      "ingredients_fr": [
+        "Farine de blé",
+        "Lait",
+        "Beurre",
+        "Œuf",
+        "Levure sèche",
+        "Sucre",
+        "Sel"
+      ],
+      "may_contain": [
+        "Sesame"
+      ],
+      "may_contain_ar": [
+        "سمسم"
+      ],
+      "may_contain_fr": [
+        "Sésame"
+      ],
+      "name": "Uzbek Bread",
+      "name_ar": "خبز أوزبكي",
+      "name_fr": "Pain Ouzbek",
+      "nutrition": {
+        "calories": 210,
+        "carbs": 36,
+        "fat": 5,
+        "fibre": 1,
+        "protein": 6,
+        "serving": "1 slice (~80g)",
+        "serving_ar": "شريحة واحدة (~80 غ)",
+        "serving_fr": "1 tranche (~80g)"
+      },
+      "price": 10.0,
+      "recommended": [
+        "walnut_fig_jam"
+      ]
+    },
+    "uzbek_honey_cake": {
+      "allergens": [
+        "gluten",
+        "eggs",
+        "dairy"
+      ],
+      "allergens_ar": [
+        "جلوتين",
+        "بيض",
+        "منتجات الألبان"
+      ],
+      "allergens_fr": [
+        "gluten",
+        "œufs",
+        "produits laitiers"
+      ],
+      "cooking_method": "oven",
+      "cooking_method_ar": "فرن",
+      "cooking_method_fr": "four",
+      "description": "A rich layered honey cake (Medovik) with delicate sponge layers soaked in honey syrup, filled with a silky butter cream. Sold by the slice.",
+      "description_ar": "كيكة عسل غنية متعددة الطبقات (ميدوفيك) مع طبقات إسفنجية رقيقة منقوعة في شراب العسل، محشوة بكريمة زبدة ناعمة. تباع بالشريحة.",
+      "description_fr": "Un riche gâteau au miel en couches (Medovik) avec des couches de génoise délicates imbibées de sirop de miel, garnies d'une crème au beurre soyeuse. Vendu à la tranche.",
+      "description_long": "The Uzbek Honey Cake, known as Medovik, is a beloved Central Asian dessert with roots in Russian imperial baking traditions. Our version features multiple thin, golden sponge layers made with eggs, flour, and a fragrant honey-sugar syrup infused with bicarbonate of soda for that signature lightness. Each layer is generously filled with a luxurious butter cream made from pure unsalted butter and condensed milk, creating a melt-in-your-mouth experience. The cake is assembled and left to rest, allowing the cream to soften the sponge layers into a perfectly moist, harmonious dessert. Each slice is approximately 7cm x 7cm — the perfect portion with tea or coffee.",
+      "description_long_ar": "كيكة العسل الأوزبكية، المعروفة باسم ميدوفيك، هي حلوى آسيوية وسطى محبوبة ذات جذور في تقاليد الخبز الإمبراطوري الروسي. نسختنا تتميز بعدة طبقات رقيقة ذهبية من الإسفنج المصنوع من البيض والدقيق وشراب العسل والسكر المعطر ببيكربونات الصودا لتلك الخفة المميزة. كل طبقة محشوة بسخاء بكريمة زبدة فاخرة مصنوعة من الزبدة غير المملحة والحليب المكثف. يتم تجميع الكيكة وتركها لترتاح، مما يسمح للكريمة بتليين طبقات الإسفنج. كل شريحة حوالي 7 سم × 7 سم.",
+      "description_long_fr": "Le gâteau au miel ouzbek, connu sous le nom de Medovik, est un dessert d'Asie centrale bien-aimé aux racines dans les traditions pâtissières de l'empire russe. Notre version présente plusieurs fines couches de génoise dorée, préparées avec des œufs, de la farine et un sirop de miel parfumé au bicarbonate de soude pour cette légèreté caractéristique. Chaque couche est généreusement garnie d'une crème au beurre luxueuse à base de beurre non salé et de lait concentré, créant une expérience fondante. Le gâteau est assemblé et laissé reposer, permettant à la crème d'adoucir les couches en un dessert parfaitement moelleux et harmonieux. Chaque tranche mesure environ 7cm x 7cm.",
+      "image": "uzbek_honey_cake.jpg",
+      "ingredients": [
+        "Eggs",
+        "Flour",
+        "Sugar",
+        "Honey",
+        "Unsalted Butter",
+        "Condensed Milk",
+        "Bicarbonate of Soda",
+        "Butter"
+      ],
+      "ingredients_ar": [
+        "بيض",
+        "دقيق",
+        "سكر",
+        "عسل",
+        "زبدة غير مملحة",
+        "حليب مكثف",
+        "بيكربونات الصودا",
+        "زبدة"
+      ],
+      "ingredients_fr": [
+        "Œufs",
+        "Farine",
+        "Sucre",
+        "Miel",
+        "Beurre non salé",
+        "Lait concentré",
+        "Bicarbonate de soude",
+        "Beurre"
+      ],
+      "meta_description": "Order fresh Uzbek Honey Cake (Medovik) in Tetouan. Rich layered sponge with honey syrup and butter cream. 20 MAD per slice. Delivery & pickup available.",
+      "meta_title": "Uzbek Honey Cake (Medovik) — Layered Honey Cake | Samarkand Bakery",
+      "name": "Uzbek Honey Cake",
+      "name_ar": "كيكة العسل الأوزبكية",
+      "name_fr": "Gâteau au Miel Ouzbek",
+      "nutrition": {
+        "calories": "380 kcal",
+        "carbs": "42g",
+        "fat": "22g",
+        "fibre": "0.5g",
+        "protein": "6g"
+      },
+      "price": 20.0
+    },
+    "veggie_pogaca": {
+      "allergens": [
+        "gluten",
+        "eggs",
+        "dairy"
+      ],
+      "allergens_ar": [
+        "جلوتين",
+        "بيض",
+        "منتجات الألبان"
+      ],
+      "allergens_fr": [
+        "gluten",
+        "œufs",
+        "produits laitiers"
+      ],
+      "cooking_method": "oven",
+      "cooking_method_ar": "فرن",
+      "cooking_method_fr": "four",
+      "description": "A soft, golden Turkish pastry filled with a savoury mix of carrot, courgette, potato, peppers, onion and herbs. Oven baked to perfection.",
+      "description_ar": "معجنات تركية ذهبية طرية محشوة بمزيج لذيذ من الجزر والكوسا والبطاطس والفلفل والبصل والأعشاب. مخبوزة في الفرن حتى الكمال.",
+      "description_fr": "Une pâtisserie turque dorée et moelleuse, garnie d'un mélange savoureux de carotte, courgette, pomme de terre, poivrons, oignon et herbes. Cuite au four à la perfection.",
+      "description_long": "Our Veggie Pogaca is a beloved Turkish filled bread roll, soft and pillowy on the inside with a golden crust on the outside. The dough is enriched with milk, yoghurt, and egg for a tender, brioche-like texture. The filling is a hearty mix of sautéed carrot, courgette, potato, green and red bell peppers, and onion, seasoned with paprika, black pepper, and fresh parsley. Each pogaca is hand-shaped, filled generously, and baked until beautifully golden. Perfect as a snack, breakfast item, or alongside soups and salads.",
+      "description_long_ar": "بوغاتشا الخضار لدينا هي خبز محشو تركي محبوب، طري ومنفوش من الداخل مع قشرة ذهبية من الخارج. العجينة غنية بالحليب والزبادي والبيض لقوام طري شبيه بالبريوش. الحشوة مزيج شهي من الجزر والكوسا والبطاطس والفلفل الأخضر والأحمر والبصل المقلي، متبل بالبابريكا والفلفل الأسود والبقدونس الطازج.",
+      "description_long_fr": "Notre Pogaca aux Légumes est un petit pain fourré turc apprécié, moelleux à l'intérieur avec une croûte dorée à l'extérieur. La pâte est enrichie de lait, yaourt et œuf pour une texture tendre de type brioche. La garniture est un mélange copieux de carotte, courgette, pomme de terre, poivrons verts et rouges, et oignon sautés, assaisonnés de paprika, poivre noir et persil frais.",
+      "image": "veggie_pogaca.jpeg",
+      "ingredients": [
+        "Flour",
+        "Egg",
+        "Milk",
+        "Yoghurt",
+        "Oil",
+        "Carrot",
+        "Courgette",
+        "Potato",
+        "Bell Pepper",
+        "Onion",
+        "Parsley",
+        "Yeast",
+        "Salt",
+        "Paprika",
+        "Black Pepper"
+      ],
+      "ingredients_ar": [
+        "دقيق",
+        "بيض",
+        "حليب",
+        "زبادي",
+        "زيت",
+        "جزر",
+        "كوسا",
+        "بطاطس",
+        "فلفل",
+        "بصل",
+        "بقدونس",
+        "خميرة",
+        "ملح",
+        "بابريكا",
+        "فلفل أسود"
+      ],
+      "ingredients_fr": [
+        "Farine",
+        "Œuf",
+        "Lait",
+        "Yaourt",
+        "Huile",
+        "Carotte",
+        "Courgette",
+        "Pomme de terre",
+        "Poivron",
+        "Oignon",
+        "Persil",
+        "Levure",
+        "Sel",
+        "Paprika",
+        "Poivre noir"
+      ],
+      "meta_description": "Order fresh Veggie Pogaca in Tetouan. Soft Turkish bread roll filled with carrot, courgette, potato and peppers. 10 MAD each. Delivery & pickup available.",
+      "meta_title": "Veggie Pogaca — Turkish Filled Bread Roll | Samarkand Bakery",
+      "name": "Veggie Pogaca",
+      "name_ar": "بوغاتشا بالخضار",
+      "name_fr": "Pogaca aux Légumes",
+      "nutrition": {
+        "calories": "220 kcal",
+        "carbs": "30g",
+        "fat": "9g",
+        "fibre": "2g",
+        "protein": "5g"
+      },
+      "price": 10.0
+    },
+    "walnut_fig_jam": {
+      "allergens": [
+        "nuts"
+      ],
+      "allergens_ar": [
+        "مكسرات"
+      ],
+      "allergens_fr": [
+        "fruits à coque"
+      ],
+      "cooking_method": "stovetop",
+      "cooking_method_ar": "على الموقد",
+      "cooking_method_fr": "cuisinière",
+      "description": "A rich, naturally sweet jam made from dried figs and crushed walnuts. Perfect as a dip with our breads and pastries.",
+      "description_ar": "مربى غنية وحلوة طبيعياً مصنوعة من التين المجفف والجوز المكسر. مثالية كمقبلة مع خبزنا ومعجناتنا.",
+      "description_fr": "Une confiture riche et naturellement sucrée à base de figues séchées et de noix concassées. Parfaite en accompagnement de nos pains et pâtisseries.",
+      "description_long": "Our Walnut & Fig Jam is a rustic, wholesome spread inspired by Central Asian and Mediterranean traditions. Dried figs are gently simmered with water and a touch of sugar until they break down into a thick, luscious jam, then folded through with coarsely crushed walnuts for texture and depth. The natural sweetness of the figs pairs beautifully with the earthy, slightly bitter crunch of the walnuts. Served in a small 60g pot — the perfect companion to our Uzbek Bread, Turkish Bread, or Simit.",
+      "description_long_ar": "مربى الجوز والتين لدينا هي مربى ريفية صحية مستوحاة من تقاليد آسيا الوسطى والبحر المتوسط. يُطهى التين المجفف برفق مع الماء ولمسة من السكر حتى يتحول إلى مربى سميكة وفاخرة، ثم يُخلط مع الجوز المكسر بشكل خشن للقوام والعمق. تقدم في وعاء صغير 60 جم.",
+      "description_long_fr": "Notre Confiture de Noix & Figues est une tartinade rustique et saine inspirée des traditions d'Asie centrale et de la Méditerranée. Les figues séchées sont doucement mijotées avec de l'eau et une touche de sucre jusqu'à ce qu'elles se transforment en une confiture épaisse et onctueuse, puis mélangées avec des noix grossièrement concassées pour la texture. Servie en petit pot de 60g.",
+      "image": "walnut_fig_jam.jpg",
+      "ingredients": [
+        "Dried Figs",
+        "Walnuts",
+        "Sugar",
+        "Water"
+      ],
+      "ingredients_ar": [
+        "تين مجفف",
+        "جوز",
+        "سكر",
+        "ماء"
+      ],
+      "ingredients_fr": [
+        "Figues séchées",
+        "Noix",
+        "Sucre",
+        "Eau"
+      ],
+      "meta_description": "Order Walnut & Fig Jam in Tetouan. Naturally sweet dried fig jam with crushed walnuts. 7 MAD per pot. Perfect with bread. Delivery & pickup available.",
+      "meta_title": "Walnut & Fig Jam — Natural Fruit Dip | Samarkand Bakery",
+      "name": "Walnut & Fig Jam",
+      "name_ar": "مربى الجوز والتين",
+      "name_fr": "Confiture de Noix & Figues",
+      "nutrition": {
+        "calories": "95 kcal",
+        "carbs": "16g",
+        "fat": "3g",
+        "fibre": "2g",
+        "protein": "1.5g"
+      },
+      "price": 10.0
+    }
+  }
+}

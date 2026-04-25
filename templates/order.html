@@ -848,24 +848,29 @@
         .cart-bar-info { font-size: 0.88rem; opacity: 0.7; }
         .cart-bar-left { flex-shrink: 0; }
         .cart-bar-promo {
-            flex: 1;
+            flex: 0 1 auto;
             text-align: center;
-            font-size: 0.82rem;
-            opacity: 0.85;
-            padding: 0 16px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--gold-pale, #f7d774);
+            background: rgba(184,134,11,0.18);
+            border: 1px solid rgba(247,215,116,0.35);
+            border-radius: 999px;
+            padding: 6px 14px;
             line-height: 1.35;
+            margin: 0 12px;
+            white-space: nowrap;
         }
-        .cart-bar-promo .qualified { color: var(--gold-pale); font-weight: 600; }
+        .cart-bar-promo .qualified { color: #fff; font-weight: 700; }
         .cart-bar-promo:empty { display: none; }
         @media (max-width: 640px) {
             .cart-bar { flex-wrap: wrap; padding: 12px 16px 14px; gap: 8px; }
             .cart-bar-promo {
                 order: 3;
                 flex-basis: 100%;
-                padding: 0;
-                font-size: 0.78rem;
+                margin: 0;
+                font-size: 0.82rem;
                 text-align: center;
-                opacity: 0.75;
             }
         }
 
@@ -2279,12 +2284,12 @@ function renderCheckoutSummary() {
         const percentLabel = (autoDiscount.percent % 1 === 0) ? autoDiscount.percent.toString() : autoDiscount.percent.toFixed(1);
         if (total + 1e-9 >= autoDiscount.threshold) {
             const tpl = T.auto_discount_qualified || 'You qualified for {percent}% off';
-            html += `<div style="margin-top:10px;padding:10px 14px;background:rgba(45,122,79,0.08);border-radius:8px;font-size:0.85rem;color:var(--success);font-weight:600;text-align:center;">✓ ${tpl.replace('{percent}', percentLabel)}</div>`;
+            html += `<div style="margin-top:10px;padding:12px 16px;background:rgba(45,122,79,0.12);border:1.5px solid var(--success,#2d7a4f);border-radius:10px;font-size:0.95rem;color:var(--success,#2d7a4f);font-weight:700;text-align:center;">✓ ${tpl.replace('{percent}', percentLabel)}</div>`;
         } else {
             const remaining = (autoDiscount.threshold - total).toFixed(2);
             const tpl = T.auto_discount_progress || 'Add {amount} MAD more to get {percent}% off';
             const msg = tpl.replace('{amount}', remaining).replace('{percent}', percentLabel);
-            html += `<div style="margin-top:10px;padding:10px 14px;background:var(--warm-cream,#faf6f1);border:1px dashed var(--border);border-radius:8px;font-size:0.85rem;color:var(--text-secondary);text-align:center;">${msg}</div>`;
+            html += `<div style="margin-top:10px;padding:12px 16px;background:linear-gradient(135deg,rgba(184,134,11,0.12),rgba(184,134,11,0.06));border:1.5px solid var(--gold,#b8860b);border-radius:10px;font-size:0.95rem;font-weight:700;color:var(--gold,#b8860b);text-align:center;display:flex;align-items:center;justify-content:center;gap:8px;">🎁 ${msg}</div>`;
         }
     }
     document.getElementById('checkout-summary').innerHTML = html;

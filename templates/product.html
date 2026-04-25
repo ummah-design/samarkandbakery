@@ -1169,12 +1169,17 @@ function updateProductCartBar() {
     var pctStr = (autoDiscount.percent % 1 === 0) ? autoDiscount.percent.toFixed(0) : String(autoDiscount.percent);
     if (subtotal + 1e-9 >= autoDiscount.threshold) {
         var qTpl = T.auto_discount_qualified || 'You qualified for {percent}% off';
-        promoEl.innerHTML = '<span style="color:var(--gold-pale,#f7d774);font-weight:600;font-style:normal;">' +
-            qTpl.replace('{percent}', pctStr) + '</span>';
+        promoEl.style.color = '#fff';
+        promoEl.style.background = 'rgba(45,122,79,0.35)';
+        promoEl.style.borderColor = 'rgba(120,200,150,0.6)';
+        promoEl.innerHTML = '<span style="font-weight:700;">\u2713 ' + qTpl.replace('{percent}', pctStr) + '</span>';
     } else {
         var remaining = (autoDiscount.threshold - subtotal).toFixed(2);
         var pTpl = T.auto_discount_progress || 'Add {amount} MAD more to get {percent}% off';
-        promoEl.textContent = pTpl.replace('{amount}', remaining).replace('{percent}', pctStr);
+        promoEl.style.color = '#f7d774';
+        promoEl.style.background = 'rgba(184,134,11,0.18)';
+        promoEl.style.borderColor = 'rgba(247,215,116,0.35)';
+        promoEl.innerHTML = '\uD83C\uDF81 ' + pTpl.replace('{amount}', remaining).replace('{percent}', pctStr);
     }
 }
 
@@ -1399,7 +1404,7 @@ function closeMobileMenu() {
         <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:22px;height:22px;"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/></svg>
         <span><span id="product-cart-count">0</span> item(s) in cart</span>
     </div>
-    <div id="product-cart-promo" style="flex:1 1 200px;text-align:center;font-size:0.85rem;color:rgba(255,255,255,0.85);font-style:italic;"></div>
+    <div id="product-cart-promo" style="flex:0 1 auto;text-align:center;font-size:0.88rem;font-weight:600;color:#f7d774;background:rgba(184,134,11,0.18);border:1px solid rgba(247,215,116,0.35);border-radius:999px;padding:6px 14px;line-height:1.35;margin:0 12px;white-space:nowrap;"></div>
     <a href="/?checkout=1#menu" onclick="return commitPendingAndCheckout(event);" style="background:var(--gold);color:#fff;text-decoration:none;padding:10px 24px;border-radius:24px;font-weight:600;font-size:0.9rem;flex-shrink:0;">View Cart & Checkout</a>
 </div>
 </body>

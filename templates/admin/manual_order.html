@@ -107,9 +107,8 @@
             <p style="color:#6b6b80;font-size:0.85em;margin-bottom:12px;">Add an order on behalf of a customer (phone/email/walk-in).</p>
             <div class="cart-summary" id="checkout-cart-summary"></div>
             <div style="margin:0 0 16px;">
-                <label for="manual-discount" style="display:block;margin-bottom:6px;">Discount (MAD) <span style="font-weight:400;color:#888;font-size:0.85em;">— optional</span></label>
-                <input type="number" id="manual-discount" min="0" step="0.5" placeholder="0.00" oninput="updateDiscount()" style="padding:10px;border:1px solid #e8e0d8;border-radius:8px;font-size:1em;width:100%;box-sizing:border-box;">
-                <div id="discount-preview" style="display:none;margin-top:8px;padding:8px 12px;background:#f0f9f0;border-radius:6px;font-size:0.88em;color:#2d7a4f;"></div>
+                <label for="amount-to-pay" style="display:block;margin-bottom:6px;">Amount to be paid (MAD) <span style="font-weight:400;color:#888;font-size:0.85em;">— leave blank for full price</span></label>
+                <input type="number" id="amount-to-pay" min="0" step="0.5" placeholder="Enter amount customer will pay..." oninput="updateAmountToPay()" style="padding:10px;border:1px solid #e8e0d8;border-radius:8px;font-size:1em;width:100%;box-sizing:border-box;">
             </div>
             <label for="customer-email">Customer Email</label>
             <div style="position:relative;">
@@ -343,8 +342,17 @@
         }
     }
 
-    function updateDiscount() {
-        manualDiscount = parseFloat(document.getElementById('manual-discount').value) || 0;
+    function updateAmountToPay() {
+        var cartTotal = 0;
+        for (var key in cart) { cartTotal += menuData.products[key].price * cart[key]; }
+        var autoAmt = getAutoDiscountAmount(cartTotal);
+        var baseAfterAuto = Math.max(0, cartTotal - autoAmt);
+        var amountToPay = parseFloat(document.getElementById('amount-to-pay').value);
+        if (!isNaN(amountToPay) && amountToPay >= 0 && amountToPay < baseAfterAuto) {
+            manualDiscount = Math.round((baseAfterAuto - amountToPay) * 100) / 100;
+        } else {
+            manualDiscount = 0;
+        }
         renderCheckoutSummary();
     }
 
@@ -477,7 +485,7 @@
 
     function resetOrder() {
         cart = {}; manualDiscount = 0; selectedLat = null; selectedLng = null;
-        document.getElementById('manual-discount').value = '';
+        document.getElementById('amount-to-pay').value = '';
         if (marker && checkoutMap) checkoutMap.removeLayer(marker); marker = null;
         var allKeys = Object.keys(menuData.products);
         for (var ki = 0; ki < allKeys.length; ki++) updateCardControls(allKeys[ki]);

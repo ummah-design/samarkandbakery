@@ -21,6 +21,7 @@
         <button class="filter-btn active" onclick="filterRR('all', this)">All Sent</button>
         <button class="filter-btn" onclick="filterRR('waiting', this)">Awaiting Review</button>
         <button class="filter-btn" onclick="filterRR('reviewed', this)">Reviewed</button>
+        <button class="filter-btn" onclick="filterRR('dismissed', this)">Dismissed</button>
         <button class="filter-btn" onclick="filterRR('unrequested', this)">Not Yet Sent</button>
     </div>
     <div id="rr-stats" style="display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap;"></div>
@@ -142,8 +143,10 @@
 
         var total = requests.length;
         var reviewed = requests.filter(function(r) { return r.status === 'reviewed'; }).length;
-        var waiting = requests.filter(function(r) { return r.status !== 'reviewed'; }).length;
-        var rate = total > 0 ? Math.round(reviewed / total * 100) : 0;
+        var dismissed = requests.filter(function(r) { return r.status === 'dismissed'; }).length;
+        var waiting = requests.filter(function(r) { return r.status !== 'reviewed' && r.status !== 'dismissed'; }).length;
+        var responseBase = total - dismissed;
+        var rate = responseBase > 0 ? Math.round(reviewed / responseBase * 100) : 0;
         statsDiv.innerHTML = '<div style="background:#f5f0eb;padding:12px 18px;border-radius:8px;text-align:center;flex:1;min-width:100px;">'
             + '<div style="font-size:1.4em;font-weight:700;color:#1e2a4a;">' + total + '</div>'
             + '<div style="font-size:0.78em;color:#888;">Requests Sent</div></div>'
@@ -153,13 +156,18 @@
             + '<div style="background:#fff3e0;padding:12px 18px;border-radius:8px;text-align:center;flex:1;min-width:100px;">'
             + '<div style="font-size:1.4em;font-weight:700;color:#e65100;">' + waiting + '</div>'
             + '<div style="font-size:0.78em;color:#888;">Awaiting</div></div>'
+            + '<div style="background:#fde8e8;padding:12px 18px;border-radius:8px;text-align:center;flex:1;min-width:100px;">'
+            + '<div style="font-size:1.4em;font-weight:700;color:#c62828;">' + dismissed + '</div>'
+            + '<div style="font-size:0.78em;color:#888;">Dismissed</div></div>'
             + '<div style="background:#e3f2fd;padding:12px 18px;border-radius:8px;text-align:center;flex:1;min-width:100px;">'
             + '<div style="font-size:1.4em;font-weight:700;color:#1565c0;">' + rate + '%</div>'
             + '<div style="font-size:0.78em;color:#888;">Response Rate</div></div>';
 
         var filtered = requests;
-        if (filter === 'waiting') filtered = requests.filter(function(r) { return r.status !== 'reviewed'; });
+        if (filter === 'waiting') filtered = requests.filter(function(r) { return r.status !== 'reviewed' && r.status !== 'dismissed'; });
         else if (filter === 'reviewed') filtered = requests.filter(function(r) { return r.status === 'reviewed'; });
+        else if (filter === 'dismissed') filtered = requests.filter(function(r) { return r.status === 'dismissed'; });
+        else if (filter === 'all') filtered = requests.filter(function(r) { return r.status !== 'dismissed'; });
 
         renderReviewRequests(filtered);
     }
@@ -175,23 +183,31 @@
             var r = requests[ri];
             var date = new Date(r.sent_at).toLocaleString();
             var items = r.items.map(function(i) { return i.name; }).join(', ');
-            var sc = r.status === 'reviewed' ? 'status-confirmed' : 'status-pending';
-            var statusLabel = r.status === 'reviewed' ? 'Reviewed' : r.status === 'reminded' ? 'Reminded' : 'Sent';
-            var reminderBtn = r.status !== 'reviewed'
-                ? '<button class="status-btn confirm" style="font-size:0.78em;padding:4px 12px;" onclick="sendReminder(' + r.order_id + ')">Send Reminder</button>'
-                : '';
-            html += '<div class="order-card" style="margin-bottom:10px;">'
+            var sc, statusLabel;
+            if (r.status === 'reviewed') { sc = 'status-confirmed'; statusLabel = 'Reviewed'; }
+            else if (r.status === 'dismissed') { sc = 'status-cancelled'; statusLabel = 'Dismissed'; }
+            else if (r.status === 'reminded') { sc = 'status-pending'; statusLabel = 'Reminded'; }
+            else { sc = 'status-pending'; statusLabel = 'Sent'; }
+            var actionBtns = '';
+            if (r.status !== 'reviewed' && r.status !== 'dismissed') {
+                actionBtns += '<button class="status-btn confirm" style="font-size:0.78em;padding:4px 12px;" onclick="sendReminder(' + r.order_id + ')">Send Reminder</button>'
+                    + '<button class="status-btn cancel" style="font-size:0.78em;padding:4px 12px;" onclick="dismissRR(' + r.order_id + ')">Dismiss</button>';
+            } else if (r.status === 'dismissed') {
+                actionBtns += '<button class="status-btn confirm" style="font-size:0.78em;padding:4px 12px;" onclick="restoreRR(' + r.order_id + ')">Restore</button>';
+            }
+            html += '<div class="order-card" style="margin-bottom:10px;' + (r.status === 'dismissed' ? 'opacity:0.7;' : '') + '">'
                 + '<div style="padding:14px 18px;">'
                 + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'
                 + '<div><strong style="color:#1e2a4a;" dir="auto">' + r.customer_name + '</strong>'
                 + '<span style="color:#999;font-size:0.82em;margin-left:8px;">' + r.customer_email + '</span></div>'
                 + '<span class="status-badge ' + sc + '">' + statusLabel + '</span></div>'
                 + '<div style="font-size:0.85em;color:#888;margin-bottom:4px;">Order #' + r.order_id + ' — ' + items + '</div>'
-                + '<div style="font-size:0.82em;color:#999;display:flex;gap:16px;align-items:center;flex-wrap:wrap;">'
+                + '<div style="font-size:0.82em;color:#999;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">'
                 + '<span>Sent: ' + date + '</span>'
                 + (r.reminder_sent_at ? '<span>Reminder: ' + new Date(r.reminder_sent_at).toLocaleString() + '</span>' : '')
                 + (r.reviews_received > 0 ? '<span style="color:#2d7a4f;font-weight:600;">' + r.reviews_received + ' review(s) received</span>' : '')
-                + reminderBtn + '</div></div></div>';
+                + (actionBtns ? '<span style="margin-left:auto;display:flex;gap:6px;">' + actionBtns + '</span>' : '')
+                + '</div></div></div>';
         }
         container.innerHTML = html;
     }
@@ -249,6 +265,25 @@
         } else {
             alert(data.error || 'Failed to send');
         }
+    }
+
+    async function dismissRR(orderId) {
+        if (!confirm('Move this review request to Dismissed? You can restore it later.')) return;
+        var res = await fetch('/api/admin/review-requests/' + orderId + '/dismiss', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }
+        });
+        var data = await res.json();
+        if (data.success) loadReviewRequests(rrCurrentFilter);
+        else alert(data.error || 'Failed to dismiss');
+    }
+
+    async function restoreRR(orderId) {
+        var res = await fetch('/api/admin/review-requests/' + orderId + '/restore', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }
+        });
+        var data = await res.json();
+        if (data.success) loadReviewRequests(rrCurrentFilter);
+        else alert(data.error || 'Failed to restore');
     }
 
     loadAdminReviews();

@@ -128,10 +128,16 @@ def send_order_placed(order):
 
     items_html = _order_items_html(order["items"])
     discount_html = ""
+    disc_amt = order.get("discount_amount", 0) or 0
     if order.get("promo_code"):
         discount_html = f"""<tr style="border-bottom:1px solid #f0ebe3;">
             <td colspan="2" style="padding:10px 0;color:#2d7a4f;font-weight:600;">Discount ({order['promo_code']})</td>
-            <td style="padding:10px 0;text-align:right;color:#2d7a4f;font-weight:600;">-{order.get('discount_amount', 0):.2f} MAD</td>
+            <td style="padding:10px 0;text-align:right;color:#2d7a4f;font-weight:600;">-{disc_amt:.2f} MAD</td>
+        </tr>"""
+    elif disc_amt > 0:
+        discount_html = f"""<tr style="border-bottom:1px solid #f0ebe3;">
+            <td colspan="2" style="padding:10px 0;color:#2d7a4f;font-weight:600;">Order discount</td>
+            <td style="padding:10px 0;text-align:right;color:#2d7a4f;font-weight:600;">-{disc_amt:.2f} MAD</td>
         </tr>"""
 
     delivery_info = "Pickup from Wilaya Centre"

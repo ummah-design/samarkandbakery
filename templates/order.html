@@ -846,6 +846,28 @@
 
         .cart-bar.visible { transform: translateY(0); }
         .cart-bar-info { font-size: 0.88rem; opacity: 0.7; }
+        .cart-bar-left { flex-shrink: 0; }
+        .cart-bar-promo {
+            flex: 1;
+            text-align: center;
+            font-size: 0.82rem;
+            opacity: 0.85;
+            padding: 0 16px;
+            line-height: 1.35;
+        }
+        .cart-bar-promo .qualified { color: var(--gold-pale); font-weight: 600; }
+        .cart-bar-promo:empty { display: none; }
+        @media (max-width: 640px) {
+            .cart-bar { flex-wrap: wrap; padding: 12px 16px 14px; gap: 8px; }
+            .cart-bar-promo {
+                order: 3;
+                flex-basis: 100%;
+                padding: 0;
+                font-size: 0.78rem;
+                text-align: center;
+                opacity: 0.75;
+            }
+        }
 
         .cart-bar-total {
             font-family: var(--font-display);
@@ -1699,10 +1721,11 @@
 
 <!-- CART BAR -->
 <div class="cart-bar" id="cart-bar">
-    <div>
+    <div class="cart-bar-left">
         <div class="cart-bar-info" id="cart-info">0 items</div>
         <div class="cart-bar-total" id="cart-total-display">0 MAD</div>
     </div>
+    <div class="cart-bar-promo" id="cart-bar-promo" aria-live="polite"></div>
     <button class="btn-checkout" onclick="openCheckout()" aria-label="Go to checkout">
         <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/></svg>
         {{ t.checkout }}
@@ -1847,6 +1870,37 @@ let paymentMethod = 'cod';
 let paypalRendered = false;
 let appliedPromo = null;
 let discountAmount = 0;
+let autoDiscount = { enabled: false, threshold: 0, percent: 0 };
+
+async function loadAutoDiscount() {
+    try {
+        const res = await fetch('/api/auto-discount');
+        const data = await res.json();
+        autoDiscount = {
+            enabled: !!data.enabled,
+            threshold: parseFloat(data.threshold) || 0,
+            percent: parseFloat(data.percent) || 0
+        };
+    } catch (e) { /* keep defaults */ }
+    updateCartBar();
+}
+
+function getCartSubtotal() {
+    let total = 0;
+    for (const [k, q] of Object.entries(cart)) {
+        const p = menuData.products[k];
+        if (p) total += p.price * q;
+    }
+    return total;
+}
+
+function getAutoDiscountAmount(subtotal) {
+    if (appliedPromo) return 0;
+    if (!autoDiscount.enabled) return 0;
+    if (autoDiscount.threshold <= 0 || autoDiscount.percent <= 0) return 0;
+    if (subtotal + 1e-9 < autoDiscount.threshold) return 0;
+    return Math.round(subtotal * autoDiscount.percent) / 100;  // round to 2dp (× percent then ÷100)
+}
 
 function switchLang(lang) {
     window.location.href = '/?lang=' + lang + window.location.hash;
@@ -1972,6 +2026,8 @@ function selectDate(dateStr, el) {
     }
 })();
 
+loadAutoDiscount();
+
 function saveCart() { localStorage.setItem('samarkand_cart', JSON.stringify(cart)); }
 
 function addToCart(key) {
@@ -2027,6 +2083,25 @@ function updateCartBar() {
     } else {
         bar.classList.remove('visible');
     }
+    renderAutoDiscountMessage(total);
+}
+
+function renderAutoDiscountMessage(subtotal) {
+    const el = document.getElementById('cart-bar-promo');
+    if (!el) return;
+    if (appliedPromo || !autoDiscount.enabled || autoDiscount.threshold <= 0 || autoDiscount.percent <= 0) {
+        el.innerHTML = '';
+        return;
+    }
+    const percentLabel = (autoDiscount.percent % 1 === 0) ? autoDiscount.percent.toString() : autoDiscount.percent.toFixed(1);
+    if (subtotal + 1e-9 >= autoDiscount.threshold) {
+        const tpl = T.auto_discount_qualified || 'You qualified for {percent}% off';
+        el.innerHTML = '<span class="qualified">✓ ' + tpl.replace('{percent}', percentLabel) + '</span>';
+    } else {
+        const remaining = (autoDiscount.threshold - subtotal).toFixed(2);
+        const tpl = T.auto_discount_progress || 'Add {amount} MAD more to get {percent}% off';
+        el.textContent = tpl.replace('{amount}', remaining).replace('{percent}', percentLabel);
+    }
 }
 
 function openCheckout() {
@@ -2065,11 +2140,27 @@ function renderCheckoutSummary() {
             </span>
         </div>`;
     }
+    const autoAmt = getAutoDiscountAmount(total);
     if (discountAmount > 0) {
         html += `<div class="cart-line" style="color:var(--success);"><span>${T.discount} (${appliedPromo})</span><span style="font-weight:600;">-${discountAmount.toFixed(2)} ${T.currency}</span></div>`;
-        html += `<div class="cart-line-total"><span>${T.total}</span><span class="amount">${(total - discountAmount).toFixed(2)} ${T.currency}</span></div>`;
-    } else {
-        html += `<div class="cart-line-total"><span>${T.total}</span><span class="amount">${total.toFixed(2)} ${T.currency}</span></div>`;
+    }
+    if (autoAmt > 0) {
+        const percentLabel = (autoDiscount.percent % 1 === 0) ? autoDiscount.percent.toString() : autoDiscount.percent.toFixed(1);
+        html += `<div class="cart-line" style="color:var(--success);"><span>${T.auto_discount_label || 'Order discount'} (${percentLabel}%)</span><span style="font-weight:600;">-${autoAmt.toFixed(2)} ${T.currency}</span></div>`;
+    }
+    const grand = Math.max(total - discountAmount - autoAmt, 0);
+    html += `<div class="cart-line-total"><span>${T.total}</span><span class="amount">${grand.toFixed(2)} ${T.currency}</span></div>`;
+    if (!appliedPromo && autoDiscount.enabled && autoDiscount.threshold > 0 && autoDiscount.percent > 0) {
+        const percentLabel = (autoDiscount.percent % 1 === 0) ? autoDiscount.percent.toString() : autoDiscount.percent.toFixed(1);
+        if (total + 1e-9 >= autoDiscount.threshold) {
+            const tpl = T.auto_discount_qualified || 'You qualified for {percent}% off';
+            html += `<div style="margin-top:10px;padding:10px 14px;background:rgba(45,122,79,0.08);border-radius:8px;font-size:0.85rem;color:var(--success);font-weight:600;text-align:center;">✓ ${tpl.replace('{percent}', percentLabel)}</div>`;
+        } else {
+            const remaining = (autoDiscount.threshold - total).toFixed(2);
+            const tpl = T.auto_discount_progress || 'Add {amount} MAD more to get {percent}% off';
+            const msg = tpl.replace('{amount}', remaining).replace('{percent}', percentLabel);
+            html += `<div style="margin-top:10px;padding:10px 14px;background:var(--warm-cream,#faf6f1);border:1px dashed var(--border);border-radius:8px;font-size:0.85rem;color:var(--text-secondary);text-align:center;">${msg}</div>`;
+        }
     }
     document.getElementById('checkout-summary').innerHTML = html;
 }
@@ -2175,7 +2266,9 @@ function getOrderTotal() {
         const p = menuData.products[k];
         if (p) total += p.price * q;
     }
+    const autoAmt = getAutoDiscountAmount(total);
     if (discountAmount) total -= discountAmount;
+    if (autoAmt) total -= autoAmt;
     return Math.max(total, 0);
 }
 

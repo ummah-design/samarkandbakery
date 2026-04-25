@@ -71,7 +71,11 @@
                 + '<div class="detail-row"><span class="label">Type:</span><span class="value">' + (o.delivery_type==='delivery'?'Delivery':'Pickup (Wilaya Centre)') + '</span></div>'
                 + (o.preferred_date?'<div class="detail-row"><span class="label">Delivery Date:</span><span class="value" style="font-weight:700;color:#b8860b;">' + o.preferred_date + '</span></div>':'')
                 + (o.delivery_address?'<div class="detail-row"><span class="label">Address:</span><span class="value" dir="auto">' + o.delivery_address + '</span></div>':'')
-                + (o.promo_code?'<div class="detail-row"><span class="label">Promo Code:</span><span class="value" style="font-weight:600;color:#2d7a4f;">' + o.promo_code + ' (-' + (o.discount_amount||0).toFixed(2) + ' MAD)</span></div>':'')
+                + (o.promo_code
+                    ? '<div class="detail-row"><span class="label">Promo Code:</span><span class="value" style="font-weight:600;color:#2d7a4f;">' + o.promo_code + ' (-' + (o.discount_amount||0).toFixed(2) + ' MAD)</span></div>'
+                    : ((o.discount_amount||0) > 0
+                        ? '<div class="detail-row"><span class="label">Auto Discount:</span><span class="value" style="font-weight:600;color:#2d7a4f;">-' + o.discount_amount.toFixed(2) + ' MAD</span></div>'
+                        : ''))
                 + (o.notes?'<div class="detail-row"><span class="label">Notes:</span><span class="value" dir="auto">' + o.notes + '</span></div>':'')
                 + '</div>'
                 + '<div class="detail-section"><h4>Items Ordered</h4>'

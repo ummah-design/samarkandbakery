@@ -529,6 +529,28 @@ def record_review_reminder(order_id):
     conn.close()
 
 
+def dismiss_review_request(order_id):
+    """Mark a review request as dismissed (manually closed by admin)."""
+    conn = get_db()
+    conn.execute(
+        "UPDATE review_requests SET status = 'dismissed' WHERE order_id = ?",
+        (order_id,)
+    )
+    conn.commit()
+    conn.close()
+
+
+def restore_review_request(order_id):
+    """Restore a dismissed review request back to its send/remind state."""
+    conn = get_db()
+    conn.execute(
+        "UPDATE review_requests SET status = CASE WHEN reminder_sent_at IS NULL THEN 'sent' ELSE 'reminded' END WHERE order_id = ? AND status = 'dismissed'",
+        (order_id,)
+    )
+    conn.commit()
+    conn.close()
+
+
 def get_review_requests():
     """Get all review requests with order details and review status."""
     conn = get_db()

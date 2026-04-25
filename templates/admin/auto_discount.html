@@ -1,0 +1,99 @@
+{% extends "admin_base.html" %}
+{% block title %}Auto Discount{% endblock %}
+{% block page_title %}Auto Discount{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Threshold-based Order Discount</h2>
+    <p style="color:var(--text-secondary);font-size:0.92em;margin-bottom:18px;">
+        Automatically give every customer a percentage off when their cart subtotal reaches a threshold.
+        Customers see live progress in the cart bar (e.g. <em>"Add 50 MAD more to get 5% off"</em>).
+        This does <strong>not stack</strong> with promo codes — if a customer applies a promo, the auto-discount is skipped.
+    </p>
+
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
+        <label style="margin:0;text-transform:none;font-size:1em;color:var(--text-primary);font-weight:600;">
+            <input type="checkbox" id="ad-enabled" style="width:auto;margin-right:8px;vertical-align:middle;">
+            Enable auto-discount
+        </label>
+    </div>
+
+    <div class="form-row">
+        <div>
+            <label>Threshold (MAD)</label>
+            <input type="number" id="ad-threshold" min="0" step="1" placeholder="e.g. 200">
+        </div>
+        <div>
+            <label>Discount (%)</label>
+            <input type="number" id="ad-percent" min="0" max="100" step="0.5" placeholder="e.g. 5">
+        </div>
+    </div>
+
+    <div id="ad-preview" style="background:var(--warm-bg-alt);border-radius:8px;padding:14px 16px;margin-bottom:18px;font-size:0.95em;color:var(--text-secondary);"></div>
+
+    <button class="btn" id="ad-save" onclick="saveAutoDiscount()">Save Settings</button>
+    <span id="ad-status" style="margin-left:14px;font-weight:600;"></span>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function renderPreview() {
+        var enabled = document.getElementById('ad-enabled').checked;
+        var th = parseFloat(document.getElementById('ad-threshold').value) || 0;
+        var pc = parseFloat(document.getElementById('ad-percent').value) || 0;
+        var box = document.getElementById('ad-preview');
+        if (!enabled) {
+            box.innerHTML = '<strong>Disabled.</strong> No auto-discount will be applied.';
+            return;
+        }
+        if (th <= 0 || pc <= 0) {
+            box.innerHTML = 'Set a threshold and percentage to activate.';
+            return;
+        }
+        var saving = (th * pc / 100).toFixed(2);
+        box.innerHTML = 'Customers spending <strong>' + th.toFixed(2) + ' MAD</strong> or more will get <strong>' + pc + '% off</strong> (≈ ' + saving + ' MAD saving on a ' + th.toFixed(2) + ' MAD order).';
+    }
+
+    async function loadSettings() {
+        var res = await fetch('/api/admin/auto-discount');
+        var cfg = await res.json();
+        document.getElementById('ad-enabled').checked = !!cfg.enabled;
+        document.getElementById('ad-threshold').value = cfg.threshold || '';
+        document.getElementById('ad-percent').value = cfg.percent || '';
+        renderPreview();
+    }
+
+    async function saveAutoDiscount() {
+        var btn = document.getElementById('ad-save');
+        var status = document.getElementById('ad-status');
+        btn.classList.add('btn-loading');
+        status.textContent = '';
+        var payload = {
+            enabled: document.getElementById('ad-enabled').checked,
+            threshold: parseFloat(document.getElementById('ad-threshold').value) || 0,
+            percent: parseFloat(document.getElementById('ad-percent').value) || 0
+        };
+        var res = await fetch('/api/admin/auto-discount', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        var data = await res.json();
+        btn.classList.remove('btn-loading');
+        if (data.success) {
+            status.style.color = 'var(--success)';
+            status.textContent = '✓ Saved';
+            setTimeout(function() { status.textContent = ''; }, 2500);
+            renderPreview();
+        } else {
+            status.style.color = 'var(--danger)';
+            status.textContent = data.error || 'Error saving';
+        }
+    }
+
+    document.getElementById('ad-enabled').addEventListener('change', renderPreview);
+    document.getElementById('ad-threshold').addEventListener('input', renderPreview);
+    document.getElementById('ad-percent').addEventListener('input', renderPreview);
+    loadSettings();
+</script>
+{% endblock %}

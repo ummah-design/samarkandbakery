@@ -638,6 +638,10 @@ def notify_new_order(order):
         "Total: " + str(round(order.get("total_price", 0), 2)) + " MAD | " + payment,
         ("Delivery" if delivery_type == "delivery" else "Pickup") + ": " + when,
     ]
+    disc = order.get("discount_amount", 0) or 0
+    if disc > 0:
+        label = order.get("promo_code") or "auto"
+        lines.append("Discount: -" + str(round(disc, 2)) + " MAD (" + label + ")")
     if delivery_type == "delivery" and order.get("delivery_address"):
         lines.append("Address: " + order["delivery_address"])
     if order.get("notes"):

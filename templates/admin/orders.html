@@ -158,7 +158,11 @@
                 + '<div class="detail-row"><span class="label">Type:</span><span class="value">' + (order.delivery_type==='delivery'?'Delivery':'Pickup (Wilaya Centre)') + '</span></div>'
                 + (order.pickup_time?'<div class="detail-row"><span class="label">Pickup Time:</span><span class="value" style="font-weight:700;color:#1e2a4a;">' + order.pickup_time + '</span></div>':'')
                 + (order.preferred_date?'<div class="detail-row"><span class="label">Delivery Date:</span><span class="value" style="font-weight:700;color:#b8860b;">' + order.preferred_date + '</span></div>':'')
-                + (order.promo_code?'<div class="detail-row"><span class="label">Promo Code:</span><span class="value" style="font-weight:600;color:#2d7a4f;">' + order.promo_code + ' (-' + (order.discount_amount||0).toFixed(2) + ' MAD)</span></div>':'')
+                + (order.promo_code
+                    ? '<div class="detail-row"><span class="label">Promo Code:</span><span class="value" style="font-weight:600;color:#2d7a4f;">' + order.promo_code + ' (-' + (order.discount_amount||0).toFixed(2) + ' MAD)</span></div>'
+                    : ((order.discount_amount||0) > 0
+                        ? '<div class="detail-row"><span class="label">Auto Discount:</span><span class="value" style="font-weight:600;color:#2d7a4f;">-' + order.discount_amount.toFixed(2) + ' MAD</span></div>'
+                        : ''))
                 + (order.delivery_address?'<div class="detail-row"><span class="label">Address:</span><span class="value" dir="auto">' + order.delivery_address + '</span></div>':'')
                 + (order.notes?'<div class="detail-row"><span class="label">Notes:</span><span class="value" dir="auto">' + order.notes + '</span></div>':'')
                 + '<div class="detail-row"><span class="label">Payment:</span><span class="value">' + (order.payment_method==='paypal'?'PayPal':'Cash on Delivery') + ' — <strong style="color:' + (order.payment_status==='paid'?'#2d7a4f':'#b8860b') + '">' + (order.payment_status||'unpaid').toUpperCase() + '</strong></span></div>'
@@ -181,7 +185,10 @@
             }
             html += '</table></div>';
 
+            var disc = order.discount_amount || 0;
             html += '<div class="detail-section"><h4>Financials</h4>'
+                + (disc > 0 ? '<div class="detail-row"><span class="label">Subtotal:</span><span class="value">' + ((order.total_price||0) + disc).toFixed(2) + ' MAD</span></div>' : '')
+                + (disc > 0 ? '<div class="detail-row"><span class="label">Discount:</span><span class="value" style="color:#2d7a4f;">-' + disc.toFixed(2) + ' MAD' + (order.promo_code ? ' (' + order.promo_code + ')' : ' (auto)') + '</span></div>' : '')
                 + '<div class="detail-row"><span class="label">Received:</span><span class="value">' + (order.total_price||0).toFixed(2) + ' MAD</span></div>'
                 + '<div class="detail-row"><span class="label">Cost:</span><span class="value">' + (order.total_cost||0).toFixed(2) + ' MAD</span></div>'
                 + '<div class="detail-row"><span class="label">Profit:</span><span class="value ' + pc + '">' + (order.total_profit||0).toFixed(2) + ' MAD</span></div>'

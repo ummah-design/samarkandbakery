@@ -37,6 +37,7 @@ from database import (create_order, get_orders, get_order, get_orders_by_date,
                       create_promo, validate_promo, use_promo, get_promos, toggle_promo,
                       get_promo_usage,
                       record_review_request, record_review_reminder,
+                      dismiss_review_request, restore_review_request,
                       get_review_requests, get_customer_review_stats,
                       get_unrequested_completed_orders,
                       update_payment_status,
@@ -148,6 +149,54 @@ def save_blocked_dates(dates):
         print("Error saving blocked dates: " + str(e))
 
 
+AUTO_DISCOUNT_DEFAULT = {"enabled": False, "threshold": 200.0, "percent": 5.0}
+
+
+def load_auto_discount():
+    """Load auto-discount settings (threshold-based order discount)."""
+    path = os.path.join(DATA_DIR, "auto_discount.json")
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            cfg = json.load(f)
+        return {
+            "enabled": bool(cfg.get("enabled", False)),
+            "threshold": float(cfg.get("threshold", 0) or 0),
+            "percent": float(cfg.get("percent", 0) or 0),
+        }
+    except Exception:
+        try:
+            with open(path, "w", encoding="utf-8") as f:
+                json.dump(AUTO_DISCOUNT_DEFAULT, f, indent=2)
+        except Exception:
+            pass
+        return dict(AUTO_DISCOUNT_DEFAULT)
+
+
+def save_auto_discount(cfg):
+    """Save auto-discount settings."""
+    path = os.path.join(DATA_DIR, "auto_discount.json")
+    payload = {
+        "enabled": bool(cfg.get("enabled", False)),
+        "threshold": float(cfg.get("threshold", 0) or 0),
+        "percent": float(cfg.get("percent", 0) or 0),
+    }
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2)
+    return payload
+
+
+def compute_auto_discount(subtotal, promo_applied=False):
+    """Return auto-discount amount for a given subtotal, or 0."""
+    cfg = load_auto_discount()
+    if not cfg["enabled"] or promo_applied:
+        return 0.0, cfg
+    if cfg["threshold"] <= 0 or cfg["percent"] <= 0:
+        return 0.0, cfg
+    if subtotal + 1e-9 < cfg["threshold"]:
+        return 0.0, cfg
+    return round(subtotal * cfg["percent"] / 100.0, 2), cfg
+
+
 def get_lang():
     """Get current language from query param, session, or default to 'en'."""
     lang = request.args.get("lang")
@@ -221,6 +270,12 @@ def api_public_blocked_dates():
     return jsonify(load_blocked_dates())
 
 
+@app.route("/api/auto-discount")
+def api_public_auto_discount():
+    """Public endpoint for customer page to read auto-discount config."""
+    return jsonify(load_auto_discount())
+
+
 @app.route("/api/orders/submit", methods=["POST"])
 def api_submit_order():
     req = request.json
@@ -249,14 +304,23 @@ def api_submit_order():
         })
 
     # Validate and apply promo code if provided
+    subtotal = total_price
     promo_code = req.get("promo_code", "").strip().upper() or None
     discount_amt = 0
+    promo_applied = False
     if promo_code:
-        promo_result = validate_promo(promo_code, total_price)
+        promo_result = validate_promo(promo_code, subtotal)
         if promo_result.get("valid"):
             discount_amt = promo_result["discount_amount"]
             total_price -= discount_amt
             use_promo(promo_code)
+            promo_applied = True
+
+    # Auto-discount (threshold-based) — only if no promo applied
+    auto_amt, _ = compute_auto_discount(subtotal, promo_applied=promo_applied)
+    if auto_amt > 0:
+        discount_amt += auto_amt
+        total_price -= auto_amt
 
     data = load_data()
     cost_items = [{"recipe_key": i["key"], "quantity": i["quantity"]} for i in items]
@@ -303,6 +367,8 @@ def api_submit_order():
                 "customer_phone": req["customer_phone"],
                 "items": order_items,
                 "total_price": round(total_price, 2),
+                "discount_amount": round(discount_amt, 2),
+                "promo_code": promo_code,
                 "delivery_type": req.get("delivery_type", "pickup"),
                 "preferred_date": req.get("preferred_date"),
                 "pickup_time": req.get("pickup_time"),
@@ -465,6 +531,33 @@ def admin_reviews_page():
 @admin_required
 def admin_promo_codes_page():
     return render_template("admin/promo_codes.html", active_page="promo_codes")
+
+
+@app.route("/admin/auto-discount")
+@admin_required
+def admin_auto_discount_page():
+    return render_template("admin/auto_discount.html", active_page="auto_discount")
+
+
+@app.route("/api/admin/auto-discount", methods=["GET", "POST"])
+@admin_required
+def api_admin_auto_discount():
+    if request.method == "GET":
+        return jsonify(load_auto_discount())
+    req = request.json or {}
+    try:
+        threshold = float(req.get("threshold", 0) or 0)
+        percent = float(req.get("percent", 0) or 0)
+    except (TypeError, ValueError):
+        return jsonify({"error": "Invalid number"}), 400
+    if threshold < 0 or percent < 0 or percent > 100:
+        return jsonify({"error": "Threshold must be ≥ 0 and percent 0–100."}), 400
+    saved = save_auto_discount({
+        "enabled": bool(req.get("enabled", False)),
+        "threshold": threshold,
+        "percent": percent,
+    })
+    return jsonify({"success": True, "config": saved})
 
 
 @app.route("/admin/customers")
@@ -1133,6 +1226,22 @@ def api_admin_send_reminder(order_id):
             return jsonify({"error": "Failed to send email"}), 500
 
     record_review_reminder(order_id)
+    return jsonify({"success": True})
+
+
+@app.route("/api/admin/review-requests/<int:order_id>/dismiss", methods=["POST"])
+@admin_required
+def api_admin_dismiss_review_request(order_id):
+    """Dismiss a review request so it stops appearing in Awaiting."""
+    dismiss_review_request(order_id)
+    return jsonify({"success": True})
+
+
+@app.route("/api/admin/review-requests/<int:order_id>/restore", methods=["POST"])
+@admin_required
+def api_admin_restore_review_request(order_id):
+    """Restore a previously dismissed review request."""
+    restore_review_request(order_id)
     return jsonify({"success": True})
 
 

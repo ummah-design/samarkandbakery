@@ -114,6 +114,9 @@
         "btn_new_order": "Place Another Order",
         "discount": "Discount",
         "total": "Total",
+        "auto_discount_label": "Order discount",
+        "auto_discount_progress": "Add {amount} MAD more to get {percent}% off",
+        "auto_discount_qualified": "You qualified for {percent}% off",
 
         "alert_name_phone": "Please enter your name, email, and phone number.",
         "alert_date": "Please select a preferred date.",
@@ -273,6 +276,9 @@
         "btn_new_order": "Passer une Autre Commande",
         "discount": "Réduction",
         "total": "Total",
+        "auto_discount_label": "Réduction commande",
+        "auto_discount_progress": "Ajoutez {amount} MAD pour obtenir {percent}% de réduction",
+        "auto_discount_qualified": "Vous bénéficiez de {percent}% de réduction",
 
         "alert_name_phone": "Veuillez entrer votre nom, email et numéro de téléphone.",
         "alert_date": "Veuillez sélectionner une date.",
@@ -432,6 +438,9 @@
         "btn_new_order": "تقديم طلب آخر",
         "discount": "خصم",
         "total": "المجموع",
+        "auto_discount_label": "خصم الطلب",
+        "auto_discount_progress": "أضف {amount} درهم للحصول على خصم {percent}٪",
+        "auto_discount_qualified": "لقد حصلت على خصم {percent}٪",
 
         "alert_name_phone": "يرجى إدخال الاسم والبريد الإلكتروني ورقم الهاتف.",
         "alert_date": "يرجى اختيار تاريخ.",

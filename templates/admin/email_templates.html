@@ -1,0 +1,379 @@
+{% extends "admin_base.html" %}
+{% block title %}Email Templates{% endblock %}
+{% block page_title %}Email Templates{% endblock %}
+
+{% block extra_css %}
+.tpl-tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+.tpl-tab {
+    padding: 9px 18px;
+    border: 1.5px solid var(--border);
+    background: var(--card-bg);
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.88em;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+}
+.tpl-tab:hover { border-color: var(--navy); color: var(--navy); }
+.tpl-tab.active {
+    background: var(--navy);
+    color: white;
+    border-color: var(--navy);
+}
+
+.lang-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+    border-bottom: 1.5px solid var(--border);
+}
+.lang-tab {
+    padding: 8px 16px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 0.92em;
+    font-weight: 600;
+    color: var(--text-muted);
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1.5px;
+    transition: all var(--transition-fast);
+    font-family: 'Source Sans 3', sans-serif;
+}
+.lang-tab:hover { color: var(--navy); }
+.lang-tab.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+}
+
+.tpl-meta {
+    background: var(--warm-bg-alt);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+}
+.tpl-meta .label {
+    font-size: 0.74em;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+    font-weight: 600;
+}
+.tpl-meta .desc {
+    color: var(--text-secondary);
+    font-size: 0.9em;
+    margin-bottom: 10px;
+}
+.placeholders {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.placeholder-chip {
+    background: #fff;
+    border: 1px solid var(--border);
+    color: var(--navy);
+    padding: 4px 10px;
+    border-radius: 14px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.78em;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    user-select: none;
+}
+.placeholder-chip:hover {
+    background: var(--gold);
+    color: white;
+    border-color: var(--gold);
+}
+
+.editor-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+.editor-col label {
+    display: block;
+    margin-bottom: 6px;
+}
+.editor-col textarea {
+    font-family: 'Courier New', 'Menlo', monospace;
+    font-size: 0.86em;
+    line-height: 1.5;
+    min-height: 360px;
+    background: #fff;
+}
+.preview-frame {
+    width: 100%;
+    min-height: 380px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: #f5f0eb;
+}
+
+.btn-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.lang-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.7em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 6px;
+    background: var(--warm-bg);
+    color: var(--text-secondary);
+}
+.lang-pill.primary {
+    background: rgba(184,134,11,0.15);
+    color: var(--gold);
+}
+
+@media (max-width: 900px) {
+    .editor-grid { grid-template-columns: 1fr; }
+}
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Email Template Editor</h2>
+    <p style="color:var(--text-secondary);font-size:0.92em;margin-bottom:14px;">
+        Edit the subject line and HTML body of every transactional email in all three languages.
+        Use the placeholder chips below — they're substituted at send time. Click <strong>Preview</strong>
+        to see the rendered email with sample data.
+    </p>
+
+    <div class="tpl-tabs" id="type-tabs">
+        {% for ttype in template_types %}
+            <button class="tpl-tab" data-type="{{ ttype }}">{{ ttype.replace('_', ' ').title() }}</button>
+        {% endfor %}
+    </div>
+
+    <div class="lang-tabs" id="lang-tabs">
+        {% for lang in template_languages %}
+            <button class="lang-tab" data-lang="{{ lang }}">
+                {% if lang == 'en' %}English{% elif lang == 'fr' %}Français{% else %}العربية{% endif %}
+                <span class="lang-pill" id="primary-pill-{{ lang }}" style="display:none;">Primary</span>
+            </button>
+        {% endfor %}
+    </div>
+
+    <div class="tpl-meta">
+        <div class="label">Description</div>
+        <div class="desc" id="meta-desc">—</div>
+        <div class="label" style="margin-top:8px;">Available placeholders <span style="color:var(--text-muted);font-weight:400;text-transform:none;letter-spacing:0;">(click to copy)</span></div>
+        <div class="placeholders" id="placeholders"></div>
+    </div>
+
+    <label for="tpl-subject">Subject line</label>
+    <input type="text" id="tpl-subject" placeholder="e.g. Order #{{ '{' }}{{ '{' }}order_id{{ '}' }}{{ '}' }} Received">
+
+    <div class="editor-grid">
+        <div class="editor-col">
+            <label for="tpl-body">HTML body (inner card content — header & footer wrap automatically)</label>
+            <textarea id="tpl-body" spellcheck="false"></textarea>
+        </div>
+        <div class="editor-col">
+            <label>Live preview</label>
+            <iframe id="preview" class="preview-frame" sandbox="allow-same-origin"></iframe>
+            <div style="font-size:0.78em;color:var(--text-muted);margin-top:6px;">
+                Preview uses sample order data. Click <em>Refresh preview</em> after editing.
+            </div>
+        </div>
+    </div>
+
+    <div class="btn-row">
+        <button class="btn" id="save-btn" onclick="saveTemplate()">Save Template</button>
+        <button class="btn btn-secondary" onclick="refreshPreview()">Refresh Preview</button>
+        <button class="btn btn-danger" onclick="resetTemplate()" style="background:#9a9aad;">Reset to Default</button>
+        <span id="status" style="margin-left:8px;font-weight:600;"></span>
+        <span id="last-updated" style="color:var(--text-muted);font-size:0.85em;margin-left:auto;"></span>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var TEMPLATE_TYPES = {{ template_types | tojson }};
+    var TEMPLATE_LANGUAGES = {{ template_languages | tojson }};
+
+    var state = {
+        currentType: TEMPLATE_TYPES[0],
+        currentLang: 'en',
+        templates: {},
+        meta: {},
+        primary: 'en',
+        dirty: false
+    };
+
+    function showStatus(msg, kind) {
+        var s = document.getElementById('status');
+        s.style.color = kind === 'error' ? 'var(--danger)' : 'var(--success)';
+        s.textContent = msg;
+        if (kind !== 'error') {
+            setTimeout(function() { s.textContent = ''; }, 2500);
+        }
+    }
+
+    function renderTabs() {
+        var typeTabs = document.querySelectorAll('#type-tabs .tpl-tab');
+        for (var i = 0; i < typeTabs.length; i++) {
+            var tab = typeTabs[i];
+            var label = (state.meta[tab.dataset.type] || {}).label || tab.dataset.type;
+            tab.textContent = label;
+            tab.classList.toggle('active', tab.dataset.type === state.currentType);
+            tab.onclick = (function(t) { return function() { switchType(t); }; })(tab.dataset.type);
+        }
+        var langTabs = document.querySelectorAll('#lang-tabs .lang-tab');
+        for (var j = 0; j < langTabs.length; j++) {
+            var lt = langTabs[j];
+            lt.classList.toggle('active', lt.dataset.lang === state.currentLang);
+            lt.onclick = (function(l) { return function() { switchLang(l); }; })(lt.dataset.lang);
+        }
+        TEMPLATE_LANGUAGES.forEach(function(lang) {
+            var pill = document.getElementById('primary-pill-' + lang);
+            if (pill) {
+                pill.style.display = (lang === state.primary) ? '' : 'none';
+                pill.classList.add('primary');
+            }
+        });
+    }
+
+    function renderMeta() {
+        var meta = state.meta[state.currentType] || {};
+        document.getElementById('meta-desc').textContent = meta.description || '';
+        var box = document.getElementById('placeholders');
+        box.innerHTML = '';
+        (meta.placeholders || []).forEach(function(ph) {
+            var chip = document.createElement('span');
+            chip.className = 'placeholder-chip';
+            var token = '{{ '{{' }}' + ph + '{{ '}}' }}';
+            chip.textContent = token;
+            chip.title = 'Click to copy ' + token;
+            chip.onclick = function() { copyToken(token); };
+            box.appendChild(chip);
+        });
+    }
+
+    function copyToken(token) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(token);
+            showStatus('Copied ' + token, 'ok');
+        }
+    }
+
+    function loadCurrentIntoEditor() {
+        var tpl = ((state.templates[state.currentType] || {})[state.currentLang]) || { subject: '', body_html: '', updated_at: null };
+        document.getElementById('tpl-subject').value = tpl.subject || '';
+        document.getElementById('tpl-body').value = tpl.body_html || '';
+        document.getElementById('last-updated').textContent = tpl.updated_at ? ('Last updated ' + tpl.updated_at) : '';
+        state.dirty = false;
+        refreshPreview();
+    }
+
+    function switchType(t) {
+        if (state.dirty && !confirm('Unsaved changes will be lost. Continue?')) return;
+        state.currentType = t;
+        renderTabs();
+        renderMeta();
+        loadCurrentIntoEditor();
+    }
+
+    function switchLang(l) {
+        if (state.dirty && !confirm('Unsaved changes will be lost. Continue?')) return;
+        state.currentLang = l;
+        renderTabs();
+        loadCurrentIntoEditor();
+    }
+
+    async function loadAll() {
+        var res = await fetch('/api/admin/email-templates');
+        var data = await res.json();
+        state.templates = data.templates || {};
+        state.meta = data.meta || {};
+        state.primary = data.primary_language || 'en';
+        state.currentLang = state.primary;
+        renderTabs();
+        renderMeta();
+        loadCurrentIntoEditor();
+    }
+
+    async function saveTemplate() {
+        var btn = document.getElementById('save-btn');
+        btn.classList.add('btn-loading');
+        var subject = document.getElementById('tpl-subject').value;
+        var body_html = document.getElementById('tpl-body').value;
+        var url = '/api/admin/email-templates/' + state.currentType + '/' + state.currentLang;
+        var res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ subject: subject, body_html: body_html })
+        });
+        var data = await res.json();
+        btn.classList.remove('btn-loading');
+        if (data.success) {
+            // update local state
+            if (!state.templates[state.currentType]) state.templates[state.currentType] = {};
+            state.templates[state.currentType][state.currentLang] = {
+                subject: subject, body_html: body_html, updated_at: new Date().toISOString().replace('T', ' ').substring(0, 19)
+            };
+            document.getElementById('last-updated').textContent = 'Just saved';
+            state.dirty = false;
+            showStatus('✓ Saved', 'ok');
+        } else {
+            showStatus(data.error || 'Save failed', 'error');
+        }
+    }
+
+    async function resetTemplate() {
+        if (!confirm('Restore the default ' + state.currentType + ' / ' + state.currentLang + ' template? Your edits will be replaced.')) return;
+        var url = '/api/admin/email-templates/' + state.currentType + '/' + state.currentLang + '/reset';
+        var res = await fetch(url, { method: 'POST' });
+        var data = await res.json();
+        if (data.success) {
+            if (!state.templates[state.currentType]) state.templates[state.currentType] = {};
+            state.templates[state.currentType][state.currentLang] = data.template;
+            loadCurrentIntoEditor();
+            showStatus('✓ Restored to default', 'ok');
+        } else {
+            showStatus(data.error || 'Reset failed', 'error');
+        }
+    }
+
+    async function refreshPreview() {
+        var subject = document.getElementById('tpl-subject').value;
+        var body_html = document.getElementById('tpl-body').value;
+        var url = '/api/admin/email-templates/' + state.currentType + '/' + state.currentLang + '/preview';
+        var res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ subject: subject, body_html: body_html })
+        });
+        var data = await res.json();
+        var iframe = document.getElementById('preview');
+        var doc = iframe.contentDocument || iframe.contentWindow.document;
+        doc.open();
+        doc.write(data.html || '<p style="padding:20px;color:#666;">No preview available.</p>');
+        doc.close();
+    }
+
+    document.getElementById('tpl-subject').addEventListener('input', function() { state.dirty = true; });
+    document.getElementById('tpl-body').addEventListener('input', function() { state.dirty = true; });
+
+    loadAll();
+</script>
+{% endblock %}

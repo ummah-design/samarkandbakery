@@ -170,7 +170,8 @@
     "review_success": "Thank you! Your review will appear after approval.",
     "added": "Added!",
     "submitting": "Submitting...",
-    "free_label": "Free"
+    "free_label": "Free",
+    "wa_confirm": "Confirm on WhatsApp"
   },
   "fr": {
     "lang_name": "Français",
@@ -343,7 +344,8 @@
     "review_success": "Merci ! Votre avis apparaîtra après approbation.",
     "added": "Ajouté !",
     "submitting": "Envoi en cours...",
-    "free_label": "Offert"
+    "free_label": "Offert",
+    "wa_confirm": "Confirmer sur WhatsApp"
   },
   "ar": {
     "lang_name": "العربية",
@@ -516,6 +518,7 @@
     "review_success": "شكراً! سيظهر رأيك بعد الموافقة عليه.",
     "added": "!تمت الإضافة",
     "submitting": "جاري الإرسال...",
-    "free_label": "مجاناً"
+    "free_label": "مجاناً",
+    "wa_confirm": "تأكيد عبر واتساب"
   }
 }

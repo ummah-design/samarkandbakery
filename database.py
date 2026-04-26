@@ -119,25 +119,28 @@ def create_order(customer_name, customer_email, customer_phone, delivery_type,
                  items, total_price, total_cost=None, total_profit=None,
                  promo_code=None, discount_amount=0,
                  preferred_date=None, pickup_time=None, notes=None,
-                 payment_method='cod', payment_status='unpaid', paypal_order_id=None):
+                 payment_method='cod', payment_status='unpaid', paypal_order_id=None,
+                 customer_lang=None):
     """Save a new order. items should be a list of dicts."""
     customer_phone = normalise_phone(customer_phone)
     if customer_email:
         customer_email = customer_email.strip().lower()
+    if customer_lang not in ("en", "fr", "ar"):
+        customer_lang = None
     conn = get_db()
     cursor = conn.execute("""
         INSERT INTO orders (customer_name, customer_email, customer_phone, delivery_type,
                           delivery_address, delivery_lat, delivery_lng,
                           items, total_price, total_cost, total_profit,
                           promo_code, discount_amount, preferred_date, pickup_time, notes,
-                          payment_method, payment_status, paypal_order_id)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                          payment_method, payment_status, paypal_order_id, customer_lang)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         customer_name, customer_email, customer_phone, delivery_type,
         delivery_address, delivery_lat, delivery_lng,
         json.dumps(items), total_price, total_cost, total_profit,
         promo_code, discount_amount, preferred_date, pickup_time, notes,
-        payment_method, payment_status, paypal_order_id
+        payment_method, payment_status, paypal_order_id, customer_lang
     ))
     conn.commit()
     order_id = cursor.lastrowid
@@ -1256,6 +1259,224 @@ def blog_slug_exists(slug, exclude_id=None):
     return row is not None
 
 
+# ── Site config (admin-editable settings) ──
+
+DEFAULT_SITE_CONFIG = {
+    "primary_language": "en",
+}
+
+
+def init_site_config_table():
+    """Create site_config table if it doesn't exist and seed defaults."""
+    conn = get_db()
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS site_config (
+            key TEXT PRIMARY KEY,
+            value TEXT,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    for k, v in DEFAULT_SITE_CONFIG.items():
+        conn.execute("INSERT OR IGNORE INTO site_config (key, value) VALUES (?, ?)", (k, v))
+    conn.commit()
+    conn.close()
+
+
+def get_config(key, default=None):
+    """Get a single config value by key."""
+    conn = get_db()
+    row = conn.execute("SELECT value FROM site_config WHERE key = ?", (key,)).fetchone()
+    conn.close()
+    if row:
+        return row["value"]
+    return DEFAULT_SITE_CONFIG.get(key, default)
+
+
+def set_config(key, value):
+    """Set a single config value by key."""
+    conn = get_db()
+    conn.execute("""
+        INSERT INTO site_config (key, value, updated_at)
+        VALUES (?, ?, CURRENT_TIMESTAMP)
+        ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = CURRENT_TIMESTAMP
+    """, (key, value))
+    conn.commit()
+    conn.close()
+
+
+def get_all_config():
+    """Get all config values as a dict, falling back to defaults."""
+    conn = get_db()
+    rows = conn.execute("SELECT key, value FROM site_config").fetchall()
+    conn.close()
+    cfg = dict(DEFAULT_SITE_CONFIG)
+    for r in rows:
+        cfg[r["key"]] = r["value"]
+    return cfg
+
+
+def get_primary_language():
+    """Convenience: site default language ('en'/'fr'/'ar')."""
+    val = get_config("primary_language", "en")
+    if val not in ("en", "fr", "ar"):
+        return "en"
+    return val
+
+
+# ── Email templates (admin-editable, stored per type x language) ──
+
+EMAIL_TEMPLATE_TYPES = (
+    "order_placed",
+    "order_confirmed",
+    "order_completed",
+    "contact_inquiry",
+    "loyalty_code",
+)
+EMAIL_TEMPLATE_LANGUAGES = ("en", "fr", "ar")
+
+
+def init_email_templates_table():
+    """Create the email_templates table; seed defaults for missing rows."""
+    conn = get_db()
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS email_templates (
+            template_type TEXT NOT NULL,
+            language TEXT NOT NULL,
+            subject TEXT NOT NULL,
+            body_html TEXT NOT NULL,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (template_type, language)
+        )
+    """)
+    conn.commit()
+    conn.close()
+    seed_email_templates()
+
+
+def seed_email_templates(force=False):
+    """Insert default subject/body for any (type, lang) row missing.
+    If force=True, overwrite existing rows with defaults."""
+    try:
+        from email_defaults import DEFAULT_EMAIL_TEMPLATES
+    except Exception:
+        DEFAULT_EMAIL_TEMPLATES = {}
+    conn = get_db()
+    for ttype in EMAIL_TEMPLATE_TYPES:
+        for lang in EMAIL_TEMPLATE_LANGUAGES:
+            tpl = DEFAULT_EMAIL_TEMPLATES.get(ttype, {}).get(lang)
+            if not tpl:
+                continue
+            if force:
+                conn.execute("""
+                    INSERT INTO email_templates (template_type, language, subject, body_html, updated_at)
+                    VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+                    ON CONFLICT(template_type, language) DO UPDATE SET
+                        subject = excluded.subject,
+                        body_html = excluded.body_html,
+                        updated_at = CURRENT_TIMESTAMP
+                """, (ttype, lang, tpl["subject"], tpl["body_html"]))
+            else:
+                conn.execute("""
+                    INSERT OR IGNORE INTO email_templates (template_type, language, subject, body_html)
+                    VALUES (?, ?, ?, ?)
+                """, (ttype, lang, tpl["subject"], tpl["body_html"]))
+    conn.commit()
+    conn.close()
+
+
+def get_email_template(template_type, language):
+    """Fetch a single template by (type, lang). Returns dict or None."""
+    conn = get_db()
+    row = conn.execute(
+        "SELECT template_type, language, subject, body_html, updated_at "
+        "FROM email_templates WHERE template_type = ? AND language = ?",
+        (template_type, language)
+    ).fetchone()
+    conn.close()
+    if row:
+        return dict(row)
+    return None
+
+
+def get_email_template_with_fallback(template_type, language):
+    """Fetch a template, falling back to primary_language then 'en'."""
+    tpl = get_email_template(template_type, language)
+    if tpl:
+        return tpl
+    primary = get_primary_language()
+    if primary != language:
+        tpl = get_email_template(template_type, primary)
+        if tpl:
+            return tpl
+    if language != "en" and primary != "en":
+        tpl = get_email_template(template_type, "en")
+        if tpl:
+            return tpl
+    return None
+
+
+def get_all_email_templates():
+    """Return all templates as nested dict: {type: {lang: {subject, body_html, updated_at}}}."""
+    conn = get_db()
+    rows = conn.execute(
+        "SELECT template_type, language, subject, body_html, updated_at FROM email_templates"
+    ).fetchall()
+    conn.close()
+    out = {}
+    for r in rows:
+        out.setdefault(r["template_type"], {})[r["language"]] = {
+            "subject": r["subject"],
+            "body_html": r["body_html"],
+            "updated_at": r["updated_at"],
+        }
+    return out
+
+
+def update_email_template(template_type, language, subject, body_html):
+    """Save edits to a single template."""
+    if template_type not in EMAIL_TEMPLATE_TYPES:
+        raise ValueError("Unknown template type: " + str(template_type))
+    if language not in EMAIL_TEMPLATE_LANGUAGES:
+        raise ValueError("Unknown language: " + str(language))
+    conn = get_db()
+    conn.execute("""
+        INSERT INTO email_templates (template_type, language, subject, body_html, updated_at)
+        VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+        ON CONFLICT(template_type, language) DO UPDATE SET
+            subject = excluded.subject,
+            body_html = excluded.body_html,
+            updated_at = CURRENT_TIMESTAMP
+    """, (template_type, language, subject, body_html))
+    conn.commit()
+    conn.close()
+
+
+def reset_email_template(template_type, language):
+    """Restore a single template to its default."""
+    try:
+        from email_defaults import DEFAULT_EMAIL_TEMPLATES
+    except Exception:
+        return False
+    tpl = DEFAULT_EMAIL_TEMPLATES.get(template_type, {}).get(language)
+    if not tpl:
+        return False
+    update_email_template(template_type, language, tpl["subject"], tpl["body_html"])
+    return True
+
+
+# ── Order language migration ──
+
+def init_order_language_column():
+    """Add customer_lang column to orders table if missing."""
+    conn = get_db()
+    try:
+        conn.execute("SELECT customer_lang FROM orders LIMIT 1")
+    except Exception:
+        conn.execute("ALTER TABLE orders ADD COLUMN customer_lang TEXT")
+        conn.commit()
+    conn.close()
+
+
 # Initialize database on import
 init_db()
 init_reviews_table()
@@ -1264,3 +1485,6 @@ init_review_requests_table()
 init_expenses_table()
 init_loyalty_tables()
 init_blog_tables()
+init_site_config_table()
+init_email_templates_table()
+init_order_language_column()

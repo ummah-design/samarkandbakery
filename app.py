@@ -51,7 +51,10 @@ from database import (create_order, get_orders, get_order, get_orders_by_date,
                       get_blog_categories, get_blog_category_by_slug,
                       create_blog_post, update_blog_post, delete_blog_post,
                       get_blog_posts, get_blog_post_by_id, get_blog_post_by_slug,
-                      get_related_blog_posts, blog_slug_exists)
+                      get_related_blog_posts, blog_slug_exists,
+                      get_config, set_config, get_all_config, get_primary_language,
+                      get_all_email_templates, get_email_template, update_email_template,
+                      reset_email_template, EMAIL_TEMPLATE_TYPES, EMAIL_TEMPLATE_LANGUAGES)
 import urllib.request
 import urllib.parse
 import urllib.error
@@ -209,12 +212,19 @@ def compute_auto_discount(subtotal, promo_applied=False):
 
 
 def get_lang():
-    """Get current language from query param, session, or default to 'en'."""
+    """Get current language from query param, session, or fall back to the
+    admin-configured primary language."""
     lang = request.args.get("lang")
     if lang in ("en", "fr", "ar"):
         session["lang"] = lang
         return lang
-    return session.get("lang", "en")
+    sess_lang = session.get("lang")
+    if sess_lang in ("en", "fr", "ar"):
+        return sess_lang
+    try:
+        return get_primary_language()
+    except Exception:
+        return "en"
 
 
 def get_t():
@@ -374,6 +384,12 @@ def api_submit_order():
         if paypal_oid:
             payment_status = "paid"
 
+    # Capture which language the customer used so future emails about this
+    # order can be sent in their language (e.g. confirmed/completed updates).
+    customer_lang = req.get("customer_lang") or get_lang()
+    if customer_lang not in ("en", "fr", "ar"):
+        customer_lang = None
+
     order_id = create_order(
         customer_name=req["customer_name"],
         customer_email=req.get("customer_email", ""),
@@ -393,7 +409,8 @@ def api_submit_order():
         notes=req.get("notes"),
         payment_method=payment_method,
         payment_status=payment_status,
-        paypal_order_id=paypal_oid
+        paypal_order_id=paypal_oid,
+        customer_lang=customer_lang
     )
 
     # Loyalty: write the redemption ledger entry now that we have the order id,
@@ -442,7 +459,8 @@ def api_submit_order():
                     "delivery_address": req.get("delivery_address"),
                     "preferred_date": req.get("preferred_date"),
                     "promo_code": promo_code,
-                    "discount_amount": round(discount_amt, 2)
+                    "discount_amount": round(discount_amt, 2),
+                    "customer_lang": customer_lang,
                 },
                 loyalty_earned=loyalty_earned_pts,
                 loyalty_redeemed_pts=loyalty_redeem_pts,
@@ -711,6 +729,159 @@ def admin_backups_page():
 @admin_required
 def admin_reports_page():
     return render_template("admin/reports.html", active_page="reports")
+
+
+@app.route("/admin/settings")
+@admin_required
+def admin_settings_page():
+    return render_template("admin/settings.html", active_page="settings")
+
+
+@app.route("/admin/email-templates")
+@admin_required
+def admin_email_templates_page():
+    return render_template(
+        "admin/email_templates.html",
+        active_page="email_templates",
+        template_types=list(EMAIL_TEMPLATE_TYPES),
+        template_languages=list(EMAIL_TEMPLATE_LANGUAGES),
+    )
+
+
+# ── Settings API ──
+
+@app.route("/api/admin/settings", methods=["GET"])
+@admin_required
+def api_admin_settings_get():
+    return jsonify(get_all_config())
+
+
+@app.route("/api/admin/settings", methods=["POST"])
+@admin_required
+def api_admin_settings_save():
+    data = request.json or {}
+    primary = (data.get("primary_language") or "").lower().strip()
+    if primary not in ("en", "fr", "ar"):
+        return jsonify({"error": "Invalid primary language"}), 400
+    set_config("primary_language", primary)
+    return jsonify({"success": True, "config": get_all_config()})
+
+
+# ── Email templates API ──
+
+EMAIL_TEMPLATE_TYPE_META = {
+    "order_placed": {
+        "label": "Order Placed",
+        "description": "Sent to the customer (and admin) when a new order is submitted.",
+        "placeholders": [
+            "customer_name", "order_id", "total_price", "items_table",
+            "delivery_info", "preferred_date_block", "discount_block",
+            "loyalty_block", "title",
+        ],
+    },
+    "order_confirmed": {
+        "label": "Order Confirmed",
+        "description": "Sent to the customer when the order status is changed to 'confirmed'.",
+        "placeholders": [
+            "customer_name", "order_id", "total_price", "items_table",
+            "preferred_date_block", "title",
+        ],
+    },
+    "order_completed": {
+        "label": "Order Completed / Review Request",
+        "description": "Sent to the customer when an order is marked completed. Includes review CTAs.",
+        "placeholders": [
+            "customer_name", "order_id", "total_price", "review_links_block", "title",
+        ],
+    },
+    "contact_inquiry": {
+        "label": "Contact Form Inquiry",
+        "description": "Sent to the admin when a visitor submits the website contact form.",
+        "placeholders": ["name", "email", "message", "title"],
+    },
+    "loyalty_code": {
+        "label": "Loyalty Code Verification",
+        "description": "Sent to the customer with a 6-digit code when they redeem loyalty points.",
+        "placeholders": ["greeting", "code", "ttl_minutes", "customer_name", "title"],
+    },
+}
+
+
+@app.route("/api/admin/email-templates", methods=["GET"])
+@admin_required
+def api_admin_email_templates_list():
+    return jsonify({
+        "templates": get_all_email_templates(),
+        "meta": EMAIL_TEMPLATE_TYPE_META,
+        "primary_language": get_primary_language(),
+    })
+
+
+@app.route("/api/admin/email-templates/<template_type>/<language>", methods=["GET"])
+@admin_required
+def api_admin_email_template_get(template_type, language):
+    if template_type not in EMAIL_TEMPLATE_TYPES or language not in EMAIL_TEMPLATE_LANGUAGES:
+        return jsonify({"error": "Unknown template"}), 404
+    tpl = get_email_template(template_type, language)
+    if not tpl:
+        return jsonify({"error": "Not found"}), 404
+    return jsonify(tpl)
+
+
+@app.route("/api/admin/email-templates/<template_type>/<language>", methods=["POST"])
+@admin_required
+def api_admin_email_template_save(template_type, language):
+    if template_type not in EMAIL_TEMPLATE_TYPES or language not in EMAIL_TEMPLATE_LANGUAGES:
+        return jsonify({"error": "Unknown template"}), 404
+    data = request.json or {}
+    subject = (data.get("subject") or "").strip()
+    body_html = data.get("body_html") or ""
+    if not subject or not body_html.strip():
+        return jsonify({"error": "Subject and body are required"}), 400
+    update_email_template(template_type, language, subject, body_html)
+    return jsonify({"success": True})
+
+
+@app.route("/api/admin/email-templates/<template_type>/<language>/reset", methods=["POST"])
+@admin_required
+def api_admin_email_template_reset(template_type, language):
+    if template_type not in EMAIL_TEMPLATE_TYPES or language not in EMAIL_TEMPLATE_LANGUAGES:
+        return jsonify({"error": "Unknown template"}), 404
+    ok = reset_email_template(template_type, language)
+    if not ok:
+        return jsonify({"error": "No default available"}), 500
+    return jsonify({"success": True, "template": get_email_template(template_type, language)})
+
+
+@app.route("/api/admin/email-templates/<template_type>/<language>/preview", methods=["POST"])
+@admin_required
+def api_admin_email_template_preview(template_type, language):
+    """Render a preview using the in-memory subject/body the admin is currently
+    editing (so previews reflect unsaved changes)."""
+    if template_type not in EMAIL_TEMPLATE_TYPES or language not in EMAIL_TEMPLATE_LANGUAGES:
+        return jsonify({"error": "Unknown template"}), 404
+    data = request.json or {}
+    draft_subject = data.get("subject")
+    draft_body = data.get("body_html")
+    if draft_subject is not None or draft_body is not None:
+        existing = get_email_template(template_type, language) or {}
+        update_email_template(
+            template_type, language,
+            draft_subject if draft_subject is not None else existing.get("subject", ""),
+            draft_body if draft_body is not None else existing.get("body_html", ""),
+        )
+        try:
+            from emailer import render_preview
+            preview = render_preview(template_type, language)
+        finally:
+            if existing:
+                update_email_template(template_type, language,
+                                      existing.get("subject", ""),
+                                      existing.get("body_html", ""))
+    else:
+        from emailer import render_preview
+        preview = render_preview(template_type, language)
+    return jsonify(preview)
 
 
 @app.route("/admin/product/<product_key>/edit")
@@ -1214,7 +1385,7 @@ def api_contact():
     if not name or not email or not message:
         return jsonify({"error": "All fields are required"}), 400
     if send_contact_inquiry:
-        ok = send_contact_inquiry(name, email, message)
+        ok = send_contact_inquiry(name, email, message, language=get_lang())
         if ok:
             return jsonify({"success": True})
         return jsonify({"error": "Failed to send email"}), 500
@@ -1433,7 +1604,7 @@ def api_loyalty_send_code():
         return jsonify({"success": False, "error": "Could not generate code"}), 500
     if send_loyalty_code:
         try:
-            send_loyalty_code(email, code, customer_name=name)
+            send_loyalty_code(email, code, customer_name=name, language=get_lang())
         except Exception as e:
             print("Loyalty code email error: " + str(e))
     return jsonify({"success": True})

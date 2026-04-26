@@ -1,5 +1,5 @@
 {
   "enabled": true,
-  "threshold": 200.0,
+  "threshold": 150.0,
   "percent": 5.0
 }

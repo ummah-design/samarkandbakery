@@ -1,0 +1,140 @@
+{% extends "admin_base.html" %}
+{% block title %}Settings{% endblock %}
+{% block page_title %}Settings{% endblock %}
+
+{% block extra_css %}
+.lang-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 18px;
+}
+.lang-card {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 14px;
+    background: var(--warm-bg-alt);
+    cursor: pointer;
+    text-align: center;
+    transition: all var(--transition-fast);
+    user-select: none;
+}
+.lang-card:hover { border-color: var(--gold); background: #fff; }
+.lang-card.selected {
+    border-color: var(--gold);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(184,134,11,0.15);
+}
+.lang-card .flag { font-size: 1.7em; line-height: 1; margin-bottom: 6px; }
+.lang-card .name { font-weight: 600; color: var(--navy); font-size: 0.95em; }
+.lang-card .code {
+    font-size: 0.72em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+@media (max-width: 600px) {
+    .lang-grid { grid-template-columns: 1fr; }
+}
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Primary Language</h2>
+    <p style="color:var(--text-secondary);font-size:0.92em;margin-bottom:18px;">
+        The default language for the public website (when a visitor hasn't picked one yet)
+        and the language used for transactional emails when no per-customer language is known
+        — for example admin notifications, contact form replies, and orders placed before
+        language tracking was added.
+    </p>
+
+    <div class="lang-grid" id="lang-grid">
+        <div class="lang-card" data-lang="en">
+            <div class="flag">🇬🇧</div>
+            <div class="name">English</div>
+            <div class="code">EN</div>
+        </div>
+        <div class="lang-card" data-lang="fr">
+            <div class="flag">🇫🇷</div>
+            <div class="name">Français</div>
+            <div class="code">FR</div>
+        </div>
+        <div class="lang-card" data-lang="ar">
+            <div class="flag">🇲🇦</div>
+            <div class="name">العربية</div>
+            <div class="code">AR</div>
+        </div>
+    </div>
+
+    <button class="btn" id="save-btn" onclick="saveSettings()">Save Settings</button>
+    <span id="status" style="margin-left:14px;font-weight:600;"></span>
+</div>
+
+<div class="card">
+    <h2>What this affects</h2>
+    <ul style="margin:0 0 0 22px;color:var(--text-secondary);line-height:1.7;font-size:0.93em;">
+        <li>Visitors who arrive without a saved language preference see the website in this language.</li>
+        <li>Admin notifications (new order, contact form) are sent in this language.</li>
+        <li>Loyalty / contact / system emails fall back to this language when the customer's preference is unknown.</li>
+        <li>The language a <em>customer</em> ordered in is captured per-order — order-status emails (confirmed/completed) always go out in their language.</li>
+    </ul>
+    <p style="color:var(--text-muted);font-size:0.88em;margin-top:14px;">
+        Need to edit the actual wording? See <a href="/admin/email-templates" style="color:var(--gold);font-weight:600;">Email Templates</a>.
+    </p>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var currentLang = 'en';
+
+    function selectLang(lang) {
+        currentLang = lang;
+        var cards = document.querySelectorAll('.lang-card');
+        for (var i = 0; i < cards.length; i++) {
+            if (cards[i].dataset.lang === lang) {
+                cards[i].classList.add('selected');
+            } else {
+                cards[i].classList.remove('selected');
+            }
+        }
+    }
+
+    async function loadSettings() {
+        var res = await fetch('/api/admin/settings');
+        var cfg = await res.json();
+        selectLang(cfg.primary_language || 'en');
+    }
+
+    async function saveSettings() {
+        var btn = document.getElementById('save-btn');
+        var status = document.getElementById('status');
+        btn.classList.add('btn-loading');
+        status.textContent = '';
+        var res = await fetch('/api/admin/settings', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ primary_language: currentLang })
+        });
+        var data = await res.json();
+        btn.classList.remove('btn-loading');
+        if (data.success) {
+            status.style.color = 'var(--success)';
+            status.textContent = '✓ Saved';
+            setTimeout(function() { status.textContent = ''; }, 2500);
+        } else {
+            status.style.color = 'var(--danger)';
+            status.textContent = data.error || 'Error saving';
+        }
+    }
+
+    var cards = document.querySelectorAll('.lang-card');
+    for (var i = 0; i < cards.length; i++) {
+        cards[i].addEventListener('click', function() {
+            selectLang(this.dataset.lang);
+        });
+    }
+    loadSettings();
+</script>
+{% endblock %}

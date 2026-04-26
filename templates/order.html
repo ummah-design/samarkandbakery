@@ -1179,6 +1179,24 @@
         .btn-new-order:hover { background: var(--navy-light); }
         .btn-new-order:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
+        .btn-whatsapp-order {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            margin: 16px auto 0;
+            padding: 13px 28px;
+            background: #25D366;
+            color: #fff;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 200ms ease, transform 150ms ease;
+        }
+        .btn-whatsapp-order:hover { background: #1ebe5d; transform: translateY(-1px); }
+        .btn-whatsapp-order svg { width: 22px; height: 22px; fill: #fff; flex-shrink: 0; }
+
         /* ===== FOOTER ===== */
         .site-footer {
             position: relative;
@@ -1944,6 +1962,10 @@
             <p class="success-message" id="success-msg"></p>
             <p class="success-message" id="success-total"></p>
             <p class="success-message" id="success-loyalty" style="color:var(--gold);font-weight:600;display:none;"></p>
+            <a id="success-wa-btn" href="#" target="_blank" rel="noopener" class="btn-whatsapp-order">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+                {{ t.wa_confirm }}
+            </a>
             <button class="btn-new-order" onclick="resetOrder()">{{ t.btn_new_order }}</button>
         </div>
     </div>
@@ -2471,6 +2493,84 @@ async function loyaltyVerifyCode() {
     }
 }
 
+function showWhatsAppButton(data) {
+    var date = document.getElementById('c-date').value;
+    var customerName = (document.getElementById('c-name').value || '').trim();
+    var dtype = deliveryType === 'delivery' ? T.delivery : T.pickup;
+    var pickupTime = '';
+    if (deliveryType === 'pickup') {
+        var pt = document.getElementById('c-pickup-time');
+        if (pt) pickupTime = pt.value || '';
+    }
+    var lines = [];
+    for (var k in cart) {
+        var q = cart[k];
+        var p = menuData.products[k];
+        if (p && q > 0) {
+            lines.push(q + 'x ' + p.name);
+        }
+    }
+    var itemsList = lines.join(', ');
+    var isPaypal = data.payment_method === 'paypal';
+    var labels;
+    if (LANG === 'ar') {
+        labels = {
+            greeting: 'مرحباً مخبز سمرقند!',
+            name: 'الاسم',
+            order: 'طلبي رقم',
+            items: 'المنتجات',
+            total: 'الإجمالي',
+            currency: 'درهم',
+            date: 'التاريخ',
+            pickupAt: 'وقت الاستلام',
+            payment: 'الدفع',
+            paypal: 'تم الدفع عبر PayPal',
+            cod: 'الدفع نقداً عند الاستلام'
+        };
+    } else if (LANG === 'fr') {
+        labels = {
+            greeting: 'Bonjour Samarkand Bakery!',
+            name: 'Nom',
+            order: 'Commande',
+            items: 'Articles',
+            total: 'Total',
+            currency: 'MAD',
+            date: 'Date',
+            pickupAt: 'Heure de retrait',
+            payment: 'Paiement',
+            paypal: 'Payé via PayPal',
+            cod: 'Espèces à la livraison'
+        };
+    } else {
+        labels = {
+            greeting: 'Hello Samarkand Bakery!',
+            name: 'Name',
+            order: 'Order',
+            items: 'Items',
+            total: 'Total',
+            currency: 'MAD',
+            date: 'Date',
+            pickupAt: 'Pickup time',
+            payment: 'Payment',
+            paypal: 'Paid via PayPal',
+            cod: 'Cash on Delivery'
+        };
+    }
+    var msg = labels.greeting + '\n\n'
+        + (customerName ? labels.name + ': ' + customerName + '\n' : '')
+        + labels.order + ' #' + data.order_id + '\n'
+        + labels.items + ': ' + itemsList + '\n'
+        + labels.total + ': ' + data.total_price.toFixed(2) + ' ' + labels.currency + '\n'
+        + labels.date + ': ' + date + ' (' + dtype + ')';
+    if (pickupTime) {
+        msg += '\n' + labels.pickupAt + ': ' + pickupTime;
+    }
+    msg += '\n' + labels.payment + ': ' + (isPaypal ? labels.paypal : labels.cod);
+    var waUrl = 'https://wa.me/212680342679?text=' + encodeURIComponent(msg);
+    var btn = document.getElementById('success-wa-btn');
+    if (btn) { btn.href = waUrl; btn.style.display = 'inline-flex'; }
+}
+
 function showLoyaltyEarned(orderData) {
     var el = document.getElementById('success-loyalty');
     if (!el) return;
@@ -2651,7 +2751,8 @@ function buildOrderPayload(fields, extraFields) {
         items: Object.entries(cart).map(([k, q]) => ({ key: k, quantity: q })),
         notes: document.getElementById('c-notes').value || null,
         payment_method: paymentMethod,
-        loyalty_redeem_points: (loyaltyApplied && loyaltyCodeVerified) ? loyaltyAppliedPoints : 0
+        loyalty_redeem_points: (loyaltyApplied && loyaltyCodeVerified) ? loyaltyAppliedPoints : 0,
+        customer_lang: (typeof LANG !== 'undefined' ? LANG : null)
     };
     if (extraFields) Object.assign(payload, extraFields);
     return payload;
@@ -2701,6 +2802,7 @@ function renderPayPalButton() {
                 document.getElementById('success-msg').textContent = orderData.message;
                 document.getElementById('success-total').textContent = T.total + ': ' + orderData.total_price.toFixed(2) + ' ' + T.currency;
                 showLoyaltyEarned(orderData);
+                showWhatsAppButton(orderData);
             } else {
                 alert(orderData.error || T.alert_error);
             }
@@ -2753,7 +2855,8 @@ async function submitOrder() {
                 items: Object.entries(cart).map(([k, q]) => ({ key: k, quantity: q })),
                 notes: document.getElementById('c-notes').value || null,
                 payment_method: 'cod',
-                loyalty_redeem_points: (loyaltyApplied && loyaltyCodeVerified) ? loyaltyAppliedPoints : 0
+                loyalty_redeem_points: (loyaltyApplied && loyaltyCodeVerified) ? loyaltyAppliedPoints : 0,
+                customer_lang: (typeof LANG !== 'undefined' ? LANG : null)
             })
         });
         const data = await res.json();
@@ -2764,6 +2867,7 @@ async function submitOrder() {
             document.getElementById('success-msg').textContent = data.message;
             document.getElementById('success-total').textContent = T.total + ': ' + data.total_price.toFixed(2) + ' ' + T.currency;
             showLoyaltyEarned(data);
+            showWhatsAppButton(data);
         } else {
             alert(data.error || T.alert_error);
             btn.disabled = false; btn.textContent = T.btn_place_order;
@@ -2793,6 +2897,8 @@ function resetOrder() {
     loyaltyResetUI();
     var sl = document.getElementById('success-loyalty');
     if (sl) { sl.style.display = 'none'; sl.textContent = ''; }
+    var wb = document.getElementById('success-wa-btn');
+    if (wb) { wb.style.display = 'none'; wb.href = '#'; }
 }
 
 // Load reviews for scrolling section
